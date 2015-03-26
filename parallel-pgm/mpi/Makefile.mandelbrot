@@ -1,0 +1,34 @@
+#
+# Makefile for MPI versions of Mandelbrot program
+#
+# "make -f Makefile.mandelbrot" or "make  -f Makefile.mandelbrot all" 
+#    to make all executables
+# "make -f Makefile.mandelbrot clean" to remove executables
+#
+
+CSTD=-std=c99
+# uncomment if using more-recent gcc
+#CSTD=-std=c11
+
+OPT = -O3
+MPICC = mpicc
+CFLAGS = $(OPT) -Wall -pedantic $(CSTD)
+
+LDFLAGS = -lm -lX11 -L/usr/X11R6/lib 
+
+ALL = mandelbrot-seq \
+	mandelbrot-mpi-block \
+	mandelbrot-mpi-cyclic \
+	mandelbrot-mpi-dynamic
+HFILES = mandelbrot-gui.h
+
+.PHONY:  all
+all:  $(ALL)
+
+%: %.c $(HFILES)
+	$(MPICC) -o $@ $(CFLAGS) $< $(LDFLAGS)
+
+.PHONY:  clean
+clean:
+	-rm $(ALL)
+

@@ -1,0 +1,187 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<!--Converted with LaTeX2HTML 2008 (1.71)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<html><head>
+<title>Using MPI on the CS Linux Machines</title>
+<meta name="description" content="Using MPI on the CS Linux Machines">
+<meta name="keywords" content="mpi-howto">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="Generator" content="LaTeX2HTML v2008">
+<meta http-equiv="Content-Style-Type" content="text/css">
+
+<link rel="STYLESHEET" href="Using%20MPI%20on%20the%20CS%20Linux%20Machines_files/mpi-howto.css">
+
+</head>
+
+<body>
+
+<p>
+
+</p><p>
+</p><h1>Using MPI on the CS Linux Machines</h1>
+
+<p>
+You should be able to run MPI programs on any of our Linux machines.
+(Note that to use a machine as one of the MPI ``hosts''
+it must be running Linux.  You can check availability with the
+command <tt>ruptime</tt>.)
+
+</p><p>
+
+</p><h2><a name="SECTION00001000000000000000">
+Setting up your account</a>
+</h2>
+
+<p>
+
+</p><h3><a name="SECTION00001100000000000000">
+Enabling remote login without prompts</a>
+</h3>
+
+<p>
+In order for MPI to start processes on other machines, 
+your account must be set up so that MPI can remotely log into
+the other machines without prompting for a password.
+See <a name="tex2html2" href="http://www.cs.trinity.edu/%7Ebmassing/Misc/ssh-howto/index.html">my notes on passwordless login</a>
+for notes on how to do this.
+
+</p><p>
+
+</p><h3><a name="SECTION00001200000000000000">
+Other setup considerations</a>
+</h3>
+
+<p>
+If your account is set up according to our default scheme,
+the commands needed to compile and execute
+MPI programs will not be in the search path.
+As of the last update to this page, this is deliberate:
+Two versions of MPI are installed,
+one for each of the two versions of the GNU compilers installed
+(more about that in
+<a name="tex2html3" href="http://www.cs.trinity.edu/%7Ebmassing/Misc/gcc-howto/index.html">my notes on the GNU compilers</a>).
+
+</p><p>
+To get access to the version of MPI that uses the default (4.4.7)
+version of the compilers, use the command
+</p><p>
+</p><blockquote><tt>module load openmpi-1.5.4</tt>
+</blockquote>
+<p>
+</p><p>
+To get access to the version of MPI that uses the more-recent (4.8.1)
+version of the compilers, use the command
+</p><p>
+</p><blockquote><tt>module load openmpi-1.6.4</tt>
+</blockquote>
+<p>
+</p><p>
+You should probably choose one of these and put it in your <tt>.bashrc</tt>
+file, as discussed in the notes on <tt>gcc</tt>;
+this is the simplest way to be sure you can actually run MPI programs
+on more than one machine.  
+</p><p>
+
+</p><h2><a name="SECTION00002000000000000000">
+Compiling MPI programs</a>
+</h2>
+
+<p>
+Use the command <tt>mpicc</tt> to compile C programs using MPI functions.
+Simple usage:  
+</p><p>
+</p><blockquote><tt>mpicc -o foo foo.c</tt>
+</blockquote>
+<p>
+Refer to the man page for other options. 
+
+</p><p>
+To compile C++ programs using MPI functions, use 
+<tt>mpiCC</tt>, <tt>mpic++</tt>, or <tt>mpicxx</tt>.
+(I'm not sure how these commands differ, if at all.)
+
+</p><p>
+To compile Fortran programs using MPI functions, use
+<tt>mpif77</tt> or <tt>mpif90</tt>.
+
+</p><p>
+
+</p><h2><a name="SECTION00003000000000000000">
+Running MPI programs</a>
+</h2>
+
+<p>
+Use the command <tt>mpirun</tt> to run an MPI program.
+Typical usage:
+</p><p>
+</p><blockquote><tt>mpirun -np 10 -host host1,host2 foobar</tt>
+</blockquote>
+<p>
+</p><blockquote><tt>mpirun -np 10 -hostfile list-of-hosts foobar</tt>
+</blockquote>
+<p>
+Both commands start 10 processes, each running executable <tt>foobar</tt>.
+The first command starts them on machines
+<tt>host1</tt> and <tt>host2</tt>; 
+the second command reads machine names from the file
+<tt>list-of-hosts</tt>.
+Refer to the man page for other options.
+
+</p><p>
+
+</p><h2><a name="SECTION00004000000000000000">
+Online documentation</a>
+</h2>
+
+<p>
+Use the command <tt>man</tt> to display UNIX-style <tt>man</tt> pages
+for MPI-related commands and routines.
+Typical usage:
+
+</p><p>
+</p><p>
+</p><blockquote><tt>man MPI_Send</tt>
+</blockquote>
+<p>
+</p><p>
+
+</p><h2><a name="SECTION00005000000000000000">
+Useful links</a>
+</h2>
+
+<p>
+
+</p><ul>
+<li><a name="tex2html4" href="http://www-unix.mcs.anl.gov/mpi">Argonne National Lab's MPI Web site</a>,
+	with links to the MPI standard, a FAQ, tutorials,
+	information about implementations, etc., etc.
+
+<p>
+</p></li>
+<li><a name="tex2html5" href="http://www.mpi-forum.org/">The MPI Forum's Web site</a>,
+	with links to the full MPI standard.
+
+<p>
+</p></li>
+<li><a name="tex2html6" href="http://www.open-mpi.org/">Home page for OpenMPI</a>, with specifics for this
+	implementation.
+
+<p>
+</p></li>
+</ul>
+
+<p>
+<br> </p><hr>
+<address>
+<i>Berna Massingill <br>
+2013-09-25</i>
+</address>
+
+
+</body></html>
