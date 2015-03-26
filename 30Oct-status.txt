@@ -1,0 +1,176 @@
+﻿30 OCTOBER 345 A, C, and D STATUS
+---------------------------------
+
+I have followed the hard copy June 20, 2014 revision of the course notes. 
+
+The timeline from the scs/~oop345 website has been used as a guideline.
+
+A. Introduction
+
+        1.      Basic Concepts
+                1.1 O-O Paradigm
+                1.2 Terminology
+                1.3 Namespaces
+                1.4 Interface with OS
+
+        2. Compilation
+                2.1 Platforms
+                        - UN*X, Microsoft, Apple
+                        - cross compiling needed for Android, iOS and most 
+                          embedded processors
+                2.2 Directives
+                2.3 Macros (preprocessor directives)
+                        - C
+                        - # + ## (stringify and concat operators)
+                2.4 Include Directive
+                        - C
+                2.5 Conditional Directives
+                        - C
+                        - compiler flags
+
+B. Types
+
+        3. Fundamental Type
+                3.1 Integral Types
+                        - C
+                3.2 Floating Point Types
+                        - C
+                3.3 Void Type
+                        - C
+
+        4. Compound Types
+                4.1 Pointer Types
+                        - C
+                4.2 References
+                        - C++
+                4.3 Enumerations
+                        - C
+                4.4 Arrays
+                        - C
+                        - structures and arrays of structures 
+                4.5 Classes
+                        - C++ 
+
+C. Relationships
+
+        5. (Section 5 missing)
+        6. (Section 6 missing)
+
+        7. Inheritance
+                7.1 Simple Inheritance
+                        - 244 review
+                7.2 Polymorphic objects
+                        - 244 review
+                7.3 Multiple Inheritance
+                        - diamond problem
+                        - virtual base class if only one instance required
+                                * how it works: inherited class uses a pointer 
+                                  to solitary base class
+                                * demonstrated pointer method by printing out sizes
+                                  of base and inherited classes
+                        - non-virtual base class if multiple instances required
+
+        8. Templates
+                8.1 Template Syntax
+                8.2 Function Template
+                        - 244 review
+                8.3 Class Templates
+                        - 244 review (all students said was covered in 244)
+                8.4 Variadic Templates
+                        - students mainly confused by variadic templates
+
+        9. Compositions, Aggregations, and Associations
+                9.1 Compositions
+                9.2 Aggregations
+                9.3 Associations
+
+D. Logic
+        
+        9. Expressions
+                9.1 Operator Precedence
+                        - C
+                9.2 lvalues + rvalues
+                        - C++ 
+                9.3 Post-Fix expressions
+                        - C
+                9.4 Pre-Fix expressions
+                        - C
+                9.5 Unary expressions
+                        - C
+                9.6 Binary expressions
+                        - C
+                9.7 Ternary expressions
+                        - C
+
+        10. Functions
+                10.1 Simplifying Syntax
+                10.2 Linkage
+                10.3 Recursion
+                        - using recursion to simplify algorithm complexity
+                                * mentioned ray tracers as an example
+                10.4 Pointer to Functions
+                        - callbacks use when an event occurs
+                                * example is atexit()
+                                * callbacks commonly used in GUI windows such as 
+                                  X11's RegisterCallback or 
+                                  Windows's register window
+                                * callbacks used in RTOS and 
+                                  embedded processor C/C++ code.
+                10.5 Function Objects
+                        - old name was functors
+                10.6 Lambda
+                        - often simplifies code
+
+        11. Error Handling
+                11.1 Exceptions
+                        - been using exceptions extensively
+                11.2 Standard Exits
+                        - C
+
+        11. Raw Pointers
+                11.1 C-Style Character Strings
+                        - C
+                11.2 Expressions
+                        - C
+                11.3 Pointers to Arrays
+                        - C
+                        - 2D array workshop 
+
+        12. Smart Pointers
+            - not covered yet
+                12.1 Exception Handling
+                12.2 Exclusive Ownership
+                12.3 Shared Ownership
+
+F. Standard Template Library
+        
+        13. Introduction to Linked Lists
+                13.1 Standard Template Library
+                        - string and STL have many things in common
+                        - showed some simple string code
+                        - ported string code to use vector<char> and
+                          developed DIY [], +, +=, << operators
+                13.2 The Concept of a Linked List
+                        - showed stack insert and print
+                        - talked about queues and doubly-linked list
+                13.3 Stack
+                13.4 Queue
+
+        14. Containers and Iterators
+                - 'container' context confusion w.r.t. STL and ABC/inheritance
+                14.1 Sequential Containers
+                        - demonstarted post-fix calculator code using stack, 
+                          list, and dequeue
+                        - emphasized polymorphic behaviour of many STL objects
+                14.2 Container Adapters
+                        - priority queue not covered
+                14.3 Iterators
+                        - use of auto to declare an iterator
+
+        15. Algorithms
+                15.1 Functional Library
+                        - not covered yet
+                15.2 Algorithm Library
+                        - sort + find
+                15.3 Numeric Library
+                        - not covered yet

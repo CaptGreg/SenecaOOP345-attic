@@ -1,0 +1,565 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title> CSCI 3366 (Introduction to Parallel and Distributed Processing):
+	Sample Programs
+</title>
+</head>
+
+<body>
+<h1>
+
+CSCI 3366 (Introduction to Parallel and Distributed Processing): <br>
+	Sample Programs
+
+</h1>
+
+<h2> OpenMP </h2>
+
+<ul>
+<li> My notes <a href="http://www.cs.trinity.edu/%7Ebmassing/Misc/openmp-howto/">
+	Using OpenMP on the Linux Lab Machines</a>.
+
+</li><li> Sample makefile <a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/OpenMP/Makefile">Makefile</a>
+	for compiling C and C++ programs.
+	(See the <a href="#makefilenote">Note About
+	Makefiles</a> below.)
+
+</li><li> "Hello, world" programs: 
+    <a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/OpenMP/hello.c">hello.c</a>,
+    <a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/OpenMP/hello++.cpp">hello++.cpp</a>.
+
+</li></ul>
+
+<li> Utility functions for use with remaining examples:
+	<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/Sequential-C/timer.h">timer.h</a>,
+	<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/Sequential-C/cmdline.h">cmdline.h</a>.
+
+</li><li> Simple example of synchronization among threads:
+	<ul>
+	<li> Without synchronization:
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/OpenMP/synch-1.c">synch-1.c</a>.
+	</li><li> Using critical section for synchronization:
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/OpenMP/synch-2.c">synch-2.c</a>.
+	</li><li> Using lock for synchronization:
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/OpenMP/synch-3.c">synch-3.c</a>.
+	</li></ul>
+
+</li><li> Programs to compute pi by numerical integration:
+	<ul>
+	<li> Sequential version:
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/Sequential-C/num-int-seq.c">num-int-seq.c</a>.
+	</li><li> Parallel version using OpenMP constructs:
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/OpenMP/num-int-par.c">num-int-par.c</a>.
+	</li><li> Parallel versions using OpenMP constructs with
+		SPMD approach (see comments in code for
+		differences among versions):
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/OpenMP/num-int-par-spmd-1.c">
+		num-int-par-spmd-1.c</a>,
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/OpenMP/num-int-par-spmd-2.c">
+		num-int-par-spmd-2.c</a>.
+	</li></ul>
+
+</li><li> Programs for heat diffusion example:
+	<ul>
+	<li> Sequential version:
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/Sequential-C/heat-eqn-seq.c">heat-eqn-seq.c</a>.
+	</li><li> Parallel version: 
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/OpenMP/heat-eqn-par.c">heat-eqn-par.c</a>.
+	</li><li> SPMD-style parallel version: 
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/OpenMP/heat-eqn-par-spmd.c">heat-eqn-par-spmd.c</a>.
+	</li><li> Revised versions that combine loops where feasible:
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/Sequential-C/heat-eqn-seq-v2.c">heat-eqn-seq-v2.c</a>,
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/OpenMP/heat-eqn-par-v2.c">heat-eqn-par-v2.c</a>,
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/OpenMP/heat-eqn-par-spmd-v2.c">heat-eqn-par-spmd-v2.c</a>.
+	</li><li> Additional code for above programs (you will need these
+		to compile):
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/Sequential-C/heat-eqn-functions.h">heat-eqn-functions.h</a>.
+	</li></ul>
+
+</li><li> Programs for Mandelbrot example:
+	<ul>
+	<li> Sequential version:
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/Sequential-C/mandelbrot-seq.c">
+			mandelbrot-seq.c</a>.
+	</li><li> Parallel version with one-point-at-a-time critical section:
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/OpenMP/mandelbrot-omp-by-points.c">
+			mandelbrot-omp-by-points.c</a>.
+	</li><li> Parallel version with one-row-at-a-time critical section:
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/OpenMP/mandelbrot-omp-by-rows.c">
+			mandelbrot-omp-by-rows.c</a>.
+	</li><li> Additional code for above programs (you will need these
+		to compile):
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/Sequential-C/mandelbrot-gui.h">mandelbrot-gui.h</a>.
+	</li><li> Makefile:
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/OpenMP/Makefile.mandelbrot">
+			Makefile.mandelbrot </a>
+	</li></ul>
+
+</li><li> Programs for matrix multiplication example:
+	<ul>
+	<li> Simple sequential version:
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/Sequential-C/matrix-mult-seq-simple.c">
+			matrix-mult-seq-simple.c</a>.
+	</li><li> Block-based sequential version:
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/Sequential-C/matrix-mult-seq-block.c">
+			matrix-mult-seq-block.c</a>.
+	</li><li> Block-based parallel version:
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/OpenMP/matrix-mult-par-block.c">
+			matrix-mult-par-block.c</a>.
+	</li><li> Additional code for above programs (you will need these
+		to compile):
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/Sequential-C/matrix-mult-initfortest.h">
+			matrix-mult-initfortest.h</a>,
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/Sequential-C/matrix-mult-print.h">
+			matrix-mult-print.h</a>,
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/Sequential-C/matrix-mult-utility.h">
+			matrix-mult-utility.h</a>.
+	</li></ul>
+
+</li><li> Generic master/worker programs:
+	<ul>
+	<li> Sequential version:
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/Sequential-C/master-worker-seq.c">
+		master-worker-seq.c</a>.
+	</li><li> Parallel version (static assignment of tasks to workers):
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/OpenMP/master-worker-par-static.c">
+		master-worker-par-static.c</a>.
+	</li><li> Parallel version (dynamic assignment of tasks to workers):
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/OpenMP/master-worker-par-dynamic.c">
+		master-worker-par-dynamic.c</a>.
+	</li><li> Additional code for above programs (you will need these
+		to compile):
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/Sequential-C/master-worker-functions.h">
+		master-worker-functions.h</a>.
+	</li></ul>
+
+
+
+
+<h2> MPI </h2>
+
+<ul>
+<li> My notes <a href="http://www.cs.trinity.edu/%7Ebmassing/Misc/mpi-howto/">
+	Using MPI on the Linux Lab Machines</a>.
+
+</li><li> Sample makefile <a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/MPI/Makefile">Makefile</a>
+	for compiling C and C++ programs.
+	(See the <a href="#makefilenote">Note About
+        Makefiles</a> below.)
+
+</li><li> "Hello, world" programs:
+	<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/MPI/hello.c">hello.c</a>.
+	<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/MPI/hello++.cpp">hello++.cpp</a>.
+
+</li><li> "Hello, world" program with command-line arguments and hostname:
+	<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/MPI/fancy-hello.c">fancy-hello.c</a>.
+
+</li><li> Utility functions for use with remaining examples:
+	<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/MPI/utility.h">utility.h</a>,
+	<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/Sequential-C/timer.h">timer.h</a>,
+	<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/Sequential-C/cmdline.h">cmdline.h</a>.
+
+</li><li> Trivial example of send/receive:
+	<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/MPI/send-recv.c">send-recv.c</a>.
+
+</li><li> Simple send/receive with timing:
+	<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/MPI/time-msg.c">time-msg.c</a>.
+
+</li><li> Programs to compute pi by numerical integration:
+	<ul>
+	<li> Sequential version:
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/Sequential-C/num-int-seq.c">num-int-seq.c</a>.
+	</li><li> Parallel version: 
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/MPI/num-int-par.c">num-int-par.c</a>.
+	</li></ul>
+
+</li><li> Programs for heat diffusion example:
+	<ul>
+	<li> Sequential version:
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/Sequential-C/heat-eqn-seq.c">heat-eqn-seq.c</a>.
+	</li><li> Parallel version: 
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/MPI/heat-eqn-par.c">heat-eqn-par.c</a>.
+	</li><li> Parallel version with overlapping computation and
+		communication: 
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/MPI/heat-eqn-par-overlap.c">heat-eqn-par-overlap.c</a>.
+	</li><li> Revised versions that combine loops where feasible:
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/Sequential-C/heat-eqn-seq-v2.c">heat-eqn-seq-v2.c</a>,
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/MPI/heat-eqn-par-v2.c">heat-eqn-par-v2.c</a>,
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/MPI/heat-eqn-par-overlap-v2.c">heat-eqn-par-overlap-v2.c</a>.
+	</li><li> Additional code for above programs (you will need these
+		to compile):
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/Sequential-C/heat-eqn-functions.h">heat-eqn-functions.h</a>,
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/MPI/heat-eqn-mpi-functions.h">heat-eqn-mpi-functions.h</a>.
+	</li></ul>
+
+</li><li> Programs for Mandelbrot example:
+	<ul>
+	<li> Sequential version:
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/Sequential-C/mandelbrot-seq.c">
+			mandelbrot-seq.c</a>.
+	</li><li> Parallel version assigning work by blocks:
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/MPI/mandelbrot-mpi-block.c">
+			mandelbrot-mpi-block.c</a>.
+	</li><li> Parallel version assigning work dynamically:
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/MPI/mandelbrot-mpi-dynamic.c">
+			mandelbrot-mpi-dynamic.c</a>.
+	</li><li> Parallel version assigning work round-robin:
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/MPI/mandelbrot-mpi-cyclic.c">
+			mandelbrot-mpi-cyclic.c</a>.
+	</li><li> Additional code for above programs (you will need these
+		to compile):
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/Sequential-C/mandelbrot-gui.h">mandelbrot-gui.h</a>.
+	</li><li> Makefile:
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/MPI/Makefile.mandelbrot">Makefile.mandelbrot</a>.
+	</li></ul>
+
+</li><li> Programs for matrix multiplication example:
+	<ul>
+	<li> Simple sequential version:
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/Sequential-C/matrix-mult-seq-simple.c">
+			matrix-mult-seq-simple.c</a>.
+	</li><li> Block-based sequential version:
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/Sequential-C/matrix-mult-seq-block.c">
+			matrix-mult-seq-block.c</a>.
+	</li><li> Block-based parallel version:
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/MPI/matrix-mult-par-block.c">
+			matrix-mult-par-block.c</a>.
+	</li><li> Additional code for above programs (you will need these
+		to compile):
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/Sequential-C/matrix-mult-initfortest.h">
+			matrix-mult-initfortest.h</a>,
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/Sequential-C/matrix-mult-print.h">
+			matrix-mult-print.h</a>,
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/Sequential-C/matrix-mult-utility.h">
+			matrix-mult-utility.h</a>,
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/MPI/matrix-mult-par-initfortest.h">
+			matrix-mult-par-initfortest.h</a>,
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/MPI/matrix-mult-par-print.h">
+			matrix-mult-par-print.h</a>,
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/MPI/matrix-mult-par-utility.h">
+			matrix-mult-par-utility.h</a>.
+	</li></ul>
+
+</li><li> Generic master/worker programs:
+	<ul>
+	<li> Sequential version:
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/Sequential-C/master-worker-seq.c">
+		master-worker-seq.c</a>.
+	</li><li> Parallel version (static assignment of tasks to workers):
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/MPI/master-worker-par-static.c">
+		master-worker-par-static.c</a>.
+	</li><li> Parallel version (dynamic assignment of tasks to workers):
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/MPI/master-worker-par-dynamic.c">
+		master-worker-par-dynamic.c</a>.
+	</li><li> Additional code for above programs (you will need these
+		to compile):
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/Sequential-C/master-worker-functions.h">
+		master-worker-functions.h</a>.
+	</li></ul>
+
+</li></ul>
+
+<h2> Java </h2>
+
+<ul>
+
+<li> My notes <a href="http://www.cs.trinity.edu/%7Ebmassing/Misc/java-cmdline-howto/">
+	Java from the Command Line</a>.
+
+</li><li> ZIP archive containing all examples 
+	<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/Java/csci3366sample.zip">csci3366sample.zip</a>.
+
+</li><li> Utility classes:
+	<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/Java/csci3366sample/ThreadUtility.java">ThreadUtility.java</a>.
+
+</li><li> "Hello, world" programs:
+	<ul>
+	<li> Version using anonymous inner class:
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/Java/csci3366sample/hello/Hello1.java">Hello1.java</a>.
+	</li><li> Version using static inner class:
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/Java/csci3366sample/hello/Hello2.java">Hello2.java</a>.
+	</li><li> Versions using <tt>java.util.concurrent</tt>:
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/Java/csci3366sample/hello/Hello3.java">Hello3.java</a>,
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/Java/csci3366sample/hello/Hello4.java">Hello4.java</a>,
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/Java/csci3366sample/hello/Hello4.java">Hello5.java</a>.
+	</li></ul>
+
+</li><li> Simple example of synchronization among threads:
+	<ul>
+	<li> Without synchronization:
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/Java/csci3366sample/synch/HelloSynch1.java">HelloSynch1.java</a>.
+	</li><li> With incorrect synchronization:
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/Java/csci3366sample/synch/HelloSynch2.java">HelloSynch2.java</a>.
+	</li><li> With correct synchronization, two ways:
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/Java/csci3366sample/synch/HelloSynch3.java">HelloSynch3.java</a>,
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/Java/csci3366sample/synch/HelloSynch4.java">HelloSynch4.java</a>.
+	</li></ul>
+
+</li><li> Programs to compute pi by numerical integration:
+	<ul>
+	<li> Sequential version:
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/Java/csci3366sample/numint/NumIntSeq.java">NumIntSeq.java</a>.
+	</li><li> Parallel version using explicit threads:
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/Java/csci3366sample/numint/NumIntPar1.java">NumIntPar1.java</a>.
+	</li><li> Parallel version using <tt>java.util.concurrent</tt>:
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/Java/csci3366sample/numint/NumIntPar2.java">NumIntPar2.java</a>.
+	</li></ul>
+
+</li><li> "Bounded buffer" class and test program, showing use of
+	wait/notify synchronization and interrupts:
+	<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/Java/csci3366sample/bbuf/BoundedBuffer.java">BoundedBuffer.java</a>,
+	<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/Java/csci3366sample/bbuf/TestBoundedBuffer.java">TestBoundedBuffer.java</a>.
+
+</li></ul>
+
+</li><li> Programs to test/time mergesort:
+	<ul>
+	<li> Sequential version:
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/Java/csci3366sample/mergesort/MergeSortSeq.java">MergeSortSeq.java</a>.
+	</li><li> Parallel version: 
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/Java/csci3366sample/mergesort/MergeSortPar.java">MergeSortPar.java</a>.
+	</li></ul>
+
+</li><li> Generic master/worker programs:
+	<ul>
+	<li> Supporting code:
+    <a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/Java/csci3366sample/masterworker/FakeTasks.java">
+        FakeTasks.java</a>.
+	</li><li> Sequential version:
+    <a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/Java/csci3366sample/masterworker/seq/MasterWorkerSeq.java">
+        seq/MasterWorkerSeq.java</a>.
+	</li><li> Multi-threaded versions:
+		<ul>
+		<li> <a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/Java/csci3366sample/masterworker/threads/MasterWorkerParStatic.java">
+			threads/MasterWorkerParStatic.java</a>.
+		</li><li> <a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/Java/csci3366sample/masterworker/threads/MasterWorkerParDynamic.java">
+			threads/MasterWorkerParDynamic.java</a>.
+		</li></ul>
+	</li><li> Client-server versions using sockets:
+		<ul>
+		<li> Supporting code:
+			<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/Java/csci3366sample/masterworker/sockets/Master.java">
+			sockets/Master.java</a>.
+		</li><li> Worker:
+			<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/Java/csci3366sample/masterworker/sockets/Worker.java">
+			sockets/Worker.java</a>.
+		</li><li> Master using "parallel" approach 
+			(it knows how many workers):
+			<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/Java/csci3366sample/masterworker/sockets/Master1.java">
+			sockets/Master1.java</a>.
+		</li><li> Master using "distributed" approach (it continues
+			to accept workers until all tasks are done):
+			<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/Java/csci3366sample/masterworker/sockets/Master2.java">
+			sockets/Master2.java</a>
+		</li></ul>
+        To execute:  Compile everything, and then run either
+        sockets/Master1 or sockets/Master2 as the master, 
+		plus one or more workers.
+		The <tt>start-workers</tt> script below may be useful.
+	</li><li> Client-server version using RMI:
+		<ul>
+		<li> Supporting code:
+			<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/Java/csci3366sample/masterworker/rmi/MasterInterface.java">
+			rmi/MasterWorkerRMIMasterInterface.java</a>,
+			<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/Java/csci3366sample/masterworker/rmi/WorkerInterface.java">
+			rmi/MasterWorkerRMIWorkerInterface.java</a>.
+		</li><li> Master:
+			<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/Java/csci3366sample/masterworker/rmi/Master.java">
+			rmi/Master.java</a>.
+		</li><li> Worker:
+			<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/Java/csci3366sample/masterworker/rmi/Worker.java">
+			rmi/Worker.java</a>.
+		</li></ul>
+		To execute:  Compile everything, start an instance of
+		the registry with the command "rmiregistry" (in the 
+		directory containing the <tt>.class</tt> files), and
+		then run one master and one or more workers.
+		The <tt>start-workers</tt> script below may be useful.
+
+	</li><li> Script <a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/Java/start-workers">start-workers</a>
+	to start "worker" processes on selected machines.
+	(Somewhat preliminary version.)
+	To use, copy into a directory in your search path
+	(current directory will probably work) and make executable
+	with <tt>chmod u+x start-workers</tt>.
+	Executing with no arguments gives a usage message.
+
+	</li></ul>
+
+
+
+<h2> OpenCL </h2>
+
+<ul>
+<li> My notes <a href="http://www.cs.trinity.edu/%7Ebmassing/Misc/opencl-howto/">
+	Using OpenCL on the Linux Lab Machines</a>.
+
+</li><li> Sample makefile <a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/OpenCL/Makefile">Makefile</a>
+	for compiling C and C++ programs.
+	(See the <a href="#makefilenote">Note About
+	Makefiles</a> below.)
+
+</li><li> Utility functions for use with examples:
+	<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/Sequential-C/timer.h">timer.h</a>,
+	<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/Sequential-C/filesize.h">filesize.h</a>.
+	<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/Sequential-C/cmdline.h">cmdline.h</a>.
+	<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/OpenCL/utility.h">utility.h</a>.
+
+</li><li> First program (to show information about available devices):
+	<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/OpenCL/semi-hello.c">semi-hello.c</a>.
+
+</li><li> Simple example (vector addition):
+	<ul> 
+	<li> Version shown in class:
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/OpenCL/vector-add.c">vector-add.c</a>.
+	</li><li> Version using <tt>utility.h</tt> functions:
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/OpenCL/vector-add-v2.c">vector-add-v2.c</a>.
+	</li><li> Version using events, as an example of their use:
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/OpenCL/vector-add-v3.c">vector-add-v3.c</a>.
+	</li></ul>
+
+</li><li> Example of totally contrived non-trivial computation:
+	<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/OpenCL/vector-compute.c">
+	vector-compute.c</a>,
+	<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/OpenCL/vector-compute-aux.h">
+	vector-compute-aux.h</a>.
+
+</li><li> Programs to compute pi by numerical integration:
+	<ul>
+	<li> Sequential version (simple version):
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/OpenCL/num-int-seq-float1.c">
+		num-int-seq-float1.c</a>.
+	</li><li> Sequential version (homebrew "improved" version):
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/OpenCL/num-int-seq-float2.c">
+		num-int-seq-float2.c</a>.
+	</li><li> Sequential version (improved version using Kahan algorithm):
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/OpenCL/num-int-seq-float3.c">
+		num-int-seq-float3.c</a>.
+	</li><li> Parallel version using OpenCL kernel on GPU:
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/OpenCL/num-int-par.c">
+		num-int-par.c</a>.
+	</li><li> Parallel version using OpenCL kernel, with command-line
+		arguments that allow varying some parameters:
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/OpenCL/num-int-par-with-args.c">
+		num-int-par-with-args.c</a>.
+	</li></ul>
+
+</li><li> Programs for heat diffusion example:
+	<ul>
+	<li> Sequential version (using floats rather than doubles):
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/OpenCL/heat-eqn-seq-float.c">
+			heat-eqn-seq-float.c</a>.
+	</li><li> Parallel version: 
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/OpenCL/heat-eqn-par.c">
+			heat-eqn-par.c</a>.
+	</li><li> Parallel version copying to local memory:
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/OpenCL/heat-eqn-par-localmem.c">
+			heat-eqn-par-localmem.c</a>.
+	</li><li> Revised versions that combine loops where feasible:
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/OpenCL/heat-eqn-seq-float-v2.c">
+			heat-eqn-seq-float-v2.c</a>,
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/OpenCL/heat-eqn-par-v2.c">
+			heat-eqn-par-v2.c</a>,
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/OpenCL/heat-eqn-par-localmem-v2.c">
+			heat-eqn-par-localmem-v2.c</a>.
+	</li><li> Additional code for above programs (you will need these
+		to compile):
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/OpenCL/heat-eqn-functions.h">
+			heat-eqn-functions.h</a>,
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/OpenCL/heat-eqn-seq-functions.h">
+			heat-eqn-seq-functions.h</a>,
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/OpenCL/heat-eqn-par-functions.h">
+			heat-eqn-par-functions.h</a>.
+	</li></ul>
+
+</li></ul>
+
+<h2> POSIX Threads </h2>
+
+<ul>
+<li> Sample makefile <a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/P-Threads/Makefile">Makefile</a>
+	for compiling C and C++ programs.
+	(See the <a href="#makefilenote">Note About
+	Makefiles</a> below.)
+
+</li><li> Utility functions for use with examples:
+	<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/Sequential-C/timer.h">timer.h</a>,
+	<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/Sequential-C/cmdline.h">cmdline.h</a>.
+
+</li><li> "Hello, world" program: 
+    <a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/P-Threads/hello.c">hello.c</a>,
+
+</li><li> Simple example of synchronization among threads:
+	<ul>
+	<li> Without synchronization:
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/P-Threads/synch-1.c">synch-1.c</a>.
+	</li><li> Using lock for synchronization:
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/P-Threads/synch-2.c">synch-2.c</a>.
+	</li></ul>
+
+</li><li> Programs to compute pi by numerical integration:
+	<ul>
+	<li> Sequential version:
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/Sequential-C/num-int-seq.c">num-int-seq.c</a>.
+	</li><li> Parallel version (using lots of global variables):
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/P-Threads/num-int-par1.c">num-int-par1.c</a>.
+	</li><li> Parallel version (not using global variables):
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/P-Threads/num-int-par2.c">num-int-par2.c</a>.
+	</li></ul>
+
+</li></ul>
+
+<h2> C++11 Threads </h2>
+
+<ul>
+<li> Sample makefile <a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/C++Threads/Makefile">Makefile</a>
+	for compiling C++ programs.
+	(See the <a href="#makefilenote">Note About
+	Makefiles</a> below.)
+    Notice that you will need to use the more-recent of the two 
+    versions of <tt>gcc</tt> available.
+    See my notes 
+    <a href="http://www.cs.trinity.edu/%7Ebmassing/Misc/gcc-howto/"> GNU compilers on the CS lab machines</a>
+    for more about that.
+
+</li><li> Utility functions for use with examples:
+	<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/Sequential-C/timer.h">timer.h</a>,
+	<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/Sequential-C/cmdline.h">cmdline.h</a>.
+
+</li><li> "Hello, world" program: 
+    <a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/C++Threads/hello.cpp">hello.cpp</a>,
+
+</li><li> Simple example of synchronization among threads:
+	<ul>
+	<li> Without synchronization:
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/C++Threads/synch-1.cpp">synch-1.cpp</a>.
+	</li><li> Using mutex lock for synchronization:
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/C++Threads/synch-2.cpp">synch-2.cpp</a>.
+	</li></ul>
+
+</li><li> Programs to compute pi by numerical integration:
+	<ul>
+	<li> Sequential version:
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/C++Threads/num-int-seq.cpp">num-int-seq.cpp</a>.
+	</li><li> Parallel version:
+		<a href="http://www.cs.trinity.edu/%7Ebmassing/Classes/CS3366_2013fall/SamplePrograms/C++Threads/num-int-par.cpp">num-int-par.cpp</a>.
+	</li></ul>
+
+</li></ul>
+
+<h2><a name="makefilenote"> Note About Makefiles </a></h2><a name="makefilenote">
+
+<p>
+To obtain a makefile, use your browser's download function;
+cutting and pasting will likely turn the tabs in the makefile
+into spaces and cause it to not work.
+Put the makefile in the directory in which you want to
+compile.
+All the makefiles linked from this page begin with
+brief documentation on their use (the "usage examples").
+
+
+
+
+
+</p></a></li></body></html>

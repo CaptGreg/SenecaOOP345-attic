@@ -1,0 +1,6 @@
+https://isocpp.org/get-started
+
+Mingw: http://nuwen.net/mingw.html
+
+
+http://herbsutter.com/elements-of-modern-c-style/

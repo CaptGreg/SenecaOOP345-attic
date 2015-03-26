@@ -1,0 +1,112 @@
+Other STL Containers
++++++++++++++++++++++
+Examining Other STL Containers
+
+The STL defines a variety of container types that fall into two basic categories—sequential and associative. With a sequential container, you can retrieve values in sequence, while an associative container lets you retrieve values based on keys. vector is an example of a sequential container.
+
+How might you use these different container types? Consider an online, turned-based strategy game. You could use a sequential container to store a group of players that you want to cycle through in, well, sequence. On the other hand, you could use an associative container to retrieve player information in a random-access fashion by looking up a unique identifier, such as a player’s IP address.
+
+Finally, the STL defines container adaptors that adapt one of the sequence containers. Container adaptors represent standard computer science data structures. Although they are not official containers, they look and feel just like them. Table 4.1 lists the container types offered by the STL.
+Table 4.1: STL Containers
+
+Container      Type          Description
+deque          Sequential    Double-ended queue
+list           Sequential    Linear list
+map            Associative   Collection of key/value pairs in which each key is associated with exactly one value
+multimap       Associative   Collection of key/value pairs in which each key may be associated with more than one value
+multiset       Associative   Collection in which each element is not necessarily unique
+priority_queue Adaptor       Priority queue
+queue          Adaptor       Queue
+set            Associative   Collection in which each element is unique
+stack          Adaptor       Stack
+vector         Sequential    Dynamic array
+
+Summary
++++++++
+
+In this chapter, you learned the following concepts:
+
+    The Standard Template Library (STL) is a powerful collection of programming code that provides containers, algorithms, and iterators.
+
+    Containers are objects that let you store and access collections of values of the same type.
+
+    Algorithms defined in the STL can be used with its containers and provide common functions for working with groups of objects.
+
+    Iterators are objects that identify elements in containers and can be manipulated to move among elements.
+
+    Iterators are the key to using containers to their fullest. Many of the container member functions require iterators, and the STL algorithms require them too.
+
+    To get the value referenced by an iterator, you must dereference the iterator using the dereference operator (*).
+
+    A vector is one kind of sequential container provided by the STL. It acts like a dynamic array.
+
+    It’s very efficient to iterate through a vector. It’s also very efficient to insert or remove an element from the end of a vector.
+
+    It can be inefficient to insert or delete elements from the middle of a vector, especially if the vector is large.
+
+    Pseudocode, which falls somewhere between English and a programming language, is used to plan programs.
+
+    Stepwise refinement is a process used to rewrite pseudocode to make it ready for implementation.
+
+Questions and Answers
++++++++++++++++++++++
+
+Q: Why is the STL important?
+
+A: Because it saves game programmers time and effort. The STL provides commonly used container types and algorithms.
+
+Q: Is the STL fast?
+
+A: Definitely. The STL has been honed by hundreds of programmers to eke out as much performance as possible on each supported platform.
+
+Q: When should I use a vector instead of an array?
+
+A: Almost always. Vectors are efficient and flexible. They do require a little more memory than arrays, but this tradeoff is almost always worth the benefits.
+
+Q: Is a vector as fast as an array?
+
+A: Accessing a vector element can be just as fast as accessing an array element. Also, iterating though a vector can be just as fast as iterating through an array.
+
+Q: If I can use the subscripting operator with vectors, why would I ever need iterators?
+
+A: There are several reasons. First, many of the vector member functions require iterators. (insert() and erase() are two examples.) Second, STL algorithms require iterators. And third, you can’t use the subscripting operator with most of the STL containers, so you’re going to have to learn to use iterators sooner or later.
+
+Q: Which is the best way to access elements of a vector—through iterators or through the subscripting operator?
+
+A: It depends. If you need random-element access, then the subscripting operator is a natural fit. If you need to use STL algorithms, then you must use iterators.
+
+Q: What about iterating through the elements of a vector? Should I use the subscripting operator or an iterator?
+
+A: You can use either method. However, an advantage of using an iterator is that it gives you the flexibility to substitute a different STL container in place of a vector (such as a list) without much code changing.
+
+Q: Why does the STL define more than one sequential container type?
+
+A: Different sequential container types have different performance properties. They’re like tools in a toolbox; each tool is best suited for a different job.
+
+Q: What are container adaptors?
+
+A: Container adaptors are based on one of the STL sequence containers; they represent standard computer data structures. Although they are not official containers, they look and feel just like them.
+
+Q: What’s a stack?
+
+A: A data structure in which elements are removed in the reverse order from how they were added. This means that the last element added is the first one removed. This is just like a real-life stack, from which you remove the last item you placed on the top of the stack.
+
+Q: What’s a queue?
+
+A: A data structure in which elements are removed in the same order they were added. This is just like a real-life queue, such as a line of people in which the first person in line gets served first.
+
+Q: What’s a double-ended queue?
+
+A: A queue in which elements can be added or removed from either end.
+
+Q: What’s a priority queue?
+
+A: A data structure that supports finding and removing the element with the highest priority.
+
+Q: When would I use pseudocode?
+
+A: Any time you want to plan a program or section of code.
+
+Q: When would I use stepwise refinement?
+
+A: When you want to get even more detailed with your pseudocode.

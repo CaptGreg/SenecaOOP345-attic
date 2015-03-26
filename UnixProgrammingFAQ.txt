@@ -1,0 +1,3807 @@
+faqs.org <http://www.faqs.org/>
+
+
+  Unix Programming FAQ (v1.37)
+
+	
+
+Font:
+
+
+        Search the FAQ Archives
+
+  *
+
+3 <http://www.faqs.org/faqs/by-archive-name.html#3> - A
+<http://www.faqs.org/faqs/by-archive-name.html#A> - B
+<http://www.faqs.org/faqs/by-archive-name.html#B> - C
+<http://www.faqs.org/faqs/by-archive-name.html#C> - D
+<http://www.faqs.org/faqs/by-archive-name.html#D> - E
+<http://www.faqs.org/faqs/by-archive-name.html#E> - F
+<http://www.faqs.org/faqs/by-archive-name.html#F> - G
+<http://www.faqs.org/faqs/by-archive-name.html#G> - H
+<http://www.faqs.org/faqs/by-archive-name.html#H> - I
+<http://www.faqs.org/faqs/by-archive-name.html#I> - J
+<http://www.faqs.org/faqs/by-archive-name.html#J> - K
+<http://www.faqs.org/faqs/by-archive-name.html#K> - L
+<http://www.faqs.org/faqs/by-archive-name.html#L> - M
+<http://www.faqs.org/faqs/by-archive-name.html#M>
+N <http://www.faqs.org/faqs/by-archive-name.html#N> - O
+<http://www.faqs.org/faqs/by-archive-name.html#O> - P
+<http://www.faqs.org/faqs/by-archive-name.html#P> - Q
+<http://www.faqs.org/faqs/by-archive-name.html#Q> - R
+<http://www.faqs.org/faqs/by-archive-name.html#R> - S
+<http://www.faqs.org/faqs/by-archive-name.html#S> - T
+<http://www.faqs.org/faqs/by-archive-name.html#T> - U
+<http://www.faqs.org/faqs/by-archive-name.html#U> - V
+<http://www.faqs.org/faqs/by-archive-name.html#V> - W
+<http://www.faqs.org/faqs/by-archive-name.html#W> - X
+<http://www.faqs.org/faqs/by-archive-name.html#X> - Y
+<http://www.faqs.org/faqs/by-archive-name.html#Y> - Z
+<http://www.faqs.org/faqs/by-archive-name.html#Z>
+faqs.org - Internet FAQ Archives	
+
+
+  Unix Programming FAQ (v1.37)
+
+//
+*[ Usenet FAQs </faqs/> | Web FAQs </contrib/> | Documents </docs/> |
+RFC Index </rfcs/> | Counties <http://www.city-data.com/countyDir.html> ] *
+faqs.org
+*Archive-Name:* unix-faq/programmer/faq
+*Comp-unix-programmer-Archive-Name:* faq
+*URL:* http://www.erlenstar.demon.co.uk/unix/faq_toc.html
+*URL:* http://www.whitefang.com/unix/faq_toc.html
+*Posting-Frequency:* every 2 weeks
+*Copyright:* Collection Copyright (C) 1997-2000 Andrew Gierth.
+*Last-Modified:* 2000/09/01 06:34:57
+*Version:* 1.37
+
+View all headers <javascript:hAll();>
+
+Path: senator-bedfellow.mit.edu!bloom-beacon.mit.edu!newsfeed.stanford.edu!headwall.stanford.edu!newshub.sdsu.edu!elnk-nf2-pas!elnk-pas-nf1!newsfeed.earthlink.net!sn-xit-02!sn-xit-06!sn-xit-08!supernews.com!news-spur.riddles.org.uk!newsmonster
+From: Andrew Gierth <andrew@erlenstar.demon.co.uk <mailto:andrew@erlenstar.demon.co.uk>>
+Newsgroups: comp.unix.programmer <http://groups.google.com/group/comp.unix.programmer>,comp.answers <http://groups.google.com/group/comp.answers>,news.answers <http://groups.google.com/group/news.answers>
+Subject: Unix Programming FAQ (v1.37)
+Supersedes: <auto-cup-faq-000135-20031009194001@erlenstar.demon.co.uk <http://groups.google.com/groups?selm=auto-cup-faq-000135-20031009194001@erlenstar.demon.co.uk>>
+Followup-To: poster
+Date: 23 Oct 2003 19:40:02 +0100
+Organization: none at all
+Lines: 3697
+Approved: news-answers-request@MIT.EDU
+Expires: 11 Nov 2003 18:40:01 -0000
+Message-ID: <auto-cup-faq-000136-20031023194001@erlenstar.demon.co.uk <http://groups.google.com/groups?selm=auto-cup-faq-000136-20031023194001@erlenstar.demon.co.uk>>
+Summary: This posting contains answers to frequently-asked questions regarding
+	 programming in the Unix environment.
+Keywords: unix faq
+X-Complaints-To: abuse@news-spur.riddles.org.uk
+X-Post-Filter: postfilter v0.6 alpha
+Xref: senator-bedfellow.mit.edu comp.unix.programmer:162040 comp.answers:55215 news.answers:260145
+
+View main headers <javascript:hMain();>
+
+See reader questions & answers on this topic! - Help others by sharing
+your knowledge <#qaComments>
+
+==============================================================================
+
+About this FAQ
+**************
+
+$Id: rawfaq.texi,v 1.37 2000/09/01 06:34:57 andrew Exp $
+
+This FAQ was originally begun by Patrick Horgan in May 1996; I took it over
+after it had been lying idle for several months.  I've reorganised it a bit
+and added some stuff; I still regard it as `under development'.
+
+Comments, suggestions, additions, corrections etc. should be sent to the
+maintainer at: <andrew@erlenstar.demon.co.uk>.
+
+A hypertext version of this document is available on the WWW. The home site
+is located at `http://www.erlenstar.demon.co.uk/unix/faq_toc.html'. A US
+mirror site is available at `http://www.whitefang.com/unix/faq_toc.html'.
+
+This document is available by FTP from the news.answers <http://groups.google.com/group/news.answers> archives at
+rtfm.mit.edu and its many mirror sites worldwide. The official archive name
+is `unix-faq/programmer/faq'. Sites which also archive *.answers posts by
+group should also carry the file under the `comp.unix.programmer <http://groups.google.com/group/comp.unix.programmer>' directory.
+
+Other sources of information are not listed here. You can find pointers to
+other FAQs, books, source code etc. in the regular [READ ME FIRST] posting
+that should appear weekly in comp.unix.programmer <http://groups.google.com/group/comp.unix.programmer>. Administrivia regarding
+newsgroup conduct, etc., are also found there; I want to reserve this
+document specifically for technical Q's and A's.
+
+All contributions have been edited by the maintainer, therefore any errors
+or omissions are my responsibility rather than that of the contributor.
+
+This FAQ is now maintained as Texinfo source; I'm generating a raw text
+version for Usenet using the `makeinfo' program, and an HTML version using
+`texi2html'.
+
+Copyright (C) 1997, 1998, 1999, 2000 Andrew Gierth. This document may be
+distributed freely on Usenet or by email; it may be archived on FTP or WWW
+sites that mirror the news.answers <http://groups.google.com/group/news.answers> archives, provided that all reasonable
+efforts are made to ensure that the archive is kept up-to-date.  (This
+permission may be withdrawn on an individual basis.)  It may not be
+published in any other form, whether in print, on the WWW, on CD-ROM, or in
+any other medium, without the express permission of the maintainer.
+
+List of contributors in no particular order:
+
+Andrew Gierth       <andrew@erlenstar.demon.co.uk>                            
+Patrick J. Horgan   withheld                                                  
+Stephen Baynes      <stephen.baynes@soton.sc.philips.com <mailto:stephen.baynes@soton.sc.philips.com>>                     
+James Raynard       withheld                                                  
+Michael F. Quigley  withheld                                                  
+Ken Pizzini         withheld                                                  
+Thamer Al-Herbish   withheld                                                  
+Nick Kew            <nick.kew@pobox.com <mailto:nick.kew@pobox.com>>                                      
+Dan Abarbanel       withheld                                                  
+Billy Chambless     <billy@cast.msstate.edu <mailto:billy@cast.msstate.edu>>                                  
+Walter Briscoe      <walter@wbriscoe.demon.co.uk <mailto:walter@wbriscoe.demon.co.uk>>                             
+Jim Buchanan        <jbuchana@buchanan1.net <mailto:jbuchana@buchanan1.net>>                                  
+Dave Plonka         <plonka@doit.wisc.edu <mailto:plonka@doit.wisc.edu>>                                    
+Daniel Stenberg     withheld                                                  
+Ralph Corderoy      <ralph@inputplus.demon.co.uk <mailto:ralph@inputplus.demon.co.uk>>                             
+Stuart Kemp         withheld                                                  
+Sergei Chernev      <ser@nsu.ru <mailto:ser@nsu.ru>>                                              
+Bjorn Reese         withheld                                                  
+Joe Halpin          <jhalpin@nortel.ca <mailto:jhalpin@nortel.ca>>                                       
+Aaron Crane         <aaronc@pobox.com <mailto:aaronc@pobox.com>>                                        
+Geoff Clare         <gwc@root.co.uk <mailto:gwc@root.co.uk>>                                          
+
+List of Questions
+*****************
+
+1. Process Control
+  1.1 Creating new processes: fork()
+    1.1.1 What does fork() do?
+    1.1.2 What's the difference between fork() and vfork()?
+    1.1.3 Why use _exit rather than exit in the child branch of a fork?
+  1.2 Environment variables
+    1.2.1 How can I get/set an environment variable from a program?
+    1.2.2 How can I read the whole environment?
+  1.3 How can I sleep for less than a second?
+  1.4 How can I get a finer-grained version of alarm()?
+  1.5 How can a parent and child process communicate?
+  1.6 How do I get rid of zombie processes?
+    1.6.1 What is a zombie?
+    1.6.2 How do I prevent them from occuring?
+  1.7 How do I get my program to act like a daemon?
+  1.8 How can I look at process in the system like ps does?
+  1.9 Given a pid, how can I tell if it's a running program?
+  1.10 What's the return value of system/pclose/waitpid?
+  1.11 How do I find out about a process' memory usage?
+  1.12 Why do processes never decrease in size?
+  1.13 How do I change the name of my program (as seen by `ps')?
+  1.14 How can I find a process' executable file?
+    1.14.1 So where do I put my configuration files then?
+  1.15 Why doesn't my process get SIGHUP when its parent dies?
+  1.16 How can I kill all descendents of a process?
+
+2. General File handling (including pipes and sockets)
+  2.1 How to manage multiple connections?
+    2.1.1 How do I use select()?
+    2.1.2 How do I use poll()?
+    2.1.3 Can I use SysV IPC at the same time as select or poll?
+  2.2 How can I tell when the other end of a connection shuts down?
+  2.3 Best way to read directories?
+  2.4 How can I find out if someone else has a file open?
+  2.5 How do I `lock' a file?
+  2.6 How do I find out if a file has been updated by another process?
+  2.7 How does the `du' utility work?
+  2.8 How do I find the size of a file?
+  2.9 How do I expand `~' in a filename like the shell does?
+  2.10 What can I do with named pipes (FIFOs)?
+    2.10.1 What is a named pipe?
+    2.10.2 How do I create a named pipe?
+    2.10.3 How do I use a named pipe?
+    2.10.4 Can I use a named pipe across NFS?
+    2.10.5 Can multiple processes write to the pipe simultaneously?
+    2.10.6 Using named pipes in applications
+
+3. Terminal I/O
+  3.1 How can I make my program not echo input?
+  3.2 How can I read single characters from the terminal?
+  3.3 How can I check and see if a key was pressed?
+  3.4 How can I move the cursor around the screen?
+  3.5 What are pttys?
+  3.6 How to handle a serial port or modem?
+    3.6.1 Serial device names and types
+    3.6.2 Setting up termios flags
+      3.6.2.1 c_iflag
+      3.6.2.2 c_oflag
+      3.6.2.3 c_cflag
+      3.6.2.4 c_lflag
+      3.6.2.5 c_cc
+
+4. System Information
+  4.1 How can I tell how much memory my system has?
+  4.2 How do I check a user's password?
+    4.2.1 How do I get a user's password?
+    4.2.2 How do I get shadow passwords by uid?
+    4.2.3 How do I verify a user's password?
+
+5. Miscellaneous programming
+  5.1 How do I compare strings using wildcards?
+    5.1.1 How do I compare strings using filename patterns?
+    5.1.2 How do I compare strings using regular expressions?
+  5.2 What's the best way to send mail from a program?
+    5.2.1 The simple method: /bin/mail
+    5.2.2 Invoking the MTA directly: /usr/lib/sendmail
+      5.2.2.1 Supplying the envelope explicitly
+      5.2.2.2 Allowing sendmail to deduce the recipients
+
+6. Use of tools
+  6.1 How can I debug the children after a fork?
+  6.2 How to build library from other libraries?
+  6.3 How to create shared libraries / dlls?
+  6.4 Can I replace objects in a shared library?
+  6.5 How can I generate a stack dump from within a running program?
+
+1. Process Control
+******************
+
+1.1 Creating new processes: fork()
+==================================
+
+1.1.1 What does fork() do?
+--------------------------
+
+     #include <sys/types.h>
+     #include <unistd.h>
+     
+     pid_t fork(void);
+
+The `fork()' function is used to create a new process from an existing
+process.  The new process is called the child process, and the existing
+process is called the parent.  You can tell which is which by checking the
+return value from `fork()'.  The parent gets the child's pid returned to
+him, but the child gets 0 returned to him.  Thus this simple code
+illustrate's the basics of it.
+
+     pid_t pid;
+     
+     switch (pid = fork())
+     {
+     case -1:
+         /* Here pid is -1, the fork failed */
+         /* Some possible reasons are that you're */
+         /* out of process slots or virtual memory */
+         perror("The fork failed!");
+         break;
+     
+     case 0:
+         /* pid of zero is the child */
+         /* Here we're the child...what should we do? */
+         /* ... */
+         /* but after doing it, we should do something like: */
+         _exit(0);
+     
+     default:
+         /* pid greater than zero is parent getting the child's pid */
+         printf("Child's pid is %d\n",pid);
+     }
+
+Of course, one can use `if()... else...' instead of `switch()', but the
+above form is a useful idiom.
+
+Of help when doing this is knowing just what is and is not inherited by the
+child.  This list can vary depending on Unix implementation, so take it
+with a grain of salt.  Note that the child gets *copies* of these things,
+not the real thing.
+
+Inherited by the child from the parent:
+
+   * process credentials (real/effective/saved UIDs and GIDs)
+
+   * environment
+
+   * stack
+
+   * memory
+
+   * open file descriptors (note that the underlying file positions are
+     shared between the parent and child, which can be confusing)
+
+   * close-on-exec flags
+
+   * signal handling settings
+
+   * nice value
+
+   * scheduler class
+
+   * process group ID
+
+   * session ID
+
+   * current working directory
+
+   * root directory
+
+   * file mode creation mask (umask)
+
+   * resource limits
+
+   * controlling terminal
+
+Unique to the child:
+
+   * process ID
+
+   * different parent process ID
+
+   * Own copy of file descriptors and directory streams.
+
+   * process, text, data and other memory locks are NOT inherited.
+
+   * process times, in the tms struct
+
+   * resource utilizations are set to 0
+
+   * pending signals initialized to the empty set
+
+   * timers created by timer_create not inherited
+
+   * asynchronous input or output operations not inherited
+
+1.1.2 What's the difference between fork() and vfork()?
+-------------------------------------------------------
+
+Some systems have a system call `vfork()', which was originally designed as
+a lower-overhead version of `fork()'. Since `fork()' involved copying the
+entire address space of the process, and was therefore quite expensive, the
+`vfork()' function was introduced (in 3.0BSD).
+
+*However*, since `vfork()' was introduced, the implementation of `fork()'
+has improved drastically, most notably with the introduction of
+`copy-on-write', where the copying of the process address space is
+transparently faked by allowing both processes to refer to the same
+physical memory until either of them modify it. This largely removes the
+justification for `vfork()'; indeed, a large proportion of systems now lack
+the original functionality of `vfork()' completely. For compatibility,
+though, there may still be a `vfork()' call present, that simply calls
+`fork()' without attempting to emulate all of the `vfork()' semantics.
+
+As a result, it is *very* unwise to actually make use of any of the
+differences between `fork()' and `vfork()'. Indeed, it is probably unwise
+to use `vfork()' at all, unless you know exactly *why* you want to.
+
+The basic difference between the two is that when a new process is created
+with `vfork()', the parent process is temporarily suspended, and the child
+process might borrow the parent's address space. This strange state of
+affairs continues until the child process either exits, or calls
+`execve()', at which point the parent process continues.
+
+This means that the child process of a `vfork()' must be careful to avoid
+unexpectedly modifying variables of the parent process. In particular, the
+child process must *not* return from the function containing the `vfork()'
+call, and it must *not* call `exit()' (if it needs to exit, it should use
+`_exit()'; actually, this is also true for the child of a normal `fork()').
+
+1.1.3 Why use _exit rather than exit in the child branch of a fork?
+-------------------------------------------------------------------
+
+There are a few differences between `exit()' and `_exit()' that become
+significant when `fork()', and especially `vfork()', is used.
+
+The basic difference between `exit()' and `_exit()' is that the former
+performs clean-up related to user-mode constructs in the library, and calls
+user-supplied cleanup functions, whereas the latter performs only the
+kernel cleanup for the process.
+
+In the child branch of a `fork()', it is normally incorrect to use
+`exit()', because that can lead to stdio buffers being flushed twice, and
+temporary files being unexpectedly removed. In C++ code the situation is
+worse, because destructors for static objects may be run incorrectly.
+(There are some unusual cases, like daemons, where the *parent* should call
+`_exit()' rather than the child; the basic rule, applicable in the
+overwhelming majority of cases, is that `exit()' should be called only once
+for each entry into `main'.)
+
+In the child branch of a `vfork()', the use of `exit()' is even more
+dangerous, since it will affect the state of the *parent* process.
+
+1.2 Environment variables
+=========================
+
+1.2.1 How can I get/set an environment variable from a program?
+---------------------------------------------------------------
+
+Getting the value of an environment variable is done by using `getenv()'.
+
+     #include <stdlib.h>
+     
+     char *getenv(const char *name);
+
+Setting the value of an environment variable is done by using `putenv()'.
+
+     #include <stdlib.h>
+     
+     int putenv(char *string);
+
+The string passed to putenv must *not* be freed or made invalid, since a
+pointer to it is kept by `putenv()'.  This means that it must either be a
+static buffer or allocated off the heap.  The string can be freed if the
+environment variable is redefined or deleted via another call to `putenv()'.
+
+Remember that environment variables are inherited; each process has a
+separate copy of the environment. As a result, you can't change the value
+of an environment variable in another process, such as the shell.
+
+Suppose you wanted to get the value for the `TERM' environment variable.
+You would use this code:
+
+     char *envvar;
+     
+     envvar=getenv("TERM");
+     
+     printf("The value for the environment variable TERM is ");
+     if(envvar)
+     {
+         printf("%s\n",envvar);
+     }
+     else
+     {
+         printf("not set.\n");
+     }
+
+Now suppose you wanted to create a new environment variable called `MYVAR',
+with a value of `MYVAL'.  This is how you'd do it.
+
+     static char envbuf[256];
+     
+     sprintf(envbuf,"MYVAR=%s","MYVAL");
+     
+     if(putenv(envbuf))
+     {
+         printf("Sorry, putenv() couldn't find the memory for %s\n",envbuf);
+         /* Might exit() or something here if you can't live without it */
+     }
+
+1.2.2 How can I read the whole environment?
+-------------------------------------------
+
+If you don't know the names of the environment variables, then the
+`getenv()' function isn't much use. In this case, you have to dig deeper
+into how the environment is stored.
+
+A global variable, `environ', holds a pointer to an array of pointers to
+environment strings, each string in the form `"NAME=value"'. A `NULL'
+pointer is used to mark the end of the array. Here's a trivial program to
+print the current environment (like `printenv'):
+
+     #include <stdio.h>
+     
+     extern char **environ;
+     
+     int main()
+     {
+         char **ep = environ;
+         char *p;
+         while ((p = *ep++))
+             printf("%s\n", p);
+         return 0;
+     }
+
+In general, the `environ' variable is also passed as the third, optional,
+parameter to `main()'; that is, the above could have been written:
+
+     #include <stdio.h>
+     
+     int main(int argc, char **argv, char **envp)
+     {
+         char *p;
+         while ((p = *envp++))
+             printf("%s\n", p);
+         return 0;
+     }
+
+However, while pretty universally supported, this method isn't actually
+defined by the POSIX standards. (It's also less useful, in general.)
+
+1.3 How can I sleep for less than a second?
+===========================================
+
+The `sleep()' function, which is available on all Unixes, only allows for a
+duration specified in seconds. If you want finer granularity, then you need
+to look for alternatives:
+
+   * Many systems have a function `usleep()'
+
+   * You can use `select()' or `poll()', specifying no file descriptors to
+     test; a common technique is to write a `usleep()' function based on
+     either of these (see the comp.unix.questions <http://groups.google.com/group/comp.unix.questions> FAQ for some examples)
+
+   * If your system has itimers (most do), you can roll your own `usleep()'
+     using them (see the BSD sources for `usleep()' for how to do this)
+
+   * If you have POSIX realtime, there is a `nanosleep()' function
+
+Of the above, `select()' is probably the most portable (and strangely, it
+is often much more efficient than `usleep()' or an itimer-based method).
+However, the behaviour may be different if signals are caught while asleep;
+this may or may not be an issue depending on the application.
+
+Whichever route you choose, it is important to realise that you may be
+constrained by the timer resolution of the system (some systems allow very
+short time intervals to be specified, others have a resolution of, say,
+10ms and will round all timings to that). Also, as for `sleep()', the delay
+you specify is only a *minimum* value; after the specified period elapses,
+there will be an indeterminate delay before your process next gets
+scheduled.
+
+1.4 How can I get a finer-grained version of alarm()?
+=====================================================
+
+Modern Unixes tend to implement alarms using the `setitimer()' function,
+which has a higher resolution and more options than the simple `alarm()'
+function. One should generally assume that `alarm()' and
+`setitimer(ITIMER_REAL)' may be the same underlying timer, and accessing it
+both ways may cause confusion.
+
+Itimers can be used to implement either one-shot or repeating signals;
+also, there are generally 3 separate timers available:
+
+`ITIMER_REAL'
+     counts real (wall clock) time, and sends the `SIGALRM' signal
+
+`ITIMER_VIRTUAL'
+     counts process virtual (user CPU) time, and sends the `SIGVTALRM'
+     signal
+
+`ITIMER_PROF'
+     counts user and system CPU time, and sends the `SIGPROF' signal; it is
+     intended for interpreters to use for profiling.
+
+Itimers, however, are not part of many of the standards, despite having
+been present since 4.2BSD. The POSIX realtime extensions define some
+similar, but different, functions.
+
+1.5 How can a parent and child process communicate?
+===================================================
+
+A parent and child can communicate through any of the normal inter-process
+communication schemes (pipes, sockets, message queues, shared memory), but
+also have some special ways to communicate that take advantage of their
+relationship as a parent and child.
+
+One of the most obvious is that the parent can get the exit status of the
+child.
+
+Since the child inherits file descriptors from its parent, the parent can
+open both ends of a pipe, fork, then the parent close one end and the child
+close the other end of the pipe.  This is what happens when you call the
+`popen()' routine to run another program from within yours, i.e. you can
+write to the file descriptor returned from `popen()' and the child process
+sees it as its stdin, or you can read from the file descriptor and see what
+the program wrote to its stdout. (The mode parameter to `popen()' defines
+which; if you want to do both, then you can do the plumbing yourself
+without too much difficulty.)
+
+Also, the child process inherits memory segments mmapped anonymously (or by
+mmapping the special file `/dev/zero') by the parent; these shared memory
+segments are not accessible from unrelated processes.
+
+1.6 How do I get rid of zombie processes?
+=========================================
+
+1.6.1 What is a zombie?
+-----------------------
+
+When a program forks and the child finishes before the parent, the kernel
+still keeps some of its information about the child in case the parent
+might need it - for example, the parent may need to check the child's exit
+status.  To be able to get this information, the parent calls `wait()';
+when this happens, the kernel can discard the information.
+
+In the interval between the child terminating and the parent calling
+`wait()', the child is said to be a `zombie'.  (If you do `ps', the child
+will have a `Z' in its status field to indicate this.)  Even though it's
+not running, it's still taking up an entry in the process table.  (It
+consumes no other resources, but some utilities may show bogus figures for
+e.g. CPU usage; this is because some parts of the process table entry have
+been overlaid by accounting info to save space.)
+
+This is not good, as the process table has a fixed number of entries and it
+is possible for the system to run out of them. Even if the system doesn't
+run out, there is a limit on the number of processes each user can run,
+which is usually smaller than the system's limit. This is one of the
+reasons why you should always check if `fork()' failed, by the way!
+
+If the parent terminates without calling wait(), the child is `adopted' by
+`init', which handles the work necessary to cleanup after the child.  (This
+is a special system program with process ID 1 - it's actually the first
+program to run after the system boots up).
+
+1.6.2 How do I prevent them from occuring?
+------------------------------------------
+
+You need to ensure that your parent process calls `wait()' (or `waitpid()',
+`wait3()', etc.) for every child process that terminates; or, on some
+systems, you can instruct the system that you are uninterested in child
+exit states.
+
+Another approach is to `fork()' *twice*, and have the immediate child
+process exit straight away. This causes the grandchild process to be
+orphaned, so the init process is responsible for cleaning it up. For code
+to do this, see the function `fork2()' in the examples section.
+
+To ignore child exit states, you need to do the following (check your
+system's manpages to see if this works):
+
+         struct sigaction sa;
+         sa.sa_handler = SIG_IGN;
+     #ifdef SA_NOCLDWAIT
+         sa.sa_flags = SA_NOCLDWAIT;
+     #else
+         sa.sa_flags = 0;
+     #endif
+         sigemptyset(&sa.sa_mask);
+         sigaction(SIGCHLD, &sa, NULL);
+
+If this is successful, then the `wait()' functions are prevented from
+working; if any of them are called, they will wait until *all* child
+processes have terminated, then return failure with `errno == ECHILD'.
+
+The other technique is to catch the SIGCHLD signal, and have the signal
+handler call `waitpid()' or `wait3()'. See the examples section for a
+complete program.
+
+1.7 How do I get my program to act like a daemon?
+=================================================
+
+A "daemon" process is usually defined as a background process that does not
+belong to a terminal session. Many system services are performed by
+daemons; network services, printing etc.
+
+Simply invoking a program in the background isn't really adequate for these
+long-running programs; that does not correctly detach the process from the
+terminal session that started it. Also, the conventional way of starting
+daemons is simply to issue the command manually or from an rc script; the
+daemon is expected to put *itself* into the background.
+
+Here are the steps to become a daemon:
+
+  1. `fork()' so the parent can exit, this returns control to the command
+     line or shell invoking your program.  This step is required so that
+     the new process is guaranteed not to be a process group leader. The
+     next step, `setsid()', fails if you're a process group leader.
+
+  2. `setsid()' to become a process group and session group leader. Since a
+     controlling terminal is associated with a session, and this new
+     session has not yet acquired a controlling terminal our process now
+     has no controlling terminal, which is a Good Thing for daemons.
+
+  3. `fork()' again so the parent, (the session group leader), can exit.
+     This means that we, as a non-session group leader, can never regain a
+     controlling terminal.
+
+  4. `chdir("/")' to ensure that our process doesn't keep any directory in
+     use. Failure to do this could make it so that an administrator
+     couldn't unmount a filesystem, because it was our current directory.
+
+     [Equivalently, we could change to any directory containing files
+     important to the daemon's operation.]
+
+  5. `umask(0)' so that we have complete control over the permissions of
+     anything we write. We don't know what umask we may have inherited.
+
+     [This step is optional]
+
+  6. `close()' fds 0, 1, and 2. This releases the standard in, out, and
+     error we inherited from our parent process. We have no way of knowing
+     where these fds might have been redirected to. Note that many daemons
+     use `sysconf()' to determine the limit `_SC_OPEN_MAX'.  `_SC_OPEN_MAX'
+     tells you the maximun open files/process. Then in a loop, the daemon
+     can close all possible file descriptors. You have to decide if you
+     need to do this or not.  If you think that there might be
+     file-descriptors open you should close them, since there's a limit on
+     number of concurrent file descriptors.
+
+  7. Establish new open descriptors for stdin, stdout and stderr. Even if
+     you don't plan to use them, it is still a good idea to have them open.
+     The precise handling of these is a matter of taste; if you have a
+     logfile, for example, you might wish to open it as stdout or stderr,
+     and open `/dev/null' as stdin; alternatively, you could open
+     `/dev/console' as stderr and/or stdout, and `/dev/null' as stdin, or
+     any other combination that makes sense for your particular daemon.
+
+Almost none of this is necessary (or advisable) if your daemon is being
+started by `inetd'.  In that case, stdin, stdout and stderr are all set up
+for you to refer to the network connection, and the `fork()'s and session
+manipulation should *not* be done (to avoid confusing `inetd').  Only the
+`chdir()' and `umask()' steps remain as useful.
+
+1.8 How can I look at process in the system like ps does?
+=========================================================
+
+You really *don't* want to do this.
+
+The most portable way, by far, is to do `popen(pscmd, "r")' and parse the
+output. (pscmd should be something like `"ps -ef"' on SysV systems; on BSD
+systems there are many possible display options: choose one.)
+
+In the examples section, there are two complete versions of this; one for
+SunOS 4, which requires root permission to run and uses the `kvm_*'
+routines to read the information from kernel data structures; and another
+for SVR4 systems (including SunOS 5), which uses the `/proc' filesystem.
+
+It's even easier on systems with an SVR4.2-style `/proc'; just read a
+psinfo_t structure from the file `/proc/PID/psinfo' for each PID of
+interest. However, this method, while probably the cleanest, is also
+perhaps the least well-supported. (On FreeBSD's `/proc', you read a
+semi-undocumented printable string from `/proc/PID/status'; Linux has
+something similar.)
+
+1.9 Given a pid, how can I tell if it's a running program?
+==========================================================
+
+Use `kill()' with 0 for the signal number.
+
+There are four possible results from this call:
+
+   * `kill()' returns 0
+
+        - this implies that a process exists with the given PID, and the
+          system would allow you to send signals to it. It is
+          system-dependent whether the process could be a zombie.
+
+   * `kill()' returns -1, `errno == ESRCH'
+
+        - either no process exists with the given PID, or security
+          enhancements are causing the system to deny its existence. (On
+          some systems, the process could be a zombie.)
+
+   * `kill()' returns -1, `errno == EPERM'
+
+        - the system would not allow you to kill the specified process.
+          This means that either the process exists (again, it could be a
+          zombie) or draconian security enhancements are present (e.g. your
+          process is not allowed to send signals to *anybody*).
+
+   * `kill()' returns -1, with some other value of `errno'
+
+        - you are in trouble!
+
+The most-used technique is to assume that success or failure with `EPERM'
+implies that the process exists, and any other error implies that it
+doesn't.
+
+An alternative exists, if you are writing specifically for a system (or all
+those systems) that provide a `/proc' filesystem: checking for the
+existence of `/proc/PID' may work.
+
+1.10 What's the return value of system/pclose/waitpid?
+======================================================
+
+     The return value of `system()', `pclose()', or `waitpid()' doesn't
+     seem to be the exit value of my process...  or the exit value is
+     shifted left 8 bits... what's the deal?
+
+The man page is right, and so are you!  If you read the man page for
+`waitpid()' you'll find that the return code for the process is encoded.
+The value returned by the process is normally in the top 16 bits, and the
+rest is used for other things.  You can't rely on this though, not if you
+want to be portable, so the suggestion is that you use the macros provided.
+These are usually documented under `wait()' or `wstat'.
+
+Macros defined for the purpose (in `<sys/wait.h>') include (stat is the
+value returned by `waitpid()'):
+
+`WIFEXITED(stat)'
+     Non zero if child exited normally.
+
+`WEXITSTATUS(stat)'
+     exit code returned by child
+
+`WIFSIGNALED(stat)'
+     Non-zero if child was terminated by a signal
+
+`WTERMSIG(stat)'
+     signal number that terminated child
+
+`WIFSTOPPED(stat)'
+     non-zero if child is stopped
+
+`WSTOPSIG(stat)'
+     number of signal that stopped child
+
+`WIFCONTINUED(stat)'
+     non-zero if status was for continued child
+
+`WCOREDUMP(stat)'
+     If `WIFSIGNALED(stat)' is non-zero, this is non-zero if the process
+     left behind a core dump.
+
+1.11 How do I find out about a process' memory usage?
+=====================================================
+
+Look at `getrusage()', if available.
+
+1.12 Why do processes never decrease in size?
+=============================================
+
+When you free memory back to the heap with `free()', on almost all systems
+that *doesn't* reduce the memory usage of your program.  The memory
+`free()'d is still part of the process' address space, and will be used to
+satisfy future `malloc()' requests.
+
+If you really need to free memory back to the system, look at using
+`mmap()' to allocate private anonymous mappings.  When these are unmapped,
+the memory really is released back to the system.  Certain implementations
+of `malloc()' (e.g. in the GNU C Library) automatically use `mmap()' where
+available to perform large allocations; these blocks are then returned to
+the system on `free()'.
+
+Of course, if your program increases in size when you think it shouldn't,
+you may have a `memory leak' - a bug in your program that results in unused
+memory not being freed.
+
+1.13 How do I change the name of my program (as seen by `ps')?
+==============================================================
+
+On BSDish systems, the `ps' program actually looks into the address space
+of the running process to find the current `argv[]', and displays that.
+That enables a program to change its `name' simply by modifying `argv[]'.
+
+On SysVish systems, the command name and usually the first 80 bytes of the
+parameters are stored in the process' u-area, and so can't be directly
+modified. There may be a system call to change this (unlikely), but
+otherwise the only way is to perform an `exec()', or write into kernel
+memory (dangerous, and only possible if running as root).
+
+Some systems (notably Solaris) may have two separate versions of `ps', one
+in `/usr/bin/ps' with SysV behaviour, and one in `/usr/ucb/ps' with BSD
+behaviour. On these systems, if you change `argv[]', then the BSD version
+of `ps' will reflect the change, and the SysV version won't.
+
+Check to see if your system has a function `setproctitle()'.
+
+1.14 How can I find a process' executable file?
+===============================================
+
+This would be a good candidate for a list of `Frequently Unanswered
+Questions', because the fact of asking the question usually means that the
+design of the program is flawed. :-)
+
+You can make a `best guess' by looking at the value of `argv[0]'.  If this
+contains a `/', then it is probably the absolute or relative (to the
+current directory at program start) path of the executable.  If it does
+not, then you can mimic the shell's search of the `PATH' variable, looking
+for the program.  However, success is not guaranteed, since it is possible
+to invoke programs with arbitrary values of `argv[0]', and in any case the
+executable may have been renamed or deleted since it was started.
+
+If all you want is to be able to print an appropriate invocation name with
+error messages, then the best approach is to have `main()' save the value
+of `argv[0]' in a global variable for use by the entire program.  While
+there is no guarantee whatsoever that the value in `argv[0]' will be
+meaningful, it is the best option available in most circumstances.
+
+The most common reason people ask this question is in order to locate
+configuration files with their program. This is considered to be bad form;
+directories containing executables should contain *nothing* except
+executables, and administrative requirements often make it desirable for
+configuration files to be located on different filesystems to executables.
+
+A less common, but more legitimate, reason to do this is to allow the
+program to call `exec()' *on itself*; this is a method used (e.g. by some
+versions of `sendmail') to completely reinitialise the process (e.g. if a
+daemon receives a `SIGHUP').
+
+1.14.1 So where do I put my configuration files then?
+-----------------------------------------------------
+
+The correct directory for this usually depends on the particular flavour of
+Unix you're using; `/var/opt/PACKAGE', `/usr/local/lib', `/usr/local/etc',
+or any of several other possibilities.  User-specific configuration files
+are usually hidden `dotfiles' under `$HOME' (e.g. `$HOME/.exrc').
+
+From the point of view of a package that is expected to be usable across a
+range of systems, this usually implies that the location of any sitewide
+configuration files will be a compiled-in default, possibly using a
+`--prefix' option on a configure script (Autoconf scripts do this).  You
+might wish to allow this to be overridden at runtime by an environment
+variable.  (If you're not using a configure script, then put the default in
+the Makefile as a `-D' option on compiles, or put it in a `config.h' header
+file, or something similar.)
+
+User-specific configuration should be either a single dotfile under
+`$HOME', or, if you need multiple files, a dot-subdirectory.  (Files or
+directories whose names start with a dot are omitted from directory
+listings by default.) Avoid creating multiple entries under `$HOME',
+because this can get very cluttered. Again, you can allow the user to
+override this location with an environment variable. Programs should always
+behave sensibly if they fail to find any per-user configuration.
+
+1.15 Why doesn't my process get SIGHUP when its parent dies?
+============================================================
+
+Because it's not supposed to.
+
+`SIGHUP' is a signal that means, by convention, "the terminal line got hung
+up".  It has nothing to do with parent processes, and is usually generated
+by the tty driver (and delivered to the foreground process group).
+
+However, as part of the session management system, there are exactly two
+cases where `SIGHUP' is sent on the death of a process:
+
+   * When the process that dies is the session leader of a session that is
+     attached to a terminal device, `SIGHUP' is sent to all processes in
+     the foreground process group of that terminal device.
+
+   * When the death of a process causes a process group to become orphaned,
+     and one or more processes in the orphaned group are *stopped*, then
+     `SIGHUP' and `SIGCONT' are sent to all members of the orphaned group.
+     (An orphaned process group is one where no process in the group has a
+     parent which is part of the same session, but not the same process
+     group.)
+
+1.16 How can I kill all descendents of a process?
+=================================================
+
+There isn't a fully general approach to doing this.  While you can
+determine the relationships between processes by parsing `ps' output, this
+is unreliable in that it represents only a snapshot of the system.
+
+However, if you're lauching a subprocess that might spawn further
+subprocesses of its own, and you want to be able to kill the entire spawned
+job at one go, the solution is to put the subprocess into a new process
+group, and kill that process group if you need to.
+
+The preferred function for creating process groups is `setpgid()'.  Use
+this if possible rather than `setpgrp()' because the latter differs between
+systems (on some systems `setpgrp();' is equivalent to `setpgid(0,0);', on
+others, `setpgrp()' and `setpgid()' are identical).
+
+See the job-control example in the examples section.
+
+Putting a subprocess into its own process group has a number of effects.
+In particular, unless you explicitly place the new process group in the
+foreground, it will be treated as a background job with these consequences:
+
+   * it will be stopped with `SIGTTIN' if it attempts to read from the
+     terminal
+
+   * if `tostop' is set in the terminal modes, it will be stopped with
+     `SIGTTOU' if it attempts to write to the terminal (attempting to
+     change the terminal modes should also cause this, independently of the
+     current setting of `tostop')
+
+   * The subprocess will not receive keyboard signals from the terminal
+     (e.g. `SIGINT' or `SIGQUIT')
+
+In many applications input and output will be redirected anyway, so the
+most significant effect will be the lack of keyboard signals. The parent
+application should arrange to catch at least `SIGINT' and `SIGQUIT' (and
+preferably `SIGTERM' as well) and clean up any background jobs as necessary.
+
+2. General File handling (including pipes and sockets)
+******************************************************
+
+See also the Sockets FAQ, available at:
+
+`http://www.lcg.org/sock-faq/'
+
+2.1 How to manage multiple connections?
+=======================================
+
+     I have to monitor more than one (fd/connection/stream) at a time. How
+     do I manage all of them?
+
+Use `select()' or `poll()'.
+
+Note: `select()' was introduced in BSD, whereas `poll()' is an artifact of
+SysV STREAMS. As such, there are portability issues; pure BSD systems may
+still lack `poll()', whereas some older SVR3 systems may not have
+`select()'. SVR4 added `select()', and the Posix.1g standard defines both.
+
+`select()' and `poll()' essentially do the same thing, just differently.
+Both of them examine a set of file descriptors to see if specific events
+are pending on any, and then optionally wait for a specified time for an
+event to happen.
+
+[Important note: neither `select()' nor `poll()' do anything useful when
+applied to plain files; they are useful for sockets, pipes, ptys, ttys &
+possibly other character devices, but this is system-dependent.]
+
+There the similarity ends....
+
+2.1.1 How do I use select()?
+----------------------------
+
+The interface to `select()' is primarily based on the concept of an
+`fd_set', which is a set of FDs (usually implemented as a bit-vector). In
+times past, it was common to assume that FDs were smaller than 32, and just
+use an int to store the set, but these days, one usually has more FDs
+available, so it is important to use the standard macros for manipulating
+fd_sets:
+
+     fd_set set;
+     FD_ZERO(&set);      /* empties the set */
+     FD_SET(fd,&set);    /* adds FD to the set */
+     FD_CLR(fd,&set);    /* removes FD from the set */
+     FD_ISSET(fd,&set)   /* true if FD is in the set */
+
+In most cases, it is the system's responsibility to ensure that fdsets can
+handle the whole range of file descriptors, but in some cases you may have
+to predefine the `FD_SETSIZE' macro.  *This is system-dependent*; check
+your `select()' manpage. Also, some systems have problems handling more
+than 1024 file descriptors in `select()'.
+
+The basic interface to select is simple:
+
+     int select(int nfds, fd_set *readset,
+                          fd_set *writeset,
+                          fd_set *exceptset, struct timeval *timeout);
+
+where
+
+`nfds'
+     the number of FDs to examine; this must be greater than the largest FD
+     in any of the fdsets, *not* the actual number of FDs specified
+
+`readset'
+     the set of FDs to examine for readability
+
+`writeset'
+     the set of FDs to examine for writability
+
+`exceptfds'
+     the set of FDs to examine for exceptional status (note: errors are
+     *not* exceptional statuses)
+
+`timeout'
+     NULL for infinite timeout, or points to a timeval specifying the
+     maximum wait time (if `tv_sec' and `tv_usec' both equal zero, then the
+     status of the FDs is polled, but the call never blocks)
+
+The call returns the number of `ready' FDs found, and the three fdsets are
+modified in-place, with only the ready FDs left in the sets. Use the
+`FD_ISSET' macro to test the returned sets.
+
+Here's a simple example of testing a single FD for readability:
+
+     int isready(int fd)
+     {
+         int rc;
+         fd_set fds;
+         struct timeval tv;
+     
+         FD_ZERO(&fds);
+         FD_SET(fd,&fds);
+         tv.tv_sec = tv.tv_usec = 0;
+     
+         rc = select(fd+1, &fds, NULL, NULL, &tv);
+         if (rc < 0)
+           return -1;
+     
+         return FD_ISSET(fd,&fds) ? 1 : 0;
+     }
+
+Note that we can pass `NULL' for fdsets that we aren't interested in
+testing.
+
+2.1.2 How do I use poll()?
+--------------------------
+
+`poll()' accepts a pointer to a list of `struct pollfd', in which the
+descriptors and the events you wish to poll for are stored.  The events are
+specified via a bitwise mask in the events field of the structure.  The
+instance of the structure will later be filled in and returned to you with
+any events which occured.  Macros defined by `poll.h' on SVR4 (probably
+older versions as well), are used to specify the events in the field.  A
+timeout may be specified in milliseconds, only the type provided is an
+integer which is quite perplexing.  A timeout of 0 causes `poll()' to
+return immediately; a value of -1 will suspend poll until an event is found
+to be true.
+
+     struct pollfd {
+         int fd;        /* The descriptor. */
+         short events;  /* The event(s) is/are specified here. */
+         short revents; /* Events found are returned here. */
+     };
+
+A lot like `select()', the return value if positive reflects how many
+descriptors were found to satisfy the events requested.  A zero return
+value is returned if the timeout period is reached before any of the events
+specified have occured.  A negative value should immediately be followed by
+a check of `errno', since it signifies an error.
+
+If no events are found, `revents' is cleared, so there's no need for you to
+do this yourself.
+
+The returned events are tested to contain the event.
+
+Here's an example:
+
+     /* Poll on two descriptors for Normal data, or High priority data.
+        If any found call function handle() with appropriate descriptor
+        and priority. Don't timeout, only give up if error, or one of the
+        descriptors hangs up. */
+     
+     #include <stdlib.h>
+     #include <stdio.h>
+     
+     #include <sys/types.h>
+     #include <stropts.h>
+     #include <poll.h>
+     
+     #include <unistd.h>
+     #include <errno.h>
+     #include <string.h>
+     
+     #define NORMAL_DATA 1
+     #define HIPRI_DATA 2
+     
+     int poll_two_normal(int fd1,int fd2)
+     {
+         struct pollfd poll_list[2];
+         int retval;
+     
+         poll_list[0].fd = fd1;
+         poll_list[1].fd = fd2;
+         poll_list[0].events = POLLIN|POLLPRI;
+         poll_list[1].events = POLLIN|POLLPRI;
+     
+         while(1)
+         {
+             retval = poll(poll_list,(unsigned long)2,-1);
+             /* Retval will always be greater than 0 or -1 in this case.
+                Since we're doing it while blocking */
+     
+             if(retval < 0)
+             {
+                 fprintf(stderr,"Error while polling: %s\n",strerror(errno));
+                 return -1;
+             }
+     
+             if(((poll_list[0].revents&POLLHUP) == POLLHUP) ||
+                ((poll_list[0].revents&POLLERR) == POLLERR) ||
+                ((poll_list[0].revents&POLLNVAL) == POLLNVAL) ||
+                ((poll_list[1].revents&POLLHUP) == POLLHUP) ||
+                ((poll_list[1].revents&POLLERR) == POLLERR) ||
+                ((poll_list[1].revents&POLLNVAL) == POLLNVAL))
+               return 0;
+     
+             if((poll_list[0].revents&POLLIN) == POLLIN)
+               handle(poll_list[0].fd,NORMAL_DATA);
+             if((poll_list[0].revents&POLLPRI) == POLLPRI)
+               handle(poll_list[0].fd,HIPRI_DATA);
+             if((poll_list[1].revents&POLLIN) == POLLIN)
+               handle(poll_list[1].fd,NORMAL_DATA);
+             if((poll_list[1].revents&POLLPRI) == POLLPRI)
+               handle(poll_list[1].fd,HIPRI_DATA);
+         }
+     }
+
+2.1.3 Can I use SysV IPC at the same time as select or poll?
+------------------------------------------------------------
+
+*No.* (Except on AIX, which has an incredibly ugly kluge to allow this.)
+
+In general, trying to combine the use of `select()' or `poll()' with using
+SysV message queues is troublesome. SysV IPC objects are not handled by
+file descriptors, so they can't be passed to `select()' or `poll()'. There
+are a number of workarounds, of varying degrees of ugliness:
+
+   - Abandon SysV IPC completely. :-)
+
+   - `fork()', and have the child process handle the SysV IPC,
+     communicating with the parent process by a pipe or socket, which the
+     parent process can `select()' on.
+
+   - As above, but have the child process do the `select()', and
+     communicate with the parent by message queue.
+
+   - Arrange for the process that sends messages to you to send a signal
+     after each message. *Warning:* handling this right is non-trivial;
+     it's very easy to write code that can potentially lose messages or
+     deadlock using this method.
+
+(Other methods exist.)
+
+2.2 How can I tell when the other end of a connection shuts down?
+=================================================================
+
+If you try to read from a pipe, socket, FIFO etc. when the writing end of
+the connection has been closed, you get an end-of-file indication (`read()'
+returns 0 bytes read). If you try and write to a pipe, socket etc. when the
+reading end has closed, then a `SIGPIPE' signal will be delivered to the
+process, killing it unless the signal is caught. (If you ignore or block
+the signal, the `write()' call fails with `EPIPE'.)
+
+2.3 Best way to read directories?
+=================================
+
+While historically there have been several different interfaces for this,
+the only one that really matters these days the the Posix.1 standard
+`<dirent.h>' functions.
+
+The function `opendir()' opens a specified directory; `readdir()' reads
+directory entries from it in a standardised format; `closedir()' does the
+obvious. Also provided are `rewinddir()', `telldir()' and `seekdir()' which
+should also be obvious.
+
+If you are looking to expand a wildcard filename, then most systems have
+the `glob()' function; also check out `fnmatch()' to match filenames
+against a wildcard, or `ftw()' to traverse entire directory trees.
+
+2.4 How can I find out if someone else has a file open?
+=======================================================
+
+This is another candidate for `Frequently Unanswered Questions' because, in
+general, your program should never be interested in whether someone else
+has the file open.  If you need to deal with concurrent access to the file,
+then you should be looking at advisory locking.
+
+This is, in general, too hard to do anyway. Tools like `fuser' and `lsof'
+that find out about open files do so by grovelling through kernel data
+structures in a most unhealthy fashion. You can't usefully invoke them from
+a program, either, because by the time you've found out that the file
+is/isn't open, the information may already be out of date.
+
+2.5 How do I `lock' a file?
+===========================
+
+There are three main file locking mechanisms available. All of them are
+`advisory'[*], which means that they rely on programs co-operating in order
+to work.  It is therefore vital that all programs in an application should
+be consistent in their locking regime, and great care is required when your
+programs may be sharing files with third-party software.
+
+[*] Well, actually some Unices permit mandatory locking via the sgid bit -
+RTFM for this hack.
+
+Some applications use lock files - something like `FILENAME.lock'.  Simply
+testing for the existence of such files is inadequate though, since a
+process may have been killed while holding the lock.  The method used by
+UUCP (probably the most notable example: it uses lock files for controlling
+access to modems, remote systems etc.) is to store the PID in the lockfile,
+and test if that pid is still running.  Even this isn't enough to be sure
+(since PIDs are recycled); it has to have a backstop check to see if the
+lockfile is old, which means that the process holding the lock must update
+the file regularly.  Messy.
+
+The locking functions are:
+
+         flock();
+         lockf();
+         fcntl();
+
+`flock()' originates with BSD, and is now available in most (but not all)
+Unices.  It is simple and effective on a single host, but doesn't work at
+all with NFS.  It locks an entire file. Perhaps rather deceptively, the
+popular Perl programming language implements its own `flock()' where
+necessary, conveying the illusion of true portability.
+
+`fcntl()' is the only POSIX-compliant locking mechanism, and is therefore
+the only truly portable lock.  It is also the most powerful, and the
+hardest to use.  For NFS-mounted file systems, `fcntl()' requests are
+passed to a daemon (`rpc.lockd'), which communicates with the lockd on the
+server host.  Unlike `flock()' it is capable of record-level locking.
+
+`lockf()' is merely a simplified programming interface to the locking
+functions of `fcntl()'.
+
+Whatever locking mechanism you use, it is important to sync all your file
+IO while the lock is active:
+
+         lock(fd);
+         write_to(some_function_of(fd));
+         flush_output_to(fd); /* NEVER unlock while output may be buffered */
+         unlock(fd);
+         do_something_else;   /* another process might update it */
+         lock(fd);
+         seek(fd, somewhere); /* because our old file pointer is not safe */
+         do_something_with(fd);
+         ...
+
+A few useful `fcntl()' locking recipes (error handling omitted for
+simplicity) are:
+
+     #include <fcntl.h>
+     #include <unistd.h>
+     
+     read_lock(int fd)   /* a shared lock on an entire file */
+     {
+         fcntl(fd, F_SETLKW, file_lock(F_RDLCK, SEEK_SET));
+     }
+     
+     write_lock(int fd)  /* an exclusive lock on an entire file */
+     {
+         fcntl(fd, F_SETLKW, file_lock(F_WRLCK, SEEK_SET));
+     }
+     
+     append_lock(int fd) /* a lock on the _end_ of a file -- other
+                            processes may access existing records */
+     {
+         fcntl(fd, F_SETLKW, file_lock(F_WRLCK, SEEK_END));
+     }
+
+The function file_lock used by the above is
+
+     struct flock* file_lock(short type, short whence)
+     {
+         static struct flock ret ;
+         ret.l_type = type ;
+         ret.l_start = 0 ;
+         ret.l_whence = whence ;
+         ret.l_len = 0 ;
+         ret.l_pid = getpid() ;
+         return &ret ;
+     }
+
+2.6 How do I find out if a file has been updated by another process?
+====================================================================
+
+This is close to being a Frequently Unanswered Question, because people
+asking it are often looking for some notification from the system when a
+file or directory is changed, and there is no portable way of getting this.
+(IRIX has a non-standard facility for monitoring file accesses, but I've
+never heard of it being available in any other flavour.)
+
+In general, the best you can do is to use `fstat()' on the file. (Note: the
+overhead on `fstat()' is quite low, usually much lower than the overhead of
+`stat()'.) By watching the mtime and ctime of the file, you can detect when
+it is modified, or deleted/linked/renamed. This is a bit kludgy, so you
+might want to rethink *why* you want to do it.
+
+2.7 How does the `du' utility work?
+===================================
+
+`du' simply traverses the directory structure calling `stat()' (or more
+accurately, `lstat()') on every file and directory it encounters, adding up
+the number of blocks consumed by each.
+
+If you want more detail about how it works, then the simple answer is:
+
+     Use the source, Luke!
+
+Source for BSD systems (FreeBSD, NetBSD and OpenBSD) is available as
+unpacked source trees on their FTP distribution sites; source for GNU
+versions of utilities is available from any of the GNU mirrors, but you
+have to unpack the archives yourself.
+
+2.8 How do I find the size of a file?
+=====================================
+
+Use `stat()', or `fstat()' if you have the file open.
+
+These calls fill in a data structure containing all the information about
+the file that the system keeps track of; that includes the owner, group,
+permissions, size, last access time, last modification time, etc.
+
+The following routine illustrates how to use `stat()' to get the file size.
+
+     #include <stdlib.h>
+     #include <stdio.h>
+     
+     #include <sys/types.h>
+     #include <sys/stat.h>
+     
+     int get_file_size(char *path,off_t *size)
+     {
+       struct stat file_stats;
+     
+       if(stat(path,&file_stats))
+         return -1;
+     
+       *size = file_stats.st_size;
+       return 0;
+     }
+
+2.9 How do I expand `~' in a filename like the shell does?
+==========================================================
+
+The standard interpretation for `~' at the start of a filename is: if alone
+or followed by a `/', then substitute the current user's home directory; if
+followed by the name of a user, then substitute that user's home directory.
+If no valid expansion can be found, then shells will leave the filename
+unchanged.
+
+Be wary, however, of filenames that actually start with the `~' character.
+Indiscriminate tilde-expansion can make it very difficult to specify such
+filenames to a program; while quoting will prevent the shell from doing the
+expansion, the quotes will have been removed by the time the program sees
+the filename. As a general rule, do not try and perform tilde-expansion on
+filenames that have been passed to the program on the command line or in
+environment variables. (Filenames generated within the program, obtained by
+prompting the user, or obtained from a configuration file, are good
+candidates for tilde-expansion.)
+
+Here's a piece of C++ code (using the standard string class) to do the job:
+
+     string expand_path(const string& path)
+     {
+         if (path.length() == 0 || path[0] != '~')
+           return path;
+     
+         const char *pfx = NULL;
+         string::size_type pos = path.find_first_of('/');
+     
+         if (path.length() == 1 || pos == 1)
+         {
+             pfx = getenv("HOME");
+             if (!pfx)
+             {
+                 // Punt. We're trying to expand ~/, but HOME isn't set
+                 struct passwd *pw = getpwuid(getuid());
+                 if (pw)
+                   pfx = pw->pw_dir;
+             }
+         }
+         else
+         {
+             string user(path,1,(pos==string::npos) ? string::npos : pos-1);
+             struct passwd *pw = getpwnam(user.c_str());
+             if (pw)
+               pfx = pw->pw_dir;
+         }
+     
+         // if we failed to find an expansion, return the path unchanged.
+     
+         if (!pfx)
+           return path;
+     
+         string result(pfx);
+     
+         if (pos == string::npos)
+           return result;
+     
+         if (result.length() == 0 || result[result.length()-1] != '/')
+           result += '/';
+     
+         result += path.substr(pos+1);
+     
+         return result;
+     }
+
+2.10 What can I do with named pipes (FIFOs)?
+============================================
+
+2.10.1 What is a named pipe?
+----------------------------
+
+A "named pipe" is a special file that is used to transfer data between
+unrelated processes.  One (or more) processes write to it, while another
+process reads from it.  Named pipes are visible in the file system and may
+be viewed with `ls' like any other file.  (Named pipes are also called
+"fifo"s; this term stands for `First In, First Out'.)
+
+Named pipes may be used to pass data between unrelated processes, while
+normal (unnamed) pipes can only connect parent/child processes (unless you
+try *very* hard).
+
+Named pipes are strictly unidirectional, even on systems where anonymous
+pipes are bidirectional (full-duplex).
+
+2.10.2 How do I create a named pipe?
+------------------------------------
+
+To create a named pipe interactively, you'll use either `mknod' or
+`mkfifo'. On some systems, mknod will be found in /etc. In other words, it
+might not be on your path. See your man pages for details.
+
+To make a named pipe within a C program use `mkfifo()':
+
+     /* set the umask explicitly, you don't know where it's been */
+     umask(0);
+     if (mkfifo("test_fifo", S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP))
+     {
+         perror("mkfifo");
+         exit(1);
+     }
+
+If you don't have `mkfifo()', you'll have to use `mknod()':
+
+     /* set the umask explicitly, you don't know where it's been */
+     umask(0);
+     if (mknod("test_fifo",
+                 S_IFIFO | S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP,
+                0))
+     {
+         perror("mknod");
+         exit(1);
+     }
+
+2.10.3 How do I use a named pipe?
+---------------------------------
+
+To use the pipe, you open it like a normal file, and use `read()' and
+`write()' just as though it was a plain pipe.
+
+However, the `open()' of the pipe may block. The following rules apply:
+
+   * If you open for both reading and writing (`O_RDWR'), then the open
+     will not block.
+
+   * If you open for reading (`O_RDONLY'), the open will block until
+     another process opens the FIFO for writing, unless `O_NONBLOCK' is
+     specified, in which case the open succeeds.
+
+   * If you open for writing `O_WRONLY', the open will block until another
+     process opens the FIFO for reading, unless `O_NONBLOCK' is specified,
+     in which case the open fails.
+
+When reading and writing the FIFO, the same considerations apply as for
+regular pipes and sockets, i.e. `read()' will return EOF when all writers
+have closed, and `write()' will raise `SIGPIPE' when there are no readers.
+If `SIGPIPE' is blocked or ignored, the call fails with `EPIPE'.
+
+2.10.4 Can I use a named pipe across NFS?
+-----------------------------------------
+
+No, you can't. There is no facility in the NFS protocol to do this.  (You
+may be able to use a named pipe on an NFS-mounted filesystem to communicate
+between processes on the same client, though.)
+
+2.10.5 Can multiple processes write to the pipe simultaneously?
+---------------------------------------------------------------
+
+If each piece of data written to the pipe is less than `PIPE_BUF' in size,
+then they will not be interleaved.  However, the boundaries of writes are
+not preserved; when you read from the pipe, the read call will return as
+much data as possible, even if it originated from multiple writes.
+
+The value of `PIPE_BUF' is guaranteed (by Posix) to be at least 512.  It
+may or may not be defined in `<limits.h>', but it can be queried for
+individual pipes using `pathconf()' or `fpathconf()'.
+
+2.10.6 Using named pipes in applications
+----------------------------------------
+
+     How can I implement two way communication between one server and
+     several clients?
+
+It is possible that more than one client is communicating with your server
+at once.  As long as each command they send to the server is smaller than
+`PIPE_BUF' (see above), they can all use the same named pipe to send data
+to the server. All clients can easily know the name of the server's
+incoming fifo.
+
+However, the server can not use a single pipe to communicate with the
+clients.  If more than one client is reading the same pipe, there is no way
+to ensure that the appropriate client receives a given response.
+
+A solution is to have the client create its own incoming pipe before
+sending data to the server, or to have the server create its outgoing pipes
+after receiving data from the client.
+
+Using the client's process ID in the pipe's name is a common way to
+identify them. Using fifos named in this manner, each time the client sends
+a command to the server, it can include its PID as part of the command.
+Any returned data can be sent through the appropriately named pipe.
+
+3. Terminal I/O
+***************
+
+3.1 How can I make my program not echo input?
+=============================================
+
+     How can I make my program not echo input, like login does when asking
+     for your password?
+
+There is an easy way, and a slightly harder way:
+
+The easy way, is to use `getpass()', which is probably found on almost all
+Unices. It takes a string to use as a prompt. It will read up to an `EOF'
+or newline and returns a pointer to a static area of memory holding the
+string typed in.
+
+The harder way is to use `tcgetattr()' and `tcsetattr()', both use a
+`struct termios' to manipulate the terminal. The following two routines
+should allow echoing, and non-echoing mode.
+
+     #include <stdlib.h>
+     #include <stdio.h>
+     
+     #include <termios.h>
+     #include <string.h>
+     
+     static struct termios stored_settings;
+     
+     void echo_off(void)
+     {
+         struct termios new_settings;
+         tcgetattr(0,&stored_settings);
+         new_settings = stored_settings;
+         new_settings.c_lflag &= (~ECHO);
+         tcsetattr(0,TCSANOW,&new_settings);
+         return;
+     }
+     
+     void echo_on(void)
+     {
+         tcsetattr(0,TCSANOW,&stored_settings);
+         return;
+     }
+
+Both routines used, are defined by the POSIX standard.
+
+3.2 How can I read single characters from the terminal?
+=======================================================
+
+     How can I read single characters from the terminal? My program is
+     always waiting for the user to press `<RETURN>'.
+
+Terminals are usually in canonical mode, where input is read in lines after
+it is edited. You may set this into non-canonical mode, where you set how
+many characters should be read before input is given to your program. You
+also may set the timer in non-canonical mode terminals to 0, this timer
+flushs your buffer at set intervals. By doing this, you can use `getc()' to
+grab the key pressed immediately by the user. We use `tcgetattr()' and
+`tcsetattr()' both of which are defined by POSIX to manipulate the
+`termios' structure.
+
+     #include <stdlib.h>
+     #include <stdio.h>
+     
+     #include <termios.h>
+     #include <string.h>
+     
+     static struct termios stored_settings;
+     
+     void set_keypress(void)
+     {
+         struct termios new_settings;
+     
+         tcgetattr(0,&stored_settings);
+     
+         new_settings = stored_settings;
+     
+         /* Disable canonical mode, and set buffer size to 1 byte */
+         new_settings.c_lflag &= (~ICANON);
+         new_settings.c_cc[VTIME] = 0;
+         new_settings.c_cc[VMIN] = 1;
+     
+         tcsetattr(0,TCSANOW,&new_settings);
+         return;
+     }
+     
+     void reset_keypress(void)
+     {
+         tcsetattr(0,TCSANOW,&stored_settings);
+         return;
+     }
+
+3.3 How can I check and see if a key was pressed?
+=================================================
+
+     How can I check and see if a key was pressed? On DOS I use the
+     `kbhit()' function, but there doesn't seem to be an equivalent?
+
+If you set the terminal to single-character mode (see previous answer),
+then (on most systems) you can use `select()' or `poll()' to test for
+readability.
+
+3.4 How can I move the cursor around the screen?
+================================================
+
+     How can I move the cursor around the screen? I want to do full screen
+     editing without using curses.
+
+Seriously, you probably *don't* want to do this. Curses knows about how to
+handle all sorts of oddities that different terminal types exhibit; while
+the termcap/terminfo data will tell you whether any given terminal type
+possesses any of these oddities, you will probably find that correctly
+handling all the combinations is a *huge* job.
+
+However, if you insist on getting your hands dirty (so to speak), look into
+the `termcap' functions, particularly `tputs()', `tparm()' and `tgoto()'.
+
+3.5 What are pttys?
+===================
+
+Pseudo-teletypes (pttys, ptys, other variant abbreviations) are
+pseudo-devices that have two parts: the "master" side, which can be thought
+of as the `user', and the "slave" side, which behaves like a standard tty
+device.
+
+They exist in order to provide a means to emulate the behaviour of a serial
+terminal under the control of a program. For example, `telnet' uses a
+pseudo-terminal on the remote system; the remote login shell sees the
+behaviour it expects from a tty device, but the master side of the
+pseudo-terminal is being controlled by a daemon that forwards all data over
+the network. They are also used by programs such as `xterm', `expect',
+`script', `screen', `emacs', and many others.
+
+3.6 How to handle a serial port or modem?
+=========================================
+
+The handling of serial devices under Unix is heavily influenced by the
+traditional use of serial terminals. Historically, various combinations of
+ioctls and other hacks were necessary to control the precise behaviour of a
+serial device, but fortunately this is one of the areas that POSIX made
+some efforts to standardise.
+
+If you're using a system that doesn't understand `<termios.h>',
+`tcsetattr()' and related functions, then you'll have to go elsewhere for
+information (or upgrade your system to something less archaeological).
+
+There are still significant differences between systems, however, mainly in
+the area of device names, handling of hardware flow control, and modem
+signalling. (Whenever possible, leave the device driver to do all the
+handshaking work, and don't attempt to manipulate handshaking signals
+directly.)
+
+The basic steps for opening and initialising a serial device are:
+
+   * `open()' the device; this may require the use of certain flags:
+
+    `O_NONBLOCK'
+          Opening a dial-in or modem-controlled device will block until
+          carrier is present, unless this flag is used. A nonblocking open
+          gives you the opportunity to disable the modem controls (see
+          CLOCAL below) if necessary.
+
+    `O_NOCTTY'
+          On 4.4BSD-derived systems this is redundant, but on other systems
+          it controls whether the serial device can become a control
+          terminal for the session. In most cases you probably *don't* want
+          to acquire a control terminal, and should therefore specify this
+          flag, but there are exceptions.
+
+   * Use `tcgetattr()' to retrieve the current device modes. While one will
+     often ignore most or all of the initial settings thus obtained, it's
+     still a convenient way of initialising a `struct termios'.
+
+   * Set suitable values for `c_iflag', `c_oflag', `c_cflag', `c_lflag',
+     and `c_cc' in the termios structure. (See below.)
+
+   * Use `cfsetispeed()' and `cfsetospeed()' to set the desired baud rate.
+     Very few systems allow you to set differing input and output speeds,
+     so as a general rule you should set both to your desired speed.
+
+   * Use `tcsetattr()' to set the device modes.
+
+   * You may wish, if you used `O_NONBLOCK' when opening the port, to use
+     `fcntl()' to ensure that `O_NONBLOCK' is turned off again.  Systems
+     seem to differ as to whether a nonblocking open on a tty will affect
+     subsequent `read()' calls; better to be explicit.
+
+Once you have opened and set up the port, you can then use `read()' and
+`write()' normally. Note that the behaviour of `read()' will be controlled
+by the flag settings you gave to `tcsetattr()'.
+
+`tcflush()', `tcdrain()', `tcsendbreak()' and `tcflow()' are additional
+useful functions that you should be aware of.
+
+When you're done with the port, and want to close it, be aware of a very
+nasty little hazard on some systems; if there's any pending output waiting
+to be written to the device (e.g. if output flow is stopped by hardware or
+software handshaking), your process can hang *unkillably* in the `close()'
+call until the output drains. Calling `tcflush()' to discard any pending
+output is probably a wise move.
+
+(Blocked output on tty devices is by far the most common cause of
+"unkillable" processes in my experience.)
+
+3.6.1 Serial device names and types
+-----------------------------------
+
+The device names used for serial port devices vary quite widely between
+systems. Some examples from different systems are:
+
+   * `/dev/tty[0-9][a-z]' for direct access devices, and
+     `/dev/tty[0-9][A-Z]' for modem control devices (e.g. SCO Unix)
+
+   * `/dev/cua[0-9]p[0-9]' for direct access devices, `/dev/cul[0-9]p[0-9]'
+     for dial-out devices and `/dev/ttyd[0-9]p[0-9]' for dial-in devices
+     (e.g. HP-UX)
+
+   * `/dev/cua[a-z][0-9]' for dial-out devices and `/dev/tty[a-z][0-9]' for
+     dial-in devices (e.g. FreeBSD)
+
+The precise interaction between the device name used, and the effect on any
+hardware handshake lines is system-, configuration- and hardware-dependant,
+but will usually follow approximately these rules (assuming that the
+hardware is RS-232 DTE):
+
+   - A successful open of any device should assert DTR and RTS
+
+   - A blocking open of a modem-control or dial-in device will wait for DCD
+     (and possibly also DSR and/or CTS) to be raised, usually after
+     asserting DTR/RTS.
+
+   - An open of a dial-out device while an open call to the corresponding
+     dial-in device is blocked waiting for carrier *may or may not* cause
+     the open of the dial-in port to complete. Some systems implement a
+     simple sharing scheme for dial-in and dial-out ports whereby the
+     dial-in port is effectively "put to sleep" while the dial-out port is
+     in use; other systems do not do this, and sharing the port between
+     dial-in and dial-out on such systems requires external cooperation
+     (e.g. use of UUCP lockfiles) to avoid contention problems.
+
+3.6.2 Setting up termios flags
+------------------------------
+
+Some hints on setting up the termios flags when using a serial device that
+you've opened yourself (as opposed to using your existing control tty):
+
+3.6.2.1 c_iflag
+...............
+
+You probably want to set *all* the bits in `c_iflag' to 0, unless you want
+to use software flow control (ick) in which case you set `IXON' and `IXOFF'.
+
+3.6.2.2 c_oflag
+...............
+
+Most of the bits of `c_oflag' are hacks of one sort or another to make
+output to slow terminals work, and as such some newer systems have dropped
+almost all of them as obsolete (especially all the gory output-padding
+options). As with `c_iflag', setting everything to 0 is reasonable for most
+applications.
+
+3.6.2.3 c_cflag
+...............
+
+When setting the character size, remember to mask using `CSIZE' first; e.g.
+to set 8-bit characters, use:
+         attr.c_cflag &= ~CSIZE;
+         attr.c_cflag |= CS8;
+
+Other important flags found in `c_cflag' that you probably want to turn
+*on* and `CREAD' and `HUPCL'.
+
+If you need to generate even parity, then set `PARENB' and clear `PARODD';
+if you need to generate odd parity then set both `PARENB' and `PARODD'. If
+you don't want parity at all, then make sure `PARENB' is clear.
+
+Clear `CSTOPB' unless you actually need to generate two stop bits.
+
+Flags for enabling hardware flow control may also be found in `c_cflag',
+but they aren't standardised (pity).
+
+3.6.2.4 c_lflag
+...............
+
+Most applications will probably want to turn off `ICANON' (canonical, i.e.
+line-based, input processing), `ECHO', and `ISIG'.
+
+`IEXTEN' is a more complex issue. If you don't turn it off, the
+implementation is allowed to do nonstandard things (like define additional
+control characters in `c_cc') that might cause unexpected results, but you
+might need to leave `IEXTEN' enabled on some systems to get useful features
+like hardware flow control.
+
+3.6.2.5 c_cc
+............
+
+This is an array of characters that have special meanings on input.  These
+characters are given names like `VINTR', `VSTOP' etc.; the names are
+indexes into the array.
+
+(Two of these "characters" are not really characters at all, but control
+the behaviour of `read()' when `ICANON' is disabled; these are `VMIN' and
+`VTIME'.)
+
+The indexes are often referred to as though they were actual variables,
+e.g. "set VMIN to 1" actually means "set c_cc[VMIN] to 1". The shorthand is
+useful and only occasionally confusing.
+
+Many of the slots in `c_cc' are only used if some other combination of
+flags is set:
+
+Used only if `ICANON' is set
+     `VEOF', `VEOL', `VERASE', `VKILL' (and also `VEOL2', `VSTATUS' and
+     `VWERASE' if defined and `IEXTEN' is set)
+
+Used only if `ISIG' is set
+     `VINTR', `VQUIT', `VSUSP' (and also `VDSUSP' if defined and `IEXTEN'
+     is set)
+
+Used only if `IXON' or `IXOFF' is set
+     `VSTOP', `VSTART'
+
+Used only if `ICANON' is *not* set
+     `VMIN', `VTIME'
+
+Implementations may define additional entries in `c_cc'. It may be prudent
+to initialise all the entries to `_POSIX_VDISABLE' (the constant `NCCS'
+gives the array size) before setting the specific values you wish to use.
+
+`VMIN' and `VTIME' (which may share slots with `VEOF' and `VEOL'
+respectively, depending on the implementation) have the following meaning.
+The value of `VTIME' is (if not 0) always interpreted as a timer in tenths
+of seconds.
+
+`c_cc[VMIN] > 0, c_cc[VTIME] > 0'
+     `read()' will return when either VMIN bytes of input are available, or
+     if at least one character has been read and VTIME has expired between
+     characters, or if interrupted by a signal.
+
+`c_cc[VMIN] > 0, c_cc[VTIME] == 0'
+     `read()' will return when VMIN bytes of input are available, or if
+     interrupted. Otherwise it will wait indefinitely.
+
+`c_cc[VMIN] == 0, c_cc[VTIME] > 0'
+     `read()' will return as soon as any input is available; if VTIME
+     expires with no data arriving, it will return with no characters read.
+     (This conflicts slightly with the end-of-file indication received in
+     the event of modem hangup; using 1 for VMIN and either `alarm()' or
+     `select()' for a timeout avoids this particular problem.)
+
+`c_cc[VMIN] == 0, c_cc[VTIME] == 0'
+     `read()' will always return immediately; if no data is available it
+     will return with no characters read (with the same problem as above).
+
+4. System Information
+*********************
+
+4.1 How can I tell how much memory my system has?
+=================================================
+
+This is another `Frequently Unanswered Question'. In most cases, you should
+not even *attempt* to find out.
+
+If you really must, then it can usually be done, but in a highly
+system-dependent fashion. For example, on Solaris, you can use
+`sysconf(_SC_PHYS_PAGES)' and `sysconf(_SC_PAGESIZE)'; on FreeBSD, you can
+use `sysctl()'; on Linux you can read and parse `/proc/meminfo' (being
+careful to allow any of the historically valid formats for this file);
+other systems may have their own methods.  I'm not aware of any more
+portable methods.
+
+For HP-UX (9 and 10), the following code has been contributed:
+
+     struct pst_static pst;
+     
+     if (pstat_getstatic(&pst, sizeof(pst), (size_t) 1, 0) != -1)
+     {
+         printf(" Page Size: %lu\n", pst.page_size);
+         printf("Phys Pages: %lu\n", pst.physical_memory);
+     }
+
+4.2 How do I check a user's password?
+=====================================
+
+4.2.1 How do I get a user's password?
+-------------------------------------
+
+Traditionally user passwords were kept in the `/etc/passwd' file, on most
+UNIX flavours. Which is usually of this format:
+
+username:password:uid:gid:gecos field:home directory:login shell
+
+Though this has changed with time, now user information may be kept on
+other hosts, or not necessarily in the `/etc/passwd' file.  Modern
+implementations also made use of `shadow' password files which hold the
+password, along with sensitive information.  This file would be readable
+only by privileged users.
+
+The password is usually not in clear text, but encrypted due to security
+concerns.
+
+POSIX defines a suite of routines which can be used to access this database
+for queries. The quickest way to get an individual record for a user is
+with the `getpwnam()' and `getpwuid()' routines. Both return a pointer to a
+struct passwd, which holds the users information in various members.
+`getpwnam()' accepts a string holding the user's name, `getpwuid()' accepts
+a uid (type `uid_t' as defined by POSIX). Both return NULL if they fail.
+
+However, as explained earlier, a shadow database exists on most modern
+systems to hold sensitive information, namely the password. Some systems
+only return the password if the calling uid is of the superuser, others
+require you to use another suite of functions for the shadow password
+database. If this is the case you need to make use of `getspnam()', which
+accepts a username and returns a struct spwd. Again, in order to
+successfully do this, you will need to have privileges. (On some systems,
+notably HP-UX and SCO, you may need to use `getprpwnam()' instead.)
+
+4.2.2 How do I get shadow passwords by uid?
+-------------------------------------------
+
+     My system uses the getsp* suite of routines to get the sensitive user
+     information. However I do not have `getspuid()', only `getspnam()'.
+     How do I work around this, and get by uid?
+
+The work around is relatively painless. The following routine should go
+straight into your personal utility library:
+
+     #include <stdlib.h>
+     #include <stdio.h>
+     
+     #include <pwd.h>
+     #include <shadow.h>
+     
+     struct spwd *getspuid(uid_t pw_uid)
+     {
+       struct spwd *shadow;
+       struct passwd *ppasswd;
+     
+       if( ((ppasswd = getpwuid(pw_uid)) == NULL)
+           || ((shadow = getspnam(ppasswd->pw_name)) == NULL))
+         return NULL;
+     
+       return shadow;
+     }
+
+The problem is, that some systems do not keep the uid, or other information
+in the shadow database.
+
+4.2.3 How do I verify a user's password?
+----------------------------------------
+
+The fundamental problem here is, that various authentication systems exist,
+and passwords aren't always what they seem. Also with the traditional one
+way encryption method used by most UNIX flavours (out of the box), the
+encryption algorithm may differ, some systems use a one way DES encryption,
+others like the international release of FreeBSD use MD5.
+
+The most popular way is to have a one way encryption algorithm, where the
+password cannot be decrypted. Instead the password is taken in clear text
+from input, and encrypted and checked against the encrypted password in the
+database. The details of how to encrypt should really come from your man
+page for `crypt()', but here's a usual version:
+
+     /* given a plaintext password and an encrypted password, check if
+      * they match; returns 1 if they match, 0 otherwise.
+      */
+     
+     int check_pass(const char *plainpw, const char *cryptpw)
+     {
+         return strcmp(crypt(plainpw,cryptpw), cryptpw) == 0;
+     }
+
+This works because the salt used in encrypting the password is stored as an
+initial substring of the encrypted value.
+
+*WARNING:* on some systems, password encryption is actually done with a
+variant of crypt called `bigcrypt()'.
+
+5. Miscellaneous programming
+****************************
+
+5.1 How do I compare strings using wildcards?
+=============================================
+
+The answer to *that* depends on what exactly you mean by `wildcards'.
+
+There are two quite different concepts that qualify as `wildcards'. They
+are:
+
+*Filename patterns*
+     These are what the shell uses for filename expansion (`globbing').
+
+*Regular Expressions*
+     These are used by editors, `grep', etc. for matching text, but they
+     normally *aren't* applied to filenames.
+
+5.1.1 How do I compare strings using filename patterns?
+-------------------------------------------------------
+
+Unless you are unlucky, your system should have a function `fnmatch()' to
+do filename matching. This generally allows only the Bourne shell style of
+pattern; i.e. it recognises `*', `[...]' and `?', but probably won't
+support the more arcane patterns available in the Korn and Bourne-Again
+shells.
+
+If you don't have this function, then rather than reinvent the wheel, you
+are probably better off snarfing a copy from the BSD or GNU sources.
+
+Also, for the common cases of matching actual filenames, look for `glob()',
+which will find all existing files matching a pattern.
+
+5.1.2 How do I compare strings using regular expressions?
+---------------------------------------------------------
+
+There are a number of slightly different syntaxes for regular expressions;
+most systems use at least two: the one recognised by `ed', sometimes known
+as `Basic Regular Expressions', and the one recognised by `egrep',
+`Extended Regular Expressions'. Perl has it's own slightly different
+flavour, as does Emacs.
+
+To support this multitude of formats, there is a corresponding multitude of
+implementations. Systems will generally have regexp-matching functions
+(usually `regcomp()' and `regexec()') supplied, but be wary; some systems
+have more than one implementation of these functions available, with
+different interfaces. In addition, there are many library implementations
+available. (It's common, BTW, for regexps to be compiled to an internal
+form before use, on the assumption that you may compare several separate
+strings against the same regexp.)
+
+One library available for this is the `rx' library, available from the GNU
+mirrors. This seems to be under active development, which may be a good or
+a bad thing depending on your point of view :-)
+
+5.2 What's the best way to send mail from a program?
+====================================================
+
+There are several ways to send email from a Unix program. Which is the best
+method to use in a given situation varies, so I'll present two of them.  A
+third possibility, not covered here, is to connect to a local SMTP port (or
+a smarthost) and use SMTP directly; see RFC 821 </rfcs/rfc821.html>.
+
+5.2.1 The simple method: /bin/mail
+----------------------------------
+
+For simple applications, it may be sufficient to invoke `mail' (usually
+`/bin/mail', but could be `/usr/bin/mail' on some systems).
+
+*WARNING:* Some versions of UCB Mail may execute commands prefixed by `~!'
+or `~|' given in the message body even in non-interactive mode. This can be
+a security risk.
+
+Invoked as `mail -s 'subject' recipients...' it will take a message body on
+standard input, and supply a default header (including the specified
+subject), and pass the message to `sendmail' for delivery.
+
+This example mails a test message to `root' on the local system:
+
+     #include <stdio.h>
+     
+     #define MAILPROG "/bin/mail"
+     
+     int main()
+     {
+         FILE *mail = popen(MAILPROG " -s 'Test Message' root", "w");
+         if (!mail)
+         {
+             perror("popen");
+             exit(1);
+         }
+     
+         fprintf(mail, "This is a test.\n");
+     
+         if (pclose(mail))
+         {
+             fprintf(stderr, "mail failed!\n");
+             exit(1);
+         }
+     }
+
+If the text to be sent is already in a file, then one can do:
+
+         system(MAILPROG " -s 'file contents' root </tmp/filename");
+
+These methods can be extended to more complex cases, but there are many
+pitfalls to watch out for:
+
+   * If using system() or popen(), you must be very careful about quoting
+     arguments to protect them from filename expansion or word splitting
+
+   * Constructing command lines from user-specified data is a common source
+     of buffer-overrun errors and other security holes
+
+   * This method does not allow for CC: or BCC: recipients to be specified
+     (some versions of /bin/mail may allow this, some do not)
+
+5.2.2 Invoking the MTA directly: /usr/lib/sendmail
+--------------------------------------------------
+
+The `mail' program is an example of a "Mail User Agent", a program intended
+to be invoked by the user to send and receive mail, but which does not
+handle the actual transport. A program for transporting mail is called an
+"MTA", and the most commonly found MTA on Unix systems is called
+`sendmail'. There are other MTAs in use, such as `MMDF', but these
+generally include a program that emulates the usual behaviour of `sendmail'.
+
+Historically, `sendmail' has usually been found in `/usr/lib', but the
+current trend is to move library programs out of `/usr/lib' into
+directories such as `/usr/sbin' or `/usr/libexec'. As a result, one
+normally invokes `sendmail' by its full path, which is system-dependent.
+
+To understand how `sendmail' behaves, it's useful to understand the concept
+of an "envelope". This is very much like paper mail; the envelope defines
+who the message is to be delivered to, and who it is from (for the purpose
+of reporting errors). Contained in the envelope are the "headers", and the
+"body", separated by a blank line.  The format of the headers is specified
+primarily by RFC 822 </rfcs/rfc822.html>; see also the MIME RFCs.
+
+There are two main ways to use `sendmail' to originate a message: either
+the envelope recipients can be explicitly supplied, or `sendmail' can be
+instructed to deduce them from the message headers.  Both methods have
+advantages and disadvantages.
+
+5.2.2.1 Supplying the envelope explicitly
+.........................................
+
+The recipients of a message can simply be specified on the command line.
+This has the drawback that mail addresses can contain characters that give
+`system()' and `popen()' considerable grief, such as single quotes, quoted
+strings etc. Passing these constructs successfully through shell
+interpretation presents pitfalls. (One can do it by replacing any single
+quotes by the sequence single-quote backslash single-quote single-quote,
+then surrounding the entire address with single quotes. Ugly, huh?)
+
+Some of this unpleasantness can be avoided by eschewing the use of
+`system()' or `popen()', and resorting to `fork()' and `exec()' directly.
+This is sometimes necessary in any event; for example, user-installed
+handlers for SIGCHLD will usually break `pclose()' to a greater or lesser
+extent.
+
+Here's an example:
+
+     #include <sys/types.h>
+     #include <sys/wait.h>
+     #include <unistd.h>
+     #include <stdlib.h>
+     #include <fcntl.h>
+     #include <sysexits.h>
+     /* #include <paths.h> if you have it */
+     
+     #ifndef _PATH_SENDMAIL
+     #define _PATH_SENDMAIL "/usr/lib/sendmail"
+     #endif
+     
+     /* -oi means "dont treat . as a message terminator"
+      * remove ,"--" if using a pre-V8 sendmail (and hope that no-one
+      * ever uses a recipient address starting with a hyphen)
+      * you might wish to add -oem (report errors by mail)
+      */
+     
+     #define SENDMAIL_OPTS "-oi","--"
+     
+     /* this is a macro for returning the number of elements in array */
+     
+     #define countof(a) ((sizeof(a))/sizeof((a)[0]))
+     
+     /* send the contents of the file open for reading on FD to the
+      * specified recipients; the file is assumed to contain RFC822 </rfcs/rfc822.html> headers
+      * & body, the recipient list is terminated by a NULL pointer; returns
+      * -1 if error detected, otherwise the return value from sendmail
+      * (which uses <sysexits.h> to provide meaningful exit codes)
+      */
+     
+     int send_message(int fd, const char **recipients)
+     {
+         static const char *argv_init[] = { _PATH_SENDMAIL, SENDMAIL_OPTS };
+         const char **argvec = NULL;
+         int num_recip = 0;
+         pid_t pid;
+         int rc;
+         int status;
+     
+         /* count number of recipients */
+     
+         while (recipients[num_recip])
+             ++num_recip;
+     
+         if (!num_recip)
+             return 0;    /* sending to no recipients is successful */
+     
+         /* alloc space for argument vector */
+     
+         argvec = malloc((sizeof char*) * (num_recip+countof(argv_init)+1));
+         if (!argvec)
+             return -1;
+     
+         /* initialise argument vector */
+     
+         memcpy(argvec, argv_init, sizeof(argv_init));
+         memcpy(argvec+countof(argv_init),
+                recipients, num_recip*sizeof(char*));
+         argvec[num_recip + countof(argv_init)] = NULL;
+     
+         /* may need to add some signal blocking here. */
+     
+         /* fork */
+     
+         switch (pid = fork())
+         {
+         case 0:   /* child */
+     
+             /* Plumbing */
+             if (fd != STDIN_FILENO)
+                 dup2(fd, STDIN_FILENO);
+     
+             /* defined elsewhere -- closes all FDs >= argument */
+             closeall(3);
+     
+             /* go for it: */
+             execv(_PATH_SENDMAIL, argvec);
+             _exit(EX_OSFILE);
+     
+         default:  /* parent */
+     
+             free(argvec);
+             rc = waitpid(pid, &status, 0);
+             if (rc < 0)
+                 return -1;
+             if (WIFEXITED(status))
+                 return WEXITSTATUS(status);
+             return -1;
+     
+         case -1:  /* error */
+             free(argvec);
+             return -1;
+         }
+     }
+
+5.2.2.2 Allowing sendmail to deduce the recipients
+..................................................
+
+The `-t' option to `sendmail' instructs `sendmail' to parse the headers of
+the message, and use all the recipient-type headers (i.e.  `To:', `Cc:' and
+`Bcc:') to construct the list of envelope recipients. This has the
+advantage of simplifying the `sendmail' command line, but makes it
+impossible to specify recipients other than those listed in the headers.
+(This is not usually a problem.)
+
+As an example, here's a program to mail a file on standard input to
+specified recipients as a MIME attachment. Some error checks have been
+omitted for brevity. This requires the `mimencode' program from the
+`metamail' distribution.
+
+     #include <stdio.h>
+     #include <unistd.h>
+     #include <fcntl.h>
+     /* #include <paths.h> if you have it */
+     
+     #ifndef _PATH_SENDMAIL
+     #define _PATH_SENDMAIL "/usr/lib/sendmail"
+     #endif
+     
+     #define SENDMAIL_OPTS "-oi"
+     #define countof(a) ((sizeof(a))/sizeof((a)[0]))
+     
+     char tfilename[L_tmpnam];
+     char command[128+L_tmpnam];
+     
+     void cleanup(void)
+     {
+         unlink(tfilename);
+     }
+     
+     int main(int argc, char **argv)
+     {
+         FILE *msg;
+         int i;
+     
+         if (argc < 2)
+         {
+             fprintf(stderr, "usage: %s recipients...\n", argv[0]);
+             exit(2);
+         }
+     
+         if (tmpnam(tfilename) == NULL
+             || (msg = fopen(tfilename,"w")) == NULL)
+             exit(2);
+     
+         atexit(cleanup);
+     
+         fclose(msg);
+         msg = fopen(tfilename,"a");
+         if (!msg)
+             exit(2);
+     
+         /* construct recipient list */
+     
+         fprintf(msg, "To: %s", argv[1]);
+         for (i = 2; i < argc; i++)
+             fprintf(msg, ",\n\t%s", argv[i]);
+         fputc('\n',msg);
+     
+         /* Subject */
+     
+         fprintf(msg, "Subject: file sent by mail\n");
+     
+         /* sendmail can add it's own From:, Date:, Message-ID: etc. */
+     
+         /* MIME stuff */
+     
+         fprintf(msg, "MIME-Version: 1.0\n");
+         fprintf(msg, "Content-Type: application/octet-stream\n");
+         fprintf(msg, "Content-Transfer-Encoding: base64\n");
+     
+         /* end of headers -- insert a blank line */
+     
+         fputc('\n',msg);
+         fclose(msg);
+     
+         /* invoke encoding program */
+     
+         sprintf(command, "mimencode -b >>%s", tfilename);
+         if (system(command))
+             exit(1);
+     
+         /* invoke mailer */
+     
+         sprintf(command, "%s %s -t <%s",
+                 _PATH_SENDMAIL, SENDMAIL_OPTS, tfilename);
+         if (system(command))
+             exit(1);
+     
+         return 0;
+     }
+
+6. Use of tools
+***************
+
+6.1 How can I debug the children after a fork?
+==============================================
+
+Depending on the tools available there are various ways:
+
+Your debugger may have options to select whether to follow the parent or
+the child process (or both) after a `fork()', which may be sufficient for
+some purposes.
+
+Alternatively, your debugger may have an option which allows you to attach
+to a running process. This can be used to attach to the child process after
+it has been started. If you don't need to examine the very start of the
+child process, this is usually sufficient. Otherwise, you may wish to
+insert a `sleep()' call after the `fork()' in the child process, or a loop
+such as the following:
+
+     {
+         volatile int f = 1;
+         while(f);
+     }
+
+which will hang the child process until you explicitly set `f' to 0 using
+the debugger.
+
+Remember, too, that actively using a debugger isn't the only way to find
+errors in your program; utilities are available to trace system calls and
+signals on many unix flavours, and verbose logging is also often useful.
+
+6.2 How to build library from other libraries?
+==============================================
+
+Assuming we're talking about an archive (static) library, the easiest way
+is to explode all the constituent libraries into their original objects
+using `ar x' in an empty directory, and combine them all back together.  Of
+course, there is the potential for collision of filenames, but if the
+libraries are large, you probably don't want to be combining them in the
+first place....
+
+6.3 How to create shared libraries / dlls?
+==========================================
+
+The precise method for creating shared libraries varies between different
+systems. There are two main parts to the process; firstly the objects to be
+included in the shared library must be compiled, usually with options to
+indicate that the code is to be position-independent; secondly, these
+objects are linked together to form the library.
+
+Here's a trivial example that should illustrate the idea:
+
+     /* file shrobj.c */
+     
+     const char *myfunc()
+     {
+         return "Hello World";
+     }
+     
+     /* end shrobj.c */
+     
+     /* file hello.c */
+     
+     #include <stdio.h>
+     
+     extern const char *myfunc();
+     
+     main()
+     {
+         printf("%s\n", myfunc());
+         return 0;
+     }
+     
+     /* end hello.c */
+     
+     $ gcc -fpic -c shrobj.c
+     $ gcc -shared -o libshared.so shrobj.o
+     $ gcc hello.c libshared.so
+     $ ./a.out
+     Hello World
+
+By far the best method if you want the library and build procedure to be
+anything approaching portable is to use GNU Libtool.  This is a small suite
+of utilities which know about the platform-dependent aspects of building
+shared libraries; you can distribute the necessary bits with your program,
+so that when the installer configures the package, he or she can decide
+what libraries to build.  Libtool works fine on systems which do not
+support shared libraries.  It also knows how to hook into GNU Autoconf and
+GNU Automake (if you use those tools to manage your program's build
+procedure).
+
+If you don't want to use Libtool, then for compilers other than gcc, you
+should change the compiler options as follows:
+
+AIX 3.2 using xlc (unverified)
+     Drop the `-fpic', and use `-bM:SRE -bE:libshared.exp' instead of
+     `-shared'. You also need to create a file `libshared.exp' containing
+     the list of symbols to export, in this case `myfunc'.  In addition,
+     use `-e _nostart' when linking the library (on newer versions of AIX,
+     I believe this changes to `-bnoentry').
+
+SCO OpenServer 5 using the SCO Development System (unverified)
+     Shared libraries are only available on OS5 if you compile to ELF
+     format, which requires the `-belf' option. Use `-Kpic' instead of
+     `-fpic', and `cc -belf -G' for the link step.
+
+Solaris using SparcWorks compilers
+     Use `-pic' instead of `-fpic', and use `ld -G' instead of `gcc
+     -shared'.
+
+(Submission of additional entries for the above table is encouraged.)
+
+Other issues to watch out for:
+
+   * AIX and (I believe) Digital Unix don't require the -fpic option,
+     because all code is position independent.
+
+   * AIX normally requires that you create an `export file', which is a list
+     of symbols to be exported from the shared library. Some versions of the
+     linker (possibly only the SLHS linker, svld?) have an option to export
+     all symbols.
+
+   * If you want to refer to your shared library using the conventional
+     `-l' parameter to the linker, you will have to understand how shared
+     libraries are searched for at runtime on your system. The most common
+     method is by using the `LD_LIBRARY_PATH' environment variable, but
+     there is usually an additional option to specify this at link time.
+
+   * Most implementations record the expected runtime location of the shared
+     library internally. Thus, moving a library from one directory to
+     another may prevent it from working. Many systems have an option to
+     the linker to specify the expected runtime location (the `-R' linker
+     option on Solaris, for example, or the `LD_RUN_PATH' environment
+     variable).
+
+   * ELF and a.out implementations may have a linker option `-Bsymbolic'
+     which causes internal references within the library to be resolved.
+     Otherwise, on these systems, all symbol resolution is deferred to the
+     final link, and individual routines in the main program can override
+     ones in the library.
+
+6.4 Can I replace objects in a shared library?
+==============================================
+
+Generally, no.
+
+On most systems (except AIX), when you link objects to form a shared
+library, it's rather like linking an executable; the objects don't retain
+their individual identity. As a result, it's generally not possible to
+extract or replace individual objects from a shared library.
+
+6.5 How can I generate a stack dump from within a running program?
+==================================================================
+
+Some systems provide library functions for unwinding the stack, so that you
+can (for example) generate a stack dump in an error-handling function.
+However, these are highly system-specific, and only a minority of systems
+have them.
+
+A possible workaround is to get your program to invoke a debugger *on
+itself* - the details still vary slightly between systems, but the general
+idea is to do this:
+
+     void dump_stack(void)
+     {
+         char s[160];
+     
+         sprintf(s, "/bin/echo 'where\ndetach' | dbx -a %d", getpid());
+         system(s);
+     
+         return;
+     }
+
+You will need to tweak the commands and parameters to dbx according to your
+system, or even substitute another debugger such as `gdb', but this is
+still the most general solution to this particular problem that I've ever
+seen. Kudos to Ralph Corderoy for this one :-)
+
+Here's a list of the command lines required for some systems:
+
+Most systems using dbx
+     `"/bin/echo 'where\ndetach' | dbx /path/to/program %d"'
+
+AIX
+     `"/bin/echo 'where\ndetach' | dbx -a %d"'
+
+IRIX
+     `"/bin/echo 'where\ndetach' | dbx -p %d"'
+
+Examples
+********
+
+Catching SIGCHLD
+================
+
+     #include <sys/types.h>  /* include this before any other sys headers */
+     #include <sys/wait.h>   /* header for waitpid() and various macros */
+     #include <signal.h>     /* header for signal functions */
+     #include <stdio.h>      /* header for fprintf() */
+     #include <unistd.h>     /* header for fork() */
+     
+     void sig_chld(int);     /* prototype for our SIGCHLD handler */
+     
+     int main()
+     {
+         struct sigaction act;
+         pid_t pid;
+     
+         /* Assign sig_chld as our SIGCHLD handler */
+         act.sa_handler = sig_chld;
+     
+         /* We don't want to block any other signals in this example */
+         sigemptyset(&act.sa_mask);
+     
+         /*
+          * We're only interested in children that have terminated, not ones
+          * which have been stopped (eg user pressing control-Z at terminal)
+          */
+         act.sa_flags = SA_NOCLDSTOP;
+     
+         /*
+          * Make these values effective. If we were writing a real
+          * application, we would probably save the old value instead of
+          * passing NULL.
+          */
+         if (sigaction(SIGCHLD, &act, NULL) < 0)
+         {
+             fprintf(stderr, "sigaction failed\n");
+             return 1;
+         }
+     
+         /* Fork */
+         switch (pid = fork())
+         {
+         case -1:
+             fprintf(stderr, "fork failed\n");
+             return 1;
+     
+         case 0:                         /* child -- finish straight away */
+             _exit(7);                   /* exit status = 7 */
+     
+         default:                        /* parent */
+             sleep(10);                  /* give child time to finish */
+         }
+     
+         return 0;
+     }
+     
+     /*
+      * The signal handler function -- only gets called when a SIGCHLD
+      * is received, ie when a child terminates
+      */
+     void sig_chld(int signo)
+     {
+         int status, child_val;
+     
+         /* Wait for any child without blocking */
+         if (waitpid(-1, &status, WNOHANG) < 0)
+         {
+             /*
+              * calling standard I/O functions like fprintf() in a
+              * signal handler is not recommended, but probably OK
+              * in toy programs like this one.
+              */
+             fprintf(stderr, "waitpid failed\n");
+             return;
+         }
+     
+         /*
+          * We now have the info in 'status' and can manipulate it using
+          * the macros in wait.h.
+          */
+         if (WIFEXITED(status))                /* did child exit normally? */
+         {
+             child_val = WEXITSTATUS(status); /* get child's exit status */
+             printf("child's exited normally with status %d\n", child_val);
+         }
+     }
+
+Reading the process table - SUNOS 4 version
+===========================================
+
+     #define _KMEMUSER
+     #include <sys/proc.h>
+     #include <kvm.h>
+     #include <fcntl.h>
+     
+     char regexpstr[256];
+     #define INIT            register char *sp=regexpstr;
+     #define GETC()          (*sp++)
+     #define PEEKC()         (*sp)
+     #define UNGETC(c)       (--sp)
+     #define RETURN(pointer) return(pointer);
+     #define ERROR(val)
+     #include <regexp.h>
+     
+     pid_t
+     getpidbyname(char *name,pid_t skipit)
+     {
+         kvm_t *kd;
+         char **arg;
+         int error;
+         char *p_name=NULL;
+         char expbuf[256];
+         char **freeme;
+         int curpid;
+         struct user * cur_user;
+         struct user myuser;
+         struct proc * cur_proc;
+     
+     
+         if((kd=kvm_open(NULL,NULL,NULL,O_RDONLY,NULL))==NULL){
+             return(-1);
+         }
+         sprintf(regexpstr,"^.*/%s$",name);
+         compile(NULL,expbuf,expbuf+256,'\0');
+     
+         while(cur_proc=kvm_nextproc(kd)){
+             curpid = cur_proc->p_pid;
+             if((cur_user=kvm_getu(kd,cur_proc))!=NULL){
+                 error=kvm_getcmd(kd,cur_proc,cur_user,&arg,NULL);
+                 if(error==-1){
+                     if(cur_user->u_comm[0]!='\0'){
+                         p_name=cur_user->u_comm;
+                     }
+                 }
+                 else{
+                     p_name=arg[0];
+                 }
+             }
+             if(p_name){
+                 if(!strcmp(p_name,name)){
+                     if(error!=-1){
+                         free(arg);
+                     }
+                     if(skipit!=-1 && ourretval==skipit){
+                         ourretval=-1;
+                     }
+                     else{
+                         close(fd);
+                         break;
+                     }
+                     break;
+                 }
+                 else{
+                     if(step(p_name,expbuf)){
+                         if(error!=-1){
+                             free(arg);
+                         }
+                         break;
+                     }
+                 }
+             }
+             if(error!=-1){
+                 free(arg);
+             }
+             p_name=NULL;
+         }
+         kvm_close(kd);
+         if(p_name!=NULL){
+             return(curpid);
+         }
+         return (-1);
+     }
+
+Reading the process table - SYSV version
+========================================
+
+     pid_t
+     getpidbyname(char *name,pid_t skipit)
+     {
+         DIR  *dp;
+         struct dirent *dirp;
+         prpsinfo_t retval;
+         int fd;
+         pid_t ourretval=-1;
+     
+         if((dp=opendir("/proc"))==NULL){
+             return -1;
+         }
+         chdir("/proc");
+         while((dirp=readdir(dp))!=NULL){
+             if(dirp->d_name[0]!='.'){
+                 if((fd=open(dirp->d_name,O_RDONLY))!=-1){
+                     if(ioctl(fd,PIOCPSINFO,&retval)!=-1){
+                         if(!strcmp(retval.pr_fname,name)){
+                             ourretval=(pid_t)atoi(dirp->d_name);
+                             if(skipit!=-1 && ourretval==skipit){
+                                 ourretval=-1;
+                             }
+                             else{
+                                 close(fd);
+                                 break;
+                             }
+                         }
+                     }
+                     close(fd);
+                 }
+             }
+         }
+         closedir(dp);
+         return ourretval;
+     }
+
+Reading the process table - AIX 4.2 version
+===========================================
+
+     #include <stdio.h>
+     #include <procinfo.h>
+     
+     int getprocs(struct procsinfo *, int, struct fdsinfo *,
+                  int, pid_t *, int);
+     
+     pid_t getpidbyname(char *name, pid_t *nextPid)
+     {
+       struct procsinfo  pi;
+       pid_t             retval = (pid_t) -1;
+       pid_t             pid;
+     
+       pid = *nextPid;
+     
+       while(1)
+       {
+         if(getprocs(&pi, sizeof pi, 0, 0, &pid, 1) != 1)
+           break;
+     
+         if(!strcmp(name, pi.pi_comm))
+         {
+           retval = pi.pi_pid;
+           *nextPid = pid;
+           break;
+         }
+       }
+     
+       return retval;
+     }
+     
+     int main(int argc, char *argv[])
+     {
+       int   curArg;
+       pid_t pid;
+       pid_t nextPid;
+     
+       if(argc == 1)
+       {
+         printf("syntax: %s <program> [program ...]\n",argv[0]);
+         exit(1);
+       }
+     
+       for(curArg = 1; curArg < argc; curArg++)
+       {
+         printf("Process IDs for %s\n", argv[curArg]);
+     
+         for(nextPid = 0, pid = 0; pid != -1; )
+           if((pid = getpidbyname(argv[curArg], &nextPid)) != -1)
+             printf("\t%d\n", pid);
+       }
+     }
+
+Reading the process table using popen and ps
+============================================
+
+     #include <stdio.h>      /* FILE, sprintf, fgets, puts */
+     #include <stdlib.h>     /* atoi, exit, EXIT_SUCCESS */
+     #include <string.h>     /* strtok, strcmp */
+     #include <sys/types.h>  /* pid_t */
+     #include <sys/wait.h>   /* WIFEXITED, WEXITSTATUS */
+     
+     char *procname(pid_t pid)
+     {
+        static char line[133], command[80], *linep, *token, *cmd;
+        FILE *fp;
+        int status;
+     
+        if (0 == pid) return (char *)0;
+     
+        sprintf(command, "ps -p %d 2>/dev/null", pid);
+        fp = popen(command, "r");
+        if ((FILE *)0 == fp) return (char *)0;
+     
+        /* read the header line */
+        if ((char *)0 == fgets(line, sizeof line, fp))
+        {
+           pclose(fp);
+           return (char *)0;
+        }
+     
+        /* figure out where the command name is from the column headings.
+         * (BSD-ish machines put the COMMAND in the 5th column, while SysV
+         * seems to put CMD or COMMAND in the 4th column.)
+         */
+        for (linep = line; ; linep = (char *)0)
+        {
+           if ((char *)0 == (token = strtok(linep, " \t\n")))
+           {
+              pclose(fp);
+              return (char *)0;
+           }
+           if (0 == strcmp("COMMAND", token) || 0 == strcmp("CMD", token))
+           { /*  we found the COMMAND column */
+              cmd = token;
+              break;
+           }
+        }
+     
+        /* read the ps(1) output line */
+        if ((char *)0 == fgets(line, sizeof line, fp))
+        {
+           pclose(fp);
+           return (char *)0;
+        }
+     
+        /* grab the "word" underneath the command heading... */
+        if ((char *)0 == (token = strtok(cmd, " \t\n")))
+        {
+           pclose(fp);
+           return (char *)0;
+        }
+     
+        status = pclose(fp);
+        if (!WIFEXITED(status) || 0 != WEXITSTATUS(status))
+          return (char *)0;
+     
+        return token;
+     }
+     
+     int main(int argc, char *argv[])
+     {
+        puts(procname(atoi(argv[1])));
+        exit(EXIT_SUCCESS);
+     }
+
+Daemon utility functions
+========================
+
+     #include <unistd.h>
+     #include <stdlib.h>
+     #include <fcntl.h>
+     #include <signal.h>
+     #include <sys/types.h>
+     #include <sys/wait.h>
+     #include <errno.h>
+     
+     /* closeall() -- close all FDs >= a specified value */
+     
+     void closeall(int fd)
+     {
+         int fdlimit = sysconf(_SC_OPEN_MAX);
+     
+         while (fd < fdlimit)
+           close(fd++);
+     }
+     
+     /* daemon() - detach process from user and disappear into the background
+      * returns -1 on failure, but you can't do much except exit in that case
+      * since we may already have forked. This is based on the BSD version,
+      * so the caller is responsible for things like the umask, etc.
+      */
+     
+     /* believed to work on all Posix systems */
+     
+     int daemon(int nochdir, int noclose)
+     {
+         switch (fork())
+         {
+             case 0:  break;
+             case -1: return -1;
+             default: _exit(0);          /* exit the original process */
+         }
+     
+         if (setsid() < 0)               /* shoudn't fail */
+           return -1;
+     
+         /* dyke out this switch if you want to acquire a control tty in */
+         /* the future -- not normally advisable for daemons */
+     
+         switch (fork())
+         {
+             case 0:  break;
+             case -1: return -1;
+             default: _exit(0);
+         }
+     
+         if (!nochdir)
+           chdir("/");
+     
+         if (!noclose)
+         {
+             closeall(0);
+             open("/dev/null",O_RDWR);
+             dup(0); dup(0);
+         }
+     
+         return 0;
+     }
+     
+     /* fork2() -- like fork, but the new process is immediately orphaned
+      *            (won't leave a zombie when it exits)
+      * Returns 1 to the parent, not any meaningful pid.
+      * The parent cannot wait() for the new process (it's unrelated).
+      */
+     
+     /* This version assumes that you *haven't* caught or ignored SIGCHLD. */
+     /* If you have, then you should just be using fork() instead anyway.  */
+     
+     int fork2()
+     {
+         pid_t pid;
+         int rc;
+         int status;
+     
+         if (!(pid = fork()))
+         {
+             switch (fork())
+             {
+               case 0:  return 0;
+               case -1: _exit(errno);    /* assumes all errnos are <256 */
+               default: _exit(0);
+             }
+         }
+     
+         if (pid < 0 || waitpid(pid,&status,0) < 0)
+           return -1;
+     
+         if (WIFEXITED(status))
+           if (WEXITSTATUS(status) == 0)
+             return 1;
+           else
+             errno = WEXITSTATUS(status);
+         else
+           errno = EINTR;  /* well, sort of :-) */
+     
+         return -1;
+     }
+
+An example of using the above functions:
+
+     #include <sys/types.h>
+     #include <sys/socket.h>
+     #include <netinet/in.h>
+     #include <stdio.h>
+     #include <stdlib.h>
+     #include <syslog.h>
+     #include <errno.h>
+     
+     int daemon(int,int);
+     int fork2(void);
+     void closeall(int);
+     
+     #define TCP_PORT 8888
+     
+     void errexit(const char *str)
+     {
+         syslog(LOG_INFO, "%s failed: %d (%m)", str, errno);
+         exit(1);
+     }
+     
+     void errreport(const char *str)
+     {
+         syslog(LOG_INFO, "%s failed: %d (%m)", str, errno);
+     }
+     
+     /* the actual child process is here. */
+     
+     void run_child(int sock)
+     {
+         FILE *in = fdopen(sock,"r");
+         FILE *out = fdopen(sock,"w");
+         int ch;
+     
+         setvbuf(in, NULL, _IOFBF, 1024);
+         setvbuf(out, NULL, _IOLBF, 1024);
+     
+         while ((ch = fgetc(in)) != EOF)
+           fputc(toupper(ch), out);
+     
+         fclose(out);
+     }
+     
+     /* This is the daemon's main work -- listen for connections and spawn */
+     
+     void process()
+     {
+         struct sockaddr_in addr;
+         int addrlen = sizeof(addr);
+         int sock = socket(AF_INET, SOCK_STREAM, 0);
+         int flag = 1;
+         int rc = setsockopt(sock, SOL_SOCKET, SO_REUSEADDR,
+                             &flag, sizeof(flag));
+     
+         if (rc < 0)
+           errexit("setsockopt");
+     
+         addr.sin_family = AF_INET;
+         addr.sin_port = htons(TCP_PORT);
+         addr.sin_addr.s_addr = INADDR_ANY;
+     
+         rc = bind(sock, (struct sockaddr *) &addr, addrlen);
+         if (rc < 0)
+           errexit("bind");
+     
+         rc = listen(sock, 5);
+         if (rc < 0)
+           errexit("listen");
+     
+         for (;;)
+         {
+             rc = accept(sock, (struct sockaddr *) &addr, &addrlen);
+     
+             if (rc >= 0)
+               switch (fork2())
+               {
+                 case 0:  close(sock); run_child(rc); _exit(0);
+                 case -1: errreport("fork2"); close(rc); break;
+                 default: close(rc);
+               }
+         }
+     }
+     
+     int main()
+     {
+         if (daemon(0,0) < 0)
+         {
+             perror("daemon");
+             exit(2);
+         }
+     
+         openlog("test", LOG_PID, LOG_DAEMON);
+     
+         process();
+     
+         return 0;
+     }
+
+Modem handling example
+======================
+
+     /* issue some simple modem commands
+      * requires the name of a serial device (preferably a dial-out device,
+      * or a non-modem-control device) as its only parameter.
+      * If you don't have functional dial-out devices, then move CLOCAL
+      * to CFLAGS_TO_SET instead.
+      */
+     
+     #include <stdio.h>
+     #include <stdlib.h>
+     #include <fcntl.h>
+     #include <unistd.h>
+     #include <sys/types.h>
+     #include <sys/time.h>
+     #include <sys/ioctl.h>   /* maybe; system-dependent */
+     #include <termios.h>
+     #include <errno.h>
+     #include <string.h>
+     #include <ctype.h>
+     
+     #define CFLAGS_TO_SET (CREAD | HUPCL)
+     #define CFLAGS_TO_CLEAR (CSTOPB | PARENB | CLOCAL)
+     
+     enum flowmode { NoFlow, HardFlow, SoftFlow };
+     
+     /* system-dependent */
+     #define CFLAGS_HARDFLOW (CRTSCTS)
+     
+     
+     #define EXAMPLE_BAUD B19200
+     #define EXAMPLE_FLOW HardFlow
+     
+     
+     static void die(const char *msg)
+     {
+         fprintf(stderr, "%s\n", msg);
+         exit(1);
+     }
+     
+     static int close_and_complain(int fd, const char *msg, int err)
+     {
+         fprintf(stderr, "%s: %s\n", msg, strerror(err));
+         if (fd >= 0)
+             close(fd);
+         errno = err;
+         return -1;
+     }
+     
+     
+     int open_port(const char *name, speed_t baud, enum flowmode flow)
+     {
+         int flags;
+         struct termios attr;
+     
+         int fd = open(name, O_RDWR | O_NONBLOCK | O_NOCTTY);
+     
+         if (fd < 0)
+             return close_and_complain(-1, "open", errno);
+     
+         /* set vaguely sensibe settings */
+     
+         if (tcgetattr(fd, &attr) < 0)
+             return close_and_complain(fd, "tcgetattr", errno);
+     
+         /* no special input or output processing */
+     
+         attr.c_iflag = (flow == SoftFlow) ? (IXON | IXOFF) : 0;
+         attr.c_oflag = 0;
+     
+         /* set 8-bit character size and miscellanous control modes */
+     
+         attr.c_cflag &= ~(CSIZE | CFLAGS_TO_CLEAR | CFLAGS_HARDFLOW);
+         attr.c_cflag |= (CS8 | CFLAGS_TO_SET);
+         if (flow == HardFlow)
+             attr.c_cflag |= CFLAGS_HARDFLOW;
+     
+         /* local modes */
+     
+         attr.c_lflag &= ~(ICANON | ECHO | ECHOE | ECHOK | ISIG);
+     
+         /* special characters -- most disabled by prior settings anyway */
+     
+         {
+             int i;
+     #ifdef _POSIX_VDISABLE
+             attr.c_cc[0] = _POSIX_VDISABLE;
+     #else
+             attr.c_cc[0] = fpathconf(fd, _PC_VDISABLE);
+     #endif
+             for (i = 1; i < NCCS; i++)
+                 attr.c_cc[i] = attr.c_cc[0];
+         }
+     
+         attr.c_cc[VSTART] = 0x11;
+         attr.c_cc[VSTOP] = 0x13;
+     
+         /* timing controls for read() */
+     
+         attr.c_cc[VMIN] = 1;
+         attr.c_cc[VTIME] = 0;
+     
+         /* baud rate */
+     
+         cfsetispeed(&attr, baud);
+         cfsetospeed(&attr, baud);
+     
+         /* write settings */
+     
+         if (tcsetattr(fd, TCSANOW, &attr) < 0)
+             return close_and_complain(fd, "tcsetattr", errno);
+     
+         /* turn off O_NONBLOCK if the device remembered it */
+     
+         flags = fcntl(fd, F_GETFL, 0);
+         if (flags < 0)
+             return close_and_complain(fd, "fcntl(GETFL)", errno);
+         if (fcntl(fd, F_SETFL, flags & ~O_NONBLOCK) < 0)
+             return close_and_complain(fd, "fcntl(SETFL)", errno);
+     
+         return fd;
+     }
+     
+     /* some simple timing utilities */
+     
+     /* add SECS and USECS to *TV */
+     
+     static void timeradd(struct timeval *tv, long secs, long usecs)
+     {
+         tv->tv_sec += secs;
+         if ((tv->tv_usec += usecs) >= 1000000)
+         {
+             tv->tv_sec += tv->tv_usec / 1000000;
+             tv->tv_usec %= 1000000;
+         }
+     }
+     
+     /* Set *RES = *A - *B, returning the sign of the result */
+     
+     static int timersub(struct timeval *res,
+                         const struct timeval *a, const struct timeval *b)
+     {
+         long sec = a->tv_sec - b->tv_sec;
+         long usec = a->tv_usec - b->tv_usec;
+     
+         if (usec < 0)
+             usec += 1000000, --sec;
+     
+         res->tv_sec = sec;
+         res->tv_usec = usec;
+     
+         return (sec < 0) ? (-1) : ((sec == 0 && usec == 0) ? 0 : 1);
+     }
+     
+     
+     /* this doesn't try and cope with pathological strings (e.g. ababc)
+      * timeout is in millisecs
+      * A more usual approach to this is to use alarm() for the timeout.
+      * This example avoids signal handling for simplicity and to illustrate
+      * an alternative approach
+      */
+     
+     int expect(int fd, const char *str, int timeo)
+     {
+         int matchlen = 0;
+         int len = strlen(str);
+         struct timeval now,end,left;
+         fd_set fds;
+         char c;
+     
+         gettimeofday(&end, NULL);
+         timeradd(&end, timeo/1000, timeo%1000);
+     
+         while (matchlen < len)
+         {
+             gettimeofday(&now, NULL);
+             if (timersub(&left, &end, &now) <= 0)
+                 return -1;
+     
+             FD_ZERO(&fds);
+             FD_SET(fd, &fds);
+             if (select(fd+1, &fds, NULL, NULL, &left) <= 0)
+                 return -1;
+     
+             if (read(fd, &c, 1) != 1)
+                 return -1;
+     
+             if (isprint((unsigned char)c) || c == '\n' || c == '\r')
+                 putchar(c);
+             else
+                 printf("\\x%02x", c);
+     
+             if (c == str[matchlen])
+                 ++matchlen;
+             else
+                 matchlen = 0;
+         }
+     
+         return 0;
+     }
+     
+     
+     int main(int argc, char **argv)
+     {
+         int fd;
+         unsigned char c;
+     
+         if (argc < 2)
+             die("no port specified");
+     
+         setvbuf(stdout, NULL, _IONBF, 0);
+     
+         fd = open_port(argv[1], EXAMPLE_BAUD, EXAMPLE_FLOW);
+         if (fd < 0)
+             die("cannot open port");
+     
+         write(fd, "AT\r", 3);
+         if (expect(fd, "OK", 5000) < 0)
+         {
+             write(fd, "AT\r", 3);
+             if (expect(fd, "OK", 5000) < 0)
+             {
+                 tcflush(fd, TCIOFLUSH);
+                 close(fd);
+                 die("no response to AT");
+             }
+         }
+     
+         write(fd, "ATI4\r", 5);
+         expect(fd, "OK", 10000);
+     
+         putchar('\n');
+     
+         tcflush(fd, TCIOFLUSH);
+         close(fd);
+     
+         return 0;
+     }
+
+Job Control example
+===================
+
+
+     /* functions to spawn foreground/background jobs */
+     
+     #include <stdio.h>
+     #include <unistd.h>
+     #include <stdlib.h>
+     #include <fcntl.h>
+     #include <signal.h>
+     #include <sys/types.h>
+     #include <sys/wait.h>
+     #include <errno.h>
+     
+     
+     /* Some of the functions below fail if the control tty can't be
+      * located, or if the calling process isn't in the foreground. In the
+      * first case, we are assuming that a foreground process will have the
+      * ctty open on either stdin, stdout or stderr, and we return ENOTTY
+      * if it isn't. In the second case, we return EPERM if a
+      * non-foreground process attempts to put something into the
+      * foreground (probably overly paranoid) except for the special case
+      * of foreground_self().
+      */
+     
+     
+     /* assign the terminal (open on ctty) to a specific pgrp. This wrapper
+      * around tcsetpgrp() is needed only because of extreme bogosity on the
+      * part of POSIX; conforming systems deliver STGTTOU if tcsetpgrp is
+      * called from a non-foreground process (which it almost invariably is).
+      * A triumph of spurious consistency over common sense.
+      */
+     
+     int assign_terminal(int ctty, pid_t pgrp)
+     {
+         sigset_t sigs;
+         sigset_t oldsigs;
+         int rc;
+     
+         sigemptyset(&sigs);
+         sigaddset(&sigs,SIGTTOU);
+         sigprocmask(SIG_BLOCK, &sigs, &oldsigs);
+     
+         rc = tcsetpgrp(ctty, pgrp);
+     
+         sigprocmask(SIG_SETMASK, &oldsigs, NULL);
+     
+         return rc;
+     }
+     
+     
+     /* Like fork(), but does job control. FG is true if the newly-created
+      * process is to be placed in the foreground. (This implicitly puts
+      * the calling process in the background, so watch out for tty I/O
+      * after doing this.) PGRP is -1 to create a new job, in which case
+      * the returned pid is also the pgrp of the new job, or specifies an
+      * existing job in the same session (normally used only for starting
+      * second or subsequent process in a pipeline).  */
+     
+     pid_t spawn_job(int fg, pid_t pgrp)
+     {
+         int ctty = -1;
+         pid_t pid;
+     
+         /* If spawning a *new* foreground job, require that at least one
+          * of stdin, stdout or stderr refer to the control tty, and that
+          * the current process is in the foreground.
+          * Only check for controlling tty if starting a new foreground
+          * process in an existing job.
+          * A session without a control tty can only have background jobs
+          */
+     
+         if (fg)
+         {
+             pid_t curpgrp;
+     
+             if ((curpgrp = tcgetpgrp(ctty = 2)) < 0
+                 && (curpgrp = tcgetpgrp(ctty = 0)) < 0
+                 && (curpgrp = tcgetpgrp(ctty = 1)) < 0)
+                 return errno = ENOTTY, (pid_t)-1;
+     
+             if (pgrp < 0 && curpgrp != getpgrp())
+                 return errno = EPERM, (pid_t)-1;
+         }
+     
+         switch (pid = fork())
+         {
+             case -1: /* fork failure */
+                 return pid;
+     
+             case 0: /* child */
+     
+                 /* establish new process group, and put ourselves in
+                  * foreground if necessary
+                  * unclear what to do if setpgid fails ("can't happen")
+                  */
+     
+                 if (pgrp < 0)
+                     pgrp = getpid();
+     
+                 if (setpgid(0,pgrp) == 0 && fg)
+                     assign_terminal(ctty, pgrp);
+     
+                 return 0;
+     
+             default: /* parent */
+     
+                 /* establish child process group here too. */
+     
+                 if (pgrp < 0)
+                     pgrp = pid;
+     
+                 setpgid(pid, pgrp);
+     
+                 return pid;
+         }
+     
+         /*NOTREACHED*/
+     }
+     
+     
+     /* Kill job PGRP with signal SIGNO */
+     
+     int kill_job(pid_t pgrp, int signo)
+     {
+         return kill(-pgrp, signo);
+     }
+     
+     
+     /* Suspend job PGRP */
+     
+     int suspend_job(pid_t pgrp)
+     {
+         return kill_job(pgrp, SIGSTOP);
+     }
+     
+     
+     /* Resume job PGRP in background */
+     
+     int resume_job_bg(pid_t pgrp)
+     {
+         return kill_job(pgrp, SIGCONT);
+     }
+     
+     
+     /* resume job PGRP in foreground */
+     
+     int resume_job_fg(pid_t pgrp)
+     {
+         pid_t curpgrp;
+         int ctty;
+     
+         if ((curpgrp = tcgetpgrp(ctty = 2)) < 0
+             && (curpgrp = tcgetpgrp(ctty = 0)) < 0
+             && (curpgrp = tcgetpgrp(ctty = 1)) < 0)
+             return errno = ENOTTY, (pid_t)-1;
+     
+         if (curpgrp != getpgrp())
+             return errno = EPERM, (pid_t)-1;
+     
+         if (assign_terminal(ctty, pgrp) < 0)
+             return -1;
+     
+         return kill_job(pgrp, SIGCONT);
+     }
+     
+     
+     /* put ourselves in the foreground, e.g. after suspending a foreground
+      * job
+      */
+     
+     int foreground_self()
+     {
+         pid_t curpgrp;
+         int ctty;
+     
+         if ((curpgrp = tcgetpgrp(ctty = 2)) < 0
+             && (curpgrp = tcgetpgrp(ctty = 0)) < 0
+             && (curpgrp = tcgetpgrp(ctty = 1)) < 0)
+             return errno = ENOTTY, (pid_t)-1;
+     
+         return assign_terminal(ctty, getpgrp());
+     }
+     
+     
+     /* closeall() - close all FDs >= a specified value */
+     
+     void closeall(int fd)
+     {
+         int fdlimit = sysconf(_SC_OPEN_MAX);
+     
+         while (fd < fdlimit)
+             close(fd++);
+     }
+     
+     
+     /* like system(), but executes the specified command as a background
+      * job, returning the pid of the shell process (which is also the pgrp
+      * of the job, suitable for kill_job etc.)
+      * If INFD, OUTFD or ERRFD are non-NULL, then a pipe will be opened and
+      * a descriptor for the parent end of the relevent pipe stored there.
+      * If any of these are NULL, they will be redirected to /dev/null in the
+      * child.
+      * Also closes all FDs > 2 in the child process (an oft-overlooked task)
+      */
+     
+     pid_t spawn_background_command(const char *cmd,
+                                    int *infd, int *outfd, int *errfd)
+     {
+         int nullfd = -1;
+         int pipefds[3][2];
+         int error = 0;
+     
+         if (!cmd)
+             return errno = EINVAL, -1;
+     
+         pipefds[0][0] = pipefds[0][1] = -1;
+         pipefds[1][0] = pipefds[1][1] = -1;
+         pipefds[2][0] = pipefds[2][1] = -1;
+     
+         if (infd && pipe(pipefds[0]) < 0)
+             error = errno;
+         else if (outfd && pipe(pipefds[1]) < 0)
+             error = errno;
+         else if (errfd && pipe(pipefds[2]) < 0)
+             error = errno;
+     
+         if (!error && !(infd && outfd && errfd))
+         {
+             nullfd = open("/dev/null",O_RDWR);
+             if (nullfd < 0)
+                 error = errno;
+         }
+     
+         if (!error)
+         {
+             pid_t pid = spawn_job(0, -1);
+             switch (pid)
+             {
+                 case -1: /* fork failure */
+                     error = errno;
+                     break;
+     
+                 case 0: /* child proc */
+     
+                     dup2(infd ? pipefds[0][0] : nullfd, 0);
+                     dup2(outfd ? pipefds[1][1] : nullfd, 1);
+                     dup2(errfd ? pipefds[2][1] : nullfd, 2);
+                     closeall(3);
+     
+                     execl("/bin/sh","sh","-c",cmd,(char*)NULL);
+     
+                     _exit(127);
+     
+                 default: /* parent proc */
+     
+                     close(nullfd);
+                     if (infd)
+                         close(pipefds[0][0]), *infd = pipefds[0][1];
+                     if (outfd)
+                         close(pipefds[1][1]), *outfd = pipefds[1][0];
+                     if (errfd)
+                         close(pipefds[2][1]), *errfd = pipefds[2][0];
+     
+                     return pid;
+             }
+         }
+     
+         /* only reached if error */
+     
+         {
+             int i,j;
+             for (i = 0; i < 3; ++i)
+                 for (j = 0; j < 2; ++j)
+                     if (pipefds[i][j] >= 0)
+                         close(pipefds[i][j]);
+         }
+     
+         if (nullfd >= 0)
+             close(nullfd);
+     
+         return errno = error, (pid_t) -1;
+     }
+     
+     
+     /*--------------------------------------------------------------------*/
+     /* This bit is a somewhat trivial example of using the above.         */
+     
+     pid_t bgjob = -1;
+     volatile int signo = 0;
+     
+     #ifndef WCOREDUMP
+      /* If WCOREDUMP is missing, you might want to supply a correct
+       * definition for your platform (this is usually (status & 0x80) but
+       * not always) or punt (as in this example) by assuming no core dumps.
+       */
+     # define WCOREDUMP(status) (0)
+     #endif
+     
+     int check_children()
+     {
+         pid_t pid;
+         int status;
+         int count = 0;
+     
+         while ((pid = waitpid(-1, &status, WNOHANG | WUNTRACED)) > 0)
+         {
+             if (pid == bgjob && !WIFSTOPPED(status))
+                 bgjob = -1;
+     
+             ++count;
+     
+             if (WIFEXITED(status))
+                 fprintf(stderr,"Process %ld exited with return code %d\n",
+                         (long)pid, WEXITSTATUS(status));
+             else if (WIFSIGNALED(status))
+                 fprintf(stderr,"Process %ld killed by signal %d%s\n",
+                         (long)pid, WTERMSIG(status),
+                         WCOREDUMP(status) ? " (core dumped)" : "");
+             else if (WIFSTOPPED(status))
+                 fprintf(stderr,"Process %ld stopped by signal %d\n",
+                         (long)pid, WSTOPSIG(status));
+             else
+                 fprintf(stderr,"Unexpected status - pid=%ld, status=0x%x\n",
+                         (long)pid, status);
+         }
+     
+         return count;
+     }
+     
+     
+     void sighandler(int sig)
+     {
+         if (sig != SIGCHLD)
+             signo = sig;
+     }
+     
+     
+     int main()
+     {
+         struct sigaction act;
+         int sigcount = 0;
+     
+         act.sa_handler = sighandler;
+         act.sa_flags = 0;
+         sigemptyset(&act.sa_mask);
+         sigaction(SIGINT,&act,NULL);
+         sigaction(SIGQUIT,&act,NULL);
+         sigaction(SIGTERM,&act,NULL);
+         sigaction(SIGTSTP,&act,NULL);
+         sigaction(SIGCHLD,&act,NULL);
+     
+         fprintf(stderr,"Starting background job 'sleep 60'\n");
+         bgjob = spawn_background_command("sleep 60", NULL, NULL, NULL);
+         if (bgjob < 0)
+         {
+             perror("spawn_background_command");
+             exit(1);
+         }
+         fprintf(stderr,"Background job started with id %ld\n", (long)bgjob);
+         while (bgjob >= 0)
+         {
+             if (signo)
+             {
+                 fprintf(stderr,"Signal %d caught\n", signo);
+                 if (sigcount++)
+                     kill_job(bgjob, SIGKILL);
+                 else
+                 {
+                     kill_job(bgjob, SIGTERM);
+                     kill_job(bgjob, SIGCONT);
+                 }
+             }
+     
+             if (!check_children())
+                 pause();
+         }
+     
+         fprintf(stderr,"Done - exiting\n");
+         return 0;
+     }
+
+
+==============================================================================
+-- 
+Andrew.
+
+
+    User Contributions:
+
+
+        Comment about this article, ask questions, or add new
+        information about this topic:
+
+Name:
+E-mail:
+Show my email publicly
+Type the code shown:
+CAPTCHA
+Public Comment:  (50-4000 characters)
+
+
+Archived related questions and answers </qa/fqa4117.html>
+
+*[ Usenet FAQs </faqs/> | Web FAQs </contrib/> | Documents </docs/> |
+RFC Index </rfcs/> ] *
+
+Send corrections/additions to the FAQ Maintainer:
+Andrew Gierth <andrew@erlenstar.demon.co.uk>
+
+
+------------------------------------------------------------------------
+
+
+*Last Update March 27 2014 @ 02:12 PM*
+
+
+------------------------------------------------------------------------
+
+Some parts © 2015 Advameg, Inc.  |   Terms of Use </terms.html>

@@ -1,0 +1,208 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<!--Converted with LaTeX2HTML 2008 (1.71)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<html><head>
+<title>Using OpenCL on the CS Linux Machines</title>
+<meta name="description" content="Using OpenCL on the CS Linux Machines">
+<meta name="keywords" content="opencl-howto">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="Generator" content="LaTeX2HTML v2008">
+<meta http-equiv="Content-Style-Type" content="text/css">
+
+<link rel="STYLESHEET" href="Using%20OpenCL%20on%20the%20CS%20Linux%20Machines_files/opencl-howto.css">
+
+</head>
+
+<body>
+
+<p>
+
+</p><p>
+</p><h1>Using OpenCL on the CS Linux Machines</h1>
+
+<p>
+All of our classroom machines and a few of our lab machines
+have graphics cards that support GPGPU (General Purpose computing
+using Graphics Processing Units).
+On these machines we have installed proprietary drivers
+(from AMD or NVIDIA), which support OpenCL,
+and AMD's Accelerated Parallel Processing toolkit, which
+provides programming support. 
+(On a few of the lab machines we have also installed NVIDIA's CUDA
+toolkit, which also provides programming support.  Ask me for details
+if interested.)
+This note describes how to develop OpenCL programs
+in C or C++ using AMD's toolkit.
+Notice that you may have other options for GPGPU programming
+(e.g., the AMD toolkit includes a Java library called Aparapi 
+meant to support this kind of programming), in which case the
+sections on compiling and running OpenCL programs are not
+relevant, but the other sections are.
+
+</p><p>
+
+</p><h2><a name="SECTION00001000000000000000">
+Preliminaries</a>
+</h2>
+
+<p>
+The first thing to do is to confirm
+that the machine you want to use has the right combination
+of hardware and software. 
+For hardware, a quick crude way to do this is to issue the command
+</p><p>
+</p><blockquote><tt>lspci | grep VGA</tt>
+</blockquote>
+<p>
+which should produce a one-line description of the machine's
+graphics card.  If it claims to be from NVIDIA or AMD, then
+the odds are good that its driver supports OpenCL.
+For software, check for the presence of directory <tt>/opt/AMDAPP</tt>,
+which is the AMD toolkit.
+If the graphics card is from AMD, you should also check whether
+you have access to the GPU by running the command <tt>clinfo</tt>;
+if its output shows information about 
+a device of type <tt>CL_DEVICE_TYPE_GPU</tt>,
+then all is well.
+(This should be the case if you're logged in from the console
+in graphical mode.)
+If the command runs, but its output shows information about only
+one ``device'', of type <tt>CL_DEVICE_TYPE_CPU</tt>,
+then the machine has the right setup,
+but you do not have access to the GPU.
+(This will likely be the case if you are logged in remotely.
+The section ``Access to the GPU'' describes what you can do in that case.)
+
+</p><p>
+Next you will need to add the installation path for the AMD toolkit
+to your search path and set related environment variables.
+You can do that with the command
+</p><p>
+</p><blockquote><tt>module load amdapp</tt>
+</blockquote>
+<p>
+You could put this in your <tt>.bashrc</tt>
+file, as discussed in 
+<a name="tex2html2" href="http://www.cs.trinity.edu/%7Ebmassing/Misc/gcc-howto/index.html">my notes on the GNU compilers</a>
+if you don't want to type it in every time you want to use OpenCL.
+
+</p><p>
+
+</p><h2><a name="SECTION00002000000000000000">
+Compiling OpenCL programs</a>
+</h2>
+
+<p>
+You should be able to compile with either a C compiler (e.g., <tt>gcc</tt>)
+or a C++ compiler (e.g., <tt>g++</tt>).
+You will need a number of flags:
+</p><blockquote>
+-DAMD_OS_LINUX -I/opt/AMDAPP/include -lOpenCL -L/opt/AMDAPP/lib/x86_64
+	
+</blockquote>Simple usage:
+<blockquote>
+gcc -DAMD_OS_LINUX -I/opt/AMDAPP/include -lOpenCL -L/opt/AMDAPP/lib/x86_64 example.c -o example
+	
+</blockquote>
+<p>
+Your program will probably need a <tt>#include</tt> line for either
+<tt>CL/cl.h</tt> (plain C) or 
+<tt>CL/cl.hpp</tt> (C++).
+
+</p><p>
+
+</p><h2><a name="SECTION00003000000000000000">
+Running OpenCL programs</a>
+</h2>
+
+<p>
+To execute the compiled program, just type the name of the executable.  
+If you've set things up correctly, and you have access to the GPU
+(as described earlier), all should be well (assuming no bugs in the
+program itself!).
+
+</p><p>
+
+</p><h2><a name="SECTION00004000000000000000">
+Access to the GPU</a>
+</h2>
+
+<p>
+(Notice that the following applies only to machines with AMD
+graphics cards.  On machines with NVIDIA graphics cards, 
+everything should just work, although the NVIDIA driver apparently
+does not support running OpenCL kernels on the CPU, while the
+AMD driver does.)
+
+</p><p>
+AMD's implementation for its own hardware
+apparently accesses the GPU by way of the
+X server (the graphical subsystem in most UNIX/Linux systems).
+This works fine for regular users logged in via a graphical login
+(even in terminal windows)
+and for the root user.  For non-root users logged in remotely,
+e.g., via an SSH connection, it doesn't work so well.
+We have installed a workaround that allows regular users 
+logged in remotely to access the GPU.
+To use it you need to do two things:
+
+</p><p>
+First, you need to be a member of the ``GPU users'' group;
+one of the sysadmins can add you to this group, so
+ask your instructor or research supervisor, or get in touch with
+one of the admins directly.
+
+</p><p>
+Next, when you log in remotely, you need to run the following
+command:
+</p><p>
+</p><blockquote><tt>source /tmp/enable-amd-compute</tt>
+</blockquote>
+<p>(Notice that the word in the middle of the filename is
+<tt>amd</tt> (as in AMD) and not <tt>and</tt>.)
+You can check that all is well by executing the <tt>clinfo</tt>
+command; 
+it should report information for 
+a device of type <tt>CL_DEVICE_TYPE_GPU</tt>.
+If it doesn't, something has gone wrong, 
+and we (the admins) would like to hear about it.
+
+</p><p>
+
+</p><h2><a name="SECTION00005000000000000000">
+Useful links and other information</a>
+</h2>
+
+<p>
+
+</p><ul>
+<li><tt>/opt/AMDAPP</tt> directory, particularly
+	<tt>/opt/AMDAPP/docs</tt> (documentation) and
+	<tt>/opt/AMDAPP/samples/opencl</tt> (examples).
+
+<p>
+</p></li>
+<li><a name="tex2html3" href="http://www.khronos.org/opencl/">OpenCL home page</a>,
+	with links to the OpenCL standard, etc.
+
+<p>
+</p></li>
+<li><a name="tex2html4" href="http://www.khronos.org/registry/cl/sdk/1.2/docs/man/xhtml/">OpenCL online man pages</a>.
+</li>
+</ul>
+
+<p>
+<br> </p><hr>
+<address>
+<i>Berna Massingill <br>
+2013-11-25</i>
+</address>
+
+
+</body></html>
