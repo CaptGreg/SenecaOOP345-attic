@@ -12,6 +12,9 @@ public:
   void hello() { cout << "hello from " << name << "\n\n"; }
 };
 
+std::unique_ptr<X> global_usp(new X("GLOBAL unique smart pointer"));
+X* global_p = new X("GLOBAL pointer");
+
 
 int main(int argc, char**argv)
 {
