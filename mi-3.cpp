@@ -3,7 +3,7 @@ using namespace std;
 
 class Base {
 public:
-  char* name;
+  const char* name;
   void display() {
     cout << name << endl;
   }
@@ -11,7 +11,7 @@ public:
 
 class Derived: public Base {
 public:
-  char* name;
+  const char* name;
   void display() {
     cout << name << ", " << Base::name << endl;
    }
@@ -21,8 +21,8 @@ int main (int argc, char**argv)
 {
   cout << endl << argv[0] << endl << endl;
   Derived d;
-  d.name       = (char *) "Derived Class";
-  d.Base::name = (char *) "Base Class";
+  d.name       = "Derived Class";
+  d.Base::name = "Base Class";
 
   // call Derived::display()
   d.display();
