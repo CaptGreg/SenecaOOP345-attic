@@ -94,7 +94,7 @@ int main2()
     {
     public:
         virtual Car *clone() const { return new Car(*this); } // Covariant Return Types
-        virtual void describe() const { std::cout << "I am a car" << std::endl;
+        virtual void describe() const { std::cout << "I am a car" << "\n";
         }
     };
  
@@ -102,14 +102,14 @@ int main2()
     {
     public:
         virtual Plane *clone() const { return new Plane(*this); } // Covariant Return Types
-        virtual void describe() const { std::cout << "I am a plane" << std::endl; }
+        virtual void describe() const { std::cout << "I am a plane" << "\n"; }
     };
  
     class FighterPlane : public Plane
     {
     public:
         virtual FighterPlane *clone() const { return new FighterPlane(*this); } // Covariant Return Types
-        virtual void describe() const { std::cout << "I am a fighter plane" << std::endl; }
+        virtual void describe() const { std::cout << "I am a fighter plane" << "\n"; }
     };
 
     std::cout << "\nmain2\n";
@@ -196,7 +196,7 @@ class Car : public VehicleCloneable<Car>
 public:
     virtual void describe() const
     {
-        std::cout << "I am a car" << std::endl;
+        std::cout << "I am a car" << "\n";
     }
 };
  
@@ -205,7 +205,7 @@ class Plane : public VehicleCloneable<Plane>
 public:
     virtual void describe() const
     {
-        std::cout << "I am a plane" << std::endl;
+        std::cout << "I am a plane" << "\n";
     }
 };
 
@@ -262,7 +262,7 @@ int main3()
      Car() {}
      Car(int fuelCapacity) : BaseClass(fuelCapacity) {}
 
-     virtual void describe() const { std::cout << "I am a car, fuel=" << fuelCapacity << std::endl; }
+     virtual void describe() const { std::cout << "I am a car, fuel=" << fuelCapacity << "\n"; }
     };
      
     class Plane : public VehicleCloneable<Vehicle, Plane>
@@ -275,7 +275,7 @@ int main3()
      Plane() {}
      Plane(int fuelCapacity, int wingSpan) : BaseClass(fuelCapacity), wingSpan(wingSpan) {}
 
-     virtual void describe() const { std::cout << "I am a plane, fuel=" << fuelCapacity << ", wingspan=" << wingSpan << std::endl; }
+     virtual void describe() const { std::cout << "I am a plane, fuel=" << fuelCapacity << ", wingspan=" << wingSpan << "\n"; }
     };
      
     class FighterPlane : public VehicleCloneable<Plane, FighterPlane>
@@ -289,7 +289,7 @@ int main3()
      FighterPlane(int fuelCapacity, int wingSpan, int numberOfBombs)
      : BaseClass(fuelCapacity, wingSpan), numberOfBombs(numberOfBombs) {}
 
-     virtual void describe() const { std::cout << "I am a fighter plane, fuel=" << fuelCapacity << ", wingspan=" << wingSpan << ", bombs=" << numberOfBombs << std::endl; }
+     virtual void describe() const { std::cout << "I am a fighter plane, fuel=" << fuelCapacity << ", wingspan=" << wingSpan << ", bombs=" << numberOfBombs << "\n"; }
     };
 
     // We have given the Vehicle class a fuelCapacity, the Plane class a wingSpan (and the 
