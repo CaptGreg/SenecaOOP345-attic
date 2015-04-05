@@ -41,7 +41,7 @@ int main(int argc, char* argv[])
 
     // creating vectors with millions of entries.  DO NOT PRINT
     // std::copy(begin(result), end(result), ostream_iterator<float>(cout, ", "));
-    std::cout<<result[0]; for(int i = 0 ; i < 10 ; i++ ) std::cout<<", "<<result[i]; std::cout<<"\n";
+    std::cout<<result[0]; for(int i = 1 ; i < 10 ; i++ ) std::cout<<", "<<result[i]; std::cout<<"\n";
   } catch (const cl::Error& e) {
       std::cerr << "threw cl::Error: " << e.what() << "\n";
   } catch (const std::exception& e) {
