@@ -1,7 +1,7 @@
 // http://stackoverflow.com/questions/10673585/start-thread-with-member-function
 
-// GB how to call start a thread with member function
-// GB read the discussion on copying paramters
+// GB how to start a thread that runs a member function
+// GB read the discussion on copying parameters
 
 #include <thread>
 #include <iostream>
