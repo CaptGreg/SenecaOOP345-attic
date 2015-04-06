@@ -14,11 +14,14 @@ using namespace std;
 int main(int argc, char* argv[]) 
 {
   try {
-    Context(CL_DEVICE_TYPE_DEFAULT);
     unsigned elements = 10 * 1000 * 1000;
     if(argc  > 1) elements = atoi(argv[1]);
+
     std::vector<float> data5(elements, 5.5);
     std::vector<float> data6(elements, 3.25);
+
+    Context(CL_DEVICE_TYPE_DEFAULT);
+
     Buffer a(begin(data5), end(data5), true, false);
     Buffer b(begin(data6), end(data6), true, false);
     Buffer c(CL_MEM_READ_WRITE, elements * sizeof(float));
@@ -34,6 +37,7 @@ int main(int argc, char* argv[])
     )d", true);
 
     auto add = make_kernel<Buffer, Buffer, Buffer>(addProg, "add");
+
     add(EnqueueArgs(elements), a, b, c);
 
     std::vector<float> result(elements);
@@ -41,7 +45,9 @@ int main(int argc, char* argv[])
 
     // creating vectors with millions of entries.  DO NOT PRINT
     // std::copy(begin(result), end(result), ostream_iterator<float>(cout, ", "));
+
     std::cout<<result[0]; for(int i = 1 ; i < 10 ; i++ ) std::cout<<", "<<result[i]; std::cout<<"\n";
+
   } catch (const cl::Error& e) {
       std::cerr << "threw cl::Error: " << e.what() << "\n";
   } catch (const std::exception& e) {
