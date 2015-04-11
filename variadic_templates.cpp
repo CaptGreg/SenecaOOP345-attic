@@ -1,3 +1,5 @@
+// see fastforward.cpp
+// see variadic.cpp
 
 // http://www.cplusplus.com/articles/EhvU7k9E/
 #include <iostream>
@@ -91,7 +93,6 @@ public:
             << param2 << " " 
             << param3 << " " 
             << "\n";
-
     }
 };
 

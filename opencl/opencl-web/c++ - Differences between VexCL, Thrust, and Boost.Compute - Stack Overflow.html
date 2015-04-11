@@ -1,0 +1,1418 @@
+<!DOCTYPE html>
+<html itemscope="" itemtype="http://schema.org/QAPage"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    
+    <title>c++ - Differences between VexCL, Thrust, and Boost.Compute - Stack Overflow</title>
+    <link rel="shortcut icon" href="http://cdn.sstatic.net/stackoverflow/img/favicon.ico?v=6cd6089ee7f6">
+    <link rel="apple-touch-icon image_src" href="http://cdn.sstatic.net/stackoverflow/img/apple-touch-icon.png?v=41f6e13ade69">
+    <link rel="search" type="application/opensearchdescription+xml" title="Stack Overflow" href="http://stackoverflow.com/opensearch.xml">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:domain" content="stackoverflow.com">
+    <meta property="og:type" content="website">
+    <meta property="og:image" itemprop="image primaryImageOfPage" content="http://cdn.sstatic.net/stackoverflow/img/apple-touch-icon@2.png?v=ea71a5211a91&amp;a">
+    <meta name="twitter:title" property="og:title" itemprop="title name" content="Differences between VexCL, Thrust, and Boost.Compute">
+    <meta name="twitter:description" property="og:description" itemprop="description" content="With a just a cursory understanding of these libraries, they look to be very similar. I know that VexCL and Boost.Compute use OpenCl as a backend (although the v1.0 release VexCL also supports CUDA...">
+    <meta property="og:url" content="http://stackoverflow.com/questions/20154179/differences-between-vexcl-thrust-and-boost-compute">
+    <link rel="canonical" href="http://stackoverflow.com/questions/20154179/differences-between-vexcl-thrust-and-boost-compute">
+
+    
+    
+    <script src="c++%20-%20Differences%20between%20VexCL,%20Thrust,%20and%20Boost.Compute%20-%20Stack%20Overflow_files/quant.js" async=""></script><script src="c++%20-%20Differences%20between%20VexCL,%20Thrust,%20and%20Boost.Compute%20-%20Stack%20Overflow_files/beacon.js" async=""></script><script src="c++%20-%20Differences%20between%20VexCL,%20Thrust,%20and%20Boost.Compute%20-%20Stack%20Overflow_files/analytics.js" async=""></script><script src="c++%20-%20Differences%20between%20VexCL,%20Thrust,%20and%20Boost.Compute%20-%20Stack%20Overflow_files/ados.js" async="" type="text/javascript"></script><script src="c++%20-%20Differences%20between%20VexCL,%20Thrust,%20and%20Boost.Compute%20-%20Stack%20Overflow_files/ados_002.js" async="" type="text/javascript"></script><script src="c++%20-%20Differences%20between%20VexCL,%20Thrust,%20and%20Boost.Compute%20-%20Stack%20Overflow_files/jquery.js"></script>
+    <script src="c++%20-%20Differences%20between%20VexCL,%20Thrust,%20and%20Boost.Compute%20-%20Stack%20Overflow_files/stub.js"></script>
+    <link rel="stylesheet" type="text/css" href="c++%20-%20Differences%20between%20VexCL,%20Thrust,%20and%20Boost.Compute%20-%20Stack%20Overflow_files/all.css">
+    
+    <link rel="alternate" type="application/atom+xml" title="Feed for question 'Differences between VexCL, Thrust, and Boost.Compute'" href="http://stackoverflow.com/feeds/question/20154179">
+    <meta name="twitter:app:country" content="US">
+    <meta name="twitter:app:name:iphone" content="Stack Exchange iOS">
+    <meta name="twitter:app:id:iphone" content="871299723">
+    <meta name="twitter:app:url:iphone" content="se-zaphod://stackoverflow.com/questions/20154179/differences-between-vexcl-thrust-and-boost-compute">
+    <meta name="twitter:app:name:ipad" content="Stack Exchange iOS">
+    <meta name="twitter:app:id:ipad" content="871299723">
+    <meta name="twitter:app:url:ipad" content="se-zaphod://stackoverflow.com/questions/20154179/differences-between-vexcl-thrust-and-boost-compute">
+    <meta name="twitter:app:name:googleplay" content="Stack Exchange Android">
+    <meta name="twitter:app:url:googleplay" content="http://stackoverflow.com/questions/20154179/differences-between-vexcl-thrust-and-boost-compute">
+    <meta name="twitter:app:id:googleplay" content="com.stackexchange.marvin">
+    <script>
+        
+        StackExchange.ready(function () {
+                
+                StackExchange.using("snippets", function () {
+                    StackExchange.snippets.initSnippetRenderer();
+                });
+                
+
+            StackExchange.using("postValidation", function () {
+                StackExchange.postValidation.initOnBlurAndSubmit($('#post-form'), 2, 'answer');
+            });
+
+            
+            StackExchange.question.init({showAnswerHelp:true,totalCommentCount:1,shownCommentCount:1,highlightColor:'#F4A83D',backgroundColor:'#FFF',questionId:20154179});
+
+            styleCode();
+
+                StackExchange.realtime.subscribeToQuestion('1', '20154179');
+                                                    StackExchange.using("gps", function () { StackExchange.gps.trackOutboundClicks('#content', '.post-text'); });
+
+        });
+    </script>
+
+
+    <script>
+        StackExchange.init({"locale":"en","stackAuthUrl":"https://stackauth.com","serverTime":1428489736,"networkMetaHostname":"meta.stackexchange.com","routeName":"Questions/Show","styleCode":true,"enableUserHovercards":true,"snippets":{"enabled":true,"domain":"stacksnippets.net"},"site":{"name":"Stack Overflow","description":"Q&A for professional and enthusiast programmers","isNoticesTabEnabled":true,"recaptchaPublicKey":"6LdchgIAAAAAAJwGpIzRQSOFaO0pU6s44Xt8aTwc","recaptchaAudioLang":"en","enableNewTagCreationWarning":true,"insertSpaceAfterNameTabCompletion":false,"nonAsciiTags":true,"enableSocialMediaInSharePopup":true},"user":{"fkey":"7d57f9bc5249405182b1e70f6b2dd1f2","isAnonymous":true}});
+        StackExchange.using.setCacheBreakers({"js/prettify-full.en.js":"41f0e33f16f8","js/moderator.en.js":"75062b042101","js/full-anon.en.js":"96cc6720bdb9","js/full.en.js":"e24e7afddc17","js/wmd.en.js":"736be19de739","js/third-party/jquery.autocomplete.min.js":"e5f01e97f7c3","js/third-party/jquery.autocomplete.min.en.js":"","js/mobile.en.js":"1cb2a5eeaa36","js/help.en.js":"7a31c9feb96c","js/tageditor.en.js":"064c2f7dfae2","js/tageditornew.en.js":"cbe83d95be9c","js/inline-tag-editing.en.js":"21223186b436","js/revisions.en.js":"6c7265ea9fa1","js/review.en.js":"ccc3718553a1","js/tagsuggestions.en.js":"bb4721d888d2","js/post-validation.en.js":"c69da0075a04","js/explore-qlist.en.js":"4e6f969d97ee","js/events.en.js":"041145f2cc8d","js/keyboard-shortcuts.en.js":"4299556d4574","js/external-editor.en.js":"1eb5c5c11526","js/external-editor.en.js":"1eb5c5c11526","js/snippet-javascript.en.js":"b70d24a386a9","js/snippet-javascript-codemirror.en.js":"4d1069f72396"});
+        StackExchange.using("gps", function() {
+             StackExchange.gps.init(true);
+        });
+    </script>
+    
+        <script>
+            StackExchange.ready(function () {
+                $('#nav-tour').click(function () {
+                    StackExchange.using("gps", function() {
+                        StackExchange.gps.track("aboutpage.click", { aboutclick_location: "headermain" }, true);
+                    });
+                });
+            });
+        </script>
+    
+    
+<script src="c++%20-%20Differences%20between%20VexCL,%20Thrust,%20and%20Boost.Compute%20-%20Stack%20Overflow_files/adFeedback.js" type="text/javascript"></script><link href="c++%20-%20Differences%20between%20VexCL,%20Thrust,%20and%20Boost.Compute%20-%20Stack%20Overflow_files/adFeedback.css" rel="stylesheet"><script src="c++%20-%20Differences%20between%20VexCL,%20Thrust,%20and%20Boost.Compute%20-%20Stack%20Overflow_files/full-anon.js" async=""></script><script src="c++%20-%20Differences%20between%20VexCL,%20Thrust,%20and%20Boost.Compute%20-%20Stack%20Overflow_files/snippet-javascript.js" async=""></script><script src="c++%20-%20Differences%20between%20VexCL,%20Thrust,%20and%20Boost.Compute%20-%20Stack%20Overflow_files/post-validation.js" async=""></script><script src="c++%20-%20Differences%20between%20VexCL,%20Thrust,%20and%20Boost.Compute%20-%20Stack%20Overflow_files/external-editor.js" async=""></script></head>
+<body class="question-page new-topbar">
+    <noscript><div id="noscript-padding"></div></noscript>
+    <div id="notify-container"></div>
+    <div id="overlay-header"></div>
+    <div id="custom-header"></div>
+
+
+
+
+<div class="topbar">
+    <div class="topbar-wrapper">
+
+        <div class="js-topbar-dialog-corral">
+
+<div class="topbar-dialog siteSwitcher-dialog dno">
+    <div class="header">
+        <h3><a href="http://stackoverflow.com/">current community</a></h3>
+    </div>
+    <div class="modal-content current-site-container">
+        <ul class="current-site">
+                <li>
+                        <div class="related-links">
+            <a href="http://chat.stackoverflow.com/" class="js-gps-track" data-gps-track="site_switcher.click({ item_type:6 })">chat</a>
+                    <a href="http://blog.stackoverflow.com/" class="js-gps-track" data-gps-track="site_switcher.click({ item_type:7 })">blog</a>
+            </div>
+
+
+
+
+    <a href="http://stackoverflow.com/" class="current-site-link site-link js-gps-track" data-id="1" data-gps-track="
+        site_switcher.click({ item_type:3 })">
+        <div class="site-icon favicon favicon-stackoverflow" title="Stack Overflow"></div>
+        Stack Overflow
+    </a>
+
+                </li>
+                <li class="related-site">
+                        <div class="L-shaped-icon-container">
+        <span class="L-shaped-icon"></span>
+    </div>
+
+                    
+
+
+
+    <a href="http://meta.stackoverflow.com/" class="site-link js-gps-track" data-id="552" data-gps-track="
+            site.switch({ target_site:552, item_type:3 }),
+        site_switcher.click({ item_type:4 })">
+        <div class="site-icon favicon favicon-stackoverflowmeta" title="Meta Stack Overflow"></div>
+        Meta Stack Overflow
+    </a>
+
+                </li>
+                            <li class="related-site">
+                        <div class="L-shaped-icon-container">
+        <span class="L-shaped-icon"></span>
+    </div>
+
+                    <a class="site-link js-gps-track" href="http://careers.stackoverflow.com/?utm_source=stackoverflow.com&amp;utm_medium=site-ui&amp;utm_campaign=multicollider" data-gps-track="site_switcher.click({ item_type:9 })">
+                        <div class="site-icon favicon favicon-careers" title="Stack Overflow Careers"></div>
+                        Stack Overflow Careers
+                    </a>
+                </li>
+        </ul>
+    </div>
+    
+    <div class="header" id="your-communities-header">
+        <h3>
+your communities        </h3>
+            
+    </div>
+    <div class="modal-content" id="your-communities-section">
+            
+            <div class="call-to-login">
+<a href="https://stackoverflow.com/users/signup?returnurl=http%3a%2f%2fstackoverflow.com%2fquestions%2f20154179%2fdifferences-between-vexcl-thrust-and-boost-compute" class="login-link js-gps-track" data-gps-track="site_switcher.click({ item_type:10 })">Sign up</a> or <a href="https://stackoverflow.com/users/login?returnurl=http%3a%2f%2fstackoverflow.com%2fquestions%2f20154179%2fdifferences-between-vexcl-thrust-and-boost-compute" class="login-link js-gps-track" data-gps-track="site_switcher.click({ item_type:11 })">log in</a> to customize your list.
+            </div>
+    </div>
+    
+    <div class="header">
+        <h3><a href="http://stackexchange.com/sites">more stack exchange communities</a></h3>
+    </div>
+    <div class="modal-content">
+            <div class="child-content"></div>
+    </div>
+</div>
+        </div>
+
+        <div class="network-items">
+
+            <a href="http://stackexchange.com/" class="topbar-icon icon-site-switcher yes-hover js-site-switcher-button js-gps-track" data-gps-track="site_switcher.show" title="A list of all 141 Stack Exchange sites">
+                <span class="hidden-text">Stack Exchange</span>
+            </a>
+
+        </div>
+
+        <div class="topbar-links">
+
+                <div class="links-container">
+                <span class="topbar-menu-links">
+                                <a href="https://stackoverflow.com/users/signup?returnurl=http%3a%2f%2fstackoverflow.com%2fquestions%2f20154179%2fdifferences-between-vexcl-thrust-and-boost-compute" class="login-link">sign up</a>
+                                <a href="https://stackoverflow.com/users/login?returnurl=http%3a%2f%2fstackoverflow.com%2fquestions%2f20154179%2fdifferences-between-vexcl-thrust-and-boost-compute" class="login-link">log in</a>
+
+                        <a href="http://stackoverflow.com/tour">tour</a>
+                            <a href="#" class="icon-help js-help-button" title="Help Center and other resources">
+        help
+        <span class="triangle"></span>
+    </a>
+    <div class="topbar-dialog help-dialog js-help-dialog dno">
+        <div class="modal-content">
+            <ul>
+                                    <li>
+                        <a href="http://stackoverflow.com/tour" class="js-gps-track" data-gps-track="help_popup.click({ item_type:1 })">
+                            Tour
+                            <span class="item-summary">
+                                Start here for a quick overview of the site
+                            </span>
+                        </a>
+                    </li>
+                <li>
+                    <a href="http://stackoverflow.com/help" class="js-gps-track" data-gps-track="help_popup.click({ item_type:4 })">
+                        Help Center
+                        <span class="item-summary">
+                            Detailed answers to any questions you might have
+                        </span>
+                    </a>
+                </li>
+                    <li>
+                        <a href="http://meta.stackoverflow.com/" class="js-gps-track" data-gps-track="help_popup.click({ item_type:2 })">
+                            Meta
+                            <span class="item-summary">
+                                Discuss the workings and policies of this site
+                            </span>
+                        </a>
+                    </li>
+            </ul>
+        </div>
+    </div>
+
+                            <a href="http://careers.stackoverflow.com/?utm_source=stackoverflow.com&amp;utm_medium=site-ui&amp;utm_campaign=anon-topbar">stack overflow careers</a>
+                    </span>
+                </div>
+
+            <div class="search-container">
+                <form id="search" action="/search" method="get" autocomplete="off">
+                    <input name="q" placeholder="search" tabindex="1" autocomplete="off" maxlength="240" type="text">
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+    <script>
+        StackExchange.ready(function() { StackExchange.topbar.init(); });
+    </script>
+
+    <div class="container">
+        <div id="header">
+            <br class="cbt">
+            <div id="hlogo">
+                <a href="http://stackoverflow.com/">
+                    Stack Overflow
+                </a>
+            </div>
+            <div id="hmenus">
+                <div class="nav mainnavs">
+                    <ul>
+                        <li class="youarehere"><a id="nav-questions" href="http://stackoverflow.com/questions">Questions</a></li>
+                        <li><a id="nav-tags" href="http://stackoverflow.com/tags">Tags</a></li>
+                        <li><a id="nav-users" href="http://stackoverflow.com/users">Users</a></li>
+                        <li><a id="nav-badges" href="http://stackoverflow.com/help/badges">Badges</a></li>
+                        <li><a id="nav-unanswered" href="http://stackoverflow.com/unanswered">Unanswered</a></li>
+                    </ul>
+                </div>
+                <div class="nav askquestion">
+                    <ul>
+                        <li>
+                            <a id="nav-askquestion" href="http://stackoverflow.com/questions/ask">Ask Question</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+
+
+
+        <div id="content" class="snippet-hidden">
+            
+
+<div itemscope="" itemtype="http://schema.org/Question">
+    <link itemprop="image" href="http://cdn.sstatic.net/stackoverflow/img/apple-touch-icon.png?v=41f6e13ade69">
+			<!--googleoff: all-->
+
+<div id="herobox-mini">
+    <div id="hero-content">
+        <span id="controls">
+            <a href="http://stackoverflow.com/tour" id="tell-me-more" class="button">Take the 2-minute tour</a>
+            <span id="close"><a title="click to dismiss">×</a></span>
+        </span>
+        <div id="blurb">
+            Stack Overflow is a question and answer site for 
+professional and enthusiast programmers. It's 100% free, no registration
+ required.
+        </div>        
+    </div>
+    <script>
+        $('#tell-me-more').click(function () {
+            var clickSource = $("body").attr("class") + '-mini';
+            if ($("body").hasClass("questions-page")) {
+                clickSource = 'questionpagemini';
+            } else if ($("body").hasClass("question-page")) {
+                clickSource = 'questionpagemini';
+            } else if ($("body").hasClass("home-page")) {
+                clickSource = 'homepagemini';
+            }
+
+            StackExchange.using("gps", function () {
+                StackExchange.gps.track("aboutpage.click", { aboutclick_location: clickSource } , true);
+            });
+        });
+        $('#herobox-mini #close').click(function () {
+            StackExchange.using("gps", function () {
+                StackExchange.gps.track("hero.action", { hero_action_type: "close" }, true);
+            });
+            $.cookie("hero", "none", { path: "/", expires: 365 });
+            var $hero = $("#herobox-mini");
+            $hero.slideUp('fast', function () { $hero.remove(); });
+            return false;
+        });
+    </script>
+</div>
+			<!--googleon: all-->
+			<div id="question-header">
+			<h1 itemprop="name"><a href="http://stackoverflow.com/questions/20154179/differences-between-vexcl-thrust-and-boost-compute" class="question-hyperlink">Differences between VexCL, Thrust, and Boost.Compute</a></h1>
+		</div>
+			<div id="mainbar">
+
+			
+
+<div class="question" data-questionid="20154179" id="question">
+
+    <script>
+                var ados = ados || {};ados.run = ados.run || [];
+                ados.run.push(function() { ados_add_placement(22,8277,"adzerk1460551846",4).setZone(43) ; });                    
+            </script>
+            <div class="everyonelovesstackoverflow adzerk-vote" id="adzerk1460551846">
+            <iframe scrolling="no" id="ados_frame_adzerk1460551846_502721" frameborder="0" height="90" width="728"></iframe><img src="c++%20-%20Differences%20between%20VexCL,%20Thrust,%20and%20Boost.Compute%20-%20Stack%20Overflow_files/i.gif" style="position:absolute;" height="0px" width="0px" border="0"><div class="adzerk-vote-controls" style="display:none;"><div class="adzerk-vote-option adzerk-vote-up"><div class="adzerk-vote-icon"></div></div><div class="adzerk-vote-option adzerk-vote-down"><div class="adzerk-vote-icon"></div></div></div><div class="adzerk-vote-survey" style="display:none;"><form><span>No problem. We won't show you that ad again. Why didn't you like it?</span><ul><li><label><input value="12" name="downvoteReason" type="radio">Uninteresting</label></li><li><label><input value="13" name="downvoteReason" type="radio">Misleading</label></li><li><label><input value="14" name="downvoteReason" type="radio">Offensive</label></li><li><label><input value="15" name="downvoteReason" type="radio">Repetitive</label></li><li><label><input value="16" name="downvoteReason" type="radio">Other</label></li></ul><a href="#" class="adzerk-vote-cancel">Oops! I didn't mean to do this.</a></form></div></div>    <table>
+        <tbody><tr>
+            <td class="votecell">
+                
+
+<div class="vote">
+    <input name="_id_" value="20154179" type="hidden">
+    <a class="vote-up-off" title="This question shows research effort; it is useful and clear">up vote</a>
+    <span itemprop="upvoteCount" class="vote-count-post ">21</span>
+    <a class="vote-down-off" title="This question does not show any research effort; it is unclear or not useful">down vote</a>
+    
+    <a class="star-off" href="#" title="This is a favorite question (click again to undo)">favorite</a>
+    <div class="favoritecount"><b>14</b></div>   
+
+</div>
+
+            </td>
+            
+<td class="postcell">
+<div>
+    <div class="post-text" itemprop="text">
+
+        <p>With a just a cursory understanding of these libraries, they 
+look to be very similar. I know that VexCL and Boost.Compute use OpenCl 
+as a backend (although the v1.0 release VexCL also supports CUDA as a 
+backend) and Thrust uses CUDA. Aside from the different backends, what's
+ the difference between these. </p>
+
+<p>Specifically, what problem space do they address and why would I want to use one over the other.</p>
+
+<p>Also, on the Thrust FAQ it is stated that</p>
+
+<blockquote>
+  <p>The primary barrier to OpenCL support is the lack of an OpenCL compiler and runtime with support for C++ templates</p>
+</blockquote>
+
+<p>If this is the case, how is it possible that VexCL and Boost.Compute even exist.</p>
+
+    </div>
+    <div class="post-taglist">
+        <a href="http://stackoverflow.com/questions/tagged/c%2b%2b" class="post-tag js-gps-track" title="" rel="tag">c++</a> <a href="http://stackoverflow.com/questions/tagged/opencl" class="post-tag js-gps-track" title="show questions tagged 'opencl'" rel="tag">opencl</a> <a href="http://stackoverflow.com/questions/tagged/thrust" class="post-tag js-gps-track" title="show questions tagged 'thrust'" rel="tag">thrust</a> <a href="http://stackoverflow.com/questions/tagged/gpu-programming" class="post-tag js-gps-track" title="show questions tagged 'gpu-programming'" rel="tag">gpu-programming</a> 
+    </div>
+    <table class="fw">
+    <tbody><tr>
+    <td class="vt">
+<div class="post-menu"><a href="http://stackoverflow.com/q/20154179" title="short permalink to this question" class="short-link" id="link-post-20154179">share</a><span class="lsep">|</span><a href="http://stackoverflow.com/posts/20154179/edit" class="suggest-edit-post" title="">improve this question</a></div>        
+    </td>
+    <td class="post-signature" align="right">
+<div class="user-info ">
+    <div class="user-action-time">
+        <a href="http://stackoverflow.com/posts/20154179/revisions" title="show all edits to this post">edited <span title="2014-08-04 13:09:38Z" class="relativetime">Aug 4 '14 at 13:09</span></a>
+    </div>
+    <div class="user-gravatar32">
+        
+    </div>
+    <div class="user-details">
+        <br>
+        
+    </div>
+</div>    </td>
+    <td class="post-signature owner">
+        <div class="user-info ">
+    <div class="user-action-time">
+        asked <span title="2013-11-22 20:47:17Z" class="relativetime">Nov 22 '13 at 20:47</span>
+    </div>
+    <div class="user-gravatar32">
+        <a href="http://stackoverflow.com/users/1046297/sean-lynch"><div class="gravatar-wrapper-32"><img src="c++%20-%20Differences%20between%20VexCL,%20Thrust,%20and%20Boost.Compute%20-%20Stack%20Overflow_files/372b0584946877ede1f6b55dd2e852fe.jpeg" alt="" height="32" width="32"></div></a>
+    </div>
+    <div class="user-details">
+        <a href="http://stackoverflow.com/users/1046297/sean-lynch">Sean Lynch</a><br>
+        <span class="reputation-score" title="reputation score " dir="ltr">461</span><span title="4 silver badges"><span class="badge2"></span><span class="badgecount">4</span></span><span title="19 bronze badges"><span class="badge3"></span><span class="badgecount">19</span></span>
+    </div>
+</div>
+    </td>
+    </tr>
+    </tbody></table>
+</div>
+</td>
+        </tr>
+                
+<tr>
+    <td class="votecell"></td>
+    <td>
+	    <div id="comments-20154179" class="comments ">
+		    <table>
+                <tbody data-remaining-comments-count="0" data-canpost="false" data-cansee="true" data-comments-unavailable="false" data-addlink-disabled="true">
+
+
+
+    <tr id="comment-30040961" class="comment ">
+        <td>
+            <table>
+                <tbody>
+                    <tr>
+                        <td class=" comment-score">
+                                &nbsp;&nbsp;
+                        </td>
+                        <td>
+                                &nbsp;
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </td>
+        <td class="comment-text">
+            <div style="display: block;" class="comment-body">
+                <span class="comment-copy">Don't forget C++ AMP! :)</span>
+                –&nbsp;
+                    <a href="http://stackoverflow.com/users/1056928/scarletamaranth" title="3623 reputation" class="comment-user">ScarletAmaranth</a>
+                <span class="comment-date" dir="ltr"><a class="comment-link" href="#comment30040961_20154179"><span title="2013-11-22 20:51:55Z" class="relativetime-clean">Nov 22 '13 at 20:51</span></a></span>
+                                                                            </div>
+                    </td>
+    </tr>
+                </tbody>
+		    </table>
+	    </div>
+
+        <div id="comments-link-20154179" data-rep="50" data-anon="true">
+
+                <a class="js-add-link comments-link disabled-link " title="Use comments to ask for more information or suggest improvements. Avoid answering questions in comments.">add a comment</a><span class="js-link-separator dno">&nbsp;|&nbsp;</span>
+            <a class="js-show-link comments-link dno" title="expand to show all comments on this post, or add one of your own" href="#" onclick=""></a>
+        </div>         
+    </td>
+</tr>        </tbody></table>
+</div>
+
+			<div id="answers">
+
+				<a name="tab-top"></a>
+				<div id="answers-header">
+					<div class="subheader answers-subheader">
+						<h2>
+								1 Answer
+                                <span style="display:none;" itemprop="answerCount">1</span>
+						</h2>
+						<div>
+							<div id="tabs">
+        <a href="http://stackoverflow.com/questions/20154179/differences-between-vexcl-thrust-and-boost-compute?answertab=active#tab-top" title="Answers with the latest activity first">active</a>
+        <a href="http://stackoverflow.com/questions/20154179/differences-between-vexcl-thrust-and-boost-compute?answertab=oldest#tab-top" title="Answers in the order they were provided">oldest</a>
+        <a class="youarehere" href="http://stackoverflow.com/questions/20154179/differences-between-vexcl-thrust-and-boost-compute?answertab=votes#tab-top" title="Answers with the highest score first">votes</a>
+</div>
+						</div>
+					</div>    
+				</div>    
+
+
+
+
+  
+<a name="20159074"></a>
+<div id="answer-20159074" class="answer accepted-answer" data-answerid="20159074" itemscope="" itemtype="http://schema.org/Answer" itemprop="acceptedAnswer">
+    <table>
+        <tbody><tr>
+            <td class="votecell">
+                
+
+<div class="vote">
+    <input name="_id_" value="20159074" type="hidden">
+    <a class="vote-up-off" title="This answer is useful">up vote</a>
+    <span itemprop="upvoteCount" class="vote-count-post ">31</span>
+    <a class="vote-down-off" title="This answer is not useful">down vote</a>
+    
+
+
+        <span class="vote-accepted-on load-accepted-answer-date" title="loading when this answer was accepted...">accepted</span>
+</div>
+
+            </td>
+            
+
+
+<td class="answercell">
+    <div class="post-text" itemprop="text">
+<p>I am the developer of <a href="https://github.com/ddemidov/vexcl">VexCL</a>, but I really like what <a href="http://stackoverflow.com/users/226814/kyle-lutz">Kyle Lutz</a>, the author of <a href="https://github.com/kylelutz/compute">Boost.Compute</a>, had to say on the same subject on <a href="http://lists.boost.org/Archives/boost/2013/03/201547.php">Boost mailing list</a>. In short, from the user standpoint <a href="http://thrust.github.io/">Thrust</a>, Boost.Compute, AMD's <a href="https://github.com/HSA-Libraries/Bolt">Bolt</a> and probably Microsoft's <a href="http://msdn.microsoft.com/en-us/library/vstudio/hh265136.aspx">C++ AMP</a> all implement an STL-like API, while VexCL is an expression template based library that is closer to <a href="http://eigen.tuxfamily.org/">Eigen</a> in nature. I believe the main difference between the STL-like libraries is their portability: </p>
+
+<ol>
+<li>Thrust only supports NVIDIA GPUs, but may also work on CPUs through its OpenMP and TBB backends.</li>
+<li>Bolt uses AMD extensions to OpenCL which are only available on AMD 
+GPUs. It also provides Microsoft C++ AMP and Intel TBB backends.</li>
+<li>The only compiler that supports Microsoft C++ AMP is Microsoft Visual C++ (although the work on <a href="http://hsafoundation.com/bringing-camp-beyond-windows-via-clang-llvm/">Bringing C++AMP Beyond Windows</a> is being done).</li>
+<li>Boost.Compute seems to be the most portable solution of those, as it is based on standard OpenCL.</li>
+</ol>
+
+<p>Again, all of those libraries are trying to implement an STL-like 
+interface, so they have very broad applicability. VexCL was developed 
+with scientific computing in mind. If Boost.Compute was developed a bit 
+earlier, I could probably base VexCL on top of it :). Another library 
+for scientific computing worth looking at is <a href="http://viennacl.sourceforge.net/">ViennaCL</a>,
+ a free open-source linear algebra library for computations on many-core
+ architectures (GPUs, MIC) and multi-core CPUs. Have a look at [1] for 
+the comparison of VexCL, ViennaCL, CMTL4 and Thrust for that field.</p>
+
+<p>Regarding the quoted inability of Thrust developers to add an OpenCL 
+backend: Thrust, VexCL and Boost.Compute (I am not familiar with the 
+internals of other libraries) all use metaprogramming techniques to do 
+what they do. But since CUDA supports C++ templates, the job of Thrust 
+developers is probably a bit easier: they have to write metaprograms 
+that generate CUDA programs with help of C++ compiler. VexCL and 
+Boost.Compute authors write metaprograms that generate programs that 
+generate OpenCL source code. Have a look at the <a href="https://speakerdeck.com/ddemidov/vexcl-implementation-university-of-texas-2013">slides</a>
+ where I tried to explain how VexCL is implemented. So I agree that 
+current Thrust's design prohibits them adding an OpenCL backend.</p>
+
+<p>[1] Denis Demidov, Karsten Ahnert, Karl Rupp, Peter Gottschling, <a href="http://epubs.siam.org/doi/abs/10.1137/120903683">Programming CUDA and OpenCL: A Case Study Using Modern C++ Libraries</a>, SIAM J. Sci. Comput., 35(5), C453–C472. (an <a href="http://arxiv.org/abs/1212.6326">arXiv version</a> is also available).</p>
+
+<p>Update: @gnzlbg commented that there is no support for C++ functors 
+and lambdas in OpenCL-based libraries. And indeed, OpenCL is based on 
+C99 and is compiled from sources stored in strings at runtime, so there 
+is no easy way to fully interact with C++ classes. But to be fair, 
+OpenCL-based libraries do support user-based functions and even lambdas 
+to some extent.</p>
+
+<ul>
+<li>Boost.Compute provides its own <a href="http://kylelutz.github.io/compute/boost_compute/advanced_topics.html#boost_compute.advanced_topics.lambda_expressions">implementation of simple lambdas</a> (based on Boost.Proto), and allows to interact with user-defined structs through <a href="http://kylelutz.github.io/compute/BOOST_COMPUTE_ADAPT_STRUCT.html">BOOST_COMPUTE_ADAPT_STRUCT</a> and <a href="http://kylelutz.github.io/compute/BOOST_COMPUTE_CLOSURE.html">BOOST_COMPUTE_CLOSURE</a> macros.</li>
+<li>VexCL provides linear-algebra-like DSL (also based on Boost.Proto), and also <a href="https://github.com/ddemidov/vexcl#converting-generic-c-algorithms-to-opencl">supports conversion of generic C++ algorithms and functors</a> (and even Boost.Phoenix lambdas) to OpenCL functions (with restrictions).</li>
+<li>I believe AMD's Bolt does support user-defined functors through its <a href="http://developer.amd.com/community/blog/2012/05/21/opencl-1-2-and-c-static-kernel-language-now-available/">C++ for OpenCL</a> extension magic.</li>
+</ul>
+
+<p>Having said that, CUDA-based libraries (and may be C++ AMP) have an 
+obvious advantage of actual compile-time compiler (can you even say 
+that?), so the integration with user code can be much tighter.</p>
+    </div>
+    <table class="fw">
+    <tbody><tr>
+    <td class="vt">
+<div class="post-menu"><a href="http://stackoverflow.com/a/20159074" title="short permalink to this answer" class="short-link" id="link-post-20159074">share</a><span class="lsep">|</span><a href="http://stackoverflow.com/posts/20159074/edit" class="suggest-edit-post" title="">improve this answer</a></div>                    </td>
+    <td class="post-signature" align="right">
+<div class="user-info ">
+    <div class="user-action-time">
+        <a href="http://stackoverflow.com/posts/20159074/revisions" title="show all edits to this post">edited <span title="2014-03-18 11:41:01Z" class="relativetime">Mar 18 '14 at 11:41</span></a>
+    </div>
+    <div class="user-gravatar32">
+        
+    </div>
+    <div class="user-details">
+        <br>
+        
+    </div>
+</div>    </td>
+            
+
+
+    <td class="post-signature" align="right">   
+       
+
+    <div class="user-info ">
+    <div class="user-action-time">
+        answered <span title="2013-11-23 05:49:11Z" class="relativetime">Nov 23 '13 at 5:49</span>
+    </div>
+    <div class="user-gravatar32">
+        <a href="http://stackoverflow.com/users/996848/ddemidov"><div class="gravatar-wrapper-32"><img src="c++%20-%20Differences%20between%20VexCL,%20Thrust,%20and%20Boost.Compute%20-%20Stack%20Overflow_files/a90f9e7d204e6a93aa60dec78e149c85.png" alt="" height="32" width="32"></div></a>
+    </div>
+    <div class="user-details">
+        <a href="http://stackoverflow.com/users/996848/ddemidov">ddemidov</a><br>
+        <span class="reputation-score" title="reputation score " dir="ltr">902</span><span title="6 silver badges"><span class="badge2"></span><span class="badgecount">6</span></span><span title="9 bronze badges"><span class="badge3"></span><span class="badgecount">9</span></span>
+    </div>
+</div>
+    </td>
+    </tr>
+    </tbody></table>
+</td>
+        </tr>
+        
+<tr>
+    <td class="votecell"></td>
+    <td>
+	    <div id="comments-20159074" class="comments ">
+		    <table>
+                <tbody data-remaining-comments-count="5" data-canpost="false" data-cansee="true" data-comments-unavailable="false" data-addlink-disabled="true">
+
+
+
+    <tr id="comment-34164402" class="comment ">
+        <td>
+            <table>
+                <tbody>
+                    <tr>
+                        <td class=" comment-score">
+                                &nbsp;&nbsp;
+                        </td>
+                        <td>
+                                &nbsp;
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </td>
+        <td class="comment-text">
+            <div style="display: block;" class="comment-body">
+                <span class="comment-copy">you might want to add that 
+while libraries based on OpenCL do not support function objects (and 
+lambdas) as kernels, those not based on OpenCL generally do.</span>
+                –&nbsp;
+                    <a href="http://stackoverflow.com/users/1422197/gnzlbg" title="1831 reputation" class="comment-user">gnzlbg</a>
+                <span class="comment-date" dir="ltr"><a class="comment-link" href="#comment34164402_20159074"><span title="2014-03-17 17:36:14Z" class="relativetime-clean">Mar 17 '14 at 17:36</span></a></span>
+                                                                            </div>
+                    </td>
+    </tr>
+    <tr id="comment-34168206" class="comment ">
+        <td class="comment-actions">
+            <table>
+                <tbody>
+                    <tr>
+                        <td class=" comment-score">
+                                <span title="number of 'useful comment' votes received" class="cool">1</span>
+                        </td>
+                        <td>
+                                &nbsp;
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </td>
+        <td class="comment-text">
+            <div style="display: block;" class="comment-body">
+                <span class="comment-copy">Just did that :)</span>
+                –&nbsp;
+                    <a href="http://stackoverflow.com/users/996848/ddemidov" title="902 reputation" class="comment-user">ddemidov</a>
+                <span class="comment-date" dir="ltr"><a class="comment-link" href="#comment34168206_20159074"><span title="2014-03-17 19:21:23Z" class="relativetime-clean">Mar 17 '14 at 19:21</span></a></span>
+                                                                            </div>
+                    </td>
+    </tr>
+    <tr id="comment-34186623" class="comment ">
+        <td>
+            <table>
+                <tbody>
+                    <tr>
+                        <td class=" comment-score">
+                                &nbsp;&nbsp;
+                        </td>
+                        <td>
+                                &nbsp;
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </td>
+        <td class="comment-text">
+            <div style="display: block;" class="comment-body">
+                <span class="comment-copy">very nice summary of features
+ in those libraries to emulate function object support! Nice work!  The 
+C++ for OpenCL extension magic that you mention about AMD's Bolt is just
+ C++AMP.</span>
+                –&nbsp;
+                    <a href="http://stackoverflow.com/users/1422197/gnzlbg" title="1831 reputation" class="comment-user">gnzlbg</a>
+                <span class="comment-date" dir="ltr"><a class="comment-link" href="#comment34186623_20159074"><span title="2014-03-18 08:50:14Z" class="relativetime-clean">Mar 18 '14 at 8:50</span></a></span>
+                    <span class="edited-yes" title="this comment was edited 1 time"></span>
+                                                                            </div>
+                    </td>
+    </tr>
+    <tr id="comment-34188929" class="comment ">
+        <td>
+            <table>
+                <tbody>
+                    <tr>
+                        <td class=" comment-score">
+                                &nbsp;&nbsp;
+                        </td>
+                        <td>
+                                &nbsp;
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </td>
+        <td class="comment-text">
+            <div style="display: block;" class="comment-body">
+                <span class="comment-copy">They do support <a href="https://github.com/HSA-Libraries/Bolt/blob/c2ac21d580f7023d3b3d8d2eef0c899808f0fa81/include/bolt/cl/detail/scan.inl#L88-L129" rel="nofollow">C++ code in OpenCL sources</a>.</span>
+                –&nbsp;
+                    <a href="http://stackoverflow.com/users/996848/ddemidov" title="902 reputation" class="comment-user">ddemidov</a>
+                <span class="comment-date" dir="ltr"><a class="comment-link" href="#comment34188929_20159074"><span title="2014-03-18 09:51:34Z" class="relativetime-clean">Mar 18 '14 at 9:51</span></a></span>
+                                                                            </div>
+                    </td>
+    </tr>
+    <tr id="comment-34192032" class="comment ">
+        <td class="comment-actions">
+            <table>
+                <tbody>
+                    <tr>
+                        <td class=" comment-score">
+                                <span title="number of 'useful comment' votes received" class="cool">1</span>
+                        </td>
+                        <td>
+                                &nbsp;
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </td>
+        <td class="comment-text">
+            <div style="display: block;" class="comment-body">
+                <span class="comment-copy">Yes, I've probably missed a bit. Here is the extension <a href="http://amd-dev.wpengine.netdna-cdn.com/wordpress/media/2012/10/CPP_kernel_language.pdf" rel="nofollow">specification</a>. And here is an <a href="http://developer.amd.com/community/blog/2012/05/21/opencl-1-2-and-c-static-kernel-language-now-available/" rel="nofollow">announcement</a>.</span>
+                –&nbsp;
+                    <a href="http://stackoverflow.com/users/996848/ddemidov" title="902 reputation" class="comment-user">ddemidov</a>
+                <span class="comment-date" dir="ltr"><a class="comment-link" href="#comment34192032_20159074"><span title="2014-03-18 11:11:47Z" class="relativetime-clean">Mar 18 '14 at 11:11</span></a></span>
+                    <span class="edited-yes" title="this comment was edited 1 time"></span>
+                                                                            </div>
+                    </td>
+    </tr>
+                </tbody>
+		    </table>
+	    </div>
+
+        <div id="comments-link-20159074" data-rep="50" data-anon="true">
+
+                <a class="js-add-link comments-link  dno" title="Use comments to ask for more information or suggest improvements. Avoid comments like “+1” or “thanks”."></a><span class="js-link-separator dno">&nbsp;|&nbsp;</span>
+            <a class="js-show-link comments-link " title="expand to show all comments on this post, or add one of your own" href="#" onclick="">show <b>5</b> more comments</a>
+        </div>         
+    </td>
+</tr>    </tbody></table>
+</div>
+									<a name="new-answer"></a>
+						<form id="post-form" action="/questions/20154179/answer/submit" method="post" class="post-form">
+						    <input id="post-id" value="20154179" type="hidden">
+                            <input id="qualityBanWarningShown" name="qualityBanWarningShown" value="false" type="hidden">
+                            <input name="referrer" value="http://www.google.ca/url?sa=t&amp;rct=j&amp;q=&amp;esrc=s&amp;source=web&amp;cd=4&amp;cad=rja&amp;uact=8&amp;ved=0CDcQFjAD&amp;url=http%3A%2F%2Fstackoverflow.com%2Fquestions%2F20154179%2Fdifferences-between-vexcl-thrust-and-boost-compute&amp;ei=ewUlVY6LLIOMsAXm_oHgCA&amp;usg=AFQjCNHj59Swmuc_nSGIi1B4wlRnKTIh6Q&amp;sig2=pHLh-JTfz3Aq3J4M0nhX3Q&amp;bvm=bv.90237346,d.b2w" type="hidden">
+							<h2 class="space">Your Answer</h2>
+
+
+
+            <script>
+            StackExchange.ifUsing("editor", function () {
+                StackExchange.using("externalEditor", function () {
+                    StackExchange.using("snippets", function () {
+                        StackExchange.snippets.init();
+                    });
+                });
+            }, "code-snippets");
+        </script>
+    
+
+<script>
+    StackExchange.ready(function() {
+        initTagRenderer("".split(" "), "".split(" "));
+       
+        StackExchange.using("externalEditor", function() {
+            // Have to fire editor after snippets, if snippets enabled
+            if (StackExchange.options.snippets.enabled) {
+                StackExchange.using("snippets", function() {
+                    createEditor();
+                });
+            }
+            else {
+                createEditor();
+            }
+        });
+
+        function createEditor() {
+            prepareEditor({
+                heartbeatType: 'answer',
+                bindNavPrevention: true,
+                postfix: "",
+                    onDemand: true,
+                    discardSelector: ".discard-answer"
+                ,immediatelyShowMarkdownHelp:true
+                });
+                
+
+        }
+    });  
+</script>
+
+
+<div id="post-editor" class="post-editor">
+
+    <div style="position: relative;">     
+        <div class="wmd-container">
+            <div id="wmd-button-bar" class="wmd-button-bar"><ul id="wmd-button-row" class="wmd-button-row"><li style="left: 0px;" class="wmd-button" id="wmd-bold-button"><span style="background-position: 0px -20px;"></span></li><li style="left: 25px;" class="wmd-button" id="wmd-italic-button"><span style="background-position: -20px -20px;"></span></li><li style="left: 50px;" class="wmd-spacer" id="wmd-spacer1"><span style="background-position: -40px -20px;"></span></li><li style="left: 75px;" class="wmd-button" id="wmd-link-button"><span style="background-position: -40px -20px;"></span></li><li style="left: 100px;" class="wmd-button" id="wmd-quote-button"><span style="background-position: -60px -20px;"></span></li><li style="left: 125px;" class="wmd-button" id="wmd-code-button"><span style="background-position: -80px -20px;"></span></li><li style="left: 150px;" class="wmd-button" id="wmd-image-button"><span style="background-position: -100px -20px;"></span></li><li style="left: 175px;" class="wmd-spacer" id="wmd-spacer2"><span style="background-position: -120px -20px;"></span></li><li style="left: 200px;" class="wmd-button" id="wmd-olist-button"><span style="background-position: -120px -20px;"></span></li><li style="left: 225px;" class="wmd-button" id="wmd-ulist-button"><span style="background-position: -140px -20px;"></span></li><li style="left: 250px;" class="wmd-button" id="wmd-heading-button"><span style="background-position: -160px -20px;"></span></li><li style="left: 275px;" class="wmd-button" id="wmd-hr-button"><span style="background-position: -180px -20px;"></span></li><li style="left: 300px;" class="wmd-spacer" id="wmd-spacer3"><span style="background-position: -200px -20px;"></span></li><li style="left: 325px;" class="wmd-button" id="wmd-undo-button"><span style="background-position: -200px -20px;"></span></li><li style="left: 350px;" class="wmd-button" id="wmd-redo-button"><span style="background-position: -220px -20px;"></span></li></ul></div>
+            <textarea id="wmd-input" class="wmd-input" name="post-text" cols="92" rows="15" tabindex="101" data-min-length=""></textarea>
+        </div>
+    </div>
+
+    <div class="fl" style="margin-top: 8px; height:24px;">&nbsp;</div>
+    <div id="draft-saved" class="draft-saved community-option fl" style="margin-top: 8px; height:24px; display:none;">draft saved</div>
+
+    <div id="draft-discarded" class="draft-discarded community-option fl" style="margin-top: 8px; height:24px; display:none;">draft discarded</div>
+
+
+
+    <div id="wmd-preview" class="wmd-preview"></div>
+    <div></div>
+    <div class="edit-block">
+        <input id="fkey" name="fkey" value="7d57f9bc5249405182b1e70f6b2dd1f2" type="hidden">
+        <input id="author" name="author" type="text">
+    </div>
+
+
+
+</div>
+							<div style="position: relative;">
+								
+            <div class="form-item new-post-login">
+        
+                <div class="new-login-form">
+                    <div class="new-login-left">
+                        <h3>Sign up or <a id="login-link" href="http://stackoverflow.com/users/login?returnurl=%2fquestions%2f20154179%2fdifferences-between-vexcl-thrust-and-boost-compute%23new-answer">log in</a></h3>
+                        <script>
+                            StackExchange.ready(function () {
+                                StackExchange.helpers.onClickDraftSave('#login-link');
+                            });
+                        </script>
+                        <div class="preferred-login google-login">
+                            <p><span class="icon"></span><span>Sign up using Google</span></p>
+                        </div>
+                        <div class="preferred-login facebook-login">
+                            <p><span class="icon"></span><span>Sign up using Facebook</span></p>
+                        </div>
+                        <div class="preferred-login stackexchange-login">
+                            <p><span class="icon"></span><span>Sign up using Stack Exchange</span></p>
+                        </div>
+                    </div>
+                    <input name="manual-openid" class="manual-openid" type="hidden">
+                    <input name="use-facebook" class="use-facebook" value="false" type="hidden">
+                    <input name="use-google" class="use-google" value="false" type="hidden">
+                    <input class="submit-openid" value="Submit" style="display:none" type="button">
+                    <div class="new-login-right">
+                                <h3>Post as a guest</h3>
+    <div class="form-item">
+        <table>
+        <tbody><tr>
+                    <td class="vm">
+                <div>
+                    <label for="display-name">Name</label>
+                    <input id="display-name" name="display-name" size="30" maxlength="30" tabindex="105" type="text">
+                </div>
+                <div>
+                    <label for="m-address">Email</label>
+                    <input id="m-address" name="m-address" size="30" maxlength="100" tabindex="106" placeholder="required, but never shown" type="email">
+                </div>
+            </td>
+        </tr>
+        </tbody></table>
+    </div>
+
+                    </div>
+                </div>
+            </div>
+            <script>
+                StackExchange.ready(
+                    function () {
+                        StackExchange.openid.initPostLogin('.new-post-login', '%2fquestions%2f20154179%2fdifferences-between-vexcl-thrust-and-boost-compute%23new-answer');
+                    }
+                );
+            </script>
+            <noscript>
+                        <h3>Post as a guest</h3>
+    <div class="form-item">
+        <table>
+        <tr>
+                    <td class="vm">
+                <div>
+                    <label for="display-name">Name</label>
+                    <input id="display-name" name="display-name" type="text" size="30" maxlength="30" value="" tabindex="105">
+                </div>
+                <div>
+                    <label for="m-address">Email</label>
+                    <input id="m-address" name="m-address" type="email" size="30" maxlength="100" value="" tabindex="106" placeholder="required, but never shown" />
+                </div>
+            </td>
+        </tr>
+        </table>
+    </div>
+
+            </noscript>
+							</div>
+           
+															<div class="form-submit cbt">
+									<input id="submit-button" value="Post Your Answer" tabindex="110" type="submit">
+									<a href="#" class="discard-answer dno">discard</a>
+
+<p class="privacy-policy-agreement">
+By posting your answer, you agree to the <a href="http://stackexchange.com/legal/privacy-policy" target="_blank">privacy policy</a> and <a href="http://stackexchange.com/legal/terms-of-service" target="_blank">terms of service</a>.</p>
+<input name="legalLinksShown" value="1" type="hidden">								</div>
+						</form>
+
+
+
+						<h2 class="bottom-notice" data-loc="1">
+Not the answer you're looking for?							Browse other questions tagged <a href="http://stackoverflow.com/questions/tagged/c%2b%2b" class="post-tag" title="show questions tagged 'c++'" rel="tag">c++</a> <a href="http://stackoverflow.com/questions/tagged/opencl" class="post-tag" title="show questions tagged 'opencl'" rel="tag">opencl</a> <a href="http://stackoverflow.com/questions/tagged/thrust" class="post-tag" title="show questions tagged 'thrust'" rel="tag">thrust</a> <a href="http://stackoverflow.com/questions/tagged/gpu-programming" class="post-tag" title="show questions tagged 'gpu-programming'" rel="tag">gpu-programming</a>  or <a href="http://stackoverflow.com/questions/ask">ask your own question</a>.						</h2>
+			</div>
+		</div>
+				<div id="sidebar" class="show-votes">
+						    <div class="module question-stats">
+			        <table id="qinfo">
+			            <tbody><tr>
+			                <td>
+			                    <p class="label-key">asked</p>
+			                </td>
+			                <td style="padding-left: 10px">
+			                    <p class="label-key" title="2013-11-22 20:47:17Z"><b>1 year ago</b></p>
+			                </td>
+			            </tr>
+			            <tr>
+			                <td>
+			                    <p class="label-key">viewed</p>
+			                </td>
+
+			                <td style="padding-left: 10px">
+			                    <p class="label-key">
+			                        <b>3268 times</b>
+			                    </p>
+			                </td>
+			            </tr>
+			                <tr>
+			                    <td>
+			                        <p class="label-key">active</p>
+			                    </td>
+			                    <td style="padding-left: 10px">
+			                        <p class="label-key"><b><a href="http://stackoverflow.com/questions/20154179/differences-between-vexcl-thrust-and-boost-compute?lastactivity" class="lastactivity-link" title="2014-08-04 13:09:38Z">8 months ago</a></b></p>
+			                    </td>
+			                </tr>
+			        </tbody></table>
+			    </div>
+			<div class="module community-bulletin" data-tracker="cb=1">
+    <div class="related">
+                <div class="bulletin-title">
+                    Upcoming Events
+                </div>
+                <hr>
+    <div class="spacer bulletin-item-important">
+        
+    <div class="bulletin-item-type"><a href="http://stackoverflow.com/election?cb=1" class="question-hyperlink"><div class="favicon favicon-stackoverflow" title="Stack Overflow"></div></a></div>
+    <div class="bulletin-item-content">
+        <a href="http://stackoverflow.com/election?cb=1" class="question-hyperlink">2015 Community Moderator Election</a>
+        <div>ends <span title="2015-04-21 20:00:00Z">Apr 21</span></div>
+    </div>
+    <br class="cbt">
+</div>
+                <div class="bulletin-title">
+                    Blog
+                </div>
+                <hr>
+    <div class="spacer">
+        <div class="bulletin-item-type">
+                <a href="http://blog.stackoverflow.com/2015/04/stack-overflow-developer-survey-2015-the-results/?cb=1" class="question-hyperlink">
+<div class="favicon favicon-stackexchangemeta" title="Meta Stack Exchange"></div>                </a>
+            </div>
+                <div class="bulletin-item-content">
+                    <a href="http://blog.stackoverflow.com/2015/04/stack-overflow-developer-survey-2015-the-results/?cb=1" class="question-hyperlink">Stack Overflow Developer Survey 2015: The Results</a>
+                </div>
+                <br class="cbt">
+            </div>
+    </div>
+</div>			
+			<script>
+                var ados = ados || {};ados.run = ados.run || [];
+                ados.run.push(function() { ados_add_placement(22,8277,"adzerk520838295",[17,2221]).setZone(45) ; });                    
+            </script>
+            <div class="everyonelovesstackoverflow adzerk-vote" id="adzerk520838295"><div id="careersadsdoublehigh" style="display:none;"></div><img src="c++%20-%20Differences%20between%20VexCL,%20Thrust,%20and%20Boost.Compute%20-%20Stack%20Overflow_files/i_002.gif" style="position:absolute;" height="0px" width="0px" border="0"><div class="adzerk-vote-controls" style="display:none;"><div class="adzerk-vote-option adzerk-vote-up"><div class="adzerk-vote-icon"></div></div><div class="adzerk-vote-option adzerk-vote-down"><div class="adzerk-vote-icon"></div></div></div><div class="adzerk-vote-survey" style="display:none;"><form><span>No problem. We won't show you that ad again. Why didn't you like it?</span><ul><li><label><input value="12" name="downvoteReason" type="radio">Uninteresting</label></li><li><label><input value="13" name="downvoteReason" type="radio">Misleading</label></li><li><label><input value="14" name="downvoteReason" type="radio">Offensive</label></li><li><label><input value="15" name="downvoteReason" type="radio">Repetitive</label></li><li><label><input value="16" name="downvoteReason" type="radio">Other</label></li></ul><a href="#" class="adzerk-vote-cancel">Oops! I didn't mean to do this.</a></form></div></div>  
+        <div id="hireme">
+            <script>
+;(function(e){var a=window.$,p=window.StackExchange,f=100,c="div#hireme,div.hireme",g=decodeURIComponent,i=encodeURIComponent,r=setTimeout,h=document,q,b,m={},l=location.hash;if(l.length>1){l.substr(1).split("&").forEach(function(t){var u=t.split("=");this[g(u[0])]=g(u[1])},m)}b=m.ac||m.accountid||(p&&p.options&&p.options.user&&p.options.user.accountId);if(b){m.ac=b}if(!m.tags){q=a(".post-taglist .post-tag").map(function(){return a(this).text()});if(q.length>0){m.tags=Array.prototype.join.call(q,";")}}if(l==="#large"){m.l=1}if(l==="#abort"){m.abort=1}function j(t){return a(t).html().replace(/\s+/g,"").length>0}function s(){var t=a("#sidebar [id^='adzerk'].everyonelovesstackoverflow");if(t.length===0){return true}return !j(t)}function n(){var t=a(c);if(t.length>0){if(m.l||a("#careersadsdoublehigh").length>0){m.l=1}var v=t.map(function(z,y){return"d="+y.id}).get().join("&");var x=["l","ip","ac","eng","prov","tags","theme"];var u=Object.keys(m).filter(function(y){return x.indexOf(y)!==-1}).map(function(y){return i(y)+"="+i(m[y])}).join("&");if(u){v+="&"+u}var w=h.createElement("script");w.type="text/javascript";w.src=e+(e.indexOf("?")===-1?"?":"&")+v;h.body.appendChild(w)}}function o(){if(s()){d=r(o,f);return}if(m.abort){k()}n()}function k(){clearTimeout(d);a(c).each(function(){var t=a(this);if(!j(t)){var v=t;var u=t.parents(".everyonelovesstackoverflow").first();if(u.length>0){v=u}v.remove()}})}r(k,2000);var d=r(o,f)}).apply(null, ["//clc.stackoverflow.com/j/p"]);            </script>
+        </div>
+			  
+    
+            <div class="module sidebar-linked">
+	<h4 id="h-linked">Linked</h4>
+	<div class="linked" data-tracker="lq=1">
+<div class="spacer">
+	<a href="http://stackoverflow.com/q/22467579?lq=1" title="Vote score (upvotes - downvotes)">
+		<div class="answer-votes answered-accepted default">3</div>
+	</a>
+	<a href="http://stackoverflow.com/questions/22467579/need-to-convert-c-template-to-c99-code?lq=1" class="question-hyperlink">need to convert C++ template to C99 code</a>
+</div>			</div>
+</div>
+
+				<div class="module sidebar-related">
+					<h4 id="h-related">Related</h4>
+                    <div class="related js-gps-related-questions" data-tracker="rq=1">
+                        <div class="spacer js-gps-track">
+<a href="http://stackoverflow.com/q/57483?rq=1" title="Vote score (upvotes - downvotes)">
+    <div class="answer-votes extra-large">1036
+    </div>
+</a><a href="http://stackoverflow.com/questions/57483/what-are-the-differences-between-a-pointer-variable-and-a-reference-variable-in?rq=1" class="question-hyperlink">What are the differences between a pointer variable and a reference variable in C++?</a>
+</div>
+<div class="spacer js-gps-track">
+<a href="http://stackoverflow.com/q/15989178?rq=1" title="Vote score (upvotes - downvotes)">
+    <div class="answer-votes answered-accepted default">1
+    </div>
+</a><a href="http://stackoverflow.com/questions/15989178/cuda-thrust-reduce-by-key-on-only-some-values-in-an-array-based-off-values-in?rq=1" class="question-hyperlink">CUDA Thrust: reduce_by_key on only some values in an array, based off values in a “key” array</a>
+</div>
+<div class="spacer js-gps-track">
+<a href="http://stackoverflow.com/q/16671799?rq=1" title="Vote score (upvotes - downvotes)">
+    <div class="answer-votes answered-accepted default">2
+    </div>
+</a><a href="http://stackoverflow.com/questions/16671799/is-it-possible-to-deallocate-memory-for-the-n-last-elements-of-a-thrustdevice?rq=1" class="question-hyperlink">Is it possible to deallocate memory for the N last elements of a thrust::device_vector without using resize?</a>
+</div>
+<div class="spacer js-gps-track">
+<a href="http://stackoverflow.com/q/19795846?rq=1" title="Vote score (upvotes - downvotes)">
+    <div class="answer-votes answered-accepted default">1
+    </div>
+</a><a href="http://stackoverflow.com/questions/19795846/sum-only-positive-elements-of-a-vector-cuda-thrust?rq=1" class="question-hyperlink">Sum only positive elements of a vector CUDA/THRUST</a>
+</div>
+<div class="spacer js-gps-track">
+<a href="http://stackoverflow.com/q/20308625?rq=1" title="Vote score (upvotes - downvotes)">
+    <div class="answer-votes answered-accepted default">0
+    </div>
+</a><a href="http://stackoverflow.com/questions/20308625/not-finding-header-files-while-compiling-thrust-example-code?rq=1" class="question-hyperlink">Not finding header files while compiling thrust example code</a>
+</div>
+<div class="spacer js-gps-track">
+<a href="http://stackoverflow.com/q/24632649?rq=1" title="Vote score (upvotes - downvotes)">
+    <div class="answer-votes answered-accepted default">2
+    </div>
+</a><a href="http://stackoverflow.com/questions/24632649/thrust-sort-by-key-on-the-fly-or-different-approach?rq=1" class="question-hyperlink">Thrust Sort by key on the fly or different approach?</a>
+</div>
+<div class="spacer js-gps-track">
+<a href="http://stackoverflow.com/q/25359599?rq=1" title="Vote score (upvotes - downvotes)">
+    <div class="answer-votes answered-accepted default">0
+    </div>
+</a><a href="http://stackoverflow.com/questions/25359599/crash-in-thrust-sorting-example?rq=1" class="question-hyperlink">Crash in thrust sorting example</a>
+</div>
+<div class="spacer js-gps-track">
+<a href="http://stackoverflow.com/q/26315284?rq=1" title="Vote score (upvotes - downvotes)">
+    <div class="answer-votes default">1
+    </div>
+</a><a href="http://stackoverflow.com/questions/26315284/thrust-data-transfers-between-host-and-device?rq=1" class="question-hyperlink">Thrust data transfers between host and device?</a>
+</div>
+<div class="spacer js-gps-track">
+<a href="http://stackoverflow.com/q/26666621?rq=1" title="Vote score (upvotes - downvotes)">
+    <div class="answer-votes answered-accepted default">0
+    </div>
+</a><a href="http://stackoverflow.com/questions/26666621/thrust-fill-isolate-space?rq=1" class="question-hyperlink">thrust: fill isolate space</a>
+</div>
+<div class="spacer js-gps-track">
+<a href="http://stackoverflow.com/q/27746191?rq=1" title="Vote score (upvotes - downvotes)">
+    <div class="answer-votes default">0
+    </div>
+</a><a href="http://stackoverflow.com/questions/27746191/thrust-reduction-by-offsets?rq=1" class="question-hyperlink">Thrust reduction by offsets</a>
+</div>
+
+                    </div>
+				</div>
+            
+<div id="hot-network-questions" class="module">
+    <h4>
+        <a href="http://stackexchange.com/questions?tab=hot" class="js-gps-track" data-gps-track="posts_hot_network.click({ item_type:1, location:11 })">
+            Hot Network Questions
+        </a>
+    </h4>
+    <ul>
+            <li>
+                <div class="favicon favicon-academia" title="Academia Stack Exchange"></div><a href="http://academia.stackexchange.com/questions/43075/just-got-tenured-and-promoted-but-need-to-move-for-family-reasons" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:415 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    Just got tenured and promoted, but need to move for family reasons
+                </a>
+
+            </li>
+            <li>
+                <div class="favicon favicon-stackoverflow" title="Stack Overflow"></div><a href="http://stackoverflow.com/questions/29504070/can-this-be-moved" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:1 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    Can `*this` be `move()`d?
+                </a>
+
+            </li>
+            <li>
+                <div class="favicon favicon-skeptics" title="Skeptics Stack Exchange"></div><a href="http://skeptics.stackexchange.com/questions/27291/did-rockstar-games-post-this-tweet-about-ea-games" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:212 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    Did Rockstar Games post this tweet about EA games?
+                </a>
+
+            </li>
+            <li>
+                <div class="favicon favicon-askubuntu" title="Ask Ubuntu"></div><a href="http://askubuntu.com/questions/606560/how-is-my-internet-browser-able-to-write-files-into-my-downloads-file-if-the-d" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:89 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    How is my internet browser able to write files into 
+my "Downloads" file if the default permissions do not allow to "write"?
+                </a>
+
+            </li>
+            <li>
+                <div class="favicon favicon-puzzling" title="Puzzling Stack Exchange"></div><a href="http://puzzling.stackexchange.com/questions/11621/kill-the-jokers" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:559 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    Kill the jokers!
+                </a>
+
+            </li>
+            <li style="display: list-item;" class="dno js-hidden">
+                <div class="favicon favicon-physics" title="Physics Stack Exchange"></div><a href="http://physics.stackexchange.com/questions/174658/drying-clothes-with-the-suns-heat-without-any-air" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:151 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    Drying clothes with the sun's heat, without any air
+                </a>
+
+            </li>
+            <li style="display: list-item;" class="dno js-hidden">
+                <div class="favicon favicon-german" title="German Language Stack Exchange"></div><a href="http://german.stackexchange.com/questions/22752/declension-of-appositions" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:253 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    Declension of appositions
+                </a>
+
+            </li>
+            <li style="display: list-item;" class="dno js-hidden">
+                <div class="favicon favicon-codereview" title="Code Review Stack Exchange"></div><a href="http://codereview.stackexchange.com/questions/86192/remove-blank-entries-from-row" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:196 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    Remove blank entries from row
+                </a>
+
+            </li>
+            <li style="display: list-item;" class="dno js-hidden">
+                <div class="favicon favicon-codegolf" title="Programming Puzzles &amp; Code Golf Stack Exchange"></div><a href="http://codegolf.stackexchange.com/questions/48589/generate-mathjax-for-the-golden-ratio-continued-fraction" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:200 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    Generate MathJax for the Golden Ratio Continued Fraction
+                </a>
+
+            </li>
+            <li style="display: list-item;" class="dno js-hidden">
+                <div class="favicon favicon-academia" title="Academia Stack Exchange"></div><a href="http://academia.stackexchange.com/questions/43122/to-what-extent-is-reviewing-work-beneficial-for-young-researchers-career" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:415 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    To what extent is reviewing work beneficial for young researcher's career?
+                </a>
+
+            </li>
+            <li style="display: list-item;" class="dno js-hidden">
+                <div class="favicon favicon-askubuntu" title="Ask Ubuntu"></div><a href="http://askubuntu.com/questions/606569/how-to-list-files-older-than-a-day-with-2015-in-filename" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:89 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    How to list files older than a day with "2015" in filename?
+                </a>
+
+            </li>
+            <li style="display: list-item;" class="dno js-hidden">
+                <div class="favicon favicon-stats" title="Cross Validated"></div><a href="http://stats.stackexchange.com/questions/145159/basic-stats-question-how-to-tell-if-my-data-distribution-is-symmetric" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:65 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    Basic stats question - How to tell if my data distribution is symmetric
+                </a>
+
+            </li>
+            <li style="display: list-item;" class="dno js-hidden">
+                <div class="favicon favicon-english" title="English Language &amp; Usage Stack Exchange"></div><a href="http://english.stackexchange.com/questions/237896/is-there-any-english-word-in-which-ph-is-not-pronounced-as-f" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:97 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    Is there any English word in which "ph" is not pronounced as "f"?
+                </a>
+
+            </li>
+            <li style="display: list-item;" class="dno js-hidden">
+                <div class="favicon favicon-ell" title="English Language Learners Stack Exchange"></div><a href="http://ell.stackexchange.com/questions/54360/he-said-with-a-resigned-air" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:481 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    he said with a resigned air
+                </a>
+
+            </li>
+            <li style="display: list-item;" class="dno js-hidden">
+                <div class="favicon favicon-travel" title="Travel Stack Exchange"></div><a href="http://travel.stackexchange.com/questions/45740/where-is-this-on-highway-24-highway-12-in-utah" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:273 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    Where is this on highway 24/highway 12 in Utah?
+                </a>
+
+            </li>
+            <li style="display: list-item;" class="dno js-hidden">
+                <div class="favicon favicon-english" title="English Language &amp; Usage Stack Exchange"></div><a href="http://english.stackexchange.com/questions/238012/pull-my-forelock" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:97 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    Pull my forelock
+                </a>
+
+            </li>
+            <li style="display: list-item;" class="dno js-hidden">
+                <div class="favicon favicon-math" title="Mathematics Stack Exchange"></div><a href="http://math.stackexchange.com/questions/1223417/is-it-necessary-for-one-to-understand-analysis" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:69 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    Is it necessary for one to understand analysis?
+                </a>
+
+            </li>
+            <li style="display: list-item;" class="dno js-hidden">
+                <div class="favicon favicon-askubuntu" title="Ask Ubuntu"></div><a href="http://askubuntu.com/questions/606378/when-to-use-vs-in-bash" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:89 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    When to use () vs. {} in bash?
+                </a>
+
+            </li>
+            <li style="display: list-item;" class="dno js-hidden">
+                <div class="favicon favicon-codegolf" title="Programming Puzzles &amp; Code Golf Stack Exchange"></div><a href="http://codegolf.stackexchange.com/questions/48514/official-ruby-inspector" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:200 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    Official Ruby Inspector
+                </a>
+
+            </li>
+            <li style="display: list-item;" class="dno js-hidden">
+                <div class="favicon favicon-bicycles" title="Bicycles Stack Exchange"></div><a href="http://bicycles.stackexchange.com/questions/29885/pedals-hits-the-ground-too-often-while-turning-at-relatively-high-speed" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:126 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    Pedals hits the ground too often while turning at relatively high speed
+                </a>
+
+            </li>
+            <li style="display: list-item;" class="dno js-hidden">
+                <div class="favicon favicon-graphicdesign" title="Graphic Design Stack Exchange"></div><a href="http://graphicdesign.stackexchange.com/questions/50800/what-is-the-purpose-of-using-a-very-dark-color-for-text-instead-of-a-pure-black" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:174 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    What is the purpose of using a very dark color for text instead of a pure black?
+                </a>
+
+            </li>
+            <li style="display: list-item;" class="dno js-hidden">
+                <div class="favicon favicon-travel" title="Travel Stack Exchange"></div><a href="http://travel.stackexchange.com/questions/45750/booked-two-separate-accommodations-after-getting-a-visa-is-it-a-problem" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:273 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    Booked two separate accommodations after getting a visa, is it a problem?
+                </a>
+
+            </li>
+            <li style="display: list-item;" class="dno js-hidden">
+                <div class="favicon favicon-parenting" title="Parenting Stack Exchange"></div><a href="http://parenting.stackexchange.com/questions/19310/how-to-nurture-my-child-to-be-fearless" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:228 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    How to nurture my child to be fearless
+                </a>
+
+            </li>
+            <li style="display: list-item;" class="dno js-hidden">
+                <div class="favicon favicon-ell" title="English Language Learners Stack Exchange"></div><a href="http://ell.stackexchange.com/questions/54285/why-do-we-say-the-earth-and-not-an-earth" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:481 }); posts_hot_network.click({ item_type:2, location:11 })">
+                    Why do we say 'The earth' and not 'An earth'?
+                </a>
+
+            </li>
+    </ul>
+
+        
+</div>
+		</div>
+	
+<div id="feed-link">
+    <div id="feed-link-text">
+        <a href="http://stackoverflow.com/feeds/question/20154179" title="feed of this question and its answers">
+            <span class="feed-icon"></span>question feed
+        </a>
+    </div>
+</div>	<script>
+StackExchange.ready(function(){$.get('/posts/20154179/ivc/7c99');});
+</script>
+<noscript>
+    <div><img src="/posts/20154179/ivc/7c99" class="dno" alt="" width="0" height="0"></div>
+</noscript><div style="display:none" id="prettify-lang">lang-cpp</div></div>
+
+
+
+        </div>
+    </div>
+    <div id="footer" class="categories">
+        <div class="footerwrap">
+            <div id="footer-menu">
+                <div class="top-footer-links">
+                        <a href="http://stackoverflow.com/tour">tour</a>
+                    <a href="http://stackoverflow.com/help">help</a>
+                    <a href="http://blog.stackoverflow.com/?blb=1">blog</a>
+                        <a href="http://chat.stackoverflow.com/">chat</a>
+                    <a href="http://data.stackexchange.com/">data</a>
+                    <a href="http://stackexchange.com/legal">legal</a>
+                    <a href="http://stackexchange.com/legal/privacy-policy">privacy policy</a>
+                    <a href="http://stackexchange.com/work-here">work here</a>
+                    <a href="http://stackexchange.com/mediakit">advertising info</a>
+
+                    <a onclick='StackExchange.switchMobile("on")'>mobile</a>
+                    <b><a href="http://stackoverflow.com/contact">contact us</a></b>
+                        <b><a href="http://meta.stackoverflow.com/">feedback</a></b>
+                    
+                </div>
+                <div id="footer-sites">
+                    <table>
+    <tbody><tr>
+            <th colspan="3">
+                Technology
+            </th>
+            <th>
+                Life / Arts
+            </th>
+            <th>
+                Culture / Recreation
+            </th>
+            <th>
+                Science
+            </th>
+            <th>
+                Other
+            </th>
+    </tr>
+    <tr>
+            <td>
+                <ol>
+                        <li><a href="http://stackoverflow.com/" title="professional and enthusiast programmers">Stack Overflow</a></li>
+                        <li><a href="http://serverfault.com/" title="system and network administrators">Server Fault</a></li>
+                        <li><a href="http://superuser.com/" title="computer enthusiasts and power users">Super User</a></li>
+                        <li><a href="http://webapps.stackexchange.com/" title="power users of web applications">Web Applications</a></li>
+                        <li><a href="http://askubuntu.com/" title="Ubuntu users and developers">Ask Ubuntu</a></li>
+                        <li><a href="http://webmasters.stackexchange.com/" title="pro webmasters">Webmasters</a></li>
+                        <li><a href="http://gamedev.stackexchange.com/" title="professional and independent game developers">Game Development</a></li>
+                        <li><a href="http://tex.stackexchange.com/" title="users of TeX, LaTeX, ConTeXt, and related typesetting systems">TeX - LaTeX</a></li>
+                            </ol></td><td><ol>
+                        <li><a href="http://programmers.stackexchange.com/" title="professional programmers interested in conceptual questions about software development">Programmers</a></li>
+                        <li><a href="http://unix.stackexchange.com/" title="users of Linux, FreeBSD and other Un*x-like operating systems.">Unix &amp; Linux</a></li>
+                        <li><a href="http://apple.stackexchange.com/" title="power users of Apple hardware and software">Ask Different (Apple)</a></li>
+                        <li><a href="http://wordpress.stackexchange.com/" title="WordPress developers and administrators">WordPress Development</a></li>
+                        <li><a href="http://gis.stackexchange.com/" title="cartographers, geographers and GIS professionals">Geographic Information Systems</a></li>
+                        <li><a href="http://electronics.stackexchange.com/" title="electronics and electrical engineering professionals, students, and enthusiasts">Electrical Engineering</a></li>
+                        <li><a href="http://android.stackexchange.com/" title="enthusiasts and power users of the Android operating system">Android Enthusiasts</a></li>
+                        <li><a href="http://security.stackexchange.com/" title="Information security professionals">Information Security</a></li>
+                            </ol></td><td><ol>
+                        <li><a href="http://dba.stackexchange.com/" title="database professionals who wish to improve their database skills and learn from others in the community">Database Administrators</a></li>
+                        <li><a href="http://drupal.stackexchange.com/" title="Drupal developers and administrators">Drupal Answers</a></li>
+                        <li><a href="http://sharepoint.stackexchange.com/" title="SharePoint enthusiasts">SharePoint</a></li>
+                        <li><a href="http://ux.stackexchange.com/" title="user experience researchers and experts">User Experience</a></li>
+                        <li><a href="http://mathematica.stackexchange.com/" title="users of Mathematica">Mathematica</a></li>
+                        <li><a href="http://salesforce.stackexchange.com/" title="Salesforce administrators, implementation experts, developers and anybody in-between">Salesforce</a></li>
+                    
+                        <li>
+                            <a href="http://stackexchange.com/sites#technology" class="more">
+                                more (14)
+                            </a>
+                        </li>
+                </ol>
+            </td>
+            <td>
+                <ol>
+                        <li><a href="http://photo.stackexchange.com/" title="professional, enthusiast and amateur photographers">Photography</a></li>
+                        <li><a href="http://scifi.stackexchange.com/" title="science fiction and fantasy enthusiasts">Science Fiction &amp; Fantasy</a></li>
+                        <li><a href="http://graphicdesign.stackexchange.com/" title="Graphic Design professionals, students, and enthusiasts">Graphic Design</a></li>
+                        <li><a href="http://cooking.stackexchange.com/" title="professional and amateur chefs">Seasoned Advice (cooking)</a></li>
+                        <li><a href="http://diy.stackexchange.com/" title="contractors and serious DIYers">Home Improvement</a></li>
+                        <li><a href="http://money.stackexchange.com/" title="people who want to be financially literate">Personal Finance &amp; Money</a></li>
+                        <li><a href="http://academia.stackexchange.com/" title="academics and those enrolled in higher education">Academia</a></li>
+                    
+                        <li>
+                            <a href="http://stackexchange.com/sites#lifearts" class="more">
+                                more (10)
+                            </a>
+                        </li>
+                </ol>
+            </td>
+            <td>
+                <ol>
+                        <li><a href="http://english.stackexchange.com/" title="linguists, etymologists, and serious English language enthusiasts">English Language &amp; Usage</a></li>
+                        <li><a href="http://skeptics.stackexchange.com/" title="scientific skepticism">Skeptics</a></li>
+                        <li><a href="http://judaism.stackexchange.com/" title="those who base their lives on Jewish law and tradition and anyone interested in learning more">Mi Yodeya (Judaism)</a></li>
+                        <li><a href="http://travel.stackexchange.com/" title="road warriors and seasoned travelers">Travel</a></li>
+                        <li><a href="http://christianity.stackexchange.com/" title="committed Christians, experts in Christianity and those interested in learning more">Christianity</a></li>
+                        <li><a href="http://gaming.stackexchange.com/" title="passionate videogamers on all platforms">Arqade (gaming)</a></li>
+                        <li><a href="http://bicycles.stackexchange.com/" title="people who build and repair bicycles, people who train cycling, or commute on bicycles">Bicycles</a></li>
+                        <li><a href="http://rpg.stackexchange.com/" title="gamemasters and players of tabletop, paper-and-pencil role-playing games">Role-playing Games</a></li>
+                    
+                        <li>
+                            <a href="http://stackexchange.com/sites#culturerecreation" class="more">
+                                more (21)
+                            </a>
+                        </li>
+                </ol>
+            </td>
+            <td>
+                <ol>
+                        <li><a href="http://math.stackexchange.com/" title="people studying math at any level and professionals in related fields">Mathematics</a></li>
+                        <li><a href="http://stats.stackexchange.com/" title="people interested in statistics, machine learning, data analysis, data mining, and data visualization">Cross Validated (stats)</a></li>
+                        <li><a href="http://cstheory.stackexchange.com/" title="theoretical computer scientists and researchers in related fields">Theoretical Computer Science</a></li>
+                        <li><a href="http://physics.stackexchange.com/" title="active researchers, academics and students of physics">Physics</a></li>
+                        <li><a href="http://mathoverflow.net/" title="professional mathematicians">MathOverflow</a></li>
+                    
+                        <li>
+                            <a href="http://stackexchange.com/sites#science" class="more">
+                                more (7)
+                            </a>
+                        </li>
+                </ol>
+            </td>
+            <td>
+                <ol>
+                        <li><a href="http://stackapps.com/" title="apps, scripts, and development with the Stack Exchange API">Stack Apps</a></li>
+                        <li><a href="http://meta.stackexchange.com/" title="meta-discussion of the Stack Exchange family of Q&amp;A websites">Meta Stack Exchange</a></li>
+                        <li><a href="http://area51.stackexchange.com/" title="proposing new sites in the Stack Exchange network">Area 51</a></li>
+                        <li><a href="http://careers.stackoverflow.com/">Stack Overflow Careers</a></li>
+                    
+                </ol>
+            </td>
+    </tr>
+</tbody></table>
+                </div>
+            </div>
+
+            <div id="copyright">
+                site design / logo © 2015 stack exchange inc; user contributions licensed under <a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license">cc by-sa 3.0</a> 
+                with <a href="http://blog.stackoverflow.com/2009/06/attribution-required/" rel="license">attribution required</a>
+            </div>
+            <div id="svnrev">
+                rev 2015.4.8.2455
+            </div>
+            
+        </div>
+    <iframe id="global-auth-frame" style="display:none" src="c++%20-%20Differences%20between%20VexCL,%20Thrust,%20and%20Boost.Compute%20-%20Stack%20Overflow_files/read.html"></iframe></div>
+    <noscript>
+        <div id="noscript-warning">Stack Overflow works best with JavaScript enabled<img src="http://pixel.quantserve.com/pixel/p-c1rF4kxgLUzNc.gif" alt="" class="dno"></div>
+    </noscript>
+<script>var p = "http", d = "static"; if (document.location.protocol == "https:") { p += "s"; d = "engine"; } var z = document.createElement("script"); z.type = "text/javascript"; z.async = true; z.src = p + "://" + d + ".adzerk.net/ados.js"; var s = document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(z, s);</script>
+<script>
+    var ados = ados || {};
+    ados.run = ados.run || [];
+    ados.run.push(function () { ados_setKeywords('c%2b%2b,opencl,thrust,gpu-programming');; ados_load(); });         
+</script>
+
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () { (i[r].q = i[r].q || []).push(arguments) }, i[r].l = 1 * new Date(); a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m);
+        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+        ga('create', 'UA-5620270-1');        
+        
+        ga('set', 'dimension2', '|c++|opencl|thrust|gpu-programming|');         
+        ga('send', 'pageview');
+        var _qevents = _qevents || [],
+            _comscore = _comscore || [];
+        (function () {
+            var ssl='https:'==document.location.protocol,
+                s=document.getElementsByTagName('script')[0],
+                qc=document.createElement('script');
+            qc.async=true;
+            qc.src=(ssl?'https://secure':'http://edge')+'.quantserve.com/quant.js';
+            s.parentNode.insertBefore(qc, s);
+            var sc=document.createElement('script');
+            sc.async=true;
+            sc.src=(ssl?'https://sb':'http://b') + '.scorecardresearch.com/beacon.js';
+            s.parentNode.insertBefore(sc, s);
+        })();
+        _comscore.push({ c1: "2", c2: "17440561" });
+        _qevents.push({ qacct: "p-c1rF4kxgLUzNc" });
+    </script>                
+    
+</body></html>

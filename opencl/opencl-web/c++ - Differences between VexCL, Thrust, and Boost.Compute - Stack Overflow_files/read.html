@@ -1,0 +1,23 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+                  <script>
+                  var data = {"ReadSession":"https://stackauth.com/auth/global/read-session","Request":"AB43qs8FVqSUXjymMpLz9wQrvhbJ1q9AlmgyFOKvSYzZRL+ySOruJdmLCrc2gCrXorfBNbGn6kWz8sbb8ltEDA==","Nonce":"DQYlVQAAAAD4CWO1MwDxTQ==","Referrer":"http://stackoverflow.com/questions/20154179/differences-between-vexcl-thrust-and-boost-compute","StorageName":"GlobalLogin"};
+
+                  var toMsg = window.parent;
+
+                  var obj = localStorage ? localStorage.getItem(data.StorageName) : null;
+                  if(obj != null) {
+                  var req = new XMLHttpRequest();
+                  req.open('POST', data.ReadSession+'?request='+encodeURIComponent(data.Request)+'&nonce='+encodeURIComponent(data.Nonce)+'&seriesAndToken='+encodeURIComponent(obj), false);
+                  req.send(null);
+                  
+                    if(req.status == 200){
+                      toMsg.postMessage(req.responseText, data.Referrer);
+                    }else{
+                      toMsg.postMessage('No Session', data.Referrer);
+                    }
+                  }else{
+                    toMsg.postMessage('No Local Storage', data.Referrer);
+                  }
+                  </script>
+                  </head><body></body></html>

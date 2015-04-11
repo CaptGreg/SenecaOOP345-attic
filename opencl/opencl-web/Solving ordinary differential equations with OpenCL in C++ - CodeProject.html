@@ -1,0 +1,1708 @@
+<!DOCTYPE html>
+<html style="height: 100%;"><head>
+	<title>Solving ordinary differential equations with OpenCL in C++ - CodeProject</title> 
+	<link type="text/css" rel="stylesheet" href="Solving%20ordinary%20differential%20equations%20with%20OpenCL%20in%20C++%20-%20CodeProject_files/Main.css">
+
+	
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="Description" content="This article shows how ordinary differential equations can be solved with OpenCL. In detail it shows how odeint - a C++ library for ordinary differential equations - can be adapted to work with VexCL - a library for OpenCL. The resulting performance is studied on two examples.; Author: headmyshoulder, Denis Demidov; Updated: 26 Jul 2012; Section: Algorithms &amp; Recipes; Chapter: General Programming; Updated: 26 Jul 2012">
+<meta name="Keywords" content="C++, Dev, Intermediate, OpenCL, C++11, OpenMP,Algorithms &amp; Recipes,General Programming,Free source code, tutorials">
+<meta name="Author" content="headmyshoulder, Denis Demidov">
+<meta name="Rating" content="General">
+<meta name="Revisit-After" content="1 days">
+<meta name="application-name" content="CodeProject">
+<meta name="google-translate-customization" content="d908bb7ce7aff658-4c2f3a504525c916-g629383f736781a8a-13">
+
+<link rel="dns-prefetch" href="http://ajax.googleapis.com/"> 
+<link rel="canonical" href="http://www.codeproject.com/Articles/429183/Solving-ordinary-differential-equations-with-OpenC">
+
+
+<link rel="alternate" type="application/rss+xml" title="CodeProject Latest articles - All Topics" href="http://www.codeproject.com/WebServices/ArticleRSS.aspx?cat=1">
+<link rel="alternate" type="application/rss+xml" title="CodeProject Latest articles - Android" href="http://www.codeproject.com/WebServices/ArticleRSS.aspx?cat=22">
+<link rel="alternate" type="application/rss+xml" title="CodeProject Latest articles - iOS" href="http://www.codeproject.com/WebServices/ArticleRSS.aspx?cat=25">
+<link rel="alternate" type="application/rss+xml" title="CodeProject Latest articles - C++" href="http://www.codeproject.com/WebServices/ArticleRSS.aspx?cat=2">
+<link rel="alternate" type="application/rss+xml" title="CodeProject Latest articles - C#" href="http://www.codeproject.com/WebServices/ArticleRSS.aspx?cat=3">
+<link rel="alternate" type="application/rss+xml" title="CodeProject Latest articles - Web" href="http://www.codeproject.com/WebServices/ArticleRSS.aspx?cat=23">
+<link rel="alternate" type="application/rss+xml" title="CodeProject Lounge Postings" href="http://www.codeproject.com/webservices/LoungeRSS.aspx">
+<meta name="robots" content="index, follow">
+<link rel="search" type="application/opensearchdescription+xml" title="CodeProject" href="http://www.codeproject.com/info/OpenSearch.xml">
+
+	<!-- base href="http://www.codeproject.com/Articles/429183/Solving-ordinary-differential-equations-with-OpenC" -->
+	<link rel="icon" href="http://www.codeproject.com/favicon.ico" type="image/ico">
+<link rel="shortcut icon" href="http://www.codeproject.com/favicon.ico" type="image/ico">
+<link rel="apple-touch-icon" href="http://www.codeproject.com/images/FavIcon-Apple.png" type="image/png">
+<script type="text/javascript" language="Javascript">//<![CDATA[
+function defrm () { /* thanks twitter */ document.write = ''; window.top.location = window.self.location;  setTimeout(function() { document.body.innerHTML = ''; }, 0);  window.self.onload = function(evt) { document.body.innerHTML = ''; }; }if (window.top !== window.self) {  try {  if (window.top.location.host) { /* will throw */ } else { defrm(); /* chrome */ }  } catch (ex) { defrm(); /* everyone else */ } }if (typeof(DemoUrl)!='undefined')   document.write(unescape('%3Cme')+'ta http'+'-equiv="re'+'fresh"                  con'+'tent="1;url='+DemoUrl+unescape('"%3CE'));
+(function() { 
+	var _dma = document.createElement('script');
+        _dma.type = 'text/javascript';
+        _dma.async = true;
+        _dma.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'cdn1.developermedia.com/a.min.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(_dma);
+})();
+
+//]]>
+</script><script src="Solving%20ordinary%20differential%20equations%20with%20OpenCL%20in%20C++%20-%20CodeProject_files/a.js" async="" type="text/javascript"></script>
+
+	
+
+
+
+
+<script type="text/javascript">
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-1735123-1']);
+	_gaq.push(['_trackPageview']);
+	_gaq.push(['_setDomainName', 'www.codeproject.com']);
+	_gaq.push(['_setSessionTimeout', '1200']); 
+
+	(function () {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ga);
+	})(); 
+</script><script src="Solving%20ordinary%20differential%20equations%20with%20OpenCL%20in%20C++%20-%20CodeProject_files/ga.js" async="" type="text/javascript"></script>
+
+
+<link href="Solving%20ordinary%20differential%20equations%20with%20OpenCL%20in%20C++%20-%20CodeProject_files/translateelement.css" charset="UTF-8" rel="stylesheet" type="text/css"><script src="Solving%20ordinary%20differential%20equations%20with%20OpenCL%20in%20C++%20-%20CodeProject_files/main.js" charset="UTF-8" type="text/javascript"></script><script src="Solving%20ordinary%20differential%20equations%20with%20OpenCL%20in%20C++%20-%20CodeProject_files/element_main.js" charset="UTF-8" type="text/javascript"></script></head>	
+
+<body style="position: relative; min-height: 100%; top: 0px;" class="firefox firefox37">
+
+<a class="access-link" href="#Main"><img alt="Click here to Skip to main content" src="Solving%20ordinary%20differential%20equations%20with%20OpenCL%20in%20C++%20-%20CodeProject_files/t.gif"></a>
+
+
+
+
+
+<div class="page-background">
+
+	
+	
+
+	
+
+	<table id="ctl00_Bn" style="width:100%;height:135px" class="banner fixed" cellpadding="0" cellspacing="0">
+	<tbody><tr valign="bottom">
+		<td class="blank-background" style="height:31px">&nbsp;</td>
+		<td class="blank-background" rowspan="3" style="width:250px;height:135px"><a href="http://www.codeproject.com/"><img id="ctl00_Logo" tabindex="1" title="CodeProject" src="Solving%20ordinary%20differential%20equations%20with%20OpenCL%20in%20C++%20-%20CodeProject_files/logo250x135.gif" alt="Home" style="height:135px;width:250px;border-width:0px;"></a></td>
+		<td class="blank-background align-right" style="width:728px;height:31px">
+
+<div class="container memberbar clearfix">
+
+	<div id="ctl00_MemberMenu_GenInfo" class="float-left">11,359,297 members (41,870 online)</div>
+
+	<div class="float-left">
+		
+	</div>
+
+	<div class="float-right">
+
+		
+
+		
+
+		
+
+			<script type="text/javascript">//<!--
+			function doSubmit(secure)
+			{
+				if (secure)
+					document.subForm.action = "https://www.codeproject.com/script/Membership/LogOn.aspx?rp=%2fArticles%2f429183%2fSolving-ordinary-differential-equations-with-OpenC"
+				else
+					document.subForm.action = "https://www.codeproject.com/script/Membership/LogOn.aspx?rp=%2fArticles%2f429183%2fSolving-ordinary-differential-equations-with-OpenC"
+				document.subForm.submit();
+				return true;
+			}//-->
+			</script>
+
+			<a name="SignUp"></a>
+			<span class="member-signin tooltip">
+				<span><a href="https://www.codeproject.com/script/Membership/LogOn.aspx?rp=%2fArticles%2f429183%2fSolving-ordinary-differential-equations-with-OpenC">Sign in</a></span>
+
+				<div class="tooltip-flyout">
+					<form name="subForm" id="subForm" action="https://www.codeproject.com/script/Membership/LogOn.aspx?rp=%2fArticles%2f429183%2fSolving-ordinary-differential-equations-with-OpenC" method="post" class="tight">
+
+						
+						<input id="FormName" name="FormName" value="MenuBarForm" type="hidden">
+
+						<div>Email</div>
+						<div><input class="small-text" name="Email" id="Email" type="email"></div>
+						<div>Password</div>
+						<div><input class="small-text" name="Password" id="Password" type="password"></div>
+						<div class="action">
+							
+<script type="text/javascript">
+function Join(){
+ var url = 'http://www.codeproject.com/script/Membership/Modify.aspx?meml=' + document.subForm.Email.value;
+ document.location.href=url;return false;
+}
+document.write('<input type="button" class="create" onclick="return Join();" value="Join"');
+document.write('<input type="hidden" name="fld_quicksign" value="true" />');
+</script><input class="create" onclick="return Join();" value="Join" <input="" name="fld_quicksign" type="button">
+							<input value="Sign in" class="signin" onclick="return doSubmit(false);" type="submit">
+						</div>
+
+						<div class="container">
+							
+							&nbsp;
+							<a id="ctl00_MemberMenu_SendPassword" class="forgot float-right" href="http://www.codeproject.com/script/Membership/SendPassword.aspx?rp=%2fArticles%2f429183%2fSolving-ordinary-differential-equations-with-OpenC">Forgot your password?</a>
+						</div>
+					</form>
+
+					<hr class="divider-dark">
+
+					Sign in using <a class="oauth" title="Sign in using Facebook" href="http://www.codeproject.com/script/Membership/OAuthLogOn.aspx?auth=Facebook"><img src="Solving%20ordinary%20differential%20equations%20with%20OpenCL%20in%20C++%20-%20CodeProject_files/facebook.png" style="vertical-align:middle;padding-right:3px;border:0;"></a>
+<a class="oauth" title="Sign in using Google" href="http://www.codeproject.com/script/Membership/OAuthLogOn.aspx?auth=Google"><img src="Solving%20ordinary%20differential%20equations%20with%20OpenCL%20in%20C++%20-%20CodeProject_files/google-plus.png" style="vertical-align:middle;padding-right:3px;border:0;"></a>
+<a class="oauth" title="Sign in using Linkedin" href="http://www.codeproject.com/script/Membership/OAuthLogOn.aspx?auth=LinkedIn"><img src="Solving%20ordinary%20differential%20equations%20with%20OpenCL%20in%20C++%20-%20CodeProject_files/linkedin.png" style="vertical-align:middle;padding-right:3px;border:0;"></a>
+<a class="oauth" title="Sign in using Microsoft" href="http://www.codeproject.com/script/Membership/OAuthLogOn.aspx?auth=Microsoft"><img src="Solving%20ordinary%20differential%20equations%20with%20OpenCL%20in%20C++%20-%20CodeProject_files/microsoft.png" style="vertical-align:middle;padding-right:3px;border:0;"></a>
+
+				</div>
+            </span>
+		
+	</div>
+</div></td>
+		<td class="blank-background" style="height:31px">&nbsp;</td>
+	</tr>
+	<tr valign="middle">
+		<td class="theme1-background" style="height:94px">&nbsp;</td>
+		<td class="theme1-background ad"><div class="msg-728x90" data-format="728x90" data-type="ad" data-publisher="lqm.codeproject.site" data-zone="General-Programming/Algorithms-Recipes/Math" data-tags="C++, Dev, Intermediate, OpenCL, C++11, OpenMP,rating4.5"><iframe id="dmad1" allowtransparency="false" style="z-index:10" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" height="90" width="728"></iframe></div></td>
+		<td class="theme1-background" style="height:94px">&nbsp;</td>
+	</tr>
+	<tr valign="top">
+		<td style="height: 14px;"></td>
+		<td style="height: 14px;" class="blank-background"></td>
+		<td style="height: 14px;"></td>
+	</tr>
+</tbody></table>
+
+
+	<a href="#Main"><img alt="Click here to Skip to main content" class="access-link" src="Solving%20ordinary%20differential%20equations%20with%20OpenCL%20in%20C++%20-%20CodeProject_files/t.gif"></a>
+
+	
+	<div id="ctl00_TPR" class="sub-headerbar fixed">
+	<table class="extended" cellpadding="0" cellspacing="0"><tbody><tr><td nowrap="nowrap">
+		
+
+<div class="navbar clearfix">
+<ul class="navmenu openable">
+
+<li><a id="ctl00_TopNavBar_Home" href="http://www.codeproject.com/">home</a>
+
+
+</li><li class=""><a id="ctl00_TopNavBar_Art" class="down selected" href="http://www.codeproject.com/script/Articles/Latest.aspx">articles</a>
+
+	<ul>
+		<li class=""><a id="ctl00_TopNavBar_ArtTopicList" class="fly" onmouseover="navBarMenu.ShowMap(this, 'ctl00_TopNavBar_MapFlyout');" href="http://www.codeproject.com/script/Content/SiteMap.aspx">Chapters and Sections<span class="has-submenu">&gt;</span></a><ul id="ctl00_TopNavBar_MapFlyout">
+			<li>
+				<div id="siteMap">
+					<img src="Solving%20ordinary%20differential%20equations%20with%20OpenCL%20in%20C++%20-%20CodeProject_files/animated.gif" alt="loading" style="margin:150px;width:100px;height:100px;">
+				</div>
+			</li>
+			</ul>
+		</li>
+		<li><a id="ctl00_TopNavBar_ArtSearch" class="fly break" href="http://www.codeproject.com/search.aspx?sbo=kw">Search</a></li>
+		<li><a id="ctl00_TopNavBar_ArtLatestArts" class="fly" href="http://www.codeproject.com/script/Articles/Latest.aspx?at=1,3,7">Latest Articles</a></li>
+		<li><a id="ctl00_TopNavBar_ArtLatestTips" class="fly" href="http://www.codeproject.com/script/Articles/Latest.aspx?at=6">Latest Tips/Tricks</a></li>
+		<li><a id="ctl00_TopNavBar_ArtTop" class="fly" href="http://www.codeproject.com/script/Articles/TopArticles.aspx?ta_so=5">Top Articles</a></li>
+		<li><a id="ctl00_TopNavBar_ArtBeginner" class="fly" href="http://www.codeproject.com/search.aspx?sbo=kw?aidlst=152&amp;sa_us=True">Beginner Articles</a></li>
+		<li><a id="ctl00_TopNavBar_ArtBlogArticles" class="fly break" href="http://www.codeproject.com/script/Articles/BlogArticleList.aspx">Technical Blogs</a></li>
+		<li><a id="ctl00_TopNavBar_ArtGuide" class="fly" href="http://www.codeproject.com/info/Submit.aspx">Posting/Update Guidelines</a></li>
+		<li><a id="ctl00_TopNavBar_ArtHelpForum" class="fly" href="http://www.codeproject.com/Forums/1641/Article-Writing.aspx">Article Help Forum</a></li>
+		<li><a id="ctl00_TopNavBar_ArtCompetition" class="fly break" href="http://www.codeproject.com/script/Awards/CurrentCompetitions.aspx?cmpTpId=1">Article Competition</a></li>
+		<li><a id="ctl00_TopNavBar_ArtPostArticle" class="fly highlight1" href="http://www.codeproject.com/script/Articles/Submit.aspx">
+			<img src="Solving%20ordinary%20differential%20equations%20with%20OpenCL%20in%20C++%20-%20CodeProject_files/write13.png" height="13px" width="13px"> Submit an article or tip
+			</a></li>
+		<li><a id="ctl00_TopNavBar_ArtPostBlog" class="fly highlight2" href="http://www.codeproject.com/script/Articles/BlogFeed.aspx">
+			<img src="Solving%20ordinary%20differential%20equations%20with%20OpenCL%20in%20C++%20-%20CodeProject_files/write13.png" height="13px" width="13px"> Post your Blog
+			</a></li>		<li class="last"></li>
+	</ul>
+
+</li>
+
+
+
+<li class=""><a id="ctl00_TopNavBar_Answers" href="http://www.codeproject.com/script/Answers/List.aspx?tab=active">quick answers</a>
+	<ul>
+		<li id="ctl00_TopNavBar_AQL"><a id="ctl00_TopNavBar_ArticleQuestion" class="fly highlight1" href="#_comments">
+			<img src="Solving%20ordinary%20differential%20equations%20with%20OpenCL%20in%20C++%20-%20CodeProject_files/write13.png" height="13px" width="13px"> Ask a Question about this 
+			article</a>
+		</li>
+
+		<li><a id="ctl00_TopNavBar_QAAsk" class="fly highlight2" href="http://www.codeproject.com/Questions/ask.aspx"><img src="Solving%20ordinary%20differential%20equations%20with%20OpenCL%20in%20C++%20-%20CodeProject_files/write13.png" height="13px" width="13px"> Ask a Question</a></li>
+
+		
+		<li><a id="ctl00_TopNavBar_QAUnanswered" class="fly" href="http://www.codeproject.com/script/Answers/List.aspx?tab=unanswered">View Unanswered Questions</a></li>
+		<li><a id="ctl00_TopNavBar_QALatest" class="fly" href="http://www.codeproject.com/script/Answers/List.aspx?tab=active">View All Questions...</a></li>
+		
+				<li><a id="ctl00_TopNavBar_QATR_ctl00_Tag" class="fly" href="http://www.codeproject.com/script/Answers/List.aspx?tab=active&amp;alltags=true&amp;tags=81" style="padding-left:30px">C# questions</a></li>
+			
+				<li><a id="ctl00_TopNavBar_QATR_ctl01_Tag" class="fly" href="http://www.codeproject.com/script/Answers/List.aspx?tab=active&amp;alltags=true&amp;tags=85" style="padding-left:30px">ASP.NET questions</a></li>
+			
+				<li><a id="ctl00_TopNavBar_QATR_ctl02_Tag" class="fly" href="http://www.codeproject.com/script/Answers/List.aspx?tab=active&amp;alltags=true&amp;tags=377" style="padding-left:30px">C#3.5 questions</a></li>
+			
+				<li><a id="ctl00_TopNavBar_QATR_ctl03_Tag" class="fly" href="http://www.codeproject.com/script/Answers/List.aspx?tab=active&amp;alltags=true&amp;tags=93" style="padding-left:30px">SQL questions</a></li>
+			
+				<li><a id="ctl00_TopNavBar_QATR_ctl04_Tag" class="fly" href="http://www.codeproject.com/script/Answers/List.aspx?tab=active&amp;alltags=true&amp;tags=842" style="padding-left:30px">VB.NET questions</a></li>
+			
+		<li class="last"></li>
+	</ul>
+
+</li>
+
+
+
+<li class=""><a id="ctl00_TopNavBar_Forums" href="http://www.codeproject.com/script/Forums/List.aspx">discussions</a>
+
+	<ul>
+		<li><a id="ctl00_TopNavBar_MessageBoardsAll" class="fly" href="http://www.codeproject.com/script/Forums/List.aspx">All Message Boards...</a></li>
+		<li class=""><a class="fly" style="padding-left:30px" href="http://www.codeproject.com/Forums/1580997/Application-Lifecycle.aspx">Application Lifecycle<span class="has-submenu">&gt;</span></a>
+<ul class="openable"><li><a class="fly" href="http://www.codeproject.com/Forums/1533717/Running-a-Business.aspx">Running a Business</a></li>
+<li><a class="fly" href="http://www.codeproject.com/Forums/1533716/Sales-Marketing.aspx">Sales / Marketing</a></li>
+<li><a class="fly" href="http://www.codeproject.com/Forums/1651/Collaboration-Beta-Testing.aspx">Collaboration / Beta Testing</a></li>
+<li><a class="fly" href="http://www.codeproject.com/Forums/3304/Work-Training-Issues.aspx">Work &amp; Training Issues</a></li>
+</ul></li>
+<li><a class="fly" style="padding-left:30px" href="http://www.codeproject.com/Forums/369270/Design-and-Architecture.aspx">Design and Architecture</a>
+</li>
+<li><a class="fly" style="padding-left:30px" href="http://www.codeproject.com/Forums/12076/ASP-NET.aspx">ASP.NET</a>
+</li>
+<li><a class="fly" style="padding-left:30px" href="http://www.codeproject.com/Forums/1580226/JavaScript.aspx">JavaScript</a>
+</li>
+<li class=""><a class="fly" style="padding-left:30px" href="http://www.codeproject.com/Forums/1647/C-Cplusplus-MFC.aspx">C / C++ / MFC<span class="has-submenu">&gt;</span></a>
+<ul class="openable"><li><a class="fly" href="http://www.codeproject.com/Forums/4486/ATL-WTL-STL.aspx">ATL /  WTL / STL</a></li>
+<li><a class="fly" href="http://www.codeproject.com/Forums/3785/Managed-Cplusplus-CLI.aspx">Managed C++/CLI</a></li>
+</ul></li>
+<li><a class="fly" style="padding-left:30px" href="http://www.codeproject.com/Forums/1827459/Adobe-Technologies.aspx">Adobe Technologies</a>
+</li>
+<li><a class="fly" style="padding-left:30px" href="http://www.codeproject.com/Forums/1649/Csharp.aspx">C#</a>
+</li>
+<li><a class="fly" style="padding-left:30px" href="http://www.codeproject.com/Forums/1627782/Free-Tools.aspx">Free Tools</a>
+</li>
+<li><a class="fly" style="padding-left:30px" href="http://www.codeproject.com/Forums/1827460/Objective-C.aspx">Objective-C</a>
+</li>
+<li><a class="fly" style="padding-left:30px" href="http://www.codeproject.com/Forums/1832431/Ruby-On-Rails.aspx">Ruby On Rails</a>
+</li>
+<li><a class="fly" style="padding-left:30px" href="http://www.codeproject.com/Forums/1725/Database.aspx">Database</a>
+</li>
+<li class=""><a class="fly" style="padding-left:30px" href="http://www.codeproject.com/Forums/186301/Hardware-Devices.aspx">Hardware &amp; Devices<span class="has-submenu">&gt;</span></a>
+<ul class="openable"><li><a class="fly" href="http://www.codeproject.com/Forums/1644/System-Admin.aspx">System Admin</a></li>
+</ul></li>
+<li><a class="fly" style="padding-left:30px" href="http://www.codeproject.com/Forums/1606152/Hosting-and-Servers.aspx">Hosting and Servers</a>
+</li>
+<li><a class="fly" style="padding-left:30px" href="http://www.codeproject.com/Forums/1643/Java.aspx">Java</a>
+</li>
+<li><a class="fly" style="padding-left:30px" href="http://www.codeproject.com/Forums/1650/NET-Framework.aspx">.NET Framework</a>
+</li>
+<li><a class="fly" style="padding-left:30px" href="http://www.codeproject.com/Forums/1848626/Android.aspx">Android</a>
+</li>
+<li><a class="fly" style="padding-left:30px" href="http://www.codeproject.com/Forums/1876716/iOS.aspx">iOS</a>
+</li>
+<li><a class="fly" style="padding-left:30px" href="http://www.codeproject.com/Forums/13695/Mobile.aspx">Mobile</a>
+</li>
+<li><a class="fly" style="padding-left:30px" href="http://www.codeproject.com/Forums/1540733/Sharepoint.aspx">Sharepoint</a>
+</li>
+<li><a class="fly" style="padding-left:30px" href="http://www.codeproject.com/Forums/1004257/Silverlight-WPF.aspx">Silverlight / WPF</a>
+</li>
+<li><a class="fly" style="padding-left:30px" href="http://www.codeproject.com/Forums/1646/Visual-Basic.aspx">Visual Basic</a>
+</li>
+<li><a class="fly" style="padding-left:30px" href="http://www.codeproject.com/Forums/1640/Web-Development.aspx">Web Development</a>
+</li>
+<li><a class="fly" style="padding-left:30px" href="http://www.codeproject.com/suggestions.aspx">Site Bugs / Suggestions</a>
+</li>
+
+		<li class="last"></li>
+	</ul>
+
+</li>
+
+<li class=""><a id="ctl00_TopNavBar_Features" href="http://www.codeproject.com/Feature/">features</a>
+
+	<ul>
+		<li><a id="ctl00_TopNavBar_Comps" class="fly" href="http://www.codeproject.com/script/Awards/CurrentCompetitions.aspx?cmpTpId=1&amp;awsac=true">Competitions</a></li>
+		<li><a id="ctl00_TopNavBar_News" class="fly" href="http://www.codeproject.com/script/News/List.aspx">News</a></li>
+		<li><a id="ctl00_TopNavBar_Insider" class="fly" href="http://www.codeproject.com/Feature/Insider/">The Insider Newsletter</a></li>
+    	<li><a id="ctl00_TopNavBar_DailyBuild" class="fly" href="http://www.codeproject.com/Feature/DailyBuild">The Daily Build Newsletter</a></li>
+		<li><a id="ctl00_TopNavBar_Newsletters" class="fly" href="http://www.codeproject.com/script/Mailouts/Archive.aspx?mtpid=1">Newsletter archive</a></li>
+		<li><a id="ctl00_TopNavBar_Surveys" class="fly" href="http://www.codeproject.com/script/Surveys/List.aspx">Surveys</a></li>
+		<li><a id="ctl00_TopNavBar_Showcase" class="fly" href="http://www.codeproject.com/KB/showcase/">Product Showcase</a></li>
+		<li><a id="ctl00_TopNavBar_Research" class="fly" href="http://www.codeproject.com/script/ResearchLibrary/Index.aspx">Research Library</a></li>
+
+		<li><a id="ctl00_TopNavBar_Stuff" class="fly" href="http://www.codeproject.com/Info/Stuff.aspx">CodeProject Stuff</a></li>
+		<li class="last"></li>
+	</ul>
+
+</li>
+
+
+<li class=""><a id="ctl00_TopNavBar_Lounge" href="http://www.codeproject.com/Lounge.aspx">community</a>
+
+	<ul>
+		<li><a id="ctl00_TopNavBar_WhosWho" class="fly" href="http://www.codeproject.com/script/Membership/Profiles.aspx">Who's Who</a></li>
+		<li><a id="ctl00_TopNavBar_MVPs" class="fly break" href="http://www.codeproject.com/script/Awards/MVPWinners.aspx">Most Valuable Professionals</a></li>
+		
+
+		<li><a id="ctl00_TopNavBar_LoungeLnk" class="fly highlight2" href="http://www.codeproject.com/Lounge.aspx">The Lounge &nbsp;</a></li>
+		<li><a id="ctl00_TopNavBar_InsiderLnk" class="fly" href="http://www.codeproject.com/Insider.aspx">The Insider News</a></li>
+		<li><a id="ctl00_TopNavBar_WeirdWonderful" class="fly" href="http://www.codeproject.com/Feature/WeirdAndWonderful.aspx">The Weird &amp; The Wonderful</a></li>
+		<li><a id="ctl00_TopNavBar_SoapBoxLnk" class="fly" href="http://www.codeproject.com/Forums/1536756/The-Soapbox.aspx">The Soapbox</a></li>
+		<li><a id="ctl00_TopNavBar_PRLnk" class="fly break" href="http://www.codeproject.com/Forums/1738007/Press-Releases.aspx">Press Releases</a></li>
+
+		
+		<li class=""><a class="fly" href="http://www.codeproject.com/Forums/1580229/Hindi.aspx">Non-English Language
+			<span class="has-submenu">&gt;</span></a>
+		<ul>
+		<li><a class="fly" href="http://www.codeproject.com/Forums/1580229/Hindi.aspx">General Indian Topics</a></li>
+		<li><a class="fly" href="http://www.codeproject.com/Forums/1580230/Chinese.aspx">General Chinese Topics</a></li>
+		</ul>
+		</li><li class="last"></li>
+		
+	</ul>
+
+</li>
+
+
+<li class="" style="margin-left:20px"><a id="ctl00_TopNavBar_Help" href="http://www.codeproject.com/KB/FAQs/">help</a>
+
+	<ul>
+		<li><a id="ctl00_TopNavBar_HelpWhatIs" class="fly" href="http://www.codeproject.com/info/guide.aspx">What is 'CodeProject'?</a></li>
+		<li><a id="ctl00_TopNavBar_HelpGeneral" class="fly break" href="http://www.codeproject.com/KB/FAQs/">General FAQ</a></li>
+		<li><a id="ctl00_TopNavBar_HelpPostQuestion" class="fly break highlight2" href="http://www.codeproject.com/Questions/ask.aspx">Ask a Question</a></li>
+		<li><a id="ctl00_TopNavBar_HelpBugs" class="fly" href="http://www.codeproject.com/suggestions.aspx">Bugs and Suggestions</a></li>
+		<li><a id="ctl00_TopNavBar_HelpArticles" class="fly" href="http://www.codeproject.com/Forums/1641/Article-Writing.aspx">Article Help Forum</a></li>
+		<li><a id="ctl00_TopNavBar_HelpSiteMap" class="fly" href="http://www.codeproject.com/script/Content/SiteMap.aspx">Site Map</a></li>
+		<li><a id="ctl00_TopNavBar_HelpAdvertise" class="fly" href="http://developermedia.com/">Advertise with us</a></li>
+		<li><a id="ctl00_TopNavBar_HelpJobs" class="fly" href="http://www.codeproject.com/info/Jobs/">Employment Opportunities</a></li>
+		<li><a id="ctl00_TopNavBar_HelpAboutUs" class="fly" href="http://www.codeproject.com/info/about.aspx">About Us</a></li>
+		<li class="last"></li>
+	</ul>
+
+</li>
+
+</ul>
+
+</div>
+	</td><td align="right">
+		
+
+<div class="searchbar">
+
+<form method="get" action="/search.aspx?sbo=kw" name="Search" class="tight">
+
+
+<table class="search" border="0" cellpadding="0" cellspacing="0"><tbody><tr><td><input tabindex="2" class="search  subdue" id="sb_tb" value="Search for articles, questions, tips" name="q"></td><td><input src="Solving%20ordinary%20differential%20equations%20with%20OpenCL%20in%20C++%20-%20CodeProject_files/search.gif" type="image"></td></tr></tbody></table>
+
+<div class="hover-container">
+	<div style="display: none;" id="SearchFilter" class="search-advanced small-text align-left">
+	<b>Search within:<br></b>
+		
+		<input id="sb_kw" name="sbo" value="kw" checked="checked" type="radio"><label for="sb_kw">Articles</label><br>
+<input id="sb_qa" name="sbo" value="qa" type="radio"><label for="sb_qa">Quick Answers</label><br>
+<input id="sb_fm" name="sbo" value="fm" type="radio"><label for="sb_fm">Messages</label><br>
+
+
+		
+		
+
+		
+		
+	</div>
+</div>
+</form>
+
+</div>
+	</td></tr></tbody></table>
+	<div class="sub-headerbar-divider"></div>
+	</div>
+	
+
+	<div id="A" class="container-content-wrap fixed"> 
+
+	<div itemscope="" itemtype="http://schema.org/Article" class="container-content"> 
+
+		<div class="clearfix">
+			<div class="float-left container-breadcrumb">
+				<div><a href="http://www.codeproject.com/script/Content/SiteMap.aspx">Articles</a> » <a href="http://www.codeproject.com/Chapters/6/General-Programming.aspx">General Programming</a> » <a href="http://www.codeproject.com/KB/recipes/"><span itemprop="articleSection">Algorithms &amp; Recipes</span></a> » <a href="http://www.codeproject.com/KB/recipes/#Math">Math</a></div>
+			</div>
+
+			<div class="align-left float-right padded-top" style="width">
+				
+
+
+ 
+&nbsp;
+
+
+
+
+
+
+
+
+
+
+			</div>
+
+			<div class="float-right article-nav">
+				
+				
+
+<a id="ctl00_ActionLinks_BookmarkMd_ImgBt" title="Bookmark" alternatetext="Bookmark" name="bm_429183_2" onclick="return bookmarkMe(429183,2,'/script/Bookmarks/Ajax/Add.aspx?obid=429183&amp;obtid=2&amp;action=AddBookmark&amp;bio=true&amp;bis=medium','medium');" href="http://www.codeproject.com/script/Bookmarks/Add.aspx?obid=429183&amp;obtid=2&amp;action=AddBookmark&amp;bio=true&amp;bis=medium" style="display:inline-block;height:24px;width:24px;"><img title="Bookmark" src="Solving%20ordinary%20differential%20equations%20with%20OpenCL%20in%20C++%20-%20CodeProject_files/bookmark24.png" alt="" style="border-width:0px;"></a>
+
+
+<span id="ctl00_ActionLinks_BookmarkMd_StatusMsg" class="tiny-text" style="display:none" name="bm_429183_2"></span>
+<a id="ctl00_ActionLinks_PrintMd" href="http://www.codeproject.com/Articles/429183/Solving-ordinary-differential-equations-with-OpenC?display=Print">
+	<img src="Solving%20ordinary%20differential%20equations%20with%20OpenCL%20in%20C++%20-%20CodeProject_files/print24.png" title="Print" style="border:0" height="24px" width="24px">
+</a>
+			</div>
+
+			<div class="align-right float-left">
+				
+			</div>
+		</div>
+
+		<table class="extended container-article-parts" cellpadding="0" cellspacing="0">
+        <tbody><tr valign="top">
+		<td width="117px">
+
+			<div id="ctl00_Nav" class="container-article-tabs">
+				<div class="tabs">
+					
+
+<div class="">
+	<div class="selected">Article</div><div class="unselected"><a href="http://www.codeproject.com/script/Articles/ViewDownloads.aspx?aid=429183">Browse Code</a></div><div class="unselected"><a href="http://www.codeproject.com/script/Articles/Statistics.aspx?aid=429183">Stats</a></div><div class="unselected"><a href="http://www.codeproject.com/script/Articles/ListVersions.aspx?aid=429183">Revisions (2)</a></div><div class="unselected"><a href="http://www.codeproject.com/script/Articles/ListAlternatives.aspx?aid=429183">Alternatives</a></div>
+
+	<div class="unselected"><a href="http://www.codeproject.com/Articles/429183/WebControls/#_comments" id="ctl00_ArticleTabs_CommentLink" class="anchorLink">Comments 
+        <span id="ctl00_ArticleTabs_CmtCnt">(3)</span></a>
+	</div>
+</div>	
+
+				</div>
+
+				
+
+			    <div class="tags"> 
+                    <h4>Tagged as</h4>
+			        <span id="ctl00_TagsList_TagWrp" class="tags">
+	
+	
+	
+	<span id="ctl00_TagsList_VisibleTags"><div class="t"><a rel="tag" href="http://www.codeproject.com/Tags/C--plus----plus--">C++</a></div><div class="t"><a rel="tag" href="http://www.codeproject.com/Tags/Dev">Dev</a></div><div class="t"><a rel="tag" href="http://www.codeproject.com/Tags/Intermediate">Intermediate</a></div><div class="t"><a rel="tag" href="http://www.codeproject.com/Tags/OpenCL">OpenCL</a></div><div class="t"><a rel="tag" href="http://www.codeproject.com/Tags/C--plus----plus--11">C++11</a></div><div class="t"><a rel="tag" href="http://www.codeproject.com/Tags/OpenMP">OpenMP</a></div></span> 
+
+	
+	
+</span>
+
+			    </div>
+
+				<div class="padded-top related">
+					
+	<h4 id="ctl00_RelatedArticles_RelatedResults_ctl00_header">Related Articles</h4>
+	<div class="content-list">	
+	
+	<div class="content-list-item">
+		<a id="ctl00_RelatedArticles_RelatedResults_ctl02_Link" href="http://www.codeproject.com/Articles/415058/VexCL-Vector-expression-template-library-for-OpenC">VexCL: Vector expression template library for OpenCL</a>
+		
+	</div>
+	
+	<div class="content-list-item">
+		<a id="ctl00_RelatedArticles_RelatedResults_ctl03_Link" href="http://www.codeproject.com/Articles/268589/odeint-v-Solving-ordinary-differential-equations">odeint v2 - Solving ordinary differential equations in C++</a>
+		
+	</div>
+	
+	<div class="content-list-item">
+		<a id="ctl00_RelatedArticles_RelatedResults_ctl04_Link" href="http://www.codeproject.com/Articles/18922/Solving-a-differential-equation">Solving a differential equation</a>
+		
+	</div>
+	
+	<div class="content-list-item">
+		<a id="ctl00_RelatedArticles_RelatedResults_ctl05_Link" href="http://www.codeproject.com/Articles/13731/Symbolic-Differentiation">Symbolic Differentiation</a>
+		
+	</div>
+	
+	<div class="content-list-item">
+		<a id="ctl00_RelatedArticles_RelatedResults_ctl06_Link" href="http://www.codeproject.com/Articles/15170/Universal-Framework-for-Science-and-Engineering">Universal Framework for Science and Engineering - Part 4: Space elevator</a>
+		
+	</div>
+	
+	</div>
+	
+
+				</div>
+			</div>
+
+		</td>
+		<td>
+			
+			<div id="AT" class="container-article  fixed"> 
+				<div class="article">
+
+					<form name="aspnetForm" method="post" action="/Articles/429183/Solving-ordinary-differential-equations-with-OpenC" id="aspnetForm" style="margin:0;padding:0">
+<div>
+<input name="__VIEWSTATE" id="__VIEWSTATE" value="LuW2qkNSAjhFV28xvf+MSog8eX5kUhoDL74PKJA0YuGn3jMPimsQkKXolwl7N5Yl+pccnjd1YwFpWgPzgh8XqsSI0hLRfPH+z4QhW+56UbF5wVWlLsF+Bc7Dx+X+q3TKdmdPWh62Qx4jZvrlX74kcUTW7phW7OOOvlI3V+dJL8OSBSoP6c5+77MqKOSYCKbFwftGcnprWCNPHmOC4BYH8kdpTn/nv7tB8dOk2QmyTayRV46FzvyZQkdwg299F+lfGkBmhWME+kspXnV86eVLY2cO3+s0F/QGSIkgSE+MgPJtjJNRZvtWonZrsK9rns9oQIBDZK9MG2hlQO+53kJzTHk1H51+ocxHyhTqorF6jw6BeVaOgDL7fr2FG6QocqMMxf60dISti47RHj1e7f8sZAITXXgxEmFMNw/URoOti8yhG39bdw0KasemaPCke/KlGLLLb2vgG09+xm+kics++d2qWcqHue+aw/c+08pGz4gyQn1haxJZ5dAGhYYzvqt+G/ZV7pfAObeNZ3XOJOpH3pFSiawirchfqIyaRpn7XCmzzYLMZilYmyUbF2UBml/IOFNGfpel85Yhu98FXGorooQE6ui/6wZ1iZzz0IUQFd54ZTymZsr/O6WAlMJAc0WGxbAf0rXiHklwV9G4rS3vD6qP/S2SVTJ46hhf/QXaI0lCVAyxhXnlN/DoUy4r32h+iBsCTkOqxjMOEntw6K4B7Vt+cdbeLmZdGWXIT1fSz5Q1IaYfEu5Da2GhhEbPwY8/dWUsEp6czn5O0pTDVxzscn8uHvKYNxscfFytoc0BoM60p53FnXhLbQmZZBfcNCtXw+LU+/ZC5s24UUk0hqsllYGorjSrJLtXcKCno952uy5AHAJogUX9sOZZbT/8KtINYf4N/jQyH71q9CNsAOUxFZaAccilXF9lPhz7rYHJBcG61zBLOLy+DjXjoX8En1rMClsm0fa5YiotWyNAoTFh298WvHXViaE1bYysNw7liiGAT/IgRZ7g4J1FXoAQtGkF718jlaEKrc/WmlALgjnS3YceHZbd/KP1iMrrnbvD2SlWdDJlWrgPOE5dKPrFRUFlsdxuqbhGHEK/7OF2BE3Jxi4veJfAKHwPM4wm0ReCEl2nZeYG3B2rHPiA6lcTQvw1DgIpljOLSmLAkGeESR3gJ/jBLj6Lr3832hnjy6pZd1f+3jpe0acrQP6kI9lAQQpqirIsjneSjmUWhF4FIw9itWEq5x2nxFLSL7bA+eidIWP3e2VqbHHvqyAGxTvjtNgXiHYsAu5o2MGsKSb2OyhpLYNs5EdbF5ttqE19vTDS2iFCDBek0YxpXNdtFJS3FT57duGf4kiXx2Qwv7h9p7+jHdYES7EzXVoAh7tol7cMfhvWONW+Zqf0GKHoeYRAxKG9ryd/+bOWyzriSk2Y7wPa2P48lAigfym4JIb9gswQ2o2zAkX1P4+jg2DrEvmY8MgiCL7o0S2J8ZiwKCSiTcKxybnraxiQoEABo5LoGaGv8pVK2CTQNr3atvTQ0AQEaebhbmz+u6+5Njmw5w6HLbGlRzmAPaE+EmE7qPwdZS72Ut0nGRVqQU9AAdFKKaprz48YATGjm4gAzkUCK4j2iQMTyKvSzFgvkTmBWJpZkaPySYkaZiRJfBrAyWQbAHrvZ5hXaYkEPdj/6w6IFjpRlHPl8mZKSJa0N4OLH9lcNSYkImEO3iBqtDwbsrOAqf5Dn6eFtjekPGlFgICy0qCwnT3zFPtdkm0mV7vmoTt8nHmfhPRGuH27H/3MFoPM5trmuYuclQa9jEe6cezhJzzSFheKwRd7OodcZJ+ylWpM6YWQFZ+Jg8tPX5TGmM5rqUoPUuBZFlJhUPpU9/xm6tkAPi7eDOAsXzIac4U63+3W25//Y3e1HM21u2Pw7EQFTQIPWN79IXQ7E34ujXyodUpIaQ4tisWq9O+NeO/entvo+LQYHNsaDhjDQ+iIyl+4JrjH+Ym41paHIP+c22qznIuyimV0G9zMlC/6hx8w66Y/8FQ+75BGcB7YSC9Y3uV/btI2J24RKH+GVoU+BXjDRitJehUgYXD9E+RhB8ap1sTmpV4LHAb7tXkhRk6wUAt8uJHUaRPtN77U+TnfCxMY6AG4IgSJ2sNQV92VeKewvgSSU71aNMwj3hH6wqlWzGKoFrRj4igBRYqEoIuPnBhEAam77kS1pV1qQCfw4i3czo39GCtbdFIXF98vz3bSvoZfZTs4c3LlNXw9ZvyBy5JEwRrpz+aipRh6H+cPJnP0+KGSMXPmHwUkG+7wEA6Z2YLIze32B5QE7U6vLwnwHRHXhWwBiOW1KjFksbIK0v0csE+dstFA8Ehbn+bqdcsa15RPkzeflYbtwpBwZRB9z6DtXubSSdye1iUo6mBeW9muPjXmcbG+E17Cbp/Ug2LxSQSal2FiwIPSR7TWBz4JFdCo6ZtSKnaMZ9t+wVRsaeUkvMKfv2bv6CTaQ6C8aA1frZe2yVhcqAJuXDbg+g==" type="hidden">
+</div>
+
+<div>
+
+	<input name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="10C1FD69" type="hidden">
+</div>
+
+					
+					 
+					<div class="header">
+					    <a name="Main"></a>
+
+					    
+					    <a name="_articleTop" id="_articleTop"></a>
+					    <div class="title">
+					        
+					        <h1 id="ctl00_ArticleTitle" itemprop="name">Solving ordinary differential equations with OpenCL in C++</h1> 
+					    </div>
+
+                        <div style="height:34px">
+					        
+					        <div class="entry float-left">
+                                
+                                <div class="float-left">
+
+						            <span class="author"><a href="http://www.codeproject.com/script/Membership/View.aspx?mid=1619496" rel="author"><span itemprop="author" itemscope="" itemtype="http://schema.org/Person"><span itemprop="name">headmyshoulder</span></span></a>, <a href="http://www.codeproject.com/script/Membership/View.aspx?mid=9148157" rel="author"><span itemprop="author" itemscope="" itemtype="http://schema.org/Person"><span itemprop="name">Denis Demidov</span></span></a></span>, 
+						            <span class="date" itemprop="dateModified" content="2012-07-26 16:54:00">
+							            26 Jul 2012</span>
+			
+                                    <a id="ctl00_LicenseLink" title="The Code Project Open License (CPOL)" class="license" href="http://www.codeproject.com/info/cpol10.aspx">CPOL</a><div id="ctl00_CurRat" class="tooltip anchorLink" style="cursor:pointer;margin-top: 5px" name="CurRat_429183">
+				
+							            
+
+<table class="small-text" itemprop="aggregateRating" itemscope="" itemtype="http://schema.org/AggregateRating" cellpadding="0" cellspacing="0"> 
+<tbody><tr>
+	
+	<td class="nowrap">
+
+		
+			<meta itemprop="bestRating" content="5"> 
+			<meta itemprop="worstRating" content="1">
+		
+
+		<span id="ctl00_ArticleRating_VI">
+		<div class="nowrap rating-stars-large" style="height:21px;width:119px;position:relative;">
+	<div class="clipped align-left float-left" style="height:19px;width:116px;">
+		<img src="Solving%20ordinary%20differential%20equations%20with%20OpenCL%20in%20C++%20-%20CodeProject_files/stars-fill-lg.png" style="border-width:0px;">
+	</div><div class="clipped" style="height:19px;width:3px;position:relative;">
+		<img src="Solving%20ordinary%20differential%20equations%20with%20OpenCL%20in%20C++%20-%20CodeProject_files/stars-empty-lg.png" style="border-width:0px;position:absolute;top:0;right:0;">
+	</div>
+</div>
+		</span>
+
+		
+	</td>
+	
+	<td id="ctl00_ArticleRating_VR" class="nowrap">
+		&nbsp;
+		<span id="ctl00_ArticleRating_VotesR">&nbsp;<span itemprop="ratingValue" class="rating">4.88</span> (<span itemprop="ratingCount" class="count">12</span> votes)</span>
+		
+	</td>
+
+</tr>
+
+</tbody></table>
+
+
+							            <div id="ctl00_RB" class="speech-bubble-container-up">
+								            <div class="speech-bubble-up" style="width:150px !important">
+									                        
+<div>
+<table class="feature" title="Voting Distribution. Recent data only" height="50px" width="100%" cellpadding="0" cellspacing="0"><tbody><tr class="chart-row"><td class="chart-column"><span title="0 votes">1</span></td>
+<td class="chart-column"><span title="0 votes">2</span></td>
+<td class="chart-column"><span title="0 votes">3</span></td>
+<td class="chart-column"><div><img src="Solving%20ordinary%20differential%20equations%20with%20OpenCL%20in%20C++%20-%20CodeProject_files/pollcol.gif" alt="2 votes, 16.7%" title="2 votes, 16.7%" height="10px" width="20pxpx" border="0px"></div><span title="2 votes">4</span></td>
+<td class="chart-column"><div><img src="Solving%20ordinary%20differential%20equations%20with%20OpenCL%20in%20C++%20-%20CodeProject_files/pollcol.gif" alt="10 votes, 83.3%" title="10 votes, 83.3%" height="50px" width="20pxpx" border="0px"></div><span title="10 votes">5</span></td>
+</tr></tbody></table><div class="small-text align-center">4.88/5 - 12 votes</div><div class="small-text align-center subdue">μ 4.88, σ<sub>a</sub> 0.98 [<a href="http://www.codeproject.com/KB/FAQs/RatingReputationFAQ.aspx#noisefilter">?</a>]</div>
+</div>
+								            </div>
+								            <div class="speech-bubble-pointer-up">
+									            <div class="speech-bubble-pointer-up-inner"></div>
+								            </div>
+							            </div>
+						            </div>
+                                </div>
+					        </div>
+
+                            
+						    <div id="ctl00_RateArticleRow" class="float-right align-right voting-bar">
+						        <div id="ctl00_RateArticle_RateItemWrapper" class="small-text" name="RateItem_429183">
+
+	<table class="small-text" width="100%" cellpadding="0" cellspacing="0">
+	<tbody><tr>
+		<td id="ctl00_RateArticle_VoteResultDiv" class="rating-result align-right">
+			<span class="align-right"></span>
+			<img class="loaderImg" alt="loading..." src="Solving%20ordinary%20differential%20equations%20with%20OpenCL%20in%20C++%20-%20CodeProject_files/animated_loading_blue.gif" style="display:none;" height="16px" width="16px"> 
+		</td>
+
+	
+		<td class="voteTbl" style="white-space:nowrap" align="right">
+			<table class="small-text">
+			<tbody><tr>
+				<td id="ctl00_RateArticle_RateText" class="rating-prompt">
+					Rate this:
+				</td>
+
+				
+				<td id="ctl00_RateArticle_VoteFormDiv" class="nowrap rating-stars-voter-large">
+					
+
+					<span id="ctl00_RateArticle_RB" class="tooltip ajaxHist radio voting">
+						<span id="ctl00_RateArticle_VoteRBL"><input style="display: none;" id="ctl00_RateArticle_VoteRBL_0" name="ctl00$RateArticle$VoteRBL" value="1" type="radio"><input style="display: none;" id="ctl00_RateArticle_VoteRBL_1" name="ctl00$RateArticle$VoteRBL" value="2" type="radio"><input style="display: none;" id="ctl00_RateArticle_VoteRBL_2" name="ctl00$RateArticle$VoteRBL" value="3" type="radio"><input style="display: none;" id="ctl00_RateArticle_VoteRBL_3" name="ctl00$RateArticle$VoteRBL" value="4" type="radio"><input style="display: none;" id="ctl00_RateArticle_VoteRBL_4" name="ctl00$RateArticle$VoteRBL" value="5" type="radio"></span> 
+
+						
+					<div class="rating-star-block"><a title="vote 1" class="star outline" rating="1" href="#">vote 1</a><a title="vote 2" class="star outline" rating="2" href="#">vote 2</a><a title="vote 3" class="star outline" rating="3" href="#">vote 3</a><a title="vote 4" class="star outline" rating="4" href="#">vote 4</a><a title="vote 5" class="star outline" rating="5" href="#">vote 5</a></div></span>
+
+				</td>
+
+				
+				<td style="padding-left:5px">	
+					<input style="display: none;" name="ctl00$RateArticle$SubmitRateBtn" value="Vote!" id="ctl00_RateArticle_SubmitRateBtn" class="button" type="submit">
+				</td>
+			</tr>
+			</tbody></table>
+			
+		</td>
+	</tr>
+	</tbody></table>
+	<div class="hover-container">
+		
+        <div id="ctl00_RateArticle_RSU" class="rating-comment align-left float-right">
+            <div class="padded">
+            Please <a id="ctl00_RateArticle_SignUp" href="https://www.codeproject.com/script/Membership/LogOn.aspx?rp=%2fArticles%2f429183%2fSolving-ordinary-differential-equations-with-OpenC">Sign up or sign in</a> to vote.
+            </div>
+        </div>
+	</div>
+</div>
+						    </div>
+						    	
+
+						    	
+                            <div class="float-right" style="margin: 4px 20px 0 0">
+						        
+                            </div>                    
+						    	
+                        </div>
+
+   					    
+                        <div id="ctl00_description" class="summary">This
+ article shows how ordinary differential equations can be solved with 
+OpenCL. In detail it shows how odeint - a C++ library for ordinary 
+differential equations - can be adapted to work with VexCL - a library 
+for OpenCL. The resulting performance is studied on two examples.</div>			
+
+                    </div>
+                    
+					
+					
+
+					
+
+					
+					
+					
+
+						
+					
+
+					
+
+						
+						<div id="contentdiv" class="text" itemprop="articleBody">
+						
+
+
+
+<div class="row"><ul class="download float-left">
+<li><a href="http://www.codeproject.com/KB/recipes/429183/vexcl_odeint.zip">Download source - 201 KB</a></li>
+</ul><div class="float-left" style="margin-top:25px;margin-left:30px"><div data-format="1x11" data-type="ad" data-publisher="lqm.codeproject.site" data-zone="downloadlink" data-tags="C%2b%2b%2cDev%2cIntermediate%2cOpenCL%2cC%2b%2b11%2cOpenMP"></div></div></div>
+<h2>Introduction</h2>
+<p>In this article we show how <a href="http://www.odeint.com/">odeint</a> can be adapted to work with <a href="https://github.com/ddemidov/vexcl">VexCL</a>.
+ 
+odeint is a library for solving ordinary differential equations (ODE) 
+numerically with C++. ODEs are important in many scientific areas and 
+hence numerous applications 
+for odeint can be found. VexCL is a high-level C++ library for OpenCL. 
+Its main feature are expression templates which significantly simplify 
+the way one writes code 
+for numerical problems. By using OpenCL the resulting code can run on a 
+GPU or can be parallelized on multiple cores. Both libraries have been 
+introduced here on the CodeProject:</p>
+<ul>
+<li><a href="http://www.codeproject.com/Articles/268589/odeint-v2-Solving-ordinary-differential-equations">odeint v2 - Solving ordinary differential equation in C++</a></li>
+<li><a href="http://www.codeproject.com/Articles/415058/VexCL-Vector-expression-template-library-for-OpenC">VexCL: Vector expression template library for OpenCL</a></li>
+</ul>
+<p><strong>Note</strong>: This article does not give an introduction to 
+the odeint and ordinary differential equations. If you are unfamiliar 
+with those read the odeint article first!</p>
+<p><strong>Note</strong>: VexCL needs C++11 features! So you have to compile with C++11 support enabled.</p>
+<p>odeint provides a mechanism which lets the user change the way how 
+the elementary numerical computations (addition, multiplication, ...) 
+are performed. This mechanism consist of a combination of state_type, 
+algebra and operations. state_type represents here the state of the ODE 
+and it is usually a vector type like <code>std::vector</code>, <code>std::array</code>. An example is:</p>
+<div class="pre-action-link" id="premain750025" style="width:100%;display:block;"><span id="prehide750025" onclick="processCodeBlocks.togglePre(750025);">Hide</span>  &nbsp; <span onclick="return processCodeBlocks.copyCode(750025);">Copy Code</span></div><pre style="margin-top: 0px;" id="pre750025" lang="C++">std::<span class="code-keyword">array</span>&lt; <span class="code-keyword">double</span> , <span class="code-digit">3</span> &gt; x1 , x2;
+<span class="code-comment">//</span><span class="code-comment"> initialize x1, x2
+</span>odeint::range_algebra algebra;
+<span class="code-keyword">double</span> dt = <span class="code-digit">0</span>.<span class="code-digit">1</span>;
+algebra.for_each2( x1 , x2 , default_operations::scale_sum1( dt ) );
+<span class="code-comment">//</span><span class="code-comment"> computes x1 = dt * x2 for all elements of x1 and x2</span></pre>
+<p>The algebra is responsible for iterating of all elements of the state
+ whereas the operations are responsible for the elementary operation. 
+In the above example a <code>for_each2</code> is used, which means that two state types are iterated. The operation is a <code>scale_sum1</code> 
+which simply calculates <code>x1[i] = dt * x2[i]</code>. odeint provides a set of predefined algebras:</p>
+<ul>
+<li><code>range_algebra</code>: default algebra which works on <a href="http://www.boost.org/doc/libs/release/libs/range/doc/html/index.html">Boost.Ranges</a> </li>
+<li><code>array_algebra</code>: specialized algebra for <code>boost::array</code></li>
+<li><code>fusion_algebra</code>: algebra for compile-time sequences like <code>boost::fusion::vector</code>, 
+<code>std::tuple</code>, ..., see  <a href="http://www.boost.org/doc/libs/release/libs/fusion/doc/html/index.html">Boost.Fusion</a></li>
+<li><code>vector_space_algebra</code>: algebra for vector space types which redirect all computations directly to the operations.
+</li><li><code>thrust_algebra</code>: algebra for <a href="http://thrust.github.com/">Thrust</a></li>
+</ul>
+<p>Many libraries for vector and matrix types provide expression templates for the elementary operations. Examples are <a href="http://www.boost.org/doc/libs/release/libs/numeric/ublas/doc/index.html">Boost.Ublas</a>, <a href="http://www.codeproject.com/Articles/429183/www.mtl4.org/">MTL4</a>, and VexCL. Such libraries do not need an own algebra but can be used with the <code>vector_space_algebra</code> and the <code>default_operations</code>
+ which simply calls the operations directly on the matrix or vector 
+type. All you have to do in this case is to adapt odeint resizing 
+mechanism. How this works for VexCL is described in this article. The 
+adaption of Boost.Ublas and MTL4 is then very similar to the adaption of
+ VexCL.
+</p>
+<h2>Adapting VexCL</h2>
+
+<p>
+VexCL introduces several vector types which live on OpenCL devices. The main vector type is <code>vex::vector</code> which is the classical analog to the <code>std::vector</code>. <code>vex::vector</code>
+ can also be split over multiple devices. One of the major points of 
+VexCL is that is supports expression templates. For example, it is 
+possible to write code like
+</p>
+
+<div class="pre-action-link" id="premain520409" style="width:100%;display:block;"><span id="prehide520409" onclick="processCodeBlocks.togglePre(520409);">Hide</span>  &nbsp; <span onclick="return processCodeBlocks.copyCode(520409);">Copy Code</span></div><pre style="margin-top: 0px;" id="pre520409" lang="C++">vex::vector&lt; <span class="code-keyword">double</span> &gt; x() , y() , z();
+<span class="code-comment">//</span><span class="code-comment"> initialize x, y, z
+</span>z = <span class="code-digit">0</span>.<span class="code-digit">125</span> * ( x * x + <span class="code-digit">2</span>.<span class="code-digit">0</span> * x * y + y * y );</pre>
+<p>
+The second line in this example creates lazily an expression template 
+which is evaluated when the assign operator is invoked. The advantage is
+ surely that temporaries are avoided and you do not loose any 
+performance.
+</p>
+
+<p>
+Since VexCL already supports expression templates it can directly be used with the <code>vector_space_algebra</code>
+ of odeint. There is no need to introduce an additional algebra or new 
+operations. The example from the previous section can be written as
+</p>
+
+<div class="pre-action-link" id="premain157465" style="width:100%;display:block;"><span id="prehide157465" onclick="processCodeBlocks.togglePre(157465);">Hide</span>  &nbsp; <span onclick="return processCodeBlocks.copyCode(157465);">Copy Code</span></div><pre style="margin-top: 0px;" id="pre157465" lang="C++">vex::vector&lt; <span class="code-keyword">double</span> &gt; x , y;
+vector_space_algebra algebra;
+<span class="code-keyword">double</span> dt = <span class="code-digit">0</span>.<span class="code-digit">1</span>;
+algebra.for_each2( x , y , default_operations::scale_sum1( dt );</pre>
+<p>
+In order to use <code>vex::vector</code> with odeint only the resizing 
+of VexCL needs to be adapted for odeint. Resizing in odeint is necessary
+ since many solvers need temporary state types. These state types need 
+to be constructed and initialized which is done by the resizing 
+mechanism of odeint.
+</p>
+
+<p>
+The resizing mechanism of odeint consist of three class templates. These classes are <code>is_resizeable&lt;&gt;</code> which is a simply  meta function telling odeint if the type is really resizable. The second class is <code>same_size_impl&lt;&gt;</code> which has a static method <code>same_size</code> taking two state_types as arguments and returning if both types have the same size. The third class is <code>resize_impl&lt;&gt;</code> which performs the actual resizing. These classes have a default implementation and can be specialized for any type.
+</p>
+
+<p>
+For VexCL the specialization is:</p>
+<div class="pre-action-link" id="premain608541" style="width:100%;display:block;"><span id="prehide608541" onclick="processCodeBlocks.togglePre(608541);">Hide</span>  &nbsp; <span onclick="return processCodeBlocks.copyCode(608541);">Copy Code</span></div><pre style="margin-top: 0px;" id="pre608541" lang="C++"><span class="code-keyword">template</span>&lt; <span class="code-keyword">typename</span> T &gt;
+<span class="code-keyword">struct</span> is_resizeable&lt; vex::vector&lt; T &gt; &gt; : boost::true_type { };
+
+<span class="code-keyword">template</span>&lt; <span class="code-keyword">typename</span> T &gt;
+<span class="code-keyword">struct</span> resize_impl&lt; vex::vector&lt; T &gt; , vex::vector&lt; T &gt; &gt;
+{
+    <span class="code-keyword">static</span> <span class="code-keyword">void</span> resize( vex::vector&lt; T &gt; &amp;x1 , <span class="code-keyword">const</span> vex::vector&lt; T &gt; &amp;x2 )
+    {
+	x1.resize( x2.queue_list() , x2.size() );
+    }
+};
+
+<span class="code-keyword">template</span>&lt; <span class="code-keyword">typename</span> T &gt;
+<span class="code-keyword">struct</span> same_size_impl&lt; vex::vector&lt; T &gt; , vex::vector&lt; T &gt; &gt;
+{
+    <span class="code-keyword">static</span> <span class="code-keyword">bool</span> same_size( <span class="code-keyword">const</span> vex::vector&lt; T &gt; &amp;x1 , <span class="code-keyword">const</span> vex::vector&lt; T &gt; &amp;x2 )
+    {
+	<span class="code-keyword">return</span> x1.size() == x2.size();
+    }
+};</pre>
+<p>That is all. Having the specializations one can use VexCL and odeint.
+ Of course, these specializations are already defined in odeint. You 
+only need to include:</p>
+<div class="pre-action-link" id="premain556930" style="width:100%;display:block;"><span id="prehide556930" onclick="processCodeBlocks.togglePre(556930);">Hide</span>  &nbsp; <span onclick="return processCodeBlocks.copyCode(556930);">Copy Code</span></div><pre style="margin-top: 0px;" id="pre556930" lang="C++"><span class="code-preprocessor">#include</span><span class="code-preprocessor"> <span class="code-keyword">&lt;</span><span class="code-leadattribute">boost</span><span class="code-keyword">/</span><span class="code-attribute">numeric</span><span class="code-keyword">/</span><span class="code-attribute">odeint</span><span class="code-keyword">/</span><span class="code-attribute">external</span><span class="code-keyword">/</span><span class="code-attribute">vexcl</span><span class="code-keyword">/</span><span class="code-attribute">vexcl_resizing.hpp</span><span class="code-keyword">&gt;</span></span></pre>
+<p>VexCL also has a multi-vector, which packs several instances of <code>vex::vector</code> and allows to synchronously operate on all of them. The resizing specializations for the multi-vector are very similar to <code>vex::vector</code> and are also included in the header above.
+</p>
+
+
+
+<h2>Examples</h2>
+
+<p>
+The power of GPUs is only used if one tries to solve large problems, 
+such that many sub-problems can be solved in parallel. For ODEs one 
+needs about 10000 coupled ODEs to gain performance from the GPU compared
+ to the CPU. In this section two typical examples for large ODEs are 
+introduced. 
+</p>
+
+<p>
+In the first example we will use the Lorenz system and study its 
+dependence on one of the parameters. The Lorenz system is a system of 
+three coupled ODEs which shows chaotic behavior for a large range of 
+parameters. The ODE reads
+</p>
+
+<div class="pre-action-link" id="premain551919" style="width:100%;display:block;"><span id="prehide551919" onclick="processCodeBlocks.togglePre(551919);">Hide</span>  &nbsp; <span onclick="return processCodeBlocks.copyCode(551919);">Copy Code</span></div><pre style="margin-top: 0px;" id="pre551919" lang="text">dx / dt = -sigma * ( x - y )
+dy / dt = R * x - y - x * z
+dz / dt = - b * z + x * y</pre>
+<p>We will study the dependence on the parameter <coed>R. Therefore, we create a large set of these systems (each with a different parameter <code>R</code>),
+ 
+pack them all into one system and solve them simultaneously on the GPU. 
+The Lorenz system is a system of three coupled ordinary differential 
+equations. If we want to solve <code>N</code> of these systems the overall state has <code>3*N</code>
+ entries. We can pack each component separately into one of VexCL's 
+vectors. But multi-vector consisting of three sub-vectors fits this 
+problem much better. 
+The typedefs are:</coed></p>
+<div class="pre-action-link" id="premain966732" style="width:100%;display:block;"><span id="prehide966732" onclick="processCodeBlocks.togglePre(966732);">Hide</span>  &nbsp; <span onclick="return processCodeBlocks.copyCode(966732);">Copy Code</span></div><pre style="margin-top: 0px;" id="pre966732" lang="C++"><span class="code-keyword">typedef</span> vex::vector&lt; <span class="code-keyword">double</span> &gt; vector_type;
+<span class="code-keyword">typedef</span> vex::multivector&lt; <span class="code-keyword">double</span>, <span class="code-digit">3</span> &gt; state_type;</pre>
+<p>The <code>vector_type</code> here is needed to store the parameters <coed>R. The sub-vectors of the <code>state_type</code> can be accessed via:</coed></p>
+<div class="pre-action-link" id="premain434320" style="width:100%;display:block;"><span id="prehide434320" onclick="processCodeBlocks.togglePre(434320);">Hide</span>  &nbsp; <span onclick="return processCodeBlocks.copyCode(434320);">Copy Code</span></div><pre style="margin-top: 0px;" id="pre434320" lang="C++">state_type X;
+<span class="code-comment">//</span><span class="code-comment"> initialize X
+</span><span class="code-keyword">auto</span> &amp;x = X(<span class="code-digit">0</span>);
+<span class="code-keyword">auto</span> &amp;y = X(<span class="code-digit">1</span>);
+<span class="code-keyword">auto</span> &amp;z = X(<span class="code-digit">2</span>);</pre>
+<p>
+So, all x-components of the N Lorenz system are in <code>X(0)</code>, all y-components are in <code>X(1)</code>, and all z-components are in <code>X(2)</code>.
+ Now, we implement the system function. This function represents the ODE
+ and is used from odeint to solve the ODE. The system needs to be a 
+function object (a functor or a plain C-function) with three parameters.
+ Is signature is <code>void( const state_type&amp;, state_type&amp;, time_type )</code>.
+ The first parameter is an input parameter and represents the current 
+state of the ODE, the second one is an output parameter and is used to 
+store 
+the RHS of the ode. The third parameter is simply the time. As said 
+above VexCL supports expression templates for numerical computation. By 
+using expression templates the system function becomes very simple.
+</p>
+
+<div class="pre-action-link" id="premain528714" style="width:100%;display:block;"><span id="prehide528714" onclick="processCodeBlocks.togglePre(528714);">Hide</span>  &nbsp; <span onclick="return processCodeBlocks.copyCode(528714);">Copy Code</span></div><pre style="margin-top: 0px;" id="pre528714" lang="C++"><span class="code-keyword">const</span> <span class="code-keyword">double</span> sigma = <span class="code-digit">10</span>.<span class="code-digit">0</span>;
+<span class="code-keyword">const</span> <span class="code-keyword">double</span> b = <span class="code-digit">8</span>.<span class="code-digit">0</span> / <span class="code-digit">3</span>.<span class="code-digit">0</span>;
+
+<span class="code-keyword">struct</span> sys_func
+{
+    <span class="code-keyword">const</span> vector_type &amp;R;
+
+    sys_func( <span class="code-keyword">const</span> vector_type &amp;_R ) : R( _R ) { }
+
+    <span class="code-keyword">void</span> <span class="code-keyword">operator</span>()( <span class="code-keyword">const</span> state_type &amp;x , state_type &amp;dxdt , <span class="code-keyword">double</span> t ) <span class="code-keyword">const</span>
+    {
+	dxdt(<span class="code-digit">0</span>) = -sigma * ( x(<span class="code-digit">0</span>) - x(<span class="code-digit">1</span>) );
+	dxdt(<span class="code-digit">1</span>) = R * x(<span class="code-digit">0</span>) - x(<span class="code-digit">1</span>) - x(<span class="code-digit">0</span>) * x(<span class="code-digit">2</span>);
+	dxdt(<span class="code-digit">2</span>) = - b * x(<span class="code-digit">2</span>) + x(<span class="code-digit">0</span>) * x(<span class="code-digit">1</span>);
+    }
+};</pre>
+<p>
+Note that the system function holds a vector for all parameters <code>R</code>.
+ Each line in system functions computes the expression for the whole set
+ of all N elements of the vector. This is in principle all. We can now 
+instantiate one of odeints solvers and solve the ODE. A complete main 
+program might look like this:
+</p>
+
+<div class="pre-action-link" id="premain879510" style="width:100%;display:block;"><span id="prehide879510" onclick="processCodeBlocks.togglePre(879510);">Hide</span>  &nbsp; <span id="preShrink879510" onclick="processCodeBlocks.shrinkExpand(879510);">Shrink</span> <img id="preimg879510" src="Solving%20ordinary%20differential%20equations%20with%20OpenCL%20in%20C++%20-%20CodeProject_files/arrow-up-16.png" style="height:16px;width:16px" onclick="processCodeBlocks.shrinkExpand(879510);">  &nbsp; <span onclick="return processCodeBlocks.copyCode(879510);">Copy Code</span></div><pre processed="true" style="margin-top: 0px;" id="pre879510" lang="C++"><span class="code-comment">//</span><span class="code-comment"> setup the opencl context
+</span>vex::Context ctx( vex::Filter::Type(CL_DEVICE_TYPE_GPU) );
+std::cout &lt;&lt; ctx &lt;&lt; std::endl;
+
+<span class="code-comment">//</span><span class="code-comment"> set up number of systems, time step and integration time
+</span><span class="code-keyword">const</span> <span class="code-sdkkeyword">size_t</span> n = <span class="code-digit">1024</span> * <span class="code-digit">1024</span>;
+<span class="code-keyword">const</span> <span class="code-keyword">double</span> dt = <span class="code-digit">0</span>.<span class="code-digit">01</span>;
+<span class="code-keyword">const</span> <span class="code-keyword">double</span> t_max = <span class="code-digit">100</span>.<span class="code-digit">0</span>;
+
+<span class="code-comment">//</span><span class="code-comment"> initialize R
+</span><span class="code-keyword">double</span> Rmin = <span class="code-digit">0</span>.<span class="code-digit">1</span> , Rmax = <span class="code-digit">50</span>.<span class="code-digit">0</span> , dR = ( Rmax - Rmin ) / <span class="code-keyword">double</span>( n - <span class="code-digit">1</span> );
+std::vector&lt;<span class="code-keyword">double</span>&gt; r( n );
+<span class="code-keyword">for</span>( <span class="code-sdkkeyword">size_t</span> i=0 ; i&lt;n ; ++i ) r[i] = Rmin + dR * <span class="code-keyword">double</span>( i );
+vector_type R( ctx.queue() , r );
+
+<span class="code-comment">//</span><span class="code-comment"> initialize the state of the lorenz ensemble
+</span>state_type X(ctx.queue(), n);
+X(<span class="code-digit">0</span>) = <span class="code-digit">10</span>.<span class="code-digit">0</span>;
+X(<span class="code-digit">1</span>) = <span class="code-digit">10</span>.<span class="code-digit">0</span>;
+X(<span class="code-digit">2</span>) = <span class="code-digit">10</span>.<span class="code-digit">0</span>;
+
+<span class="code-comment">//</span><span class="code-comment"> instantiate a stepper
+</span>runge_kutta4&lt;
+    state_type , <span class="code-keyword">double</span> , state_type , <span class="code-keyword">double</span> ,
+    odeint::vector_space_algebra , odeint::default_operations
+    &gt; stepper;
+
+<span class="code-comment">//</span><span class="code-comment"> solve the system
+</span>integrate_const( stepper , sys_func( R ) , X , <span class="code-digit">0</span>.<span class="code-digit">0</span> , t_max , dt );</pre>
+<p>As you can see, odeint's <code>vector_space_algebra</code> and default operation set are used here.</p>
+<p>As a second example we choose a chain of coupled phase oscillators. <a href="http://www.scholarpedia.org/article/Phase_Model">Phase oscillators</a> 
+are a very simplified version of usual oscillator where the state is described by a <code>2π</code> periodic variable. If a single phase oscillator is uncoupled its phase <code>φ</code> is described by a linear growth <code>dφ / dt = ω</code> where <code>ω</code>
+ is the phase velocity. Therefore, interesting behavior can only be 
+observed if two or more oscillators are coupled. In fact, a system of 
+coupled phase oscillators is a prominent example of an <a href="http://en.wikipedia.org/wiki/Emergence">emergent system</a> where the coupled system shows a more complex behavior than its constitutes.
+</p>
+
+<p>
+The concrete example we analyze here is:</p>
+
+<div class="pre-action-link" id="premain397932" style="width:100%;display:block;"><span id="prehide397932" onclick="processCodeBlocks.togglePre(397932);">Hide</span>  &nbsp; <span onclick="return processCodeBlocks.copyCode(397932);">Copy Code</span></div><pre style="margin-top: 0px;" id="pre397932" lang="text">dφ(i) / dt = ω(i) + sin( dφ(i+1) - dφ(i) ) + sin( dφ(i) - dφ(i-1) )</pre>
+<p>
+Note, that <code>dφ(i)</code> is a function of the time, the argument <code>i</code>
+ denotes here the i.th phase in the chain. To implement such equations 
+efficiently on the GPU Denis did a great job of introducing some kind of
+ generalized stencils. The stencil for our problem is generated by
+</p>
+
+<div class="pre-action-link" id="premain634973" style="width:100%;display:block;"><span id="prehide634973" onclick="processCodeBlocks.togglePre(634973);">Hide</span>  &nbsp; <span onclick="return processCodeBlocks.copyCode(634973);">Copy Code</span></div><pre style="margin-top: 0px;" id="pre634973" lang="C++"><span class="code-keyword">extern</span> <span class="code-keyword">const</span> <span class="code-keyword">char</span> oscillator_body[] = <span class="code-string">"</span><span class="code-string">return sin(X[-1] - X[0]) + sin(X[0] - X[1]);"</span>;
+vex::StencilOperator&lt; <span class="code-keyword">double</span>, <span class="code-digit">3</span>, <span class="code-digit">1</span>, oscillator_body &gt; S( queue_list() );</pre>
+
+<p>
+The first line simply generates an OpenCL string of the elementary 
+operation done in each kernel. The second line instantiates the stencil 
+operator. It can be applied to a vector x by imposing <code>S(x)</code>. The complete system function of the chain of phase oscillators is then
+</p>
+
+<div class="pre-action-link" id="premain865830" style="width:100%;display:block;"><span id="prehide865830" onclick="processCodeBlocks.togglePre(865830);">Hide</span>  &nbsp; <span onclick="return processCodeBlocks.copyCode(865830);">Copy Code</span></div><pre style="margin-top: 0px;" id="pre865830" lang="C++"><span class="code-keyword">extern</span> <span class="code-keyword">const</span> <span class="code-keyword">char</span> oscillator_body[] = <span class="code-string">"</span><span class="code-string">return sin(X[-1] - X[0]) + sin(X[0] - X[1]);"</span>;
+
+<span class="code-keyword">struct</span> sys_func
+{
+
+    <span class="code-keyword">const</span> state_type ω
+    vex::StencilOperator&lt; <span class="code-keyword">double</span>, <span class="code-digit">3</span>, <span class="code-digit">1</span>, oscillator_body &gt; S;
+
+    sys_func( <span class="code-keyword">const</span> state_type &amp;_omega )
+        : omega( _omega ) , S( _omega.queue_list() )
+    { }
+
+    <span class="code-keyword">void</span> <span class="code-keyword">operator</span>()( <span class="code-keyword">const</span> state_type &amp;x , state_type &amp;dxdt , value_type t ) <span class="code-keyword">const</span>
+    {
+        dxdt = omega + S( x );
+    }
+};</pre>
+
+Note again, how compact the code is. An equivalent version of the above 
+system with Thrust is much larger. In fact the Lorenz system 
+implementation introduced here as 78 lines of code, whereas the Thrust 
+version has 145. Furthermore, Thrust also needed a separate algebra as 
+well as a separate operations type.
+
+
+<h2>Performance comparison</h2>
+
+<p>
+In this section we compare the performance of VexCL against Thrust. 
+Thrust is a high level library for CUDA which provides a STL like 
+interface to vectors on the CUDA devices. Furthermore, it can easily be 
+used to put the computations on one or more cores of your CPU by using 
+OpenMP. The Lorenz example for Thrust is described in the tutorial of 
+odeint. Thrust does not provide expression templates, but is has an 
+advanced iterator system which lets you program the numerical expression
+ in an easy manner. Nevertheless it is more complicated than VexCL.
+</p>
+
+<p>
+The image below shows the performance of the Lorenz system example for 
+several configurations of Thrust and VexCL. In detail it shows the 
+performance of VexCL on one GPU, two GPUs, three GPUs, and on one CPU 
+core. Furthermore, the performance for Thrust on the GPU (only single 
+GPU computations are supported) and on one CPU are shown shown. It is 
+clearly visible that Thrust outperforms VexCL on one GPU. But if more 
+than one GPUs are used (and are installed on your computer) VexCL 
+becomes faster. The same holds for the CPU version. Furthermore, one can
+ clearly see that for small system sizes where the computation time is 
+relatively small VexCL has a constant run-time. This is due to the fact 
+that the OpenCL compiles the kernels at run-time for the GPU. (The right
+ panel shows the performance of VexCL relative to Thrust on GPU. So if 
+the curves are above 1 then VexCL is faster otherwise it is slower.)
+</p>
+
+<p><img src="Solving%20ordinary%20differential%20equations%20with%20OpenCL%20in%20C++%20-%20CodeProject_files/lorenz_vexcl_vs_thrust.png" height="254" width="640"></p>
+
+
+<p>
+The performance results for the phase oscillator chain are shown in the 
+next figure. For the Thrust version of the chain the system function has
+ been implemented with Thrust's iterator system. Interestingly, VexCL 
+here outperforms Thrust. Of course, for small system sizes the constant 
+overhead is present and here Thrust performs better. But for large 
+systems VexCL becomes faster. This might be due to the fact that the 
+iterators in Thrust have their price but it is not exactly clear why 
+which version is faster. 
+</p>
+<p><img src="Solving%20ordinary%20differential%20equations%20with%20OpenCL%20in%20C++%20-%20CodeProject_files/phase_oscillator_vexcl_vs_thrust.png" height="254" width="640"></p>
+
+
+<h2>Conclusion</h2>
+
+<p>
+We have shown how VexCL can be adapted to odeint and how it can be used 
+to increase the performance when solving large ordinary differential 
+equations. Large here means that the system size (number of coupled 
+coupled ODEs) should be of the order 10000-100000 to see a reasonable 
+performance gain compared to usual CPUs. For large systems this gain can
+ be about 20 times.
+</p>
+
+<p>
+The performance of VexCL has also been compared against Thrust. In one 
+example a large ensemble of ODEs has been solved. It turns out that 
+Thrust is about 10% faster in this case compared to VexCL. In the second
+ example a system of coupled phase oscillators has been studied. Here 
+VexCL is faster by a factor of 1.2. Nevertheless, the expression 
+templates of VexCL are a big plus for this library. It lets the user 
+solve complicated problems within minutes where the development with 
+native CUDA or OpenCL code or even with Thrust requires much more time.
+</p>
+
+
+<h2>References</h2>
+
+
+<ul>
+<li><a href="http://www.codeproject.com/Articles/268589/odeint-v2-Solving-ordinary-differential-equations">odeint v2 - Solving ordinary differential equation in C++</a> - A 
+CodeProject article about odeint v2.</li>
+<li><a href="http://www.codeproject.com/Articles/415058/VexCL-Vector-expression-template-library-for-OpenC">VexCL: Vector expression template library for OpenCL</a> - A 
+CodeProject article about VexCL</li>
+
+<li><a href="http://www.scholarpedia.org/article/Chaos">Chaos</a> and the Lorenz system on Scholarpedia</li>
+<li><a href="http://www.scholarpedia.org/article/Phase_Model">Phase oscillators</a> on Scholarpedia</li>
+<li><a href="http://www.odeint.com/">www.odeint.com</a> - odeints project page</li>
+<li><a href="https://github.com/ddemidov/vexcl">VexCL</a> project page on github</li>
+<li><a href="http://thrust.github.com/">Thrust</a> - Code at the speed of light</li>
+</ul>
+
+<h2>History</h2>
+
+<ul>
+<li>26.7.2012 - Initial version</li>
+</ul>
+
+
+						</div>
+						
+
+						<div class="float-right" style="margin:20px 0 0 10px;border:1px solid #ccc">
+						<div class="msg-300x250" data-format="300x250" data-type="ad" data-publisher="lqm.codeproject.site" data-zone="General-Programming/Algorithms-Recipes/Math" data-loadonview="true" data-tags="C++, Dev, Intermediate, OpenCL, C++11, OpenMP,rating4.5"><noscript><a href="http://ad.doubleclick.net/N6839/jump/lqm.codeproject.site/General-Programming/Algorithms-Recipes/Math;sz=300x250;ord=635640725697565870?"><img src="http://ad.doubleclick.net/N6839/ad/lqm.codeproject.site/General-Programming/Algorithms-Recipes/Math;sz=300x250;ord=635640725697565870?"  width="300px" height="250px" /></a></noscript></div>
+						</div>
+                        
+                        
+						
+						<h2>License</h2>
+						<div id="LicenseTerms"><p>This article, along with any associated source code and files, is licensed under <a href="http://www.codeproject.com/info/cpol10.aspx" rel="license">The Code Project Open License (CPOL)</a></p></div>
+						
+
+                        
+						<h2>Share</h2>
+				        <div style="margin-bottom:40px;width:385px">
+					        
+
+
+
+<!-- Buttons start here. Copy this ul to your document. -->
+<ul class="rrssb-buttons clearfix rrssb-1">
+    <li data-size="34" data-initwidth="14.285714285714286" style="width: calc(100% - 252px);" class="email">
+
+        <!-- Replace subject with your message using URL Endocding: http://meyerweb.com/eric/tools/dencoder/ -->
+        <a href="mailto:?subject=Solving+ordinary+differential+equations+with+OpenCL+in+C%2b%2b+-+CodeProject&amp;body=http%3a%2f%2fwww.codeproject.com%2fArticles%2f429183%2fSolving-ordinary-differential-equations-with-OpenC">
+            <span class="icon">
+                <svg xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" width="28px" height="28px" viewBox="0 0 28 28" enable-background="new 0 0 28 28" xml:space="preserve"><g><path d="M20.111 26.147c-2.336 1.051-4.361 1.401-7.125 1.401c-6.462 0-12.146-4.633-12.146-12.265 c0-7.94 5.762-14.833 14.561-14.833c6.853 0 11.8 4.7 11.8 11.252c0 5.684-3.194 9.265-7.399 9.3 c-1.829 0-3.153-0.934-3.347-2.997h-0.077c-1.208 1.986-2.96 2.997-5.023 2.997c-2.532 0-4.361-1.868-4.361-5.062 c0-4.749 3.504-9.071 9.111-9.071c1.713 0 3.7 0.4 4.6 0.973l-1.169 7.203c-0.388 2.298-0.116 3.3 1 3.4 c1.673 0 3.773-2.102 3.773-6.58c0-5.061-3.27-8.994-9.303-8.994c-5.957 0-11.175 4.673-11.175 12.1 c0 6.5 4.2 10.2 10 10.201c1.986 0 4.089-0.43 5.646-1.245L20.111 26.147z M16.646 10.1 c-0.311-0.078-0.701-0.155-1.207-0.155c-2.571 0-4.595 2.53-4.595 5.529c0 1.5 0.7 2.4 1.9 2.4 c1.441 0 2.959-1.828 3.311-4.087L16.646 10.068z"></path></g></svg>
+            </span>
+            <span class="text">email</span>
+        </a>
+    </li>
+    <li data-size="49" data-initwidth="14.285714285714286" style="width: 42px;" class="twitter small">
+        <!-- Replace href with your Meta and URL information  -->
+        <a href="http://twitter.com/home?status=Solving+ordinary+differential+equations+with+OpenCL+in+C%2b%2b+-+CodeProject%20http%3a%2f%2fwww.codeproject.com%2fArticles%2f429183%2fSolving-ordinary-differential-equations-with-OpenC" class="popup">
+            <span class="icon">
+                <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="28px" height="28px" viewBox="0 0 28 28" enable-background="new 0 0 28 28" xml:space="preserve">
+                <path d="M24.253,8.756C24.689,17.08,18.297,24.182,9.97,24.62c-3.122,0.162-6.219-0.646-8.861-2.32
+                    c2.703,0.179,5.376-0.648,7.508-2.321c-2.072-0.247-3.818-1.661-4.489-3.638c0.801,0.128,1.62,0.076,2.399-0.155
+                    C4.045,15.72,2.215,13.6,2.115,11.077c0.688,0.275,1.426,0.407,2.168,0.386c-2.135-1.65-2.729-4.621-1.394-6.965
+                    C5.575,7.816,9.54,9.84,13.803,10.071c-0.842-2.739,0.694-5.64,3.434-6.482c2.018-0.623,4.212,0.044,5.546,1.683
+                    c1.186-0.213,2.318-0.662,3.329-1.317c-0.385,1.256-1.247,2.312-2.399,2.942c1.048-0.106,2.069-0.394,3.019-0.851
+                    C26.275,7.229,25.39,8.196,24.253,8.756z"></path>
+                </svg>
+            </span>
+            <span class="text">twitter</span>
+        </a>
+    </li>
+
+    <li data-size="63" data-initwidth="14.285714285714286" style="width: 42px;" class="facebook small">
+        <!-- Replace with your URL. For best results, make sure you page has the proper FB Open Graph tags in header: 
+        https://developers.facebook.com/docs/opengraph/howtos/maximizing-distribution-media-content/ -->
+        <a href="https://www.facebook.com/sharer/sharer.php?u=http%3a%2f%2fwww.codeproject.com%2fArticles%2f429183%2fSolving-ordinary-differential-equations-with-OpenC" class="popup">
+            <span class="icon">
+                <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="28px" height="28px" viewBox="0 0 28 28" enable-background="new 0 0 28 28" xml:space="preserve">
+                    <path d="M27.825,4.783c0-2.427-2.182-4.608-4.608-4.608H4.783c-2.422,0-4.608,2.182-4.608,4.608v18.434
+                        c0,2.427,2.181,4.608,4.608,4.608H14V17.379h-3.379v-4.608H14v-1.795c0-3.089,2.335-5.885,5.192-5.885h3.718v4.608h-3.726
+                        c-0.408,0-0.884,0.492-0.884,1.236v1.836h4.609v4.608h-4.609v10.446h4.916c2.422,0,4.608-2.188,4.608-4.608V4.783z"></path>
+                </svg>
+            </span>
+            <span class="text">facebook</span>
+        </a>
+    </li>
+    
+    <li data-size="52" data-initwidth="14.285714285714286" style="width: 42px;" class="linkedin small">
+        <!-- Replace href with your meta and URL information -->
+        <a href="http://www.linkedin.com/shareArticle?mini=true&amp;url=http%3a%2f%2fwww.codeproject.com%2fArticles%2f429183%2fSolving-ordinary-differential-equations-with-OpenC&amp;title=Solving+ordinary+differential+equations+with+OpenCL+in+C%2b%2b+-+CodeProject" class="popup">
+            <span class="icon">
+                <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="28px" height="28px" viewBox="0 0 28 28" enable-background="new 0 0 28 28" xml:space="preserve">
+                    <path d="M25.424,15.887v8.447h-4.896v-7.882c0-1.979-0.709-3.331-2.48-3.331c-1.354,0-2.158,0.911-2.514,1.803
+                        c-0.129,0.315-0.162,0.753-0.162,1.194v8.216h-4.899c0,0,0.066-13.349,0-14.731h4.899v2.088c-0.01,0.016-0.023,0.032-0.033,0.048
+                        h0.033V11.69c0.65-1.002,1.812-2.435,4.414-2.435C23.008,9.254,25.424,11.361,25.424,15.887z M5.348,2.501
+                        c-1.676,0-2.772,1.092-2.772,2.539c0,1.421,1.066,2.538,2.717,2.546h0.032c1.709,0,2.771-1.132,2.771-2.546
+                        C8.054,3.593,7.019,2.501,5.343,2.501H5.348z M2.867,24.334h4.897V9.603H2.867V24.334z"></path>
+                </svg>
+            </span>
+            <span class="text">linkedin</span>
+        </a>
+    </li>
+    <li data-size="41" data-initwidth="14.285714285714286" style="width: 42px;" class="reddit small">
+        <a href="http://www.reddit.com/submit?url=http%3a%2f%2fwww.codeproject.com%2fArticles%2f429183%2fSolving-ordinary-differential-equations-with-OpenC">
+            <span class="icon">
+                <svg xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" width="28px" height="28px" viewBox="0 0 28 28" enable-background="new 0 0 28 28" xml:space="preserve"><g>
+                <path d="M11.794 15.316c0-1.029-0.835-1.895-1.866-1.895c-1.03 0-1.893 0.865-1.893 1.895s0.863 1.9 1.9 1.9 C10.958 17.2 11.8 16.3 11.8 15.316z"></path>
+                <path d="M18.1 13.422c-1.029 0-1.895 0.864-1.895 1.895c0 1 0.9 1.9 1.9 1.865c1.031 0 1.869-0.836 1.869-1.865 C19.969 14.3 19.1 13.4 18.1 13.422z"></path>
+                <path d="M17.527 19.791c-0.678 0.678-1.826 1.006-3.514 1.006c-0.004 0-0.009 0-0.014 0c-0.004 0-0.01 0-0.015 0 
+                c-1.686 0-2.834-0.328-3.51-1.005c-0.264-0.265-0.693-0.265-0.958 0c-0.264 0.265-0.264 0.7 0 1 c0.943 0.9 2.4 1.4 
+                4.5 1.402c0.005 0 0 0 0 0c0.005 0 0 0 0 0c2.066 0 3.527-0.459 4.47-1.402 c0.265-0.264 0.265-0.693 0.002-0.958C18.221 
+                19.5 17.8 19.5 17.5 19.791z"></path><path d="M27.707 13.267c0-1.785-1.453-3.237-3.236-3.237c-0.793 0-1.518 0.287-2.082 
+                0.761c-2.039-1.295-4.646-2.069-7.438-2.219 l1.483-4.691l4.062 0.956c0.071 1.4 1.3 2.6 2.7 2.555c1.488 0 2.695-1.208 
+                2.695-2.695C25.881 3.2 24.7 2 23.2 2 c-1.059 0-1.979 0.616-2.42 1.508l-4.633-1.091c-0.344-0.081-0.693 0.118-0.803 
+                0.455l-1.793 5.7 C10.548 8.6 7.7 9.4 5.6 10.75C5.006 10.3 4.3 10 3.5 10.029c-1.785 0-3.237 1.452-3.237 3.2 c0 1.1 0.6 
+                2.1 1.4 2.69c-0.04 0.272-0.061 0.551-0.061 0.831c0 2.3 1.3 4.4 3.7 5.9 c2.299 1.5 5.3 2.3 8.6 2.325c3.228 0 6.271-0.825 
+                8.571-2.325c2.387-1.56 3.7-3.66 3.7-5.917 c0-0.26-0.016-0.514-0.051-0.768C27.088 15.5 27.7 14.4 27.7 13.267z M23.186 
+                3.355c0.74 0 1.3 0.6 1.3 1.3 c0 0.738-0.6 1.34-1.34 1.34s-1.342-0.602-1.342-1.34C21.844 4 22.4 3.4 23.2 3.355z M1.648 
+                13.3 c0-1.038 0.844-1.882 1.882-1.882c0.31 0 0.6 0.1 0.9 0.209c-1.049 0.868-1.813 1.861-2.26 2.9 C1.832 14.2 1.6 13.8 1.6 
+                13.267z M21.773 21.57c-2.082 1.357-4.863 2.105-7.831 2.105c-2.967 0-5.747-0.748-7.828-2.105 
+                c-1.991-1.301-3.088-3-3.088-4.782c0-1.784 1.097-3.484 3.088-4.784c2.081-1.358 4.861-2.106 7.828-2.106 c2.967 0 5.7 
+                0.7 7.8 2.106c1.99 1.3 3.1 3 3.1 4.784C24.859 18.6 23.8 20.3 21.8 21.57z M25.787 14.6 
+                c-0.432-1.084-1.191-2.095-2.244-2.977c0.273-0.156 0.59-0.245 0.928-0.245c1.035 0 1.9 0.8 1.9 1.9 
+                C26.354 13.8 26.1 14.3 25.8 14.605z"></path></g></svg>
+            </span>
+            <span class="text">reddit</span>
+        </a>
+    </li>
+    <li data-size="56" data-initwidth="14.285714285714286" style="width: 42px;" class="googleplus small">
+        <!-- Replace href with your meta and URL information.  -->
+        <a href="https://plus.google.com/share?url=Check%20out%20Solving+ordinary+differential+equations+with+OpenCL+in+C%2b%2b+-+CodeProject%20http%3a%2f%2fwww.codeproject.com%2fArticles%2f429183%2fSolving-ordinary-differential-equations-with-OpenC" class="popup">
+            <span class="icon">
+                <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="28px" height="28px" viewBox="0 0 28 28" enable-background="new 0 0 28 28" xml:space="preserve">
+                    <g>
+                        <g>
+                            <path d="M14.703,15.854l-1.219-0.948c-0.372-0.308-0.88-0.715-0.88-1.459c0-0.748,0.508-1.223,0.95-1.663
+                                c1.42-1.119,2.839-2.309,2.839-4.817c0-2.58-1.621-3.937-2.399-4.581h2.097l2.202-1.383h-6.67c-1.83,0-4.467,0.433-6.398,2.027
+                                C3.768,4.287,3.059,6.018,3.059,7.576c0,2.634,2.022,5.328,5.604,5.328c0.339,0,0.71-0.033,1.083-0.068
+                                c-0.167,0.408-0.336,0.748-0.336,1.324c0,1.04,0.551,1.685,1.011,2.297c-1.524,0.104-4.37,0.273-6.467,1.562
+                                c-1.998,1.188-2.605,2.916-2.605,4.137c0,2.512,2.358,4.84,7.289,4.84c5.822,0,8.904-3.223,8.904-6.41
+                                c0.008-2.327-1.359-3.489-2.829-4.731H14.703z M10.269,11.951c-2.912,0-4.231-3.765-4.231-6.037c0-0.884,0.168-1.797,0.744-2.511
+                                c0.543-0.679,1.489-1.12,2.372-1.12c2.807,0,4.256,3.798,4.256,6.242c0,0.612-0.067,1.694-0.845,2.478
+                                c-0.537,0.55-1.438,0.948-2.295,0.951V11.951z M10.302,25.609c-3.621,0-5.957-1.732-5.957-4.142c0-2.408,2.165-3.223,2.911-3.492
+                                c1.421-0.479,3.25-0.545,3.555-0.545c0.338,0,0.52,0,0.766,0.034c2.574,1.838,3.706,2.757,3.706,4.479
+                                c-0.002,2.073-1.736,3.665-4.982,3.649L10.302,25.609z"></path>
+                            <polygon points="23.254,11.89 23.254,8.521 21.569,8.521 21.569,11.89 18.202,11.89 18.202,13.604 21.569,13.604 21.569,17.004
+                                23.254,17.004 23.254,13.604 26.653,13.604 26.653,11.89      "></polygon>
+                        </g>
+                    </g>
+                </svg>
+            </span>
+            <span class="text">google+</span>
+        </a>
+    </li>
+    
+    <li data-size="61" data-initwidth="14.285714285714286" style="width: 42px;" class="pinterest small">
+        <!-- Replace href with your meta and URL information.  -->
+        <a href="http://pinterest.com/pin/create/button/?url=http%3a%2f%2fwww.codeproject.com%2fArticles%2f429183%2fSolving-ordinary-differential-equations-with-OpenC&amp;media=http://kurtnoble.com/labs/rrssb/media/facebook-share.jpg&amp;description=Solving+ordinary+differential+equations+with+OpenCL+in+C%2b%2b+-+CodeProject">
+            <span class="icon">
+                <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="28px" height="28px" viewBox="0 0 28 28" enable-background="new 0 0 28 28" xml:space="preserve">
+                <path d="M14.021,1.57C6.96,1.57,1.236,7.293,1.236,14.355c0,7.062,5.724,12.785,12.785,12.785c7.061,0,12.785-5.725,12.785-12.785
+                    C26.807,7.294,21.082,1.57,14.021,1.57z M15.261,18.655c-1.161-0.09-1.649-0.666-2.559-1.219c-0.501,2.626-1.113,5.145-2.925,6.458
+                    c-0.559-3.971,0.822-6.951,1.462-10.116c-1.093-1.84,0.132-5.545,2.438-4.632c2.837,1.123-2.458,6.842,1.099,7.557
+                    c3.711,0.744,5.227-6.439,2.925-8.775c-3.325-3.374-9.678-0.077-8.897,4.754c0.19,1.178,1.408,1.538,0.489,3.168
+                    C7.165,15.378,6.53,13.7,6.611,11.462c0.131-3.662,3.291-6.227,6.46-6.582c4.007-0.448,7.771,1.474,8.29,5.239
+                    c0.579,4.255-1.816,8.865-6.102,8.533L15.261,18.655z"></path>
+                </svg>
+            </span>
+            <span class="text">pinterest</span>
+        </a>
+    </li>
+</ul>
+<!-- Buttons end here -->
+
+				        </div> 
+    			        
+
+
+						
+						<h2 id="ctl00_AboutHeading">About the Authors</h2>
+						
+
+<div class="container">
+<div style="width:210px;overflow:hidden;float:left;text-align:center">
+	<img id="ctl00_AboutAuthorRptr_ctl00_AboutAuthor_memberPhoto" class="profile-pic" src="Solving%20ordinary%20differential%20equations%20with%20OpenCL%20in%20C++%20-%20CodeProject_files/member_unknown.gif" style="border-width:0px;transform:rotate(-1deg);">
+</div>
+<div class="container-member float-left" style="margin:35px 15px 0 0;">
+	<b><a id="ctl00_AboutAuthorRptr_ctl00_AboutAuthor_memberProfileLink" class="author" href="http://www.codeproject.com/Members/headmyshoulder">headmyshoulder</a></b>
+	<div class="company">
+		<span id="ctl00_AboutAuthorRptr_ctl00_AboutAuthor_memberJobTitle"></span>
+		<span id="ctl00_AboutAuthorRptr_ctl00_AboutAuthor_memberCompany"></span> 
+		<br><span id="ctl00_AboutAuthorRptr_ctl00_AboutAuthor_memberLocation">Germany <img src="Solving%20ordinary%20differential%20equations%20with%20OpenCL%20in%20C++%20-%20CodeProject_files/DE.gif" alt="Germany" height="11px" width="16px"></span>
+	</div>
+</div>
+	
+<div class="padded-top float-left clearfix">
+	No Biography provided
+
+	
+
+	
+</div>
+</div><br>
+						
+						
+
+<div class="container">
+<div style="width:210px;overflow:hidden;float:left;text-align:center">
+	<img id="ctl00_AboutAuthorRptr_ctl01_AboutAuthor_memberPhoto" class="profile-pic" src="Solving%20ordinary%20differential%20equations%20with%20OpenCL%20in%20C++%20-%20CodeProject_files/member_unknown.gif" style="border-width:0px;transform:rotate(0deg);">
+</div>
+<div class="container-member float-left" style="margin:35px 15px 0 0;">
+	<b><a id="ctl00_AboutAuthorRptr_ctl01_AboutAuthor_memberProfileLink" class="author" href="http://www.codeproject.com/Members/denis-demidov">Denis Demidov</a></b>
+	<div class="company">
+		<span id="ctl00_AboutAuthorRptr_ctl01_AboutAuthor_memberJobTitle"></span>
+		<span id="ctl00_AboutAuthorRptr_ctl01_AboutAuthor_memberCompany">Supercomputer Center of Russian Academy of Science</span> 
+		<br><span id="ctl00_AboutAuthorRptr_ctl01_AboutAuthor_memberLocation">Russian Federation <img src="Solving%20ordinary%20differential%20equations%20with%20OpenCL%20in%20C++%20-%20CodeProject_files/RU.gif" alt="Russian Federation" height="11px" width="16px"></span>
+	</div>
+</div>
+	
+<div class="padded-top float-left clearfix">
+	No Biography provided
+
+	
+
+	<div id="ctl00_AboutAuthorRptr_ctl01_AboutAuthor_FollowOn" class="padded-top">Follow on
+		
+		&nbsp; <a href="https://plus.google.com/108893142063302532625"><img style="vertical-align:middle;border:0;" alt="Google+" src="Solving%20ordinary%20differential%20equations%20with%20OpenCL%20in%20C++%20-%20CodeProject_files/gplus-32.png"></a> <a href="https://plus.google.com/108893142063302532625?rel=author" rel="author" class="small-text">Google</a>
+		
+	</div>
+</div>
+</div><br>
+						
+						
+
+						<div class="clearfix"></div>
+
+						<div style="padding-top:8px">
+							
+						</div>
+
+						
+						<div style="margin:auto;height:90px;margin-top:10px;Widt:730px"> 
+							<div class="msg-728x90" data-format="728x90" data-type="ad" data-publisher="lqm.codeproject.site" data-zone="General-Programming/Algorithms-Recipes/Math" data-loadonview="true" data-tags="C++, Dev, Intermediate, OpenCL, C++11, OpenMP,rating4.5,pos_bottom"><noscript><a href="http://ad.doubleclick.net/N6839/jump/lqm.codeproject.site/General-Programming/Algorithms-Recipes/Math;sz=728x90;ord=635640725697565870?"><img src="http://ad.doubleclick.net/N6839/ad/lqm.codeproject.site/General-Programming/Algorithms-Recipes/Math;sz=728x90;ord=635640725697565870?"  width="728px" height="90px" /></a></noscript></div>
+						</div>
+						
+					
+
+				    
+					</form>
+
+				</div>
+
+				
+				
+
+					<h2>Comments and Discussions</h2>
+					<a class="float-left" name="_comments" id="_comments">&nbsp;</a><div id="_MessageBoardctl00_MessageBoard" onclick="return SwitchMessage(event, null)">
+<table id="ForumTable" class="forum tight" cellpadding="0" cellspacing="0">
+<tbody><tr>
+<td class="header1 callout"><b>You must <a href="https://www.codeproject.com/script/Membership/LogOn.aspx?rp=%2fArticles%2f429183%2fSolving-ordinary-differential-equations-with-OpenC%3ffid%3d1754419">Sign In</a> to use this message board.</b></td>
+</tr><tr>
+<td><table width="100%" border="0" cellpadding="3px" cellspacing="0">
+<tbody><tr class="header1">
+<td colspan="2" style="white-space:nowrap;"><div class="container">
+<div class="float-right">
+<form action="/Search.aspx?sbo=fm" method="get" class="searchbar">
+<input name="fid" value="1754419" type="hidden"><input name="sbo" value="fm" type="hidden"><b>Search Comments </b><input class="search" name="qf" type="search">&nbsp;<input value="Go" class="button" type="submit">
+</form>
+</div>
+</div></td>
+</tr><tr class="header2">
+<td></td><td style="width:100%;"><div style="text-align:right;">
+<form action="/script/Forums/SetOptions.aspx?floc=%2fArticles%2f429183%2fSolving-ordinary-differential-equations-with-OpenC&amp;fid=1754419" method="get" style="margin:0;padding:0;">
+<input name="fid" value="1754419" type="hidden"><input name="currentQS" value="?floc=%2fArticles%2f429183%2fSolving-ordinary-differential-equations-with-OpenC&amp;fid=1754419" type="hidden"><input name="floc" value="/Articles/429183/Solving-ordinary-differential-equations-with-OpenC" type="hidden"><input checked="checked" name="prof" id="prof" style="vertical-align:middle;" type="checkbox"><label for="prof">Profile popups</label>&nbsp;&nbsp;&nbsp;&nbsp;Spacing<select size="1" class="dropdown" name="spc">
+<option value="Relaxed">Relaxed</option><option value="Compact">Compact</option><option selected="selected" value="Tight">Tight</option>
+</select>&nbsp;&nbsp;Noise<select size="1" class="dropdown" name="noise">
+<option value="1">Very High</option><option value="2">High</option><option selected="selected" value="3">Medium</option><option value="4">Low</option><option value="5">Very Low</option>
+</select>&nbsp;&nbsp;Layout<select size="1" class="dropdown" name="view">
+<option selected="selected" value="Normal">Normal</option><option value="Topic">Open Topics</option><option value="Expanded">Open All</option><option value="Thread">Thread View</option>
+</select>&nbsp;&nbsp;Per page<select size="1" class="dropdown" name="mpp">
+<option value="10">10</option><option selected="selected" value="25">25</option><option value="50">50</option>
+</select>&nbsp;&nbsp;&nbsp;<input value="Update" name="SetOpt" class="button" type="submit">
+</form>
+</div></td>
+</tr>
+</tbody></table></td>
+</tr><tr>
+<td><a name="xx0xx"></a><table width="100%" border="0" cellpadding="2px" cellspacing="0">
+<tbody><tr class="navbar">
+<td></td><td style="text-align:right;width:50%;"></td><td style="text-align:right;white-space:nowrap;"><span class="nav-link disabled">First</span> <span class="nav-link disabled">Prev</span> <span class="nav-link disabled">Next</span></td>
+</tr>
+</tbody></table></td>
+</tr><tr>
+<td><table class="fixed-layout blank-background" width="100%" border="0" cellpadding="0" cellspacing="0">
+<tbody><tr>
+<td><img src="Solving%20ordinary%20differential%20equations%20with%20OpenCL%20in%20C++%20-%20CodeProject_files/t_002.gif" alt="" height="5px" width="1px" border="0"></td>
+</tr><tr id="F4334238_h0" class="header hover-row root">
+<td class="subject-line normal " width="100%"><table width="100%" border="0" cellpadding="0" cellspacing="0">
+<tbody><tr>
+<td class="indent" width="20px"><a name="xx4334238xx"></a><img src="Solving%20ordinary%20differential%20equations%20with%20OpenCL%20in%20C++%20-%20CodeProject_files/msg_general.gif" alt="General" height="16px" width="16px" align="top"></td><td class="subject hover-container"><a class="message-link" name="4334238" parent="0" thread="4334238" href="http://www.codeproject.com/Messages/4334238/My-vote-of.aspx">My vote of 5</a> <a onclick="return Pin(this);" href="#" title="Click to pin message"><img src="Solving%20ordinary%20differential%20equations%20with%20OpenCL%20in%20C++%20-%20CodeProject_files/pin.png" alt="Pin" height="13px" width="13px" align="top" border="0"></a></td><td class="icon"><img src="Solving%20ordinary%20differential%20equations%20with%20OpenCL%20in%20C++%20-%20CodeProject_files/icn-member-16.gif" title="member" alt="member" height="16px" border="0"></td><td class="author"><a href="http://www.codeproject.com/script/Membership/View.aspx?mid=478442">Volynsky Alex</a></td><td class="date">9-Aug-12  6:05&nbsp;</td>
+</tr>
+</tbody></table></td>
+</tr><tr id="F4334238_h1" class="content root selected" style="display:none;">
+<td class="normal" width="100%"><table width="100%" border="0" cellpadding="0" cellspacing="0">
+<tbody><tr valign="top">
+<td class="indent align-right" style="width:20px;"><div class="voteform vertical" ownerid="478442" msgid="4334238" votingtype="GoodOrBad">
+
+</div><img src="Solving%20ordinary%20differential%20equations%20with%20OpenCL%20in%20C++%20-%20CodeProject_files/t_002.gif" alt="" height="1px" width="20px"></td><td class="text"><table width="100%" border="0" cellpadding="0" cellspacing="5px">
+<tbody><tr>
+<td><table width="100%" border="0" cellpadding="0" cellspacing="0">
+<tbody><tr>
+<td colspan="2">The nice Denis!<br></td>
+</tr><tr class="footer" style="vertical-align:top;">
+<td><a href="http://www.codeproject.com/script/Membership/LogOn.aspx?rp=%2fArticles%2f429183%2fSolving-ordinary-differential-equations-with-OpenC">Sign In</a>·<wbr><a href="http://www.codeproject.com/Articles/429183/Solving-ordinary-differential-equations-with-OpenC?fid=1754419&amp;tid=4334238" title="View&nbsp;Thread">View&nbsp;Thread</a>·<wbr><a href="http://www.codeproject.com/Messages/4334238/My-vote-of.aspx" title="Get permanent link">Permalink</a></td><td style="text-align:right;"><span id="MVF4334238" data-ref="3_4334238" class="rating-label" style="white-space:nowrap;"></span></td>
+</tr>
+</tbody></table></td>
+</tr>
+</tbody></table></td>
+</tr>
+</tbody></table></td>
+</tr><tr id="F4333203_h0" class="header hover-row root">
+<td class="subject-line normal " width="100%"><table width="100%" border="0" cellpadding="0" cellspacing="0">
+<tbody><tr>
+<td class="indent" width="20px"><a name="xx4333203xx"></a><img src="Solving%20ordinary%20differential%20equations%20with%20OpenCL%20in%20C++%20-%20CodeProject_files/msg_general.gif" alt="General" height="16px" width="16px" align="top"></td><td class="subject hover-container"><a class="message-link" name="4333203" parent="0" thread="4333203" href="http://www.codeproject.com/Messages/4333203/My-vote-of.aspx">My vote of 5</a> <a onclick="return Pin(this);" href="#" title="Click to pin message"><img src="Solving%20ordinary%20differential%20equations%20with%20OpenCL%20in%20C++%20-%20CodeProject_files/pin.png" alt="Pin" height="13px" width="13px" align="top" border="0"></a></td><td class="icon"><img src="Solving%20ordinary%20differential%20equations%20with%20OpenCL%20in%20C++%20-%20CodeProject_files/icn-member-16.gif" title="member" alt="member" height="16px" border="0"></td><td class="author"><a href="http://www.codeproject.com/script/Membership/View.aspx?mid=47764">Mihai MOGA</a></td><td class="date">8-Aug-12  6:28&nbsp;</td>
+</tr>
+</tbody></table></td>
+</tr><tr id="F4333203_h1" class="content root selected" style="display:none;">
+<td class="normal" width="100%"><table width="100%" border="0" cellpadding="0" cellspacing="0">
+<tbody><tr valign="top">
+<td class="indent align-right" style="width:20px;"><div class="voteform vertical" ownerid="47764" msgid="4333203" votingtype="GoodOrBad">
+
+</div><img src="Solving%20ordinary%20differential%20equations%20with%20OpenCL%20in%20C++%20-%20CodeProject_files/t_002.gif" alt="" height="1px" width="20px"></td><td class="text"><table width="100%" border="0" cellpadding="0" cellspacing="5px">
+<tbody><tr>
+<td><table width="100%" border="0" cellpadding="0" cellspacing="0">
+<tbody><tr>
+<td colspan="2">This is a great inspiring article. I am pretty much 
+pleased with your good work. You put really very helpful information. 
+Keep it up once again.<br></td>
+</tr><tr class="footer" style="vertical-align:top;">
+<td><a href="http://www.codeproject.com/script/Membership/LogOn.aspx?rp=%2fArticles%2f429183%2fSolving-ordinary-differential-equations-with-OpenC">Sign In</a>·<wbr><a href="http://www.codeproject.com/Articles/429183/Solving-ordinary-differential-equations-with-OpenC?fid=1754419&amp;tid=4333203" title="View&nbsp;Thread">View&nbsp;Thread</a>·<wbr><a href="http://www.codeproject.com/Messages/4333203/My-vote-of.aspx" title="Get permanent link">Permalink</a></td><td style="text-align:right;"><span id="MVF4333203" data-ref="3_4333203" class="rating-label" style="white-space:nowrap;"></span></td>
+</tr>
+</tbody></table></td>
+</tr>
+</tbody></table></td>
+</tr>
+</tbody></table></td>
+</tr><tr id="F4322718_h0" class="header hover-row root">
+<td class="subject-line normal  vote-lo" width="100%"><table width="100%" border="0" cellpadding="0" cellspacing="0">
+<tbody><tr>
+<td class="indent" width="20px"><a name="xx4322718xx"></a><img src="Solving%20ordinary%20differential%20equations%20with%20OpenCL%20in%20C++%20-%20CodeProject_files/msg_general.gif" alt="General" height="16px" width="16px" align="top"></td><td class="subject hover-container"><a class="message-link" name="4322718" parent="0" thread="4322718" href="http://www.codeproject.com/Messages/4322718/My-vote-of.aspx">My vote of 5</a> <a onclick="return Pin(this);" href="#" title="Click to pin message"><img src="Solving%20ordinary%20differential%20equations%20with%20OpenCL%20in%20C++%20-%20CodeProject_files/pin.png" alt="Pin" height="13px" width="13px" align="top" border="0"></a></td><td class="icon"><img src="Solving%20ordinary%20differential%20equations%20with%20OpenCL%20in%20C++%20-%20CodeProject_files/icn-member-16.gif" title="member" alt="member" height="16px" border="0"></td><td class="author"><a href="http://www.codeproject.com/script/Membership/View.aspx?mid=3816089">Art Tres</a></td><td class="date">27-Jul-12  8:13&nbsp;</td>
+</tr>
+</tbody></table></td>
+</tr><tr id="F4322718_h1" class="content root selected" style="display:none;">
+<td class="normal" width="100%"><table width="100%" border="0" cellpadding="0" cellspacing="0">
+<tbody><tr valign="top">
+<td class="indent align-right" style="width:20px;"><div class="voteform vertical" ownerid="3816089" msgid="4322718" votingtype="GoodOrBad">
+
+</div><img src="Solving%20ordinary%20differential%20equations%20with%20OpenCL%20in%20C++%20-%20CodeProject_files/t_002.gif" alt="" height="1px" width="20px"></td><td class="text"><table width="100%" border="0" cellpadding="0" cellspacing="5px">
+<tbody><tr>
+<td><table width="100%" border="0" cellpadding="0" cellspacing="0">
+<tbody><tr>
+<td colspan="2">performance<br></td>
+</tr><tr class="footer" style="vertical-align:top;">
+<td><a href="http://www.codeproject.com/script/Membership/LogOn.aspx?rp=%2fArticles%2f429183%2fSolving-ordinary-differential-equations-with-OpenC">Sign In</a>·<wbr><a href="http://www.codeproject.com/Articles/429183/Solving-ordinary-differential-equations-with-OpenC?fid=1754419&amp;tid=4322718" title="View&nbsp;Thread">View&nbsp;Thread</a>·<wbr><a href="http://www.codeproject.com/Messages/4322718/My-vote-of.aspx" title="Get permanent link">Permalink</a></td><td style="text-align:right;"><span id="MVF4322718" data-ref="3_4322718" class="rating-label" style="white-space:nowrap;"><span>1.00/5 (1 vote)</span></span></td>
+</tr>
+</tbody></table></td>
+</tr>
+</tbody></table></td>
+</tr>
+</tbody></table></td>
+</tr>
+</tbody></table></td>
+</tr><tr>
+<td><img src="Solving%20ordinary%20differential%20equations%20with%20OpenCL%20in%20C++%20-%20CodeProject_files/t_002.gif" alt="" height="5px" width="1px" border="0"></td>
+</tr><tr>
+<td><table width="100%" cellpadding="2px" cellspacing="0">
+<tbody><tr class="footer">
+<td>Last Visit: 31-Dec-99  19:00 &nbsp; &nbsp; Last Update: 7-Apr-15  20:49</td><td><a href="http://www.codeproject.com/Articles/429183/Solving-ordinary-differential-equations-with-OpenC?fid=1754419">Refresh</a></td><td style="text-align:right;white-space:nowrap;"><input id="_mbnUrl" value="/Articles/429183/Solving-ordinary-differential-equations-with-OpenC?fid=1754419&amp;fr=4" type="hidden"><span class="nav-link selected">1</span></td>
+</tr>
+</tbody></table></td>
+</tr>
+</tbody></table>
+</div><p class="small-text"><img src="Solving%20ordinary%20differential%20equations%20with%20OpenCL%20in%20C++%20-%20CodeProject_files/msg_general.gif" alt="General" height="16px" width="16px" align="top"> General &nbsp;&nbsp; <img src="Solving%20ordinary%20differential%20equations%20with%20OpenCL%20in%20C++%20-%20CodeProject_files/msg_news.gif" alt="News" height="16px" width="16px" align="top"> News &nbsp;&nbsp; <img src="Solving%20ordinary%20differential%20equations%20with%20OpenCL%20in%20C++%20-%20CodeProject_files/msg_idea.gif" alt="Suggestion" height="16px" width="16px" align="top"> Suggestion &nbsp;&nbsp; <img src="Solving%20ordinary%20differential%20equations%20with%20OpenCL%20in%20C++%20-%20CodeProject_files/msg_question.gif" alt="Question" height="16px" width="16px" align="top"> Question &nbsp;&nbsp; <img src="Solving%20ordinary%20differential%20equations%20with%20OpenCL%20in%20C++%20-%20CodeProject_files/msg_bug.gif" alt="Bug" height="16px" width="16px" align="top"> Bug &nbsp;&nbsp; <img src="Solving%20ordinary%20differential%20equations%20with%20OpenCL%20in%20C++%20-%20CodeProject_files/msg_answer.gif" alt="Answer" height="16px" width="16px" align="top"> Answer &nbsp;&nbsp; <img src="Solving%20ordinary%20differential%20equations%20with%20OpenCL%20in%20C++%20-%20CodeProject_files/msg_joke.gif" alt="Joke" height="16px" width="16px" align="top"> Joke &nbsp;&nbsp; <img src="Solving%20ordinary%20differential%20equations%20with%20OpenCL%20in%20C++%20-%20CodeProject_files/msg_rant.gif" alt="Rant" height="16px" width="16px" align="top"> Rant &nbsp;&nbsp; <img src="Solving%20ordinary%20differential%20equations%20with%20OpenCL%20in%20C++%20-%20CodeProject_files/msg_admin.gif" alt="Admin" height="16px" width="16px" align="top"> Admin &nbsp;&nbsp; </p><p class="small-text">Use Ctrl+Left/Right to switch messages, Ctrl+Up/Down to switch threads, Ctrl+Shift+Left/Right to switch pages.</p>
+				
+
+			</div>
+			
+		</td>
+		<td width="170px">
+			<div id="ctl00_RightSideBar" class="container-article-info">
+
+                <div id="RHSticky" class="container-article-info-sticky">
+        			
+
+<div class="header">Info</div>
+<div class="article-summary">
+
+<a id="ctl00_InfoBox_ParentLink"></a>
+
+<table class="article-info" cellpadding="0" cellspacing="0">
+
+    
+
+    
+	
+
+	
+	
+
+	
+
+	
+
+	
+
+	<tbody><tr><td>First Posted&nbsp;</td><td class="value" nowrap="nowrap"><span itemprop="datePublished" content="2012-07-26">26 Jul 2012</span></td></tr>
+
+	<tr><td>Views&nbsp;</td><td class="value">14,935</td></tr>
+
+	
+	<tr><td>Downloads&nbsp;</td><td class="value">432</td></tr>
+		
+
+	
+	<tr><td>Bookmarked&nbsp;</td><td class="value">28 times</td></tr>
+	
+
+	
+
+	
+
+    
+
+	<tr><td colspan="2"></td></tr>
+	
+	
+</tbody></table>
+</div>
+
+				    
+
+                    
+                    <div class="padded-top">
+                        
+	<h4 id="ctl00_RelatedLibrary_RelatedResults_ctl00_header" class="header">Research</h4>
+	<div class="research content-list clearfix">	
+	
+	<div class="content-list-item clearfix">
+		<div class="thumbnail"><img id="ctl00_RelatedLibrary_RelatedResults_ctl01_Thumb" src="Solving%20ordinary%20differential%20equations%20with%20OpenCL%20in%20C++%20-%20CodeProject_files/LibraryItemThumbnail_104_100x130.png" style="border-width:0px;"></div>
+        <div class="text">
+            <a id="ctl00_RelatedLibrary_RelatedResults_ctl01_Link" class="title" href="http://www.codeproject.com/ResearchLibrary/104/Why-Your-Developers-Need-More-Training">Why Your Developers Need More Training</a>
+		    
+        </div>
+	</div>
+	
+	</div>
+	
+
+                    </div>
+
+				    <div style="width:160px;margin: 10px auto;">
+					    <div class="msg-160x600" data-format="160x600" data-type="ad" data-publisher="lqm.codeproject.site" data-zone="General-Programming/Algorithms-Recipes/Math" data-tags="C++, Dev, Intermediate, OpenCL, C++11, OpenMP,rating4.5"><iframe id="dmad5" allowtransparency="false" style="z-index:10" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" height="600" width="160"></iframe></div>
+				    </div>
+
+				    
+
+				    
+
+				    
+
+                    <div class="anchorLink gototop" id="gototop">
+                        <a id="ctl00_GoToTop" href="http://www.codeproject.com/Articles/429183/Solving-ordinary-differential-equations-with-OpenC#_articleTop">Go to top</a>
+                    </div>
+
+				</div>
+
+			</div>
+		</td>
+		</tr></tbody></table>
+
+		
+		<div class="theme1-background" style="height:2px" id="stickyStop"></div>
+
+		<div class="extended tiny-text">
+			<div class="row">
+				<div class="float-left">
+					<a id="ctl00_PermaLink" itemprop="url" href="http://www.codeproject.com/Articles/429183/Solving-ordinary-differential-equations-with-OpenC">Permalink</a> | 
+					<a id="ctl00_AdvertiseLink" href="http://developermedia.com/">Advertise </a> |
+					<a id="ctl00_PrivacyLink" href="http://www.codeproject.com/info/privacy.aspx">Privacy</a> |
+                    <a id="ctl00_TermsOfUseLink" href="http://www.codeproject.com/info/TermsOfUse.aspx">Terms of Use</a> |
+					<a id="ctl00_Mobile" rel="nofollow" href="http://www.codeproject.com/Articles/429183/Solving-ordinary-differential-equations-with-OpenC?display=Mobile">Mobile</a>
+					<br>
+								
+					
+					Web04 |
+					2.8.150331.1 |
+					Last Updated 26 Jul 2012								
+				</div>
+
+                <div id="ctl00_GoogleTranslate" class="translate float-left"><div style="" dir="ltr" class="skiptranslate goog-te-gadget"><div class="goog-te-gadget-simple" style="white-space: nowrap;" id=":0.targetLanguage"><img style="background-image: url(&quot;https://translate.googleapis.com/translate_static/img/te_ctrl3.gif&quot;); background-position: -65px 0px;" class="goog-te-gadget-icon" src="Solving%20ordinary%20differential%20equations%20with%20OpenCL%20in%20C++%20-%20CodeProject_files/cleardot.gif"><span style="vertical-align: middle;"><a href="javascript:void(0)" class="goog-te-menu-value"><span>Select Language</span><img src="Solving%20ordinary%20differential%20equations%20with%20OpenCL%20in%20C++%20-%20CodeProject_files/cleardot.gif" height="1" width="1"><span style="border-left: 1px solid rgb(187, 187, 187);">​</span><img src="Solving%20ordinary%20differential%20equations%20with%20OpenCL%20in%20C++%20-%20CodeProject_files/cleardot.gif" height="1" width="1"><span style="color: rgb(155, 155, 155);">▼</span></a></span></div></div></div>      
+
+				<div class="float-right align-right">
+					Article Copyright 2012 by headmyshoulder, Denis Demidov<br>Everything else
+					Copyright © <a href="mailto:webmaster@codeproject.com">CodeProject</a>, 1999-2015 <br>
+				</div>
+
+				
+
+
+<div class="page-width">
+Layout: <a id="ctl00_PageWidth_FixedT" title="Fixed width layout" rel="nofollow" class=" active" href="http://www.codeproject.com/Articles/429183/Solving-ordinary-differential-equations-with-OpenC?PageFlow=FixedWidth">fixed</a>
+|
+<a id="ctl00_PageWidth_FluidT" title="Fluid layout" rel="nofollow" href="http://www.codeproject.com/Articles/429183/Solving-ordinary-differential-equations-with-OpenC?PageFlow=Fluid">fluid</a>
+</div>
+
+
+
+			</div>
+		</div>
+		
+
+		<br clear="all">
+		
+			
+
+	</div> 
+	</div>
+</div>
+
+
+<div style="display:none;" id="dm_AdTable">
+	
+</div>
+<img id="ctl00_Audience" src="Solving%20ordinary%20differential%20equations%20with%20OpenCL%20in%20C++%20-%20CodeProject_files/DFPAudiencePixel.gif" style="border-width:0px;height:1px;width:1px;">
+
+
+
+<script type="text/javascript" language="Javascript" src="Solving%20ordinary%20differential%20equations%20with%20OpenCL%20in%20C++%20-%20CodeProject_files/jquery.js"></script><script type="text/javascript">//<![CDATA[
+if (typeof jQuery == 'undefined') {
+    document.write(unescape("%3Cscript src='/script/JS/jquery-1.6.2.min.js' type='text/javascript' %3E%3C/script%3E"));
+}//]]></script>
+<script type="text/javascript" language="Javascript" src="Solving%20ordinary%20differential%20equations%20with%20OpenCL%20in%20C++%20-%20CodeProject_files/article.js"></script>
+<script type="text/javascript" language="Javascript" src="Solving%20ordinary%20differential%20equations%20with%20OpenCL%20in%20C++%20-%20CodeProject_files/element.js"></script>
+<script type="text/javascript" language="Javascript" src="Solving%20ordinary%20differential%20equations%20with%20OpenCL%20in%20C++%20-%20CodeProject_files/navbar.js"></script>
+<script type="text/javascript" language="Javascript" src="Solving%20ordinary%20differential%20equations%20with%20OpenCL%20in%20C++%20-%20CodeProject_files/Notifications.js"></script>
+<script type="text/javascript" language="Javascript" src="Solving%20ordinary%20differential%20equations%20with%20OpenCL%20in%20C++%20-%20CodeProject_files/MemberProfilePopup.js"></script>
+<script type="text/javascript" language="Javascript">//<![CDATA[
+$(document).ready(function () { processCodeBlocks.Initialise('#contentdiv'); });
+function googleTranslateElementInit() {  new google.translate.TranslateElement({   pageLanguage: 'en',   layout: google.translate.TranslateElement.InlineLayout.SIMPLE,   autoDisplay: false,   gaTrack: true,   gaId: 'UA-1735123-1'},  'ctl00_GoogleTranslate');}
+$(document).ready(function() { anchorAnimate();
+$('#RHSticky').sticky($('#stickyStop'));
+$('#ctl00_Nav').sticky($('#stickyStop'));
+});
+$(function() {
+                                            var $downloads =  $("ul.download");
+                                            $downloads.addClass("float-left").wrap("<div class=\'row\'></div>");
+                                            $downloads.after("<div class='float-left' style='margin-top:25px;margin-left:30px'><div data-format='1x11' data-type='ad'  data-publisher='lqm.codeproject.site' data-zone='downloadlink' data-tags='C%2b%2b%2cDev%2cIntermediate%2cOpenCL%2cC%2b%2b11%2cOpenMP'></div></div");
+                                    });
+$(function ()
+                {
+                    $('.oauth').click(function () {
+                        $this = $(this);
+                        href = $this.attr('href');
+                        var myWindow = window.open(href, 'popup',
+                                    'width=800,height=600,location=0,menubar=0,resizeable=0,scrollbars=0,toolbar=0');
+                        myWindow.focus();
+                        var timer = setInterval(function () {
+                                        if (myWindow.closed) {
+                                            clearInterval(timer);
+                                            // window.location.reload(); // May do a POST reload, shows a warning
+                                            window.location = window.location; // force a GET reload
+                                        }
+                                    }, 200);
+                        return false;
+                    });
+                });
+var oSrchFlt = false, oSrchBox=false,srchBoxFoc=false;
+$(document).ready(function() {
+ if(InitWatermark)InitWatermark('sb_tb', 'Search for articles, questions, tips');
+ var sbar = $('#sb_tb'); 
+ var sfilter = $('#SearchFilter');
+ if (sbar && sfilter) {
+  sfilter.removeClass('popup'); sfilter.hide(); sfilter.removeClass('open');
+  sbar.blur(function() {
+ if (!oSrchFlt) {sfilter.hide(); sfilter.removeClass('open');}
+ srchBoxFoc=false;
+ });
+  sbar.focus(function() {
+ oSrchFlt=false; srchBoxFoc=true;
+ sfilter.show(); sfilter.addClass('open');
+ });
+  sbar.mouseleave(function() { oSrchBox=false; });
+  sbar.mouseover(function() { oSrchBox=true; });
+  sfilter.mouseleave(function() { oSrchFlt=false; if (!srchBoxFoc&&!oSrchBox) { sfilter.hide(); sfilter.removeClass('open'); }});
+  sfilter.mouseover(function() { oSrchFlt=true; });
+ }
+});
+$('#clear-rate_ctl00_RateArticle_RSU').click(function () {    $('#ctl00_RateArticle_RSU').hide(); return false;});$("#ctl00_RateArticle_RateItemWrapper")   .removeClass("container-rating")   .hover( function() { $('#ctl00_RateArticle_RSU').fadeIn('fast'); },            function() { $('#ctl00_RateArticle_RSU').fadeOut('fast'); } );
+function PostBack_ctl00_RateArticle_RateItemWrapper() {
+  return rateItem(429183,2,1,true,true,0,'LargeStars');
+}
+
+                        function getVotesHistogram(objectId, objectTypeId, containerId, loadingId) {
+                            if (!$('#' + containerId).attr('alreadyRequested')){
+                                $.ajax({
+                                    url: '/script/Ratings/Ajax/Histogram.aspx?obid=' + objectId + '&obtid='+objectTypeId,
+                                    success: function (data) {
+                                        $('#' + containerId).html(data);
+                                        $('#' + loadingId).hide();
+                                    }
+                                });
+                                $('#' + containerId).attr('alreadyRequested', 'true');
+                            }
+                        }
+$(document).ready(function() {   new starRating('#ctl00_RateArticle_VoteFormDiv', PostBack_ctl00_RateArticle_RateItemWrapper,'ctl00_RateArticle');
+  $('#ctl00_RateArticle_RB').mouseenter(function() {     getVotesHistogram(429183,2   ,'ctl00_RateArticle_Histogram','ctl00_RateArticle_Loading');  })})
+$(document).ready(function() { $('#ctl00_RateArticle_SubmitRateBtn').hide(); });
+$(document).ready(function() { $('#ctl00_RateArticle_SubmitRateBtn').hide(); });function ChkRtctl00_RateArticle(){}
+
+forumDir = '/script/Forums/';
+staticServer = '//dj9okeyxktdvd.cloudfront.net';
+allowReporting = false;
+allowRating = false;
+allowRatingDisplay = true;
+var smoothScroll = false;
+Selected        = -1;
+oldTitle        = document.title;
+minMessageScore = 1;
+minMessageScore = 5;
+abuseScore      = -2;
+spamScore       = -1;
+getRatingUrl    = '/script/Ratings/Ajax/GetRatings.aspx';
+noiseThreshold  = 3;
+getRatingRefKey = 'obrs';
+
+
+//]]>
+</script>
+
+
+
+<canvas id="cv1" width="1px" height="1px" style="position:absolute;left:0;top:0;pointer-events:none"></canvas><canvas id="cv2" width="1px" height="1px" style="position:absolute;left:0;top:0;pointer-events:none"></canvas><div style="display: none; position: absolute;" id="MemberProfilePopupDiv" class="raised box"></div><div style="display: none; position: absolute;" id="MemberProfilePopupDiv" class="raised box"></div><div id="goog-gt-tt" class="skiptranslate" dir="ltr"><div style="padding: 8px;"><div><div class="logo"><img src="Solving%20ordinary%20differential%20equations%20with%20OpenCL%20in%20C++%20-%20CodeProject_files/translate-32.png" height="20" width="20"></div></div></div><div class="top" style="padding: 8px; float: left; width: 100%;"><h1 class="title gray">Original text</h1></div><div class="middle" style="padding: 8px;"><div class="original-text"></div></div><div class="bottom" style="padding: 8px;"><div class="activity-links"><span class="activity-link">Contribute a better translation</span><span class="activity-link"></span></div><div class="started-activity-container"><hr style="color: #CCC; background-color: #CCC; height: 1px; border: none;"><div class="activity-root"></div></div></div><div style="display: none;" class="status-message"></div></div><div style="display: none; position: absolute;" id="MemberProfilePopupDiv" class="raised box"></div><iframe style="visibility: visible; box-sizing: content-box; width: 860px; height: 274px; display: none;" class="goog-te-menu-frame skiptranslate" frameborder="0"></iframe></body></html>
