@@ -19,8 +19,16 @@ endif
 OPTCFLAGS = -fopenmp
 CXXFLAGS = -Wall $(C11FLAG) $(CXXDFLAGS) $(OPTCFLAGS)
 
-CXXFLAGSOCL = -I/opt/AMDAPP/include
-LFLAGSOCL   = -L/opt/AMDAPP/lib/x86_64 -lamdocl64
+# NOTE AMDAPP Beta link paths are different from standard AMDAPP
+AMDAPP      = AMDAPPSDK-3.0-0-Beta
+CXXFLAGSOCL = -I/opt/$(AMDAPP)/include
+LFLAGSOCL   = -L/opt/$(AMDAPP)/lib/x86_64/sdk -lamdocl64
+
+# AMDAPP v 2.x at least linked and ran
+# AMDAPP      = AMDAPP
+# CXXFLAGSOCL = -I/opt/$(AMDAPP)/include
+# LFLAGSOCL   = -L/opt/$(AMDAPP)/lib/x86_64 -lamdocl64
+
 OPTLFLAGS   = -lrt -pthread
 LFLAGS      = $(OPTLFLAGS)
 
@@ -43,6 +51,12 @@ moments : moments.cpp Makefile
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags opencv`   $< `pkg-config --libs opencv` -o $@
 
 ocl_c++11: ocl_c++11.cpp Makefile
+	$(CXX) $(CXXFLAGS)  $(CXXFLAGSOCL) $< $(LFLAGSOCL) -o $@
+
+ocldemo: ocldemo.cpp Makefile
+	$(CXX) $(CXXFLAGS)  $(CXXFLAGSOCL) $< $(LFLAGSOCL) -o $@
+
+ocldemo2: ocldemo2.cpp Makefile
 	$(CXX) $(CXXFLAGS)  $(CXXFLAGSOCL) $< $(LFLAGSOCL) -o $@
 
 

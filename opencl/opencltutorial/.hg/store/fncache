@@ -1,0 +1,9 @@
+data/kernels/image.cl.i
+data/test.ppm.i
+data/kernels/saxpy.cl.i
+data/main.cpp.i
+data/test.ppm.d
+data/.hgtags.i
+data/.hgignore.i
+data/cmake/FindOpenCL.cmake.i
+data/CMakeLists.txt.i

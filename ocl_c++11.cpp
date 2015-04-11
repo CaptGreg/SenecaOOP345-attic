@@ -26,7 +26,7 @@ int main(int argc, char* argv[])
     Buffer b(begin(data6), end(data6), true, false);
     Buffer c(CL_MEM_READ_WRITE, elements * sizeof(float));
 
-    Program addProg(R"d(
+    Program addProg(R"add(
         kernel
         void add(   global const float * restrict const a,
                     global const float * restrict const b,
@@ -34,7 +34,7 @@ int main(int argc, char* argv[])
             unsigned idx = get_global_id(0);
             c[idx] = a[idx] + b[idx];
         }
-    )d", true);
+    )add", true);
 
     auto add = make_kernel<Buffer, Buffer, Buffer>(addProg, "add");
 
