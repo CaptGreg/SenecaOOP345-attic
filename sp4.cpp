@@ -30,6 +30,10 @@ int main(int argc, char**argv)
     std::shared_ptr<X> ssp(new X("shared smart pointer"));
     ssp->hello();
 
+    if(argc > 2)  {
+       cout << "argc > 2, return\n";
+       return 0;
+    } else
     if(argc > 1)  {
        cout << "argc > 1, we are throwing\n";
        throw string("we are throwing");
