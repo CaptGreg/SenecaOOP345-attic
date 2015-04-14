@@ -439,7 +439,7 @@ void SimpleDIYPrintf(const char *fmt, ...)  // a variable argument function (var
       } else {
         std::cout << '%'; // print the %.  The % was followed by '\0', end-of-string
       }
-    } else { // not a format character, just print it
+   } else { // not a format character, just print it
       std::cout << *f;
     }
   }
@@ -571,7 +571,7 @@ void STLContainers()
   l.push_back("pig");
   std::cout << l.size() << " Chinese animals - NOTE print order is the same as the insert order\n";
   std::cout << "'rat' was added to the end of the list first. 'pig' was added to the end of the list last.\n";
-  std::cout << "This list is a queue, a FIFO: first in, first out. Just like to coffee lineup at Tim Hortons.\n";
+  std::cout << "This list is a queue, a FIFO: first in, first out. Just like the coffee lineup at Tim Hortons.\n";
   for(auto e : l) std::cout << e << "\n";
 } // STLContainers
 
@@ -918,7 +918,7 @@ void run(std::string label, void(*f)())
   std::cout << "RUNNING [" << label << "]\n";
   f();
   std::cout << "--> FINISHED [" << label << "], press any key to continue\n";
-  char c; std::cin >> c; std::cout << "\n";
+  char c; std::cin.get(c); std::cout << "\n";
 }
 
 #define RUN(FUNCTION, LABEL) run("week" #FUNCTION " - " #LABEL, week##FUNCTION); 
@@ -1019,7 +1019,7 @@ int main(int argc, char**argv)
 
   We have 13 weeks to sort it out.  Don't be intimidated.  You will like C++11.
 
-  C is shorthand for the assmebler used on 1970's vintage PDP/11 minicomputers.  
+  C is shorthand for the assembler used on 1970's vintage PDP/11 minicomputers.  
   ++, and --, were hardware instructions on the PDP/11.
 
   C is a low level language, perfect for low level things.

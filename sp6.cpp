@@ -47,6 +47,10 @@ int main(int argc, char**argv)
     cout << "ssp3.get()=" << ssp3.get() << "\n";
     cout << "\n";
 
+    if(argc > 2)  {
+       cout << "argc > 2, return\n";
+       return 0;
+    } else
     if(argc > 1)  {
        cout << "argc > 1, we are throwing\n";
        throw string("we are throwing");

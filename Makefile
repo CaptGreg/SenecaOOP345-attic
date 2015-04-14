@@ -22,7 +22,7 @@ CXXFLAGS = -Wall $(C11FLAG) $(CXXDFLAGS) $(OPTCFLAGS)
 # NOTE AMDAPP Beta link paths are different from standard AMDAPP
 AMDAPP      = AMDAPPSDK-3.0-0-Beta
 CXXFLAGSOCL = -I/opt/$(AMDAPP)/include
-LFLAGSOCL   = -L/opt/$(AMDAPP)/lib/x86_64/sdk -lamdocl64
+LFLAGSOCL   = -L/opt/$(AMDAPP)/lib/x86_64 -lamdocl64
 
 # AMDAPP v 2.x at least linked and ran
 # AMDAPP      = AMDAPP

@@ -12,6 +12,7 @@
 // Functions can have a variable number of arguments.  Think about printf.  How does it work?
 
 #include <cmath>      // M_PI, sin, cos, tan, sqrt, abs, ...
+                      // NOTE M_PI is PI=3.1415962..., the M_ means 'machine precision' (best value of PI)
 #include <cstdarg>    // vararg
 #include <functional> // std::bind
 #include <future>     // std::async returns future
@@ -110,11 +111,21 @@ int main(int argc, char**argv)
   cout << "evalFunction(f," << arg << ")=" << evalFunction(f,arg) << ", (f=fabs), result=3*f\n";
 
   // 6. std::bind
-  extern double sin(double arg);            // compiler complained bind can't figure out sin
+  extern double sin(double arg);             // compiler complained bind can't figure out sin
   auto foo = std::bind(sin, 30*M_PI/180.);   // works with our DIY prototype for 'sin', <cmath> should of taken care of this
   cout << "foo=bind of sin of 30 degrees: foo() =" << foo() << "\n";
 
+  // bind is like a define macro
+  #define FOO sin(30*M_PI/180.)
+  cout << "'#define FOO sin(30*M_PI/180.)' : FOO =" << FOO << "\n";
+  // Why have bind, if a #define macro can do the same thing?
+  // Bind objects can be passed as arguments to other functions.
+  // #define macros objects cannot be passed as arguments to other functions.
+  // The compiler will call the function and pass the function's return value to the other function.
+
+
   // 7. threads are functions. std::thread
+  // They might be running on another core, if there is another core.
   auto threadFunction = [] (int foo) { std::this_thread::sleep_for( std::chrono::milliseconds ( foo )); };
 
   cout << "launching thread ... \n";

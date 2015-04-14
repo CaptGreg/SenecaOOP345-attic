@@ -45,6 +45,10 @@ int main(int argc, char**argv)
     cout << "ssp2.use_count()=" << ssp2.use_count() << endl;
     cout << "ssp3.use_count()=" << ssp3.use_count() << endl;
 
+    if(argc > 2)  {
+       cout << "argc > 2, return\n";
+       return 0;
+    } else
     if(argc > 1)  {
        cout << "argc > 1, we are throwing\n";
        throw string("we are throwing");
