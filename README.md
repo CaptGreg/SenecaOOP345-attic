@@ -20,14 +20,14 @@ fastforward.cpp  - a summary of OOP345.
 
 funcptr.cpp - examples of the many ways of passing function names to other functions:
               direct call, c-style function pointer, c++-style function pointer, function object (functor), lambda, bind
-              examples of intersting functions to pass function to: thread, async, packaged_task
+              examples of interesting functions to pass function to: thread, async, packaged_task
 
 sp?.cpp     - smart pointer resources
 
 mi-*.cpp    - multiple inheritance resources, clone+diamond problem
 
 theading?01?.cpp - threading101?.cpp - basic threading, mutexes
-                 - threading201?.cpp - futires and promises
+                 - threading201?.cpp - futures and promises
                  - threading301?.cpp - async, packaged_task
                  - threading401?.cpp - how things were done before async + packaged task
 
