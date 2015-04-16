@@ -1,4 +1,6 @@
-// clone member function, see page 59+60 of text book + http://www.cplusplus.com/forum/articles/18757/
+// clone member function. 
+// see inheritance section, page 59+60, of text book 
+// and http://www.cplusplus.com/forum/articles/18757/
 
 #include <iostream>
 #include <vector> // works with vector, a contiguous memory table
@@ -43,7 +45,8 @@ int main(int argc, char**argv)
   *xClone += 4;
   cout << "xClone="; xClone->print();
 
-  cout << "if x prints 123 + xClone prints 1234, they are different which means 'clone of x' STL magic did a deep copy.\n";
+  cout << "if x prints 123 + xClone prints 1234, they are different\n";
+  cout << "This means STL did a deep copy during the 'clone of x' operation.\n";
   cout << "x=";  x.print();
 
   // yes, x printed 123.
