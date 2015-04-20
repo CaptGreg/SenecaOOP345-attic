@@ -17,7 +17,7 @@ int main()
   auto s = [r] () { cout << "s\n"; r(); };
   auto t = [s] () { cout << "t\n"; s(); };
 
-  auto letterMethod1 = [] (float grade) -> string {
+  auto letterMethod1 = [] (float grade) { // -> string {
     return
             grade >= 90? string("A+") :
             grade >= 80? string("A")  :
@@ -30,7 +30,7 @@ int main()
                          string("F");
   };
 
-  auto letterMethod2 = [] (float grade) -> string {
+  auto letterMethod2 = [] (float grade) { // -> string {
     struct {
         float       lowerLimit;
         const char* letterGrade;
@@ -46,6 +46,8 @@ int main()
             {45, "F but you nearly made it"},
             {0 , "F - take the course again.  next time do some work!"}
      }, *pTable = table;
+
+     if(grade < 0) grade = 0;
 
      while(true) {
 	if(grade >= pTable->lowerLimit) 

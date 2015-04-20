@@ -3,9 +3,9 @@
 #define __CL_ENABLE_EXCEPTIONS
 
 #if defined(__APPLE__) || defined(__MACOSX)
-#include <OpenCL/cl.hpp>
+  #include <OpenCL/cl.hpp>
 #else
-#include <CL/cl.hpp>
+  #include <CL/cl.hpp>
 #endif
 #include <cstdio>
 #include <cstdlib>
@@ -27,7 +27,7 @@ __kernel void hello(void)
       std::vector<cl::Platform> platforms;
       cl::Platform::get(&platforms);
       if (platforms.size() == 0) {
-          std::cout << "Platform size 0\n";
+          std::cout<<" No platforms found. Check OpenCL installation!\n";
           return -1;
       }
       std::cout << "Platform size " << platforms.size() << "\n";

@@ -24,6 +24,10 @@ AMDAPP      = AMDAPPSDK-3.0-0-Beta
 CXXFLAGSOCL = -I/opt/$(AMDAPP)/include
 LFLAGSOCL   = -L/opt/$(AMDAPP)/lib/x86_64 -lamdocl64
 
+# NOTE April 19, 2015 These OpenCL flags compile
+CXXFLAGSOCL = 
+LFLAGSOCL   = -lOpenCL
+
 # AMDAPP v 2.x at least linked and ran
 # AMDAPP      = AMDAPP
 # CXXFLAGSOCL = -I/opt/$(AMDAPP)/include
