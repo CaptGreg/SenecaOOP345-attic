@@ -1,7 +1,9 @@
-// !!!  compile flags -mmmx + -msse flags for mmx + sse instructions
+// !!!  compile flags -mmmx + -msse flags for mmx + sse intrinsics
+// intrinsic list https://github.com/emoon/ps2dev_tools/blob/master/osx/ps2dev/ee/info/gcc.info-3
 
 // g++ -Wall -std=c++11  -ggdb -mmmx -msse  vectorization.cpp -o vectorization && ./vectorization
 // clang++ complains about the __builtin_XXX functions
+
 
 // GCC vectorization has been supported since 2009, experimentally since 2006/7
 
@@ -56,6 +58,7 @@ void printf4vector(v4sf* e) // GB wrote this
 
 int main()
 {
+<<<<<<< HEAD
   union f4vector a, b, c;
 
   a.f[0] = 1.1; a.f[1] =  2; a.f[2] = 3;  a.f[3] = 4.0;
@@ -560,6 +563,9 @@ void vectorcode ()
       }
     }
   }
+=======
+  return 0;
+>>>>>>> 445772d29da514beb5f0b6c1470786d499e8abdb
 }
 
 
