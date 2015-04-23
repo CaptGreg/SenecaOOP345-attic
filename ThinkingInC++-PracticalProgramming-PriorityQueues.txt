@@ -1,0 +1,452 @@
+// http://www.linuxtopia.org/online_books/programming_books/c++_practical_programming/c++_practical_programming_189.html
+
+Thinking in C++ Vol 2 - Practical Programming
+Prev <c++_practical_programming_188.html> 	Home <index.html> 	Next
+<c++_practical_programming_190.html>
+
+
+    Priority queues <c++_practical_programming_189.html>
+
+
+When you *push( )* an object onto a *priority_queue*, that object is
+sorted into the queue according to a comparison function or function
+object. (You can allow the default *less* template to supply this, or
+you can provide one of your own.) The *priority_queue* ensures that when
+you look at the *top( )* element, it will be the one with the highest
+priority. When you re done with it, you call *pop( )* to remove it and
+bring the next one into place. Thus, the *priority_queue* has nearly the
+same interface as a *stack*, but it behaves differently.
+
+Like *stack* and *queue*, *priority_queue* is an adaptor that is built
+on top of one of the basic sequences the default sequence being *vector*.
+
+It s trivial to make a *priority_queue* that works with *int*s:
+
+//: C07:PriorityQueue1.cpp
+#include <cstdlib>
+#include <ctime>
+#include <iostream>
+#include <queue>
+using namespace std;
+ 
+int main() {
+priority_queue<int> pqi;
+srand(time(0)); // Seed the random number generator
+for(int i = 0; i < 100; i++)
+pqi.push(rand() % 25);
+while(!pqi.empty()) {
+cout << pqi.top() << ' ';
+pqi.pop();
+}
+} ///:~
+ 
+
+This pushes into the *priority_queue *100 random values from 0 to 24.
+When you run this program you ll see that duplicates are allowed, and
+the highest values appear first. To show how you can change the ordering
+by providing your own function or function object, the following program
+gives lower-valued numbers the highest priority:
+
+//: C07:PriorityQueue2.cpp
+// Changing the priority.
+#include <cstdlib>
+#include <ctime>
+#include <functional>
+#include <iostream>
+#include <queue>
+using namespace std;
+ 
+int main() {
+priority_queue<int, vector<int>, greater<int> > pqi;
+srand(time(0));
+for(int i = 0; i < 100; i++)
+pqi.push(rand() % 25);
+while(!pqi.empty()) {
+cout << pqi.top() << ' ';
+pqi.pop();
+}
+} ///:~
+ 
+
+A more interesting problem is a to-do list, where each object contains a
+*string* and a primary and secondary priority value:
+
+//: C07:PriorityQueue3.cpp
+// A more complex use of priority_queue.
+#include <iostream>
+#include <queue>
+#include <string>
+using namespace std;
+ 
+class ToDoItem {
+char primary;
+int secondary;
+string item;
+public:
+ToDoItem(string td, char pri = 'A', int sec = 1)
+: primary(pri), secondary(sec), item(td) {}
+friend bool operator<(
+const ToDoItem& x, const ToDoItem& y) {
+if(x.primary > y.primary)
+return true;
+if(x.primary == y.primary)
+if(x.secondary > y.secondary)
+return true;
+return false;
+}
+friend ostream&
+operator<<(ostream& os, const ToDoItem& td) {
+return os << td.primary << td.secondary
+<< ": " << td.item;
+}
+};
+ 
+int main() {
+priority_queue<ToDoItem> toDoList;
+toDoList.push(ToDoItem("Empty trash", 'C', 4));
+toDoList.push(ToDoItem("Feed dog", 'A', 2));
+toDoList.push(ToDoItem("Feed bird", 'B', 7));
+toDoList.push(ToDoItem("Mow lawn", 'C', 3));
+toDoList.push(ToDoItem("Water lawn", 'A', 1));
+toDoList.push(ToDoItem("Feed cat", 'B', 1));
+while(!toDoList.empty()) {
+cout << toDoList.top() << endl;
+toDoList.pop();
+}
+} ///:~
+ 
+
+The *ToDoItem* s *operator<* must be a nonmember function for it to work
+with *less< >*. Other than that, everything happens automatically. The
+output is
+
+A1: Water lawn
+A2: Feed dog
+B1: Feed cat
+B7: Feed bird
+C3: Mow lawn
+C4: Empty trash
+ 
+
+You cannot iterate through a *priority_queue*, but it s possible to
+simulate the behavior of a *priority_queue* using a *vector*, thus
+allowing you access to that *vector*. You can do this by looking at the
+implementation of *priority_queue*, which uses *make_heap( )*,
+*push_heap( )*, and *pop_heap( )*. (These are the soul of the
+*priority_queue* in fact you could say that the heap /is/ the priority
+queue and that *priority_queue***is just a wrapper around it.) This
+turns out to be reasonably straightforward, but you might think that a
+shortcut is possible. Since the container used by *priority_queue* is
+*protected* (and has the identifier, according to the Standard C++
+specification, named *c*), you can inherit a new class that provides
+access to the underlying implementation:
+
+//: C07:PriorityQueue4.cpp
+// Manipulating the underlying implementation.
+#include <algorithm>
+#include <cstdlib>
+#include <ctime>
+#include <iostream>
+#include <iterator>
+#include <queue>
+using namespace std;
+ 
+class PQI : public priority_queue<int> {
+public:
+vector<int>& impl() { return c; }
+};
+ 
+int main() {
+PQI pqi;
+srand(time(0));
+for(int i = 0; i < 100; i++)
+pqi.push(rand() % 25);
+copy(pqi.impl().begin(), pqi.impl().end(),
+ostream_iterator<int>(cout, " "));
+cout << endl;
+while(!pqi.empty()) {
+cout << pqi.top() << ' ';
+pqi.pop();
+}
+} ///:~
+ 
+
+However, if you run this program, you ll discover that the *vector*
+doesn t contain the items in the descending order that you get when you
+call *pop( )*, the order that you want from the priority queue. It would
+seem that if you want to create a *vector* that is a priority queue, you
+have to do it by hand, like this:
+
+//: C07:PriorityQueue5.cpp
+// Building your own priority queue.
+#include <algorithm>
+#include <cstdlib>
+#include <ctime>
+#include <iostream>
+#include <iterator>
+#include <queue>
+using namespace std;
+ 
+template<class T, class Compare>
+class PQV : public vector<T> {
+Compare comp;
+public:
+PQV(Compare cmp = Compare()) : comp(cmp) {
+make_heap(this->begin(),this->end(), comp);
+}
+const T& top() { return this->front(); }
+void push(const T& x) {
+this->push_back(x);
+push_heap(this->begin(),this->end(), comp);
+}
+void pop() {
+pop_heap(this->begin(),this->end(), comp);
+this->pop_back();
+}
+};
+ 
+int main() {
+PQV< int, less<int> > pqi;
+srand(time(0));
+for(int i = 0; i < 100; i++)
+pqi.push(rand() % 25);
+copy(pqi.begin(), pqi.end(),
+ostream_iterator<int>(cout, " "));
+cout << endl;
+while(!pqi.empty()) {
+cout << pqi.top() << ' ';
+pqi.pop();
+}
+} ///:~
+ 
+
+But this program behaves in the same way as the previous one! What you
+are seeing in the underlying *vector* is called a /heap/.//This heap
+data structure represents the tree of the priority queue (stored in the
+linear structure of the *vector*), but when you iterate through it, you
+do not get a linear priority-queue order. You might think that you can
+simply call *sort_heap( )*, but that only works once, and then you don t
+have a heap anymore, but instead a sorted list. This means that to go
+back to using it as a heap, the user must remember to call *make_heap( )
+*first. This can be encapsulated into your custom priority queue:
+
+//: C07:PriorityQueue6.cpp
+#include <algorithm>
+#include <cstdlib>
+#include <ctime>
+#include <iostream>
+#include <iterator>
+#include <queue>
+using namespace std;
+ 
+template<class T, class Compare>
+class PQV : public vector<T> {
+Compare comp;
+bool sorted;
+void assureHeap() {
+if(sorted) {
+// Turn it back into a heap:
+make_heap(this->begin(),this->end(), comp);
+sorted = false;
+}
+}
+public:
+PQV(Compare cmp = Compare()) : comp(cmp) {
+make_heap(this->begin(),this->end(), comp);
+sorted = false;
+}
+const T& top() {
+assureHeap();
+return this->front();
+}
+void push(const T& x) {
+assureHeap();
+this->push_back(x); // Put it at the end
+// Re-adjust the heap:
+push_heap(this->begin(),this->end(), comp);
+}
+void pop() {
+assureHeap();
+// Move the top element to the last position:
+pop_heap(this->begin(),this->end(), comp);
+this->pop_back();// Remove that element
+}
+void sort() {
+if(!sorted) {
+sort_heap(this->begin(),this->end(), comp);
+reverse(this->begin(),this->end());
+sorted = true;
+}
+}
+};
+ 
+int main() {
+PQV< int, less<int> > pqi;
+srand(time(0));
+for(int i = 0; i < 100; i++) {
+pqi.push(rand() % 25);
+copy(pqi.begin(), pqi.end(),
+ostream_iterator<int>(cout, " "));
+cout << "\n----- << endl;
+}
+pqi.sort();
+copy(pqi.begin(), pqi.end(),
+ostream_iterator<int>(cout, " "));
+cout << "\n----- << endl;
+while(!pqi.empty()) {
+cout << pqi.top() << ' ';
+pqi.pop();
+}
+} ///:~
+ 
+
+If *sorted* is true, the *vector* is not organized as a heap but instead
+as a sorted sequence. The *assureHeap( )* function guarantees that it s
+put back into heap form before performing any heap operations on it. The
+first *for* loop in *main( )* now has the additional quality that it
+displays the heap as it is being built.
+
+In the previous two programs we had to introduce a seemingly extraneous
+usage of the *this->* prefix. Although some compilers do not require it,
+the standard definition of C++ does. Note that the class *PQV* derives
+from *vector<T>*, therefore *begin( )* and *end( )*, inherited from
+*vector<T>*, are dependent names.[110]
+<c++_practical_programming_189.html> Compilers can t look up names from
+dependent base classes in the definition of a template (*vector*, in
+this case) because for a given instantiation an explicitly specialized
+version of the template might be used that does not have a given member.
+The special naming requirement guarantees that you won t end up calling
+a base class member in some cases and possibly a function from an
+enclosing scope (such as a global one) in other cases. The compiler has
+no way of knowing that a call to *begin( )* is dependent, so we must
+give it a clue with a *this‑>* qualification.[111]
+<c++_practical_programming_189.html> This tells the compiler that
+*begin( )* is in the scope of *PQV*, so it waits until an instance of
+*PQV* is fully instantiated. If this qualifying prefix is left out, the
+compiler will attempt an early lookup for the names *begin* and *end*
+(at template definition time, and will fail to find them because there
+are no such names declared in enclosing lexical scopes in this example).
+In the code above, however, the compiler waits until the point of
+instantiation of *pqi*, and then finds the correct specializations of
+*begin( )* and *end( )* in *vector<int>*.
+
+The only drawback to this solution is that the user must remember to
+call *sort( ) *before viewing it as a sorted sequence (although one
+could conceivably redefine all the member functions that produce
+iterators so that they guarantee sorting). Another solution is to create
+a priority queue that is not a *vector*, but will build you a *vector*
+whenever you want one:
+
+//: C07:PriorityQueue7.cpp
+// A priority queue that will hand you a vector.
+#include <algorithm>
+#include <cstdlib>
+#include <ctime>
+#include <iostream>
+#include <iterator>
+#include <queue>
+#include <vector>
+using namespace std;
+ 
+template<class T, class Compare> class PQV {
+vector<T> v;
+Compare comp;
+public:
+// Don't need to call make_heap(); it's empty:
+PQV(Compare cmp = Compare()) : comp(cmp) {}
+void push(const T& x) {
+v.push_back(x); // Put it at the end
+// Re-adjust the heap:
+push_heap(v.begin(), v.end(), comp);
+}
+void pop() {
+// Move the top element to the last position:
+pop_heap(v.begin(), v.end(), comp);
+v.pop_back(); // Remove that element
+}
+const T& top() { return v.front(); }
+bool empty() const { return v.empty(); }
+int size() const { return v.size(); }
+typedef vector<T> TVec;
+TVec getVector() {
+TVec r(v.begin(), v.end());
+// It s already a heap
+sort_heap(r.begin(), r.end(), comp);
+// Put it into priority-queue order:
+reverse(r.begin(), r.end());
+return r;
+}
+};
+ 
+int main() {
+PQV<int, less<int> > pqi;
+srand(time(0));
+for(int i = 0; i < 100; i++)
+pqi.push(rand() % 25);
+const vector<int>& v = pqi.getVector();
+copy(v.begin(), v.end(),
+ostream_iterator<int>(cout, " "));
+cout << "\n----------- << endl;
+while(!pqi.empty()) {
+cout << pqi.top() << ' ';
+pqi.pop();
+}
+} ///:~
+ 
+
+The *PQV* class template follows the same form as the STL s
+*priority_queue*, but has the additional member *getVector( )*, which
+creates a new *vector* that s a copy of the one in *PQV *(which means
+that it s already a heap). It then sorts that copy (leaving *PQV* s
+*vector* untouched), and reverses the order so that traversing the new
+*vector* produces the same effect as popping the elements from the
+priority queue.
+
+You may observe that the approach of deriving from *priority_queue* used
+in *PriorityQueue4.cpp* could be used with the above technique to
+produce more succinct code:
+
+//: C07:PriorityQueue8.cpp
+// A more compact version of PriorityQueue7.cpp.
+#include <algorithm>
+#include <cstdlib>
+#include <ctime>
+#include <iostream>
+#include <iterator>
+#include <queue>
+using namespace std;
+ 
+template<class T> class PQV : public priority_queue<T> {
+public:
+typedef vector<T> TVec;
+TVec getVector() {
+TVec r(this->c.begin(),this->c.end());
+// c is already a heap
+sort_heap(r.begin(), r.end(), this->comp);
+// Put it into priority-queue order:
+reverse(r.begin(), r.end());
+return r;
+}
+};
+ 
+int main() {
+PQV<int> pqi;
+srand(time(0));
+for(int i = 0; i < 100; i++)
+pqi.push(rand() % 25);
+const vector<int>& v = pqi.getVector();
+copy(v.begin(), v.end(),
+ostream_iterator<int>(cout, " "));
+cout << "\n----------- << endl;
+while(!pqi.empty()) {
+cout << pqi.top() << ' ';
+pqi.pop();
+}
+} ///:~
+ 
+
+The brevity of this solution makes it the simplest and most desirable,
+plus it s guaranteed that the user will not have a *vector* in the
+unsorted state. The only potential problem is that the *getVector( )*
+member function returns the *vector<T>* by value, which might cause some
+overhead issues with complex values of the parameter type *T*.
