@@ -1,6 +1,6 @@
 # usage: make filename
 
-CFLAGS = -std=c++11 -Wall 
+CFLAGS = -std=c++11 -Wall -mmmx -msse
 CXXDFLAGS = -ggdb
 
 C11FLAG = -std=c++11 
@@ -83,6 +83,13 @@ jsoncpp : jsoncpp.cpp Makefile
 	#$(CXX) $(CXXFLAGS) $< -o $@ -ljsoncpp
 
 
+vectorization : vectorization.cpp Makefile
+	# compiles on AMD1100t with  Ubuntu 14.04 + g++ 4.9
+	# fails to resolve instrinsics with clang++
+	# needs the -mmmx -msse flags to compile instrinsics
+	g++ -std=c++11  -ggdb -Ofast -mmmx -msse -msse2  vectorization.cpp -o vectorization && ./vectorization 
+	# compile again with auto vectorization turned on
+	g++ -std=c++11  -ggdb -Ofast -mmmx -msse -msse2  -ftree-vectorize -ftree-vectorizer-verbose=2 vectorization.cpp -o vectorization && ./vectorization 
 
 # using clang++ to dump class layout
 # http://eli.thegreenplace.net/2012/12/17/dumping-a-c-objects-memory-layout-with-clang/
