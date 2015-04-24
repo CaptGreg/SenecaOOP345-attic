@@ -1,6 +1,9 @@
 // valarray assignment example
 #include <iostream>     // std::cout
-#include <cstddef>      // std::size_t
+// #include <cstddef>      // std::size_t, include works with g++, clang++ error
+// error: no member named 'max_align_t' in the global namespace
+// using ::max_align_t;
+
 #include <valarray>     // std::valarray, std::slice
 #include <cmath>        // std::sqrt(double)
 
