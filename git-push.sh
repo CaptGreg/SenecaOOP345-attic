@@ -1,1 +1,1 @@
-git push https://github.com/CaptGreg/SenecaOOP345-attic.git/ HEAD
+git push https://github.com/CaptGreg/SenecaOOP345-attic.git/ HEAD $*

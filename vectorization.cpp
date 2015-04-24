@@ -33,17 +33,32 @@
   #include <emmintrin.h>
 #endif
 
-// vector of four single floats
+// https://gcc.gnu.org/onlinedocs/gcc-3.4.0/gcc/Vector-Extensions.html
+// V4XX where XX is:
+//   QI An integer that is as wide as the smallest addressable unit, usually 8 bits.
+//   HI An integer, twice as wide as a QI mode integer, usually 16 bits.
+//   SI An integer, four times as wide as a QI mode integer, usually 32 bits.
+//   DI An integer, eight times as wide as a QI mode integer, usually 64 bits.
+//   SF A floating point value, as wide as a SI mode integer, usually 32 bits.
+//   DF A floating point value, as wide as a DI mode integer, usually 64 bits.
+
+typedef int V4SI __attribute__ ((mode(V4SI)));
+// warning: specifying vector types with __attribute__ ((mode)) is deprecated [-Wattributes]
+// warning: use __attribute__ ((vector_size)) instead [-Wattributes]
+
+// vector of four single floats/int32_t
 #define VECTOR_SIZE         4
-typedef float v4sf __attribute__ ((vector_size(sizeof(float)*VECTOR_SIZE)));
+typedef float v4sf __attribute__ ((vector_size(sizeof(float)*VECTOR_SIZE)));   // 128-bit SSE
+typedef int   v4si __attribute__ ((vector_size(sizeof(int32_t)*VECTOR_SIZE))); // 128-bit MMX
+// or ...     v4si __attribute__ ((vector_size(sizeof(int)*VECTOR_SIZE)));     // 128-bit MMX
+
+// Currently, GCC will allow using the following operators on these types: +, -, *, /, unary minus, ^, |, &, ~.
 
 typedef union f4vector
 {
   v4sf    v;
   float   f[VECTOR_SIZE];
 } f4vector;
-
-// typedef int v4si __attribute__ ((mode(V4SI)));
 
 void printf4vector(v4sf* e) // GB wrote this
 {
@@ -55,19 +70,34 @@ void printf4vector(v4sf* e) // GB wrote this
   std::cout << "\n";
 }
 
+typedef union i4vector
+{
+  v4si    v;
+  int     i[VECTOR_SIZE];
+} i4vector;
+
+// typedef int v4si __attribute__ ((mode(V4SI)));
+
+void printi4vector(v4si* e) // GB wrote this
+{
+  i4vector* i4 = reinterpret_cast< i4vector* >(e);
+
+  std::cout << i4->i[0];
+  for( int i = 1; i < VECTOR_SIZE; i++)
+    std::cout << ", " << i4->i[i];
+  std::cout << "\n";
+}
+
 
 int main()
 {
-<<<<<<< HEAD
   union f4vector a, b, c;
 
   a.f[0] = 1.1; a.f[1] =  2; a.f[2] = 3;  a.f[3] = 4.0;
   b.f[0] = 5.0; b.f[1] =  6; b.f[2] = 7;  b.f[3] = 8.0;
   c.f[0] = 9.1; c.f[1] = 10; c.f[2] = 11; c.f[3] = 12.3;
 
-                                 // a * b
   v4sf tmp = __builtin_ia32_mulps (a.v, b.v);
-                                 // e = (a * b) + c
   v4sf foo = __builtin_ia32_addps(tmp, c.v);
 
   std::cout << "calculate foo = (a * b) + c:\n";
@@ -75,6 +105,50 @@ int main()
   std::cout << "b   = "; printf4vector(&b.v);
   std::cout << "c   = "; printf4vector(&c.v);
   std::cout << "foo = "; printf4vector(&foo);
+
+  v4si A ={1,2,3,4};
+  v4si B ={5,6,7,8};
+  v4si C;
+
+  std::cout << "A     : "; printi4vector(&A);
+  std::cout << "B     : "; printi4vector(&B);
+
+  C = A + B;
+  std::cout << "C=A+B : "; printi4vector(&C);
+  C = A - B;
+  std::cout << "C=A-B : "; printi4vector(&C);
+  C = B - A;
+  std::cout << "C=B-A : "; printi4vector(&C);
+  C = A * B;
+  std::cout << "C=A*B : "; printi4vector(&C);
+  C = B / A;
+  std::cout << "C=B/A : "; printi4vector(&C);
+  C = A / B;
+  std::cout << "C=A/B : "; printi4vector(&C);
+
+  v4sf fA ={1,2,3,4.5};
+  v4sf fB ={5,6,7,8.5};
+  v4sf fC;
+
+  std::cout << "fA       : "; printf4vector(&fA);
+  std::cout << "fB       : "; printf4vector(&fB);
+
+  fC = fA + fB;
+  std::cout << "fC=fA+fB : "; printf4vector(&fC);
+  fC = fA - fB;
+  std::cout << "fC=fA-fB : "; printf4vector(&fC);
+  fC = fB - fA;
+  std::cout << "fC=fB-fA : "; printf4vector(&fC);
+  fC = fA * fB;
+  std::cout << "fC=fA*fB : "; printf4vector(&fC);
+  fC = fA * fA;
+  std::cout << "fC=fA*fA : "; printf4vector(&fC);
+  fC = fB * fB;
+  std::cout << "fC=fB*fB : "; printf4vector(&fC);
+  fC = fA / fB;
+  std::cout << "fC=fA/fB : "; printf4vector(&fC);
+  fC = fB / fA;
+  std::cout << "fC=fB/fA : "; printf4vector(&fC);
 
   /* ... */
   extern void vectorcode();
@@ -86,7 +160,7 @@ int main()
 // GB The following examples are from                       //
 // https://gcc.gnu.org/projects/tree-ssa/vectorization.html //
 // GB cleaned up a bit to make it compile                   //
-// GB may not execute, most likely won't                    //
+// GB may not execute, most likely won't, does not segfault //
 //////////////////////////////////////////////////////////////
 
 void vectorcode ()
@@ -563,9 +637,4 @@ void vectorcode ()
       }
     }
   }
-=======
-  return 0;
->>>>>>> 445772d29da514beb5f0b6c1470786d499e8abdb
-}
-
-
+} // void vectorcode ()
