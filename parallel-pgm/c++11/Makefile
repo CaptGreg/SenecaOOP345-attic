@@ -11,6 +11,6 @@
 #
 CXXSTD=-std=c++11
 
-OPT = -O3
+OPT = -Ofast
 CXX = g++
 CXXFLAGS = $(OPT) -Wall -pedantic -pthread $(CXXSTD)

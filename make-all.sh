@@ -12,3 +12,8 @@ do
     # echo no main in $f 
   fi
 done
+
+echo
+echo "IGNORE grep: *.c: No such file or directory"
+echo "(script file looking for .c files and there are not any)"
+echo

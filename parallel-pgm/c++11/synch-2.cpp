@@ -25,8 +25,9 @@ static std::mutex print_lock;
 
 int main(int argc, char* argv[]) {
 
-    int num_threads = 
-        get_integer_environment("NUM_THREADS", 1, "number of threads");
+    int num_threads = 0;
+    // num_threads = get_integer_environment("NUM_THREADS", 1, "number of threads");
+    if(num_threads == 0) num_threads = std::thread::hardware_concurrency();
 
     std::vector<std::thread> threads;
 
