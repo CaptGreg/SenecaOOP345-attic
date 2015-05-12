@@ -1,3 +1,7 @@
+echo IGNORE ./clean.sh: line 13: test: too many arguments
+echo "(script file looking for .c files and there are not any)"
+echo
+
 for f in *.cpp  *.c
 do
   # http://stackoverflow.com/questions/965053/extract-filename-and-extension-in-bash

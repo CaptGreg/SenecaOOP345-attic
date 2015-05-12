@@ -3,9 +3,23 @@
 CFLAGS = -std=c++11 -Wall -mmmx -msse
 CXXDFLAGS = -ggdb
 
-C11FLAG = -std=c++11 
-CXX = g++
-CXX = clang++
+C11FLAG  = -std=c++11 
+CXX      = g++
+CXX      = clang++
+CXX      = g++-5
+CXX5     = g++-5
+
+ifeq ($(HOSTNAME),amd1100t)
+  CC   = gcc-5
+  CXX  = g++-5
+  CC5  = gcc-5
+  CXX5 = g++-5
+endif
+
+ifeq ($(HOSTNAME),hp)
+  CC   = gcc-5
+  CXX  = g++-5
+endif
 
 ifeq ($(HOSTNAME),matrix)
   # Fall 2014 semester (2014-09-08), matrix g++ is 4.6.2, released October 26, 2011
@@ -84,12 +98,13 @@ jsoncpp : jsoncpp.cpp Makefile
 
 
 vectorization : vectorization.cpp Makefile
-	# compiles on AMD1100t with  Ubuntu 14.04 + g++ 4.9
+	@echo compiler $(CXX)
+	# compiles fine on AMD1100t with Ubuntu 14.04 and g++ 4.9/5.0
 	# fails to resolve instrinsics with clang++
 	# needs the -mmmx -msse flags to compile instrinsics
-	g++ -std=c++11  -ggdb -Ofast -mmmx -msse -msse2  vectorization.cpp -o vectorization && ./vectorization 
+	$(CXX) -std=c++11  -ggdb -Ofast -mmmx -msse -msse2  vectorization.cpp -o vectorization && ./vectorization 
 	# compile again with auto vectorization turned on
-	g++ -std=c++11  -ggdb -Ofast -mmmx -msse -msse2  -ftree-vectorize -ftree-vectorizer-verbose=2 vectorization.cpp -o vectorization && ./vectorization 
+	$(CXX) -std=c++11  -ggdb -Ofast -mmmx -msse -msse2  -ftree-vectorize -ftree-vectorizer-verbose=2 vectorization.cpp -o vectorization && ./vectorization 
 
 # using clang++ to dump class layout
 # http://eli.thegreenplace.net/2012/12/17/dumping-a-c-objects-memory-layout-with-clang/
