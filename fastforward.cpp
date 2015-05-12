@@ -2,6 +2,17 @@
 // Author Greg Blair
 // Date   January 11, 2015
 
+#ifdef __GNUC__
+  // turn off most compiler warnings
+  // #pragma GCC diagnostic warning "-w"
+  // turn off 'variable not used' compiler warnings.
+  #pragma GCC diagnostic ignored "-Wunused-variable"
+#endif
+#ifdef __clang__
+  // turn off CLANG++ 'unused private field' compiler warnings.
+  #pragma GCC diagnostic ignored "-Wunused-private-field"
+#endif
+
 #include <algorithm> // accumulate, inner_product, ...
 #include <cmath>     // sqrt, abs, fmod, trig functions, ...
 #include <cstdarg>   // vararg
@@ -348,14 +359,14 @@ void Inheritance()
   //  *  one or more specializations 
   //  *  the actual template with the variable arguments.
   // the compiler generates multiple recursive calls to the variadic template function 
-  // each time calling one of the viable specialized template until all args are processes.
+  // each time calling one of the viable specialized template until all args are processed.
 
   // NOTE: uncomment the 'std::cout << __PRETTY_FUNCTION__ << "\n";' to see what is going on
 
   template <typename T> // a C++ OOP244 function template
   void print(const T& t) { // function template print for single argument
     // std::cout << __PRETTY_FUNCTION__ << "\n";
-    std::cout << t << std::endl;
+    std::cout << t << "\n";
   }
 
   template <typename First, typename... Rest>  // a C++11 variable argument (variadic) template
@@ -401,7 +412,7 @@ void Expressions()
 {
    int i = 2;
    std::cout << "i=" << i << "\n";
-   i = i++;
+   i = i++; // favorite question on JAVA final exam
    std::cout << "after 'i = i++;',  the value of i is " << i << "\n";
 
    std::cout << "what happens if we have an array 'a[i] = a[i++];'?\n";
@@ -482,7 +493,17 @@ void Functions()
 void ErrorHandling()
 {
    try {
-     double trouble = 30 / 1.001;
+     double trouble = 30 / 1.001; // frame rate for NTSC Television 29.970 FPS
+     throw std::string("throwing a string");
+   } catch (const std::string& e) {
+     std::cout << e << "\n";
+   } catch(...) {
+     std::cout << "Unknown error\n";
+   }
+
+   try {
+     double trouble = 30 / 1.001; // frame rate for NTSC Television 29.970 FPS
+     throw nullptr;
    } catch (const std::string& e) {
      std::cout << e << "\n";
    } catch(...) {
@@ -493,11 +514,21 @@ void ErrorHandling()
      for (int i = 0; i < 10; i++) {
       if(i == 7) throw std::string("i is 7");
      }
+     throw nullptr;
    } catch (const std::string& e) {
      std::cout << e << "\n";
    } catch(...) {
      std::cout << "Unknown error\n";
    }
+
+   try {
+     uint8_t* pointerToTeraByte = new uint8_t [ 1000000LL * 1000000LL * 1000000LL];
+     // or uint8_t* pointerToTeraByte = new uint8_t [ size_t(1.e18) ];
+     delete [] pointerToTeraByte;  // might work.  If it did, delete it.
+   } catch(std::exception& e) {
+     std::cout << "std::exception error=" << e.what() << "\n"; // expect std::bad_alloc()
+   }
+
 } // ErrorHandling
 
 template <class T>  // templates have to be global
@@ -705,7 +736,7 @@ void QuadraticComplexity()
 {
   std::cout << "QuadraticComplexity\n";
 
-  class Timer {
+  class Timer { // use C++11 std::chrono features to create a stop-watch timer class
     std::chrono::time_point<std::chrono::high_resolution_clock> start;
     std::chrono::time_point<std::chrono::high_resolution_clock> stop;
   public:
@@ -785,13 +816,13 @@ void QuadraticComplexity()
   // log(Y) = 'p' * log(X)
   // fit a straight to the log of X+Y. The slope will be the power 'p'
 
-  // if 'p' is around 1, time is varies as size varies. 
+  // if 'p' is around 1, time varies as size varies. 
   //     It is a linear algorithm. Double the size takes double the time.
   // if 'p' is around 2, time varies as a power of 2.  
   //     It is a quadratic algorithm.  Double the size takes 4 times as long
   // if 'p' is around 3, time varies as a power of 3.  
   //     It is a cubic algorithm. Double the size takes 8 times as long
-  for (int i = 0; i < X.size(); i++ ) {
+  for (size_t i = 0; i < X.size(); i++ ) {
     X[i] = log10( X[i] );
     Y[i] = log10( Y[i] );
   }
@@ -816,7 +847,7 @@ void QuadraticComplexity()
     };
 
   std::cout << "Data:\n";
-  for (int i = 0; i < X.size(); i++ )
+  for (size_t i = 0; i < X.size(); i++ )
     std::cout << i << ": " << X[i] << "," << Y[i] << "\n";
 
   double Slope, Intercept;
@@ -999,7 +1030,7 @@ int main(int argc, char**argv)
   RUN(01, create namespaces + multiple source files)
   RUN(02, fundamental + compound types);
   RUN(03, inheritance + templates);
-  RUN(04, composition + aggragation + association);
+  RUN(04, composition + aggregation + association);
   RUN(05, expressions + functions);
   RUN(06, error handling + linked lists);
   RUN(07, STL containers + test 1);
@@ -1041,7 +1072,7 @@ int main(int argc, char**argv)
 
   C++11 is an exciting development.  It is easy to learn and once
   you have some experience with C++11, there is no going back.
-  You will not want to code in legacy C++ (1998, or 2003), or C!.
+  You will not want to code in legacy C++ (1998, or 2003), or C.
 
   The best way to learn anything is practise.  This applies to aquiring
   any new skill.  Learning C++11 is not different.  You need to write many
@@ -1058,9 +1089,10 @@ int main(int argc, char**argv)
   john.blair@senecacollege.ca
 
   Office Hours TEL Building either T2105 or Open Lab: 
-    Tuesday,  after 345A (T3133) 8:00 to 09:45 class
-    Thursday, after 345A (S2119) 9:50 to 11:35 class
-    Friday,   after 345B (T3074) 8:00 to 09:45 class
+    Tuesday,    after 345A (S2158) 8:00 to 09:45 class
+    Wednesday,  after 345B (S2174) 8:00 to 09:45 class
+    Thursday,   after 345A (T3074) 8:55 to 10:40 class
+    Friday,     after 345B (T3074) 9:50 to 11:35 class
   )bar";
   
   return 0;

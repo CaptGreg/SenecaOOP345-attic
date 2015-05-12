@@ -6,7 +6,7 @@ do
   rootname="${filename%.*}"
 
   # echo $f:  $rootname
-  if test -f $rootname ; then 
+  if ( test -f $rootname ) ; then 
     rm $rootname
   fi
 done
