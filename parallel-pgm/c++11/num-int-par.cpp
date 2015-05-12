@@ -36,8 +36,9 @@ int main(int argc, char *argv[]) {
     double sum = 0.0;
     double step = 1.0/(double) NUM_STEPS; 
 
-    int num_threads = 
-        get_integer_environment("NUM_THREADS", 1, "number of threads");
+    int num_threads = 0;
+    // num_threads = get_integer_environment("NUM_THREADS", 1, "number of threads");
+    if(num_threads == 0) num_threads = std::thread::hardware_concurrency();
 
     std::mutex lock;
 
