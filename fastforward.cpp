@@ -257,7 +257,7 @@ void CompoundTypes()
     MoveClass& operator=(MoveClass&& rhs)  // move assignment operator   (no copy, move pointer) C++11
       { 
         if(this != &rhs) 
-          {delete [] b; b = rhs.b; rhs.b = nullptr;} 
+          {if(b) delete [] b; b = rhs.b; rhs.b = nullptr;} 
         std::cout << "move assignment operator (move pointers) this=" << (void*)this << ", b=" << (void*) b << "\n";
         return *this; 
       }
@@ -408,6 +408,63 @@ void Templates()
 
 } // Templates
 
+void Composition()
+{
+  // Composition: 
+  // The parent contains or is composed of the children.
+  // A 'death' relationship.  Destroying the parent, destroys the children.
+
+  // A house contains rooms.
+  // Run over a house with a bulldozer and the rooms are destroyed
+  class House { 
+    class Room {std::string name; public:Room(std::string n) : name(n){}};
+    std::list<Room*> rooms; 
+  public:
+    void AddRoom(std::string name) {rooms.push_back(new Room(name));}
+    ~House() { for(auto e : rooms) delete e; } 
+  }; 
+}
+
+void Association()
+{
+  // Association: A relationship between two or more objects where all objects 
+  // have their own lifecycle abd there is no owwner.
+
+  // Clubs and people are independent.  The club can fold or a person can die 
+  // without destroying the other.
+  class Person; class Club;
+  class Person {std::list<Club> clubs;};     // people can belong to multiple clubs
+  class Club { std::list<Person> members; }; // clubs have more than one member
+}
+
+void Aggregation()
+{
+  // Aggregation: Specialized form of Association where all objects have their 
+  // own lifecycle but there is ownership.  
+  // This a "whole-part" or "a-part-of" relationship.
+  // There is one parent but no lifetime dependency of the child.
+  // Child object cannot belong to another parent object.
+  // "has-a" or "uses" relationship
+
+  class Engine{ }; // Engine exists independently of Car;
+  class Car{
+    Engine* engine;  // A car "has-a" or "uses" an engine. You can change engines.
+  public:
+    Car()          : engine(nullptr) {}
+    Car(Engine* e) : engine(e)       {}
+    void newEngine(Engine* e) { if(engine) delete engine; engine = e; }
+    Engine* pullEngine() { Engine* ret = engine; engine = nullptr; return ret; }
+    ~Car() { if(engine) delete engine; }
+  };
+
+  class Duck {};   // A duck exists independently of Pond
+  class Pond {     // A pond may have multiple ducks.  A duck can only be in one pond at a time.
+    A duck list<Duck> ducks;
+  public:
+    void AddDuck(Duck& duck) { ducks.push_back(duck); }
+  };
+}
+
 void Expressions()
 {
    int i = 2;
@@ -503,10 +560,10 @@ void ErrorHandling()
 
    try {
      double trouble = 30 / 1.001; // frame rate for NTSC Television 29.970 FPS
-     throw nullptr;
+     throw nullptr;               // need to throw nullptr or program will segfault
    } catch (const std::string& e) {
      std::cout << e << "\n";
-   } catch(...) {
+   } catch(...) {                 // catch 'throw nullptr'
      std::cout << "Unknown error\n";
    }
 
@@ -517,7 +574,7 @@ void ErrorHandling()
      throw nullptr;
    } catch (const std::string& e) {
      std::cout << e << "\n";
-   } catch(...) {
+   } catch(...) {                 // catch 'throw nullptr'
      std::cout << "Unknown error\n";
    }
 
@@ -880,7 +937,9 @@ void week03()
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void week04()
 {
-  // Compositions, Aggregations, Associations
+  Composition(); 
+  Association();
+  Aggregation(); 
 } // week04
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -968,8 +1027,10 @@ void run(std::string label, void(*f)())
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 int main(int argc, char**argv)
 {
-#ifdef __MSVC__
+#ifdef __MSVC__   // one of the many Microsoft visual studio c compilers
   std::cout << R"msc(
+  Everytime I go near Windows, Windows bites me.
+
   Windows programs execute with a tiny stack.
 
   This code generates some classes with data elements that are a million bytes plus.
@@ -1008,11 +1069,13 @@ int main(int argc, char**argv)
      and "editbin.exe".  Run "dumpbin /headers executable_file", and you can see 
     the "size of stack reserve" information in "optional header values".  Run 
     "editbin /STACK:size" to change the default stack size.
+
+    Hope this helps.  Greg
   
   )msc";
 #endif
 
-#ifdef __GNUC__
+#ifdef __GNUC__  // either g++ or clang++
   std::cout << R"gnu(
 
   /*****************************************************************\
@@ -1022,6 +1085,19 @@ int main(int argc, char**argv)
   | Compile with either g++ or clang++                              | 
   |   g++     -std=c++11 fastforward.cpp -o fastfoward -pthread     |
   |   clang++ -std=c++11 fastforward.cpp -o fastfoward -pthread     |
+  |                                                                 |
+  | It also runs fine on Matrix, a 32-bit SUSE linux system.        |
+  | Compile with either g++ with the -std=c++0x flag or             | 
+  |   /usr/local/gcc/gcc-cilk/bin/g++ with the -std=c++11 flag      |
+  |                                                                 |
+  |   g++ -std=c++0x fastforward.cpp -o fastfoward -pthread         |
+  |   /usr.../g++ -std=c++11 fastforward.cpp -o fastfoward -pthread |
+  |                                                                 |
+  | NOTE:                                                           |
+  | The Matrix clang++ will not compile fastforward.cpp.            |
+  | The Matrix clang++ (version 3.4) chrono header files are broken.|
+  | Just including <chrono.h> generates syntax errors.              |
+  |     (use g++ instead)                                           |
   \*****************************************************************/
 
   )gnu";
