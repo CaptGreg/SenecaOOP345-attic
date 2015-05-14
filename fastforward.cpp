@@ -210,13 +210,19 @@ void CompoundTypes()
   lrv.print("9", 9);
   lrv.print("9+6", 9+6);
 
-  #define P(x) lrv.print(#x, x);
+  // do the same thing with a macro
+  #define P(param) lrv.print(#param, param);
   P(x)
   P(9)
   P(9+6)
   #undef P
 
-  #define P(x) lrv(#x, x);
+  lrv("x", x);
+  lrv("9", 9);
+  lrv("9+6", 9+6);
+
+  // do the same thing with a macro
+  #define P(param) lrv(#param, param);
   P(x);
   P(9);
   P(9+6);
@@ -433,8 +439,20 @@ void Association()
   // Clubs and people are independent.  The club can fold or a person can die 
   // without destroying the other.
   class Person; class Club;
-  class Person {std::list<Club> clubs;};     // people can belong to multiple clubs
-  class Club { std::list<Person> members; }; // clubs have more than one member
+  class Person { std::list<Club> clubs; };     // people can belong to multiple clubs
+  class Club   { std::list<Person> members; }; // clubs have more than one member
+
+  class Student; class College;
+  class Student {
+    std::list<College*> colleges;  // can enroll in more than one college
+  public:
+    void AddCollege(College* college) { colleges.push_back(college); }
+  };
+  class College {
+    std::list<Student*> students;
+  public:
+    void AddStudent(Student* student) { students.push_back(student); }
+  };
 }
 
 void Aggregation()
@@ -444,11 +462,14 @@ void Aggregation()
   // This a "whole-part" or "a-part-of" relationship.
   // There is one parent but no lifetime dependency of the child.
   // Child object cannot belong to another parent object.
-  // "has-a" or "uses" relationship
+  // "has-a" relationship
 
-  class Engine{ }; // Engine exists independently of Car;
+  // A motor can exist without a car.
+  // A car can exists with a motor
+  // A motor can only be in one car.
+  class Engine{ };
   class Car{
-    Engine* engine;  // A car "has-a" or "uses" an engine. You can change engines.
+    Engine* engine;  // A car "has-a" engine.
   public:
     Car()          : engine(nullptr) {}
     Car(Engine* e) : engine(e)       {}
@@ -457,11 +478,14 @@ void Aggregation()
     ~Car() { if(engine) delete engine; }
   };
 
-  class Duck {};   // A duck exists independently of Pond
-  class Pond {     // A pond may have multiple ducks.  A duck can only be in one pond at a time.
-    A duck list<Duck> ducks;
-  public:
-    void AddDuck(Duck& duck) { ducks.push_back(duck); }
+  // A duck can exist without a pond
+  // A pond can exists with a duck
+  // A duck can only be in one pond.
+  class Duck {};
+  class Pond {
+    std::list<Duck> ducks;
+    public:
+    void Addduck(Duck duck) { ducks.push_back(duck); }
   };
 }
 
