@@ -206,6 +206,7 @@ void CompoundTypes()
   LRValue lrv;
   int x = 99;
   
+  // print out l or r value with the class print method
   lrv.print("x", x);
   lrv.print("9", 9);
   lrv.print("9+6", 9+6);
@@ -217,6 +218,7 @@ void CompoundTypes()
   P(9+6)
   #undef P
 
+  // print out l or r value with the operator() method
   lrv("x", x);
   lrv("9", 9);
   lrv("9+6", 9+6);
