@@ -4,10 +4,12 @@ CFLAGS = -std=c++11 -Wall -mmmx -msse
 CXXDFLAGS = -ggdb
 
 C11FLAG  = -std=c++11 
-CXX      = g++
-CXX      = clang++
 CXX      = g++-5
 CXX5     = g++-5
+# May 15, 2015, clang++ has missing/corrupt header files: won't compile fastforward, inlcudes fail
+# use g++ for fastforward
+CXX      = clang++
+CXX      = g++
 
 ifeq ($(HOSTNAME),amd1100t)
   CC   = gcc-5
@@ -52,6 +54,10 @@ LFLAGS      = $(OPTLFLAGS)
 
 % : %.cpp Makefile
 	$(CXX) $(CXXFLAGS) $< -o $@ $(LFLAGS)
+
+fastforward : fastforward.cpp Makefile
+	g++ $(CXXFLAGS)  $< -o $@ -pthread
+
 
 camera : camera.cpp Makefile
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags opencv`   $< `pkg-config --libs opencv` -o $@
