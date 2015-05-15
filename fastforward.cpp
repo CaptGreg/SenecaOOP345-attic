@@ -469,15 +469,15 @@ void Aggregation()
   // A motor can exist without a car.
   // A car can exists with a motor
   // A motor can only be in one car.
-  class Engine{ };
+  class Motor{ };
   class Car{
-    Engine* engine;  // A car "has-a" engine.
+    Motor* motor;  // A car "has-a" motor.
   public:
-    Car()          : engine(nullptr) {}
-    Car(Engine* e) : engine(e)       {}
-    void newEngine(Engine* e) { if(engine) delete engine; engine = e; }
-    Engine* pullEngine() { Engine* ret = engine; engine = nullptr; return ret; }
-    ~Car() { if(engine) delete engine; }
+    Car()          : motor(nullptr) {}
+    Car(Motor* e) : motor(e)       {}
+    void newMotor(Motor* e) { if(motor) delete motor; motor = e; }
+    Motor* pullMotor() { Motor* ret = motor; motor = nullptr; return ret; }
+    ~Car() { if(motor) delete motor; }
   };
 
   // A duck can exist without a pond
