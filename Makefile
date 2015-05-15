@@ -55,6 +55,7 @@ LFLAGS      = $(OPTLFLAGS)
 % : %.cpp Makefile
 	$(CXX) $(CXXFLAGS) $< -o $@ $(LFLAGS)
 
+# compile fastforward with g++.  Clang++ has header problems.
 fastforward : fastforward.cpp Makefile
 	g++ $(CXXFLAGS)  $< -o $@ -pthread
 
