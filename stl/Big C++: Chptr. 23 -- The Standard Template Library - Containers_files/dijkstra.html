@@ -1,0 +1,142 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+	<title>dijkstra.cpp</title>
+</head>
+
+<body>
+<pre>  1  #include &lt;map&gt;
+  2  #include &lt;queue&gt;
+  3  #include &lt;iostream&gt;
+  4  
+  5  using namespace std;
+  6  
+  <font color="#0000cc">7  /**
+  8     A utility class representing distance to a given city.
+  9  */</font>
+ 10  class DistanceToCity 
+ 11  {
+ 12  public:
+ 13     DistanceToCity();
+ 14     DistanceToCity(string n, int d);
+ 15     bool operator&lt;(const DistanceToCity&amp; right) const;
+ 16     string get_name() const;
+ 17     int get_distance() const;
+ 18  private:
+ 19     string name;
+ 20     int distance;
+ 21  };
+ 22  
+ 23  DistanceToCity::DistanceToCity()
+ 24  {
+ 25     name = "";
+ 26     distance = 0;
+ 27  }
+ 28  
+ 29  DistanceToCity::DistanceToCity(string n, int d)
+ 30  {
+ 31     name = n;
+ 32     distance = d;
+ 33  }
+ 34  
+ 35  bool DistanceToCity::operator&lt;(const DistanceToCity&amp; right) const
+ 36  {
+ 37     return right.distance &lt; distance;
+ 38  }
+ 39  
+ 40  inline string DistanceToCity::get_name() const { return name; }
+ 41  
+ 42  inline int DistanceToCity::get_distance() const { return distance; }
+ 43  
+ <font color="#0000cc">44  /**
+ 45     A framework for finding shortest paths
+ 46     using Dijkstra's shortest path algorithm.
+ 47  */</font>
+ 48  class DistanceFinder 
+ 49  {
+ 50  public:
+ <font color="#0000cc">51     /**
+ 52        Set the distance between two cities.
+ 53        @param from originating city
+ 54        @param to destination city
+ 55        @param distance distance between cities
+ 56     */</font>
+ 57     void set_distance(string from, string to, int distance);
+ 58  
+ <font color="#0000cc">59     /**
+ 60        Produce map of shortest distances.
+ 61        @param start originating city
+ 62        @param shortest map of shortest distances from start
+ 63     */</font>
+ 64     void find_distance(string start, map&lt;string, int&gt;&amp; shortest);
+ 65  
+ 66  private:
+ 67     typedef multimap&lt;string, DistanceToCity&gt; CityMap;
+ 68     typedef CityMap::iterator Citr;
+ 69     CityMap cities;
+ 70  };
+ 71  
+ 72  void DistanceFinder::set_distance(string from, string to, int distance)
+ 73  {
+ 74     cities.insert(CityMap::value_type(from, DistanceToCity(to, 
+ 75        distance)));
+ 76  }
+ 77  
+ 78  void DistanceFinder::find_distance(string start, 
+ 79     map&lt;string, int&gt;&amp; shortest)
+ 80  {
+ 81     priority_queue&lt;DistanceToCity&gt; que;
+ 82     que.push(DistanceToCity(start, 0));
+ 83  
+ 84     while (!que.empty()) 
+ 85     {
+ 86        DistanceToCity new_city = que.top();
+ 87        que.pop();
+ 88        if (shortest.count(new_city.get_name()) == 0)
+ 89        {
+ 90           int d = new_city.get_distance();
+ 91           shortest[new_city.get_name()] = d;
+ 92           Citr p = cities.lower_bound(new_city.get_name());
+ 93           Citr stop = cities.upper_bound(new_city.get_name());
+ 94           while (p != stop)
+ 95           {
+ 96              DistanceToCity next_destination = (*p).second;
+ 97              int total_distance = d + next_destination.get_distance();
+ 98              que.push(DistanceToCity(next_destination.get_name(),
+ 99                       total_distance));
+100              ++p;
+101           }
+102        }
+103     }
+104  }
+105  
+106  int main()
+107  {
+108     DistanceFinder d;
+109     d.set_distance("Pendleton", "Phoenix", 4);
+110     d.set_distance("Pendleton", "Pueblo", 8);
+111     d.set_distance("Pensacola", "Phoenix", 5);
+112     d.set_distance("Peoria", "Pittsburgh", 5);
+113     d.set_distance("Peoria", "Pueblo", 3);
+114     d.set_distance("Phoenix", "Peoria", 4);
+115     d.set_distance("Phoenix", "Pittsburgh", 10);
+116     d.set_distance("Phoenix", "Pueblo", 3);
+117     d.set_distance("Pierre", "Pendleton", 2);
+118     d.set_distance("Pittsburgh", "Pensacola", 4);
+119     d.set_distance("Princeton", "Pittsburgh", 2);
+120     d.set_distance("Pueblo", "Pierre", 3);
+121  
+122     map&lt;string, int&gt; shortest;
+123     d.find_distance("Pierre", shortest);
+124     map&lt;string, int&gt;::iterator current = shortest.begin();
+125     map&lt;string, int&gt;::iterator stop = shortest.end();
+126     while (current != stop)
+127     {
+128        pair&lt;string, int&gt; p = *current;
+129        cout &lt;&lt; "distance to " &lt;&lt; p.first &lt;&lt; " is " &lt;&lt; p.second &lt;&lt; "\n";
+130        ++current;
+131     }
+132     return 0;
+133  }</pre>
+
+
+</body></html>

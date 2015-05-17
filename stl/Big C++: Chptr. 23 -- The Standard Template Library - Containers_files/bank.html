@@ -1,0 +1,157 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+	<title>bank.cpp</title>
+</head>
+
+<body>
+<pre>  1  #include &lt;deque&gt;
+  2  #include &lt;iostream&gt;
+  3  
+  4  using namespace std;
+  5  
+  6  int rand_int(int a, int b)
+  7  {
+  8      return a + rand() % (b - a + 1);
+  9  }
+ 10  
+ 11  double rand_double(double a, double b)
+ 12  {
+ 13      return a + (b - a) * rand() * (1.0 / RAND_MAX);
+ 14  }
+ 15  
+ 16  const int MIN_PROCESS_TIME = 2;
+ 17  const int MAX_PROCESS_TIME = 8;
+ 18  
+ <font color="#0000cc">19  /**
+ 20      A typical customer.
+ 21      Customers arrive at random time,
+ 22      and take random time to process work.
+ 23  */</font>
+ 24  class Customer
+ 25  {
+ 26  public:
+ 27      Customer(int at = 0);
+ <font color="#0000cc">28      /**
+ 29         Return arrival time, set by constructor.
+ 30         @return arrival time
+ 31      */</font>
+ 32      int get_arrival_time() const;
+ 33  
+ <font color="#0000cc">34      /**
+ 35         Return process time, set randomly by constructor.
+ 36         @return process time
+ 37      */</font>
+ 38      int get_process_time() const;
+ 39  
+ 40  private:
+ 41      int arrival_time;
+ 42      int process_time;
+ 43  };
+ 44  
+ 45  Customer::Customer(int at) :
+ 46      arrival_time(at),
+ 47      process_time(rand_int(MIN_PROCESS_TIME, MAX_PROCESS_TIME))
+ 48  {
+ 49  }
+ 50  
+ 51  int Customer::get_arrival_time() const
+ 52  {
+ 53      return arrival_time;
+ 54  }
+ 55  
+ 56  int Customer::get_process_time() const
+ 57  {
+ 58      return process_time;
+ 59  }
+ 60  
+ <font color="#0000cc">61  /**
+ 62      Simulation of bank teller.
+ 63  */</font>
+ 64  class Teller
+ 65  {
+ 66  public:
+ 67      Teller();
+ 68  
+ <font color="#0000cc">69      /**
+ 70         @return true if teller is free to service customer
+ 71      */</font>
+ 72      bool is_free() const;
+ 73  
+ <font color="#0000cc">74      /**
+ 75         Updates the teller status.
+ 76         @param time the current time
+ 77      */</font>
+ 78      void update(int time);
+ 79  
+ <font color="#0000cc">80      /**
+ 81         Assign a teller to customer.
+ 82         @param c the customer
+ 83      */</font>
+ 84      void add_customer(const Customer&amp; c, int time);
+ 85  private:
+ 86      bool free;
+ 87      Customer customer;
+ 88      int start_time;
+ 89  };
+ 90  
+ 91  Teller::Teller()
+ 92  {
+ 93      free = true;
+ 94  }
+ 95  
+ 96  bool Teller::is_free() const
+ 97  {
+ 98      return free;
+ 99  }
+100  
+101  void Teller::update(int time)
+102  {
+103      if (free) return;
+104      if (time &gt; start_time + customer.get_process_time())
+105         free = true;
+106  }
+107  
+108  void Teller::add_customer(const Customer&amp; c, int time)
+109  {
+110      free = false;
+111      customer = c;
+112      start_time = time;
+113  }
+114  
+115  int main()
+116  {
+117      const int NUMBER_OF_TELLERS = 5;
+118      const int NUMBER_OF_MINUTES = 60;
+119  
+120      const double ARRIVAL_RATE = 0.9;
+121      double total_wait = 0;
+122      int number_of_customers = 0;
+123      deque&lt;Teller&gt; teller(NUMBER_OF_TELLERS);
+124      deque&lt;Customer&gt; line;
+125  
+126      for (int time = 0; time &lt; NUMBER_OF_MINUTES; time++)
+127      {
+128         if (rand_double(0, 1) &lt; ARRIVAL_RATE)
+129         {
+130            line.push_back(Customer(time));
+131         }
+132  
+133         for (int i = 0; i &lt; NUMBER_OF_TELLERS; i++)
+134         {
+135            teller[i].update(time);
+136            if (teller[i].is_free() &amp;&amp; !line.empty())
+137            {
+138               Customer front_customer = line.front();
+139               total_wait += (time - front_customer.get_arrival_time());
+140               number_of_customers++;
+141               teller[i].add_customer(front_customer, time);
+142               line.pop_front();
+143            }
+144         }
+145      }
+146      cout &lt;&lt; "average wait: " &lt;&lt; (total_wait / number_of_customers) &lt;&lt; "\n";
+147      return 0;
+148  }</pre>
+
+
+</body></html>

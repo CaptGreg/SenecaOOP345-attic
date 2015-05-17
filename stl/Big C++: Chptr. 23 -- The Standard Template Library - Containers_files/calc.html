@@ -1,0 +1,124 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+	<title>calc.cpp</title>
+</head>
+
+<body>
+<pre>  1  #include &lt;stack&gt;
+  2  #include &lt;iostream&gt;
+  3  #include &lt;stdexcept&gt;
+  4  
+  5  using namespace std;
+  6  
+  <font color="#0000cc">7  /**
+  8    A class that implements a simple RPN calculator.
+  9  */</font>
+ 10  class Calculator 
+ 11  {
+ 12  public:
+ 13     enum BinaryOperator {PLUS, MINUS, TIMES, DIVIDE};
+ 14  
+ <font color="#0000cc">15     /**
+ 16        Return the current top of stack, or throw
+ 17        exception if there is no current value
+ 18        @return current top of stack
+ 19     */</font>
+ 20     int current_memory() const;
+ 21    
+ <font color="#0000cc">22     /**
+ 23        Push integer value onto top of stack.
+ 24        @param value integer to be placed on stack
+ 25     */</font>
+ 26     void push_operand(int value);
+ 27  
+ <font color="#0000cc">28     /**
+ 29        Perform indicated binary operation.
+ 30        @param op operation to be performed
+ 31     */</font>
+ 32     void do_operator(BinaryOperator op);
+ 33  
+ 34  private:
+ 35     stack&lt;int&gt; data;
+ 36  };
+ 37  
+ <font color="#0000cc">38  /**
+ 39     A class that represents an input error.
+ 40  */</font>
+ 41  class CalcInputException : public runtime_error
+ 42  {
+ 43  public:
+ 44     CalcInputException(string why) : runtime_error(why) {}
+ 45  };
+ 46  
+ 47  int Calculator::current_memory() const
+ 48  {
+ 49     if (data.empty())
+ 50        throw CalcInputException("Stack Underflow");
+ 51     return data.top();
+ 52  }
+ 53  
+ 54  inline void Calculator::push_operand(int value)
+ 55  {
+ 56     data.push(value);
+ 57  }
+ 58  
+ 59  void Calculator::do_operator(BinaryOperator op)
+ 60  {
+ 61     int right = current_memory();
+ 62     data.pop();
+ 63     int left = current_memory();
+ 64     data.pop();
+ 65     if (op == PLUS) data.push(left + right);
+ 66     else if (op == MINUS) data.push(left - right);
+ 67     else if (op == TIMES) data.push(left * right);
+ 68     else if (op == DIVIDE) data.push(left / right);   
+ 69  }
+ 70  
+ <font color="#0000cc">71  /**
+ 72     Read from input stream, performing operations.
+ 73     Input consists of numbers, binary operators, or commands.
+ 74     command p - print
+ 75     command q - quit 
+ 76     @param in input stream to be read
+ 77  */</font>
+ 78  void read(istream&amp; in) 
+ 79  {
+ 80     Calculator calc;
+ 81     char c;
+ 82  
+ 83     while (in &gt;&gt; c)
+ 84        if (isdigit(c)) 
+ 85        {
+ 86           int intval;
+ 87           in.putback(c);
+ 88           in &gt;&gt; intval;
+ 89           calc.push_operand(intval);
+ 90        }
+ 91        else if (c == '+') 
+ 92           calc.do_operator(Calculator::PLUS); 
+ 93        else if (c == '-') 
+ 94           calc.do_operator(Calculator::MINUS); 
+ 95        else if (c == '*') 
+ 96           calc.do_operator(Calculator::TIMES); 
+ 97        else if (c == '/') 
+ 98           calc.do_operator(Calculator::DIVIDE); 
+ 99        else if (c == 'p') 
+100           cout &lt;&lt; calc.current_memory() &lt;&lt; "\n";
+101        else if (c == 'q')
+102           return;
+103  }
+104  
+105  int main() 
+106  {
+107     try 
+108     {
+109        read(cin);
+110     } 
+111     catch (exception&amp; e) 
+112     {
+113        cout &lt;&lt; "caught exception " &lt;&lt; e.what() &lt;&lt; "\n";
+114     }
+115  }</pre>
+
+
+</body></html>

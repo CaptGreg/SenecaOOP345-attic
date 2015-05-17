@@ -1,0 +1,106 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+	<title>hotdog.cpp</title>
+</head>
+
+<body>
+<pre>  1  #include "event.h"
+  2  #include &lt;iostream&gt;
+  3  
+  4  using namespace std;
+  5  
+  <font color="#0000cc">6  /**
+  7     Simulation of a hot dog stand with limited seating
+  8  */</font>
+  9  class HotDogStand : public Simulation 
+ 10  {
+ 11  public:
+ 12     HotDogStand(int s);
+ <font color="#0000cc">13     /**
+ 14        Test to see if new customer can be seated.
+ 15        @return true if customer is seated
+ 16     */</font>
+ 17     bool can_seat();
+ 18  
+ <font color="#0000cc">19     /**
+ 20        Satisfied customer leaves, having eaten.
+ 21     */</font>
+ 22     void customer_leaves();
+ 23  private:
+ 24     int free_seats;
+ 25  };
+ 26  
+ 27  HotDogStand::HotDogStand(int s) : free_seats(s) {}
+ 28  
+ 29  bool HotDogStand::can_seat()
+ 30  {
+ 31     if (free_seats &gt; 0) 
+ 32     {
+ 33        free_seats--;
+ 34        return true;
+ 35     }
+ 36     else
+ 37        return false;
+ 38  }
+ 39  
+ 40  void HotDogStand::customer_leaves() 
+ 41  {
+ 42     free_seats++;
+ 43  }
+ 44  
+ 45  HotDogStand freds(3);
+ 46  
+ <font color="#0000cc">47  /**
+ 48     Arrival event for simulation.
+ 49     Either customer is seated, or leaves without eating.
+ 50  */</font>
+ 51  class ArriveEvent : public Event 
+ 52  {
+ 53  public:
+ 54     ArriveEvent(int t);
+ 55     virtual void do_event();
+ 56  };
+ 57  
+ <font color="#0000cc">58  /**
+ 59     Leave event for simulation.
+ 60     Satisfied customer leaves and releases seat.
+ 61  */</font>
+ 62  class LeaveEvent : public Event 
+ 63  {
+ 64  public:
+ 65     LeaveEvent(int t);
+ 66     virtual void do_event();
+ 67  };
+ 68  
+ 69  ArriveEvent::ArriveEvent(int t) : Event(t) {}
+ 70  
+ 71  void ArriveEvent::do_event()
+ 72  {
+ 73     if (freds.can_seat()) 
+ 74     {
+ 75        cout &lt;&lt; "time " &lt;&lt; time &lt;&lt; " Customer is seated\n";
+ 76        freds.schedule_event(new LeaveEvent(time + rand_int(1, 5)));
+ 77     }
+ 78     else
+ 79        cout &lt;&lt; "time " &lt;&lt; time 
+ 80           &lt;&lt; " Customer is unable to find a seat, leaves\n";
+ 81  }
+ 82  
+ 83  LeaveEvent::LeaveEvent(int t) : Event(t) {}
+ 84  
+ 85  void LeaveEvent::do_event()
+ 86  {
+ 87     cout &lt;&lt; "time " &lt;&lt; time &lt;&lt; " Customer finishes eating, leaves\n";
+ 88     freds.customer_leaves();
+ 89  }
+ 90  
+ 91  int main()
+ 92  {
+ 93     for (int i = 0; i &lt; 50; i++)
+ 94        freds.schedule_event(new ArriveEvent(rand_int(1, 60)));
+ 95     freds.run();
+ 96     return 0;
+ 97  }</pre>
+
+
+</body></html>

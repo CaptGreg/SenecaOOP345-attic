@@ -1,0 +1,31 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+	<title>sieve.cpp</title>
+</head>
+
+<body>
+<pre>  1  #include &lt;vector&gt;
+  2  #include &lt;iostream&gt;
+  3  
+  4  using namespace std;
+  5  
+  6  int main()
+  7  {
+  8     <font color="#000099">// Create the sieve, initially true</font>
+  9     const int sievesize = 100;
+ 10     vector&lt;bool&gt; sieve(sievesize, true);
+ 11     <font color="#000099">// Now search for positions with true</font>
+ 12     for (int i = 2; i * i &lt; sievesize; i++)
+ 13        if (sieve[i])
+ 14           <font color="#000099">// Strike out multiples</font>
+ 15           for (int j = i + i; j &lt; sievesize; j += i)
+ 16              sieve[j] = false;
+ 17     <font color="#000099">// Output values that remain set</font>
+ 18     for (int i = 2; i &lt; sievesize; i++)
+ 19        if (sieve[i])
+ 20           cout &lt;&lt; i &lt;&lt; " is prime\n";
+ 21     return 0;
+ 22  }</pre>
+
+
+</body></html>
