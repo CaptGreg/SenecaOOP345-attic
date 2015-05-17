@@ -1,0 +1,84 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+	<title>event.h</title>
+</head>
+
+<body>
+<pre>  1  #ifndef EVENT_H
+  2  #define EVENT_H
+  3  
+  4  #include &lt;vector&gt;
+  5  #include &lt;queue&gt;
+  6  
+  7  using std::priority_queue;
+  8  using std::vector;
+  9  
+ <font color="#0000cc">10  /**
+ 11     A single event for a discrete event driven simulation.
+ 12  */</font>
+ 13  class Event 
+ 14  {
+ 15  public:
+ 16     Event(int t);
+ 17  
+ <font color="#0000cc">18     /**
+ 19        Perform one event in the simulation.
+ 20     */</font>
+ 21     virtual void do_event() = 0;
+ 22  
+ 23  protected:
+ 24     friend class EventComparison;
+ 25     int time;
+ 26  };
+ 27  
+ <font color="#0000cc">28  /**
+ 29     Compare two events based on their time.
+ 30  */</font>
+ 31  class EventComparison 
+ 32  {
+ 33  public:
+ 34     bool operator()(const Event* left, const Event* right) const;
+ 35  };
+ 36  
+ 37  inline int rand_int(int a, int b)
+ 38  {
+ 39     return a + rand() % (b - a + 1);
+ 40  }
+ 41  
+ 42  inline Event::Event(int t) : time(t) {}
+ 43  
+ 44  inline bool EventComparison::operator()
+ 45     (const Event* left, const Event* right) const
+ 46  {
+ 47     return left-&gt;time &gt; right-&gt;time;
+ 48  }
+ 49  
+ <font color="#0000cc">50  /**
+ 51     Simulation framework for event driven simulation.
+ 52  */</font>
+ 53  class Simulation 
+ 54  {
+ 55  public:
+ <font color="#0000cc">56     /**
+ 57        Add new event to simulation.
+ 58        @param new_event the event to add
+ 59     */</font>
+ 60     void schedule_event(Event* new_event);
+ 61  
+ <font color="#0000cc">62     /**
+ 63        Run the simulation through all events.
+ 64     */</font>
+ 65     void run();
+ 66  private:
+ 67     priority_queue&lt;Event*, vector&lt;Event*&gt;, EventComparison&gt; event_queue;
+ 68  };
+ 69  
+ 70  inline void Simulation::schedule_event(Event* new_event)
+ 71  { 
+ 72     event_queue.push(new_event); 
+ 73  }
+ 74  
+ 75  #endif</pre>
+
+
+</body></html>

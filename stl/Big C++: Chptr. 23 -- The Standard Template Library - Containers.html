@@ -1,0 +1,1420 @@
+<!--	-*-html-*-
+	$Source: /usr/local/cvsroot/BigC++/23/index.html,v $
+	$Revision: 1.4 $
+
+	Big C++, chptr 23
+	editor: cols=80, tabstop=2
+
+  (c) 2005 John Wiley & Sons
+	Kurt Schmidt, kschmidt@cs.drexel.edu
+
+	NOTES
+	- 3 spaces are used for each indent in examples
+
+	REVISIONS:
+		$Log: index.html,v $
+		Revision 1.4  2004/04/20 22:03:01  kurt
+		Made slides smaller (view %150, on 1024x768 display)
+		
+		Revision 1.3  2004/02/23 16:47:28  kurt
+		pared verbage, put image in
+		
+		Revision 1.2  2004/02/01 16:47:43  kurt
+		Pared language, split long slides
+		
+		Revision 1.1  2004/01/31 22:36:09  kurt
+		Creation
+
+-->
+<html><head>
+	<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+  <meta name="Copyright" content="2005 John Wiley &amp; Sons">
+  <meta name="Author" content="Kurt Schmidt">
+	<script language="JavaScript" src="Big%20C++:%20Chptr.%2023%20--%20The%20Standard%20Template%20Library%20-%20Containers_files/config.js"></script>
+	<script language="JavaScript" src="Big%20C++:%20Chptr.%2023%20--%20The%20Standard%20Template%20Library%20-%20Containers_files/pageFormat.js"></script>
+	<script><!-- // Set title on page
+		title()
+	//--></script><title>Big C++:  Chptr. 23 -- The Standard Template Library - Containers</title>
+
+</head>
+
+<body>
+
+<hr><h2><font size="+3" color="#009999">Chapter 23 - The Standard Template
+	Library - Containers</font></h2>
+<font size="+1">
+
+<script><!--
+	image( "cover.png" )
+//--></script><p align="center"><img src="Big%20C++:%20Chptr.%2023%20--%20The%20Standard%20Template%20Library%20-%20Containers_files/cover.png" alt="Images/cover.png - Check path and permissions"></p>
+
+
+</font>
+
+<hr><h2><font size="+2" color="#009999">Chapter Goals</font></h2>
+
+<hr noshade="noshade" size="4" color="#009999">
+<font size="+1">
+
+<ul>
+	<li>To understand the purpose and use of the containers in the Standard
+		Template Library</li>
+		<ul>
+			<li>The fundamental sequential containers - vector, list, deque</li>
+			<li>The adapter containers - stack, queue, and priority queue</li>
+			<li>The ordered container - set</li>
+			<li>The associative container - map</li>
+		</ul>
+	
+</ul>
+
+</font>
+
+<hr><h2><font color="#009999">23.1 The Standard Template Library
+	(STL)</font></h2>
+<font size="+1">
+
+<ul>
+	<li>Library of collection classes and associated functions</li>
+	<li>Found in most nontrivial applications</li>
+	<li>Simplifies creation of new applications</li>
+	<li>Promote reliability and portability</li>
+	<li>Containers represented by class templates w/small interfaces</li>
+	<li>Functionality extended by generic algorithms, used w/many
+		types of containers</li>
+</ul>
+
+</font>
+
+<hr><h2><font color="#009999">23.1.1 STL Container Categories</font></h2>
+<font size="+1">
+
+<p>3 categories of containers:</p>
+
+<ol>
+	<li>Fundamental (or <i>sequential</i>)
+		<ul>
+			<li>vector, list, deque (pronounced "deck")</li>
+		</ul>
+	</li>
+	<li>Adapters
+		<ul>
+			<li>Layered on top of the fundamental containers</li>
+			<li>stack, queue, priority queue</li>
+		</ul>
+	</li>
+	<li>Associative
+		<ul>
+			<li>set, map</li>
+		</ul>
+	</li>
+</ol>
+
+</font>
+
+<hr><h2><font color="#009999">23.2 The Fundamental Containers</font></h2>
+<font size="+1">
+
+<ul>
+	<li>Overlap of operations among these containers (see table, next slide)</li>
+	<li>The 3 containers often interchangeable:
+		<blockquote>
+<pre>vector&lt;int&gt;::iterator current
+   = a_container.begin();
+while (current != a_container.end())
+{
+   <font color="#0000cc">// Number is even if remainder is
+   // zero after division by two</font>
+   if (0 == *current % 2)
+      current = a_container.erase(current);
+   else
+      ++current;
+}</pre>
+		</blockquote>
+	</li>
+</ul>
+
+</font>
+
+<hr><h2><font color="#009999">23.2 The Fundamental Containers (cont.)
+	</font></h2>
+<font size="+1">
+
+<table width="80%" border="1">
+	<tbody><tr bgcolor="#00ffff">
+		<th>Operation</th>
+		<th>Vector</th>
+		<th>List</th>
+		<th>Queue</th>
+	</tr>
+	<tr align="center">
+		<td><tt>container()</tt></td>
+		<td>O(1)</td>
+		<td>O(1)</td>
+		<td>O(1)</td>
+	</tr>
+	<tr align="center">
+		<td><tt>container(<i>size</i>)</tt></td>
+		<td>O(1)</td>
+		<td>O(<i>n</i>)</td>
+		<td>O(1)</td>
+	</tr>
+	<tr align="center">
+		<td><tt>container(<i>size</i>, <i>value</i>)</tt></td>
+		<td>O(<i>n</i>)</td>
+		<td>O(<i>n</i>)</td>
+		<td>O(<i>n</i>)</td>
+	</tr>
+	<tr align="center">
+		<td><tt>at(int)</tt></td>
+		<td>O(1)</td>
+		<td>&nbsp;</td>
+		<td>O(1)</td>
+	</tr>
+	<tr align="center">
+		<td><tt>back()</tt></td>
+		<td>O(1)</td>
+		<td>O(1)</td>
+		<td>O(1)</td>
+	</tr>
+	<tr align="center">
+		<td><tt>begin()</tt></td>
+		<td>O(1)</td>
+		<td>O(1)</td>
+		<td>O(1)</td>
+	</tr>
+	<tr align="center">
+		<td><tt>capacity()</tt></td>
+		<td>O(1)</td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr align="center">
+		<td><tt>clear()</tt></td>
+		<td>O(1)</td>
+		<td>O(1)</td>
+		<td>O(1)</td>
+	</tr>
+	<tr align="center">
+		<td><tt>empty()</tt></td>
+		<td>O(1)</td>
+		<td>O(1)</td>
+		<td>O(1)</td>
+	</tr>
+</tbody></table>
+
+</font>
+
+<hr><h2><font color="#009999">23.2 The Fundamental Containers (cont.)
+	</font></h2>
+<font size="+1">
+
+<table width="80%" border="1">
+	<tbody><tr bgcolor="#00ffff">
+		<th>Operation</th>
+		<th>Vector</th>
+		<th>List</th>
+		<th>Queue</th>
+	</tr>
+	<tr align="center">
+		<td><tt>end()</tt></td>
+		<td>O(1)</td>
+		<td>O(1)</td>
+		<td>O(1)</td>
+	</tr>
+	<tr align="center">
+		<td><tt>erase(<i>iterator</i>)</tt></td>
+		<td>O(<i>n</i>)</td>
+		<td>O(1)</td>
+		<td>O(<i>n</i>)</td>
+	</tr>
+	<tr align="center">
+		<td><tt>erase(<i>iterator</i>, <i>iterator</i>)</tt></td>
+		<td>O(<i>n</i>)</td>
+		<td>O(1)</td>
+		<td>O(<i>n</i>)</td>
+	</tr>
+	<tr align="center">
+		<td><tt>front()</tt></td>
+		<td>O(1)</td>
+		<td>O(1)</td>
+		<td>O(1)</td>
+	</tr>
+	<tr align="center">
+		<td><tt>insert( <i>iterator</i>, <i>value</i>)</tt></td>
+		<td>O(<i>n</i>)</td>
+		<td>O(1)</td>
+		<td>O(<i>n</i>)</td>
+	</tr>
+	<tr align="center">
+		<td><tt>pop_back()</tt></td>
+		<td>O(1)</td>
+		<td>O(1)</td>
+		<td>O(1)</td>
+	</tr>
+	<tr align="center">
+		<td><tt>pop_front()</tt></td>
+		<td>&nbsp;</td>
+		<td>O(1)</td>
+		<td>O(1)</td>
+	</tr>
+	<tr align="center">
+		<td><tt>push_back(<i>value</i>)</tt></td>
+		<td>O(1)+</td>
+		<td>O(1)</td>
+		<td>O(1)+</td>
+	</tr>
+	<tr align="center">
+		<td><tt>push_front(<i>value</i>)</tt></td>
+		<td>&nbsp;</td>
+		<td>O(1)</td>
+		<td>O(1)+</td>
+	</tr>
+</tbody></table>
+
+</font>
+
+<hr><h2><font color="#009999">23.2 The Fundamental Containers (cont.)
+	</font></h2>
+<font size="+1">
+
+<table width="80%" border="1">
+	<tbody><tr bgcolor="#00ffff">
+		<th>Operation</th>
+		<th>Vector</th>
+		<th>List</th>
+		<th>Queue</th>
+	</tr>
+	<tr align="center">
+		<td><tt>rbegin()</tt></td>
+		<td>O(1)</td>
+		<td>O(1)</td>
+		<td>O(1)</td>
+	</tr>
+	<tr align="center">
+		<td><tt>rend()</tt></td>
+		<td>O(1)</td>
+		<td>O(1)</td>
+		<td>O(1)</td>
+	</tr>
+	<tr align="center">
+		<td><tt>resize()</tt></td>
+		<td>O(<i>n</i>)</td>
+		<td>&nbsp;</td>
+		<td>O(<i>n</i>)</td>
+	</tr>
+	<tr align="center">
+		<td><tt>size()</tt></td>
+		<td>O(1)</td>
+		<td>O(1)</td>
+		<td>O(1)</td>
+	</tr>
+	<tr align="center">
+		<td><tt>operator[]()</tt></td>
+		<td>O(1)</td>
+		<td>&nbsp;</td>
+		<td>O(1)</td>
+	</tr>
+	<tr align="center">
+		<td><tt>operator=(<i>container</i>)</tt></td>
+		<td>O(<i>n</i>)</td>
+		<td>O(<i>n</i>)</td>
+		<td>O(<i>n</i>)</td>
+	</tr>
+</tbody></table>
+
+</font><p><font size="+1"><b>O(1)+</b> - means <i>amortized</i> constant time
+
+</font>
+
+</p><hr><h2><font color="#009999">23.2 The Fundamental Containers (cont.)
+	</font></h2>
+<font size="+1">
+
+<dl>
+	<dt><b>C'tors</b></dt>
+		<dd>Default creates an empty container</dd>
+		<dd>Integer arg. creates container with <i>size</i> elements,
+			initialized to default value
+			<ul>
+				<li>2nd form allows explicit initialization.  Same for all
+					elements</li>
+			</ul>
+		</dd>
+		<dd>Can be initialized with another collection</dd>
+	<dt><b><tt>at</tt></b></dt>
+		<dd>checks for index validity, unlike <tt>operator[]</tt></dd>
+	<dt><b><tt>front</tt>, <tt>back</tt></b></dt>
+		<dd>return the first and last elements</dd>
+	<dt><b><tt>empty</tt></b></dt>
+		<dd>returns <tt>true</tt> if container has no elements</dd>
+</dl>
+
+</font>
+
+<hr><h2><font color="#009999">23.2 The Fundamental Containers (cont.)
+	</font></h2>
+<font size="+1">
+
+<dl>
+	<dt><b><tt>erase</tt></b></dt>
+		<dd>removes specified element(s), returns iterator to next element</dd>
+	<dt><b><tt>insert</tt></b></dt>
+		<dd>inserts element prior to the iterator</dd>
+	<dt><b><tt>push_front</tt>, <tt>push_back</tt></b></dt>
+		<dd>insert values at the front and back</dd>
+	<dt><b><tt>pop_front</tt>, <tt>pop_back</tt></b></dt>
+		<dd>remove them</dd>
+	<dt><b><tt>rbegin</tt>, <tt>rend</tt></b></dt>
+		<dd>return <tt>reverse_iterator</tt>s</dd>
+</dl>
+
+</font>
+
+<hr><h2><font color="#009999">23.2 The Fundamental Containers (cont.)
+	</font></h2>
+<font size="+1">
+
+<ul>
+	<li>Generic algorithms extend classes (next chapter)</li>
+	<li>Similar, not identical, behavior</li>
+	<li>Not all operations are supported in all containers</li>
+	<li>Common operations may have different complexity (see chptr. 15)</li>
+	<li>To choose an appropriate container:
+		<ul>
+			<li>Which operations are req'd?</li>
+			<li>How often each operation will be performed (relatively)?</li>
+		</ul>
+	</li>
+</ul>
+
+</font>
+
+<hr><h2><font color="#009999">23.2.1 Vectors</font></h2>
+<font size="+1">
+
+<ul>
+	<li>Indexed container</li>
+	<li>Declared in <tt>&lt;vector&gt;</tt>
+	</li><li>Subscripting (<tt>operator[]</tt>) is the fundamental operation</li>
+	<li><tt>push_back</tt> - adds elements at back (resizing as needed)</li>
+	<li>E.g., the Sieve of Eratosthenes, to discover prime numbers
+		(ex. P16.15)
+		<ul>
+			<li>Start w/a vector of <tt>bool</tt>s, initialized to <tt>true</tt></li>
+			<li>Increasing from 2, for each that is still <tt>true</tt>, strike out
+				all multiples of that number</li>
+		</ul>
+	</li>
+</ul>
+
+</font>
+
+<hr><h2><font color="#009999">23.2.1 Vectors - Sieve of Eratosthenes
+	</font></h2>
+<font size="+1">
+
+<script><!-- 
+	iframeWrapCode( "sieve.cpp", "90%", "80%" )
+//--></script><iframe src="Big%20C++:%20Chptr.%2023%20--%20The%20Standard%20Template%20Library%20-%20Containers_files/sieve.html" height="80%" width="90%">
+&lt;p&gt;Your browser does not support the &amp;lt;iframe&amp;gt; tag.&lt;/p&gt;
+&lt;br&gt;Click &lt;a target='bigc' href='Code/sieve.cpp.html'&gt;
+Code/sieve.cpp.html&lt;/a&gt; to view file.&lt;br&gt;
+</iframe>
+<br><font size="-1"><i>Click <a target="bigc" href="http://www.math.ucla.edu/%7Ewittman/10a.1.10w/ccc/ch23/Code/sieve.cpp">sieve.cpp</a> to download plain text</i></font>
+
+
+</font>
+
+<hr><h2><font color="#009999">Advanced Topic 23.1</font></h2>
+<font size="+1">
+<hr size="6" color="#00ffff">
+
+<p><font color="#009999">Implementation of Vector</font></p>
+
+<ul>
+	<li>Built on an array, allocated from the heap</li>
+	<li>Store a pointer, the size and the capacity</li>
+	<li>Usually larger than needed</li>
+	<li>When needed <tt>vector</tt> will
+		<ul>
+			<li>get a new buffer, at least double the previous size</li>
+			<li>copy elements over</li>
+		</ul>
+	</li>
+	<li><tt>push_front</tt> and <tt>pop_front</tt> would be O(<i>n</i>) tasks,
+		so, not implemented</li>
+</ul>
+
+</font>
+
+<hr><h2><font color="#009999">23.2.2 Lists</font></h2>
+<font size="+1">
+
+<ul>
+	<li>Declared in <tt>&lt;list&gt;</tt></li>
+	<li>Implemented as linked lists (see chptr. 16)</li>
+	<li>Not indexed</li>
+	<li>Allows O(1) insertion/removal from front and back</li>
+	<li>Supports insertion into the middle via iterators</li>
+	<li>The only container of the three that does it in constant time</li>
+</ul>
+
+<script><!--
+	image( "fig4.png" )
+//--></script><p align="center"><img src="Big%20C++:%20Chptr.%2023%20--%20The%20Standard%20Template%20Library%20-%20Containers_files/fig4.png" alt="Images/fig4.png - Check path and permissions"></p>
+
+
+</font>
+
+<hr><h2><font color="#009999">23.2.2 Lists (cont.)</font></h2>
+<font size="+1">
+
+<p>Operations unique to <tt>list</tt>:</p>
+
+<table width="90%" align="center" border="1">
+	<tbody><tr bgcolor="#00ffff">
+		<th>Operation</th>
+		<th>Description</th>
+	</tr>
+	<tr align="center">
+		<td><tt>merge(<i>list</i>)</tt></td>
+		<td>Merge the current (sorted) list with the (sorted) argument list</td>
+	</tr>
+	<tr align="center">
+		<td><tt>remove(<i>value</i>)</tt></td>
+		<td>Remove all instances of the given value</td>
+	</tr>
+	<tr align="center">
+		<td><tt>remove(<i>pred</i>)</tt></td>
+		<td>Remove values for which <i>pred</i> returns true</td>
+	</tr>
+	<tr align="center">
+		<td><tt>reverse()</tt></td>
+		<td>Reverse order of elements</td>
+	</tr>
+	<tr align="center">
+		<td><tt>sort()</tt></td>
+		<td>Place the values into sorted order</td>
+	</tr>
+	<tr align="center">
+		<td><tt>sort(<i>comp</i>)</tt></td>
+		<td>Place values in order using <tt>comp</tt></td>
+	</tr>
+	<tr align="center">
+		<td><tt>splice(<i>iter</i>, <i>list</i>)</tt></td>
+		<td>Splices argument list into the list at given location</td>
+	</tr>
+	<tr align="center">
+		<td><tt>unique()</tt></td>
+		<td>Remove duplicate copies of values from <u>sorted</u> list</td>
+	</tr>
+	<tr align="center">
+		<td><tt>unique(<i>pred</i>)</tt></td>
+		<td>Remove duplicate values from list sorted w/<i>pred</i></td>
+	</tr>
+</tbody></table>
+
+</font>
+
+<hr><h2><font color="#009999">23.2.2 Lists - Example</font></h2>
+<font size="+1">
+
+<p>Simple inventory mgt. system; products have unique IDs.  Tasks:
+	<br>- Process an order for a product #
+	<br>- Process the shipment of a given product.</p>
+
+</font>
+
+<hr><h2><font color="#009999">23.2.2 Lists - Example</font></h2>
+<font size="+1">
+
+
+<script><!-- 
+	iframeWrapCode( "inventory.cpp", "90%", "80%" )
+//--></script><iframe src="Big%20C++:%20Chptr.%2023%20--%20The%20Standard%20Template%20Library%20-%20Containers_files/inventory.html" height="80%" width="90%">
+&lt;p&gt;Your browser does not support the &amp;lt;iframe&amp;gt; tag.&lt;/p&gt;
+&lt;br&gt;Click &lt;a target='bigc' href='Code/inventory.cpp.html'&gt;
+Code/inventory.cpp.html&lt;/a&gt; to view file.&lt;br&gt;
+</iframe>
+<br><font size="-1"><i>Click <a target="bigc" href="http://www.math.ucla.edu/%7Ewittman/10a.1.10w/ccc/ch23/Code/inventory.cpp">inventory.cpp</a> to download plain text</i></font>
+
+
+</font>
+
+<hr><h2><font color="#009999">23.2.3 Deque</font></h2>
+<font size="+1">
+
+<ul>
+	<li><i>double-ended queue</i></li>
+	<li>Indexed, like vector</li>
+	<li>Provides O(1) insertions at front or back</li>
+	<li>O(<i>n</i>) insertion at middle</li>
+	<li>W/out link fields, takes up less room than a list</li>
+</ul>
+
+</font>
+
+<hr><h2><font color="#009999">23.2.3 Deque - Example</font></h2>
+<font size="+1">
+
+<p>Example: time-driven simulation of the line in front of a tellers'
+	counter at a bank.
+</p><ul>
+	<li>Each minute there's a .9 probability that a new customer arrives
+		<ul>
+			<li>Add to the end of customer deque</li>
+		</ul>
+	</li>
+	<li>Each transaction takes from 2-8 minutes (random)</li>
+	<li>Calculate the avg. time a customer stands in line</li>
+	<li>Each minute, examine and update the status of every teller in the
+		teller deque, working off the front of the customer deque</li>
+</ul>
+
+</font>
+
+<hr><h2><font color="#009999">23.2.3 Deque - Example</font></h2>
+<font size="+1">
+
+<script><!-- 
+	iframeWrapCode( "bank.cpp", "95%", "80%" )
+//--></script><iframe src="Big%20C++:%20Chptr.%2023%20--%20The%20Standard%20Template%20Library%20-%20Containers_files/bank.html" height="80%" width="95%">
+&lt;p&gt;Your browser does not support the &amp;lt;iframe&amp;gt; tag.&lt;/p&gt;
+&lt;br&gt;Click &lt;a target='bigc' href='Code/bank.cpp.html'&gt;
+Code/bank.cpp.html&lt;/a&gt; to view file.&lt;br&gt;
+</iframe>
+<br><font size="-1"><i>Click <a target="bigc" href="http://www.math.ucla.edu/%7Ewittman/10a.1.10w/ccc/ch23/Code/bank.cpp">bank.cpp</a> to download plain text</i></font>
+
+
+</font>
+
+<hr><h2><font color="#009999">Advanced Topic 23.3</font></h2>
+<font size="+1">
+<hr size="6" color="#00ffff">
+
+<p><font color="#009999">Implementation of Deque</font></p>
+
+<ul>
+	<li>Not specified by the standard</li>
+	<li><i>circular buffer</i> commonly used</li>
+	<li>Like vector, but also store the start index</li>
+	<li>Can insert/remove from the front w/out moving all of the other
+		elements</li>
+</ul>
+
+</font>
+
+<hr><h2><font color="#009999">23.3 The Stack and Queue Adapters</font></h2>
+<font size="+1">
+
+<ul>
+	<li>Linear data structures that support LIFO or FIFO access (sect. 16.3)</li>
+	<li>Not actually containers, but adapters (wrappers) built on containers</li>
+	<li>Found in <tt>&lt;stack&gt;</tt> and <tt>&lt;queue&gt;</tt></li>
+	<li>Adapter: a class that uses another container to maintain elements,
+		but changes the interface</li>
+	<li>Operations for the adapter are ultimately passed to the underlying
+		class</li>
+	<li>Slightly simplified implementation of <tt>stack</tt> (next slide)</li>
+</ul>
+
+</font>
+
+<hr><h2><font color="#009999">23.3 (cont.) - <tt>stack</tt> implementation
+	</font></h2>
+<font size="+1">
+
+<blockquote>
+<pre>template &lt;class T, class C = deque&lt;T&gt; &gt;
+class stack
+{
+public:
+   int size() const;
+   void push(const T&amp; x);
+   T&amp; top();
+   void pop();
+protected:
+   C values;
+};</pre>
+</blockquote>
+
+</font>
+
+<hr><h2><font color="#009999">23.3 (cont.) - <tt>stack</tt> implementation
+	</font></h2>
+<font size="+1">
+
+<blockquote>
+<pre>template &lt;typename T, typename C&gt;
+int stack&lt;T, C&gt;::size() const
+{
+   return values.size();
+}
+
+template &lt;typename T, typename C&gt;
+void stack&lt;T, C&gt;::push(const T&amp; x)
+{
+   values.push_back(x);
+}</pre>
+</blockquote>
+
+</font>
+
+<hr><h2><font color="#009999">23.3 <tt>stack</tt> implementation (cont.) 
+	</font></h2>
+<font size="+1">
+
+<blockquote>
+<pre>template &lt;typename T, typename C&gt;
+T&amp; stack&lt;T, C&gt;::top()
+{
+   return values.back();
+}
+
+template &lt;typename T, typename C&gt;
+void stack&lt;T, C&gt;::pop()
+{
+   values.pop_back();
+}</pre>
+</blockquote>
+
+</font>
+
+<hr><h2><font color="#009999">23.3 <tt>stack</tt> implementation (cont.)
+	</font></h2>
+<font size="+1">
+
+<ul>
+	<li><tt>values</tt> attribute is the actual container</li>
+	<li><tt>stack</tt> takes two type arguments</li>
+	<li>The 2nd argument is the type of the underlying container</li>
+	<li>The default value depends on the first argument</li>
+	<li>The default container for both <tt>stack</tt> and <tt>queue</tt> is a
+		<tt>deque</tt></li>
+	<li>For <tt>stack</tt> it can also be <tt>vector</tt></li>
+	<li>A <tt>queue</tt> can also be built on a <tt>list</tt></li>
+</ul>
+
+</font>
+
+<hr><h2><font color="#009999">23.3 (cont.) - <tt>stack</tt> Example</font></h2>
+<font size="+1">
+
+<p><i>Reverse Polish Notation</i> (RPN, or <i>postfix</i>) calculator</p>
+
+<ul>
+	<li>Arguments written before operators
+		<ul>
+			<li><tt>3 + 4 * 7</tt> would be <tt>3 4 7 * +</tt></li>
+		</ul>
+	</li>
+	<li>Calculation is easy:</li>
+		<ul>
+			<li>Each argument read is pushed onto a stack</li>
+			<li>If a (binary) operator is read:
+				<ul>
+					<li>Pop top two values</li>
+					<li>Perform appropriate operation</li>
+					<li>Push result back onto stack</li>
+				</ul>
+			</li><li>Add 2 commands:
+				<ol>
+					<li><tt>p</tt> - print the top of the stack</li>
+					<li><tt>q</tt> - quit the program</li>
+				</ol>
+		</li></ul>
+	
+</ul>
+
+</font>
+
+<hr><h2><font color="#009999">23.3 (cont.) - <tt>stack</tt> Example</font></h2>
+<font size="+1">
+
+<script><!-- 
+	iframeWrapCode( "calc.cpp", "90%", "80%" )
+//--></script><iframe src="Big%20C++:%20Chptr.%2023%20--%20The%20Standard%20Template%20Library%20-%20Containers_files/calc.html" height="80%" width="90%">
+&lt;p&gt;Your browser does not support the &amp;lt;iframe&amp;gt; tag.&lt;/p&gt;
+&lt;br&gt;Click &lt;a target='bigc' href='Code/calc.cpp.html'&gt;
+Code/calc.cpp.html&lt;/a&gt; to view file.&lt;br&gt;
+</iframe>
+<br><font size="-1"><i>Click <a target="bigc" href="http://www.math.ucla.edu/%7Ewittman/10a.1.10w/ccc/ch23/Code/calc.cpp">calc.cpp</a> to download plain text</i></font>
+
+
+</font>
+
+<hr><h2><font color="#009999">23.4 Sets</font></h2>
+<font size="+1">
+
+<ul>
+	<li>optimized for fast insertion, removal, and testing</li>
+	<li>Not linear.  Often a balanced BST</li>
+	<li>Finding an item takes O(log <i>n</i>) time</li>
+	<li>Elements of a set are unique
+		<ul>
+			<li><tt>multiset</tt> removes this restriction</li>
+		</ul>
+	</li>
+	<li>Declared in the <tt>&lt;set&gt;</tt> header file</li>
+</ul>
+
+</font>
+
+<hr><h2><font color="#009999">23.4 Set Operations</font></h2>
+<font size="+1">
+
+<table width="90%" align="center" border="1">
+	<tbody><tr bgcolor="#00ffff">
+		<th>Operation</th>
+		<th>Description</th>
+	</tr>
+	<tr align="center">
+		<td><tt>set()</tt></td>
+		<td>Construct an empty set</td>
+	</tr>
+	<tr align="center">
+		<td><tt>set(<i>iterator</i>, <i>iterator</i>)</tt></td>
+		<td>Construct a set from the given range of values</td>
+	</tr>
+	<tr align="center">
+		<td><tt>begin()</tt></td>
+		<td>Return iterator for set</td>
+	</tr>
+	<tr align="center">
+		<td><tt>count(<i>value</i>)</tt></td>
+		<td>Return number of instances of <i>value</i></td>
+	</tr>
+	<tr align="center">
+		<td><tt>empty()</tt></td>
+		<td>Return <tt>true</tt> if set is empty</td>
+	</tr>
+	<tr align="center">
+		<td><tt>end()</tt></td>
+		<td>Return ending iterator for set
+	</td></tr>
+	<tr align="center">
+		<td><tt>erase(<i>iterator</i>)</tt></td>
+		<td>Erase position from set</td>
+	</tr>
+</tbody></table>
+</font>
+
+<hr><h2><font color="#009999">23.4 Set Operations (cont.)</font></h2>
+<font size="+1">
+
+<table width="90%" align="center" border="1">
+	<tbody><tr bgcolor="#00ffff">
+		<th>Operation</th>
+		<th>Description</th>
+	</tr>
+	<tr align="center">
+		<td><tt>erase(<i>value</i>)</tt></td>
+		<td>Erase value from set</td>
+	</tr>
+	<tr align="center">
+		<td><tt>find()</tt></td>
+		<td>Return iterator for value</td>
+	</tr>
+	<tr align="center">
+		<td><tt>insert(<i>value</i>)</tt></td>
+		<td>Insert value into set</td>
+	</tr>
+	<tr align="center">
+		<td><tt>rbegin()</tt></td>
+		<td>Return iterator for values in reverse order</td>
+	</tr>
+	<tr align="center">
+		<td><tt>rend()</tt></td>
+		<td>Return ending iterator for values in reverse order</td>
+	</tr>
+	<tr align="center">
+		<td><tt>size()</tt></td>
+		<td>Return number of elements in set</td>
+	</tr>
+</tbody></table>
+
+</font>
+
+<hr><h2><font color="#009999">23.4 Sets (cont.)</font></h2>
+<font size="+1">
+
+<ul>
+	<li>Elements are maintained in sequence (sorted order)</li>
+	<li>Fast lookups</li>
+	<li>Need to compare elements, unlike the fundamental containers</li>
+	<li>Template parameters:
+		<blockquote>
+<pre>template &lt;typename T, typename CMP = less&lt;T&gt; &gt;
+class set
+{
+   . . .
+};</pre>
+		</blockquote>
+	</li>
+	<li>Second argument is the trait that compares two elements</li>
+	<li>The default value is the standard <tt>less</tt> function object
+		(<tt>operator&lt;</tt>)</li>
+</ul>
+
+</font>
+
+<hr><h2><font color="#009999">23.4 Sets (cont.)</font></h2>
+<font size="+1">
+
+<p>2 ways to form sets of a new object type.  Using the <tt>Employee</tt>
+	class for our example.</p>
+
+<ol>
+	<li>Override <tt>operator&lt;</tt>, allowing the normal declaration:
+		<blockquote>
+<pre>bool operator&lt; (const Employee&amp; a, const Employee&amp; b)
+{
+   return a.salary() &lt; b.salary();
+}
+
+set&lt;Employee&gt; workers; <font color="#0000cc">// Will be sorted by salary</font></pre>
+		</blockquote>
+	</li>
+</ol>
+
+</font>
+
+<hr><h2><font color="#009999">23.4 Sets (cont.)</font></h2>
+<font size="+1">
+
+<ol start="2">
+	<li>Provide an explicit function object; name it as the second template
+		argument
+		<blockquote>
+<pre>class SortByName
+{
+public:
+   bool operator() (const Employee&amp; a, const Employee&amp; b) const;
+};
+
+bool SortByName::operator(const Employee&amp; a, const Employee&amp; b)
+{
+   return a.get_name() &lt; b.get_name();
+}
+
+set&lt;Employee, SortByName&gt; workers; <font color="#0000cc">// Now sorted by name</font></pre>
+		</blockquote>
+	</li>
+</ol>
+
+</font>
+
+<hr><h2><font color="#009999">23.4 Sets - Dictionary Example</font></h2>
+<font size="+1">
+
+<p>Program to check for misspelled words.  A dictionary is read
+	into a set, then checks input words against the set.</p>
+
+<blockquote>
+<pre>void spellCheck(istream&amp; dictionary, istream&amp; text)
+{
+   set&lt;string&gt; words;
+   string word;
+
+   // First put all words from dictionary into set.
+   while (dictionary &gt;&gt; word)
+      words.insert(word);
+
+   // Then read words from text
+   while (text &gt;&gt; word)
+      if (words.count(word) == 0)
+         cout &lt;&lt; "Misspelled word " &lt;&lt; word &lt;&lt; "\n";
+}</pre>
+</blockquote>
+
+</font>
+
+<hr><h2><font color="#009999">23.5 Maps</font></h2>
+<font size="+1">
+
+<ul>
+	<li>Indexed data structure, similar to a vector or deque</li>
+	<li>2 important differences:
+		<ol>
+			<li>The indices (keys) can be any ordered type</li>
+			<li>Ordered data structure (like the set), based on the keys</li>
+		</ol>
+	</li><li>Keys could be floats, strings, or even employees</li>
+	<li>Keys may be looked up quickly</li>
+	<li><tt>map</tt> demands unique keys</li>
+	<li><tt>multimap</tt> permits multiple entries indexed by the same key</li>
+	<li>Found in <tt>&lt;map&gt;</tt></li>
+</ul>
+
+</font>
+
+<hr><h2><font color="#009999">23.5 Maps (cont.)</font></h2>
+<font size="+1">
+
+<ul>
+	<li>Takes three template arguments:
+		<blockquote>
+<pre>template &lt;typename K, typename V, typename CMP = less&lt;K&gt; &gt;
+class map
+{
+   . . .
+};</pre>
+		</blockquote>
+		<ul>
+			<li><tt>K</tt> - key type</li>
+			<li><tt>V</tt> - value type</li>
+			<li><tt>CMP</tt> - comparison for keys, less than by default</li>
+		</ul>
+	</li>
+	<li><tt>operator&lt;</tt> must be defined on the key type, or provide a
+		function object</li>
+</ul>
+
+</font>
+
+<hr><h2><font color="#009999">23.5 Maps (cont.)</font></h2>
+<font size="+1">
+
+<ul>
+	<li>Set that maintains a collection of <tt>pair</tt>s (chptr. 22)</li>
+	<li>Insert key/value pairs</li>
+	<li>Iterators return <tt>pair</tt>s:
+		<blockquote>
+<pre>map&lt;string, int&gt; database;
+. . .
+map&lt;string, int&gt;::iterator current = database.begin();
+while (current != database.end())
+{
+   pair&lt;string, int&gt; element = *current;
+   cout &lt;&lt; "key is " &lt;&lt; element.first &lt;&lt; " value is " &lt;&lt;
+      element.second &lt;&lt; "\n";
+   ++current;
+}</pre>
+		</blockquote>
+	</li>
+</ul>
+
+</font>
+
+<hr><h2><font color="#009999">23.5 Maps - Operations</font></h2>
+<font size="+1">
+
+<table width="90%" align="center" border="1">
+	<tbody><tr bgcolor="#00ffff">
+		<th>Operation</th>
+		<th>Description</th>
+	</tr>
+	<tr align="center">
+		<td><tt>map()</tt></td>
+		<td>Construct an empty map</td>
+	</tr>
+	<tr align="center">
+		<td><tt>map(<i>iter</i>, <i>iter</i>)</tt></td>
+		<td>Initialize a new map from the given range of values</td>
+	</tr>
+	<tr align="center">
+		<td><tt>begin()</tt></td>
+		<td>Return iterator</td>
+	</tr>
+	<tr align="center">
+		<td><tt>count(<i>key</i>)</tt></td>
+		<td>Return number of entries with <i>key</i> (0 or 1)</td>
+	</tr>
+	<tr align="center">
+		<td><tt>empty()</tt></td>
+		<td>Return <tt>true</tt> if collection is empty</td>
+	</tr>
+	<tr align="center">
+		<td><tt>end()</tt></td>
+		<td>Return ending iterator</td>
+	</tr>
+	<tr align="center">
+		<td><tt>erase(<i>iter</i>)</tt></td>
+		<td>Erase value at indicated location</td>
+	</tr>
+	<tr align="center">
+		<td><tt>erase(<i>iter</i>, <i>iter</i>)</tt></td>
+		<td>Erase range of values</td>
+	</tr>
+</tbody></table>
+
+</font>
+
+<hr><h2><font color="#009999">23.5 Maps - Operations (cont.)</font></h2>
+<font size="+1">
+
+<table width="90%" align="center" border="1">
+	<tbody><tr bgcolor="#00ffff">
+		<th>Operation</th>
+		<th>Description</th>
+	</tr>
+	<tr align="center">
+		<td><tt>find(<i>key</i>)</tt></td>
+		<td>Return iterator to value with <i>key</i></td>
+	</tr>
+	<tr align="center">
+		<td><tt>insert(<i>elem</i>)</tt></td>
+		<td>Insert <i>elem</i>, which must be a key/value <tt>pair</tt></td>
+	</tr>
+	<tr align="center">
+		<td><tt>lower_bound(<i>key</i>)</tt></td>
+		<td>Return iterator for first entry with <i>key</i> (<tt>multimap</tt>
+			only)</td>
+	</tr>
+	<tr align="center">
+		<td><tt>rbegin()</tt></td>
+		<td>Return iterator in reverse order</td>
+	</tr>
+	<tr align="center">
+		<td><tt>rend()</tt></td>
+		<td>Return ending iterator in reverse order</td>
+	</tr>
+	<tr align="center">
+		<td><tt>size()</tt></td>
+		<td>Number of elements in container</td>
+	</tr>
+	<tr align="center">
+		<td><tt>upper_bound(<i>key</i>)</tt></td>
+		<td>Return iterator for past-the-end entry with <i>key</i>
+			(<tt>multimap</tt> only)</td>
+	</tr>
+	<tr align="center">
+		<td><tt>operator[<i>key</i>]</tt></td>
+		<td>Return value associated with <i>key</i></td>
+	</tr>
+</tbody></table>
+
+</font>
+
+<hr><h2><font color="#009999">23.5 Maps - Example</font></h2>
+<font size="+1">
+
+<p>Consider a directory listing of telephone numbers.</p>
+
+<ul>
+	<li>Use unique names as keys</li>
+	<li>Numbers as elements</li>
+	<li><tt>print_all</tt> produces a (naturally) ordered listing</li>
+	<li><tt>print_by_number</tt> produces a reverse white pages.  A multimap
+		provides an ordering on the numbers (not unique)</li>
+</ul>
+
+</font>
+
+<hr><h2><font color="#009999">23.5 Maps - Example (cont.)</font></h2>
+<font size="+1">
+
+<script><!-- 
+	iframeWrapCode( "tele.cpp", "90%", "80%" )
+//--></script><iframe src="Big%20C++:%20Chptr.%2023%20--%20The%20Standard%20Template%20Library%20-%20Containers_files/tele.html" height="80%" width="90%">
+&lt;p&gt;Your browser does not support the &amp;lt;iframe&amp;gt; tag.&lt;/p&gt;
+&lt;br&gt;Click &lt;a target='bigc' href='Code/tele.cpp.html'&gt;
+Code/tele.cpp.html&lt;/a&gt; to view file.&lt;br&gt;
+</iframe>
+<br><font size="-1"><i>Click <a target="bigc" href="http://www.math.ucla.edu/%7Ewittman/10a.1.10w/ccc/ch23/Code/tele.cpp">tele.cpp</a> to download plain text</i></font>
+
+
+</font>
+
+<hr><h2><font color="#009999">23.5.1 Priority Queue</font></h2>
+<font size="+1">
+
+<ul>
+	<li>Non-linear container</li>
+	<li>Optimized to quickly locate the highest priority element</li>
+	<li>Does not imply a sorting</li>
+	<li>Elements must be comparable</li>
+	<li><font color="#009999">Note</font>:  <i>queue</i> is a misnomer; FIFO is
+		<u>not</u> enforced</li>
+	<li>Basic operations:
+		<ul>
+			<li><tt>push</tt> - Insert a new element</li>
+			<li><tt>top</tt> - Return element w/highest priority</li>
+			<li><tt>pop</tt> - Remove element w/highest priority</li>
+			<li><tt>empty</tt>, <tt>size</tt> - as usual</li>
+		</ul>
+	</li>
+	<li>Comparison operator can be specified (less than, by default)</li>
+</ul>
+
+</font>
+
+<hr><h2><font color="#009999">23.5.1 Priority Queue (cont.)</font></h2>
+<font size="+1">
+
+<ul>
+	<li><tt>priority_queue</tt> is defined in <tt>&lt;queue&gt;</tt></li>
+	<li>An adapter, wrapping an indexed structure (usually <tt>vector</tt>)</li>
+	<li>Implemented using a <tt>heap</tt> (<tt>priority_queue</tt> wraps
+		<tt>heap</tt>, which wraps an indexed container)</li>
+</ul>
+
+</font>
+
+<hr><h2><font color="#009999">23.5.1 Priority Queue - Example</font></h2>
+<font size="+1">
+
+<ul>
+	<li>Discrete event-driven simulation - classic application</li>
+	<li>Structured around events (actions) that occur at some fixed time</li>
+	<li>Often an action will spawn new events</li>
+	<li>The following 2 files are the basis for an event-driven simulation</li>
+	<li>Each event will be represented by an instance of <tt>Event</tt></li>
+	<li>The <tt>Event</tt> records the time, the key for comparison</li>
+	<li>The <u>lower</u> time has <u>higher</u> priority</li>
+	<li>A pure virtual method represents the action of an event</li>
+</ul>
+
+</font>
+
+<hr><h2><font color="#009999">23.5.1 Priority Queue (<tt>event.h</tt>)
+	</font></h2>
+<font size="+1">
+
+<script><!-- 
+	iframeWrapCode( "event.h", "90%", "80%" )
+//--></script><iframe src="Big%20C++:%20Chptr.%2023%20--%20The%20Standard%20Template%20Library%20-%20Containers_files/event.html" height="80%" width="90%">
+&lt;p&gt;Your browser does not support the &amp;lt;iframe&amp;gt; tag.&lt;/p&gt;
+&lt;br&gt;Click &lt;a target='bigc' href='Code/event.h.html'&gt;
+Code/event.h.html&lt;/a&gt; to view file.&lt;br&gt;
+</iframe>
+<br><font size="-1"><i>Click <a target="bigc" href="http://www.math.ucla.edu/%7Ewittman/10a.1.10w/ccc/ch23/Code/event.h">event.h</a> to download plain text</i></font>
+
+
+</font>
+
+<hr><h2><font color="#009999">23.5.1 Priority Queue - Example</font></h2>
+<font size="+1">
+
+<ul>
+	<li>Event loop - the heart of the simulation</li>
+	<li>It pulls the next event (smallest time) from the PQ</li>
+	<li>Events are removed in sequence, regardless of insertion</li>
+	<li>As each event is removed it is executed, and the memory recovered</li>
+	<li>The loop runs until the the queue is exhausted</li>
+</ul>
+
+</font>
+
+<hr><h2><font color="#009999">23.5.1 Priority Queue (<tt>event.cpp</tt>)
+	</font></h2>
+<font size="+1">
+
+<script><!-- 
+	iframeWrapCode( "event.cpp", "80%", "60%" )
+//--></script><iframe src="Big%20C++:%20Chptr.%2023%20--%20The%20Standard%20Template%20Library%20-%20Containers_files/event_002.html" height="60%" width="80%">
+&lt;p&gt;Your browser does not support the &amp;lt;iframe&amp;gt; tag.&lt;/p&gt;
+&lt;br&gt;Click &lt;a target='bigc' href='Code/event.cpp.html'&gt;
+Code/event.cpp.html&lt;/a&gt; to view file.&lt;br&gt;
+</iframe>
+<br><font size="-1"><i>Click <a target="bigc" href="http://www.math.ucla.edu/%7Ewittman/10a.1.10w/ccc/ch23/Code/event.cpp">event.cpp</a> to download plain text</i></font>
+
+
+</font>
+
+<hr><h2><font color="#009999">23.5.1 Priority Queue - Example</font></h2>
+<font size="+1">
+
+<ul>
+	<li>Subclass <tt>Simulation</tt> and <tt>Event</tt> to emulate traffic
+		at a hot dog stand</li>
+	<li>Vary the number of seats, see the outcome</li>
+	<li>There are two types of events:
+		<ol>
+			<li>Arrival event - signals the arrival of a customer.  If seated,
+				(s)he stays a random amount of time, the leaves</li>
+			<li>Leave event - frees the seat the customer was occupying</li>
+		</ol>
+	</li>
+	<li>Random arrival events are generated over an hour to initialize the
+		simulation</li>
+</ul>
+
+</font>
+
+<hr><h2><font color="#009999">23.5.1 Priority Queue (<tt>hotdog.cpp</tt>)
+	</font></h2>
+<font size="+1">
+
+<script><!-- 
+	iframeWrapCode( "hotdog.cpp", "90%", "80%" )
+//--></script><iframe src="Big%20C++:%20Chptr.%2023%20--%20The%20Standard%20Template%20Library%20-%20Containers_files/hotdog.html" height="80%" width="90%">
+&lt;p&gt;Your browser does not support the &amp;lt;iframe&amp;gt; tag.&lt;/p&gt;
+&lt;br&gt;Click &lt;a target='bigc' href='Code/hotdog.cpp.html'&gt;
+Code/hotdog.cpp.html&lt;/a&gt; to view file.&lt;br&gt;
+</iframe>
+<br><font size="-1"><i>Click <a target="bigc" href="http://www.math.ucla.edu/%7Ewittman/10a.1.10w/ccc/ch23/Code/hotdog.cpp">hotdog.cpp</a> to download plain text</i></font>
+
+
+</font>
+
+<hr><h2><font color="#009999">23.6 Case Study: Dijkstra's Shortest Path
+	Algorithm</font></h2>
+<font size="+1">
+
+<ul>
+	<li>Find the shortest distance from a node on a directed graph to each
+ 		other node</li>
+	<li>A sample of routes to cities serviced by a bus company:</li>
+	
+	<script><!-- // Set title on page
+		image( "fig10.png" )	// country map
+	//--></script><p align="center"><img src="Big%20C++:%20Chptr.%2023%20--%20The%20Standard%20Template%20Library%20-%20Containers_files/fig10.png" alt="Images/fig10.png - Check path and permissions"></p>
+
+</ul>
+
+</font>
+
+<hr><h2><font color="#009999">23.6 Case Study: Graph Representation</font></h2>
+<font size="+1">
+
+<ul>
+	<li>Determine the minimum cost to travel from one city,
+		e.g., Pierre, to each of the other cities</li>
+	<li>Represent a destination, and the associated cost</li>
+	<li>Could use a <tt>pair</tt></li>
+	<li>Need to override comparison operator</li>
+	<li>Create a new class:
+</li></ul>
+
+</font>
+
+<hr><h2><font color="#009999">23.6 Case Study: Graph Representation</font></h2>
+<font size="+1">
+
+<blockquote>
+<pre>class DistanceToCity
+{
+public:
+   DistanceToCity(string n, int d);
+   string name;
+   int distance;
+   bool operator&lt;(const DistanceToCity&amp; right) const;
+};</pre>
+</blockquote>
+
+</font>
+
+<hr><h2><font color="#009999">23.6 Case Study: Graph Representation (cont.)
+	</font></h2>
+<font size="+1">
+
+<blockquote>
+<pre>DistanceToCity::DistanceToCity(string n, int d)
+{
+   name = n;
+   distance = d;
+}
+
+bool DistanceToCity::operator&lt;(const DistanceToCity&amp; right) const
+{
+   return right.distance &lt; distance;
+}</pre>
+</blockquote>
+
+</font>
+
+<hr><h2><font color="#009999">23.6 Case Study: Graph Representation (cont.)
+	</font></h2>
+<font size="+1">
+
+<ul>
+	<li>Represent graph using type of map</li>
+	<li>City name is the key, a <tt>DistanceToCity</tt> is the element</li>
+	<li><tt>cities</tt> is a multimap; more than one edge may leave a city
+		<blockquote><tt>multimap&lt;string, DistanceToCity&gt; CityMap;</tt>
+		</blockquote>
+	(Adjacency list)
+	</li>
+	<li><tt>DistanceFinder</tt> wraps the multimap, provides 2 member functions:
+		<ul>
+			<li><tt>set_distance</tt> adds an edge to the graph</li>
+			<li><tt>find_distance</tt> fills in a map of destinations and their
+				costs, given a source node</li>
+		</ul>
+	</li>
+</ul>
+
+<hr><h2><font color="#009999">23.6 Case Study: Dijkstra's Algorithm</font></h2>
+<font size="+1">
+
+<ul>
+	<li>A (min) PQ is used to represent the list of possible
+		destinations with the relative cost of traveling to them</li>
+	<li>Build a resultant map <tt>shortest</tt> of names and distances</li>
+	<li>Place the source on the queue, w/distance 0</li>
+	<li>Loop while the PQ is not empty:
+		<ol>
+			<li>Pop element</li>
+			<li>If city already visited (in <tt>shortest</tt>), goto 1</li>
+			<li>Place city and cost in <tt>shortest</tt></li>
+			<li>For each adjacent node in <tt>cities</tt> (loop from
+				<tt>lower_bound</tt> to <tt>upper_bound</tt>:
+				<ul>
+					<li>Add current distance to relative distance, add new entry to
+						PQ</li>
+				</ul>
+			</li>
+		</ol>
+	</li>
+</ul>
+
+</font>
+
+<hr><h2><font color="#009999">23.6 Case Study: Dijkstra's Shortest Path
+	Algorithm (<tt>dijkstra.cpp</tt>)</font></h2>
+<font size="+1">
+
+<script><!-- 
+	iframeWrapCode( "dijkstra.cpp", "90%", "80%" )
+//--></script><iframe src="Big%20C++:%20Chptr.%2023%20--%20The%20Standard%20Template%20Library%20-%20Containers_files/dijkstra.html" height="80%" width="90%">
+&lt;p&gt;Your browser does not support the &amp;lt;iframe&amp;gt; tag.&lt;/p&gt;
+&lt;br&gt;Click &lt;a target='bigc' href='Code/dijkstra.cpp.html'&gt;
+Code/dijkstra.cpp.html&lt;/a&gt; to view file.&lt;br&gt;
+</iframe>
+<br><font size="-1"><i>Click <a target="bigc" href="http://www.math.ucla.edu/%7Ewittman/10a.1.10w/ccc/ch23/Code/dijkstra.cpp">dijkstra.cpp</a> to download plain text</i></font>
+
+
+</font>
+
+<hr><h2><font color="#009999">Chapter Summary</font></h2>
+<font size="+1">
+<hr size="6" color="#00ffff">
+
+<ol>
+	<li>STL - a library of classes that represent containers that occur
+	frequently in computer programs in all application areas.</li>
+	<li>Each class in the STL supports a relatively small set of operations.
+	Basic functionality is extended through the use of generic algorithms.</li>
+	<li>The 3 fundamental data structures are the vector, list, and deque.</li>
+	<li>Vector and deque are indexed data structures; they support efficient
+	access to each element based on an integer key.</li>
+	<li>A list supports efficient insertion into or removal from the middle of a
+	collection.  Lists can also be merged with other lists.</li>
+</ol>
+
+</font>
+
+<hr><h2><font color="#009999">Chapter Summary (cont.)</font></h2>
+<font size="+1">
+<hr size="6" color="#00ffff">
+
+<ol start="6">
+	<li>Stacks, queue, and priority queues are adapters built on top of the
+	fundamental collections.  A stack enforces the LIFO protocol, while the
+	queue uses FIFO.</li>
+	<li>A set maintains elements in order.  Permits very efficient insertion,
+	removal, and testing of elements.</li>
+	<li>A map is a keyed container.  Entries in a map are accessed through a key,
+	which can be any ordered data type.  Associated with each key is a value.
+	A multimap allows more than one value to be associated with a key.</li>
+	<li>A priority queue is a collection organised so as to permit fast access
+	to and removal of the largest element.</li>
+</ol>
+
+</font>
+
+
+
+</font></body></html>

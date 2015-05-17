@@ -1,0 +1,112 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+	<title>tele.cpp</title>
+</head>
+
+<body>
+<pre>  1  #include &lt;string&gt;
+  2  #include &lt;iostream&gt;
+  3  #include &lt;map&gt;
+  4  
+  5  using namespace std;
+  6  
+  <font color="#0000cc">7  /**
+  8     TelephoneDirectory maintains a map of name/number pairs.
+  9  */</font>
+ 10  class TelephoneDirectory 
+ 11  {
+ 12  public:
+ <font color="#0000cc">13     /**
+ 14        Add a new name/number pair to database.
+ 15        @param name the new name
+ 16        @param number the new number
+ 17     */</font>
+ 18     void add_entry(string name, int number);
+ 19  
+ <font color="#0000cc">20     /**
+ 21        Find the number associated with a name.
+ 22        @param name the name being searched
+ 23        @return the associated number, or zero 
+ 24        if not found in database
+ 25     */</font>
+ 26     int find_entry(string name) const;
+ 27  
+ <font color="#0000cc">28     /**
+ 29        Print all entries on given output stream
+ 30        in name : number format ordered by name.
+ 31        @param out the output stream
+ 32     */</font>
+ 33     void print_all(ostream&amp; out) const;
+ 34  
+ <font color="#0000cc">35     /**
+ 36        Print all entries on given output stream
+ 37        in number : name format ordered by number.
+ 38        @param out the output stream
+ 39     */</font>
+ 40     void print_by_number(ostream&amp; out) const;
+ 41  private:
+ 42     map&lt;string, int&gt; database;
+ 43     typedef map&lt;string, int&gt;::const_iterator iterator;
+ 44  };
+ 45  
+ 46  void TelephoneDirectory::add_entry(string name, int number)
+ 47  {
+ 48     database[name] = number;
+ 49  }
+ 50  
+ 51  int TelephoneDirectory::find_entry(string name) const
+ 52  {
+ 53     iterator p = database.find( name );
+ 54     if (p != database.end())
+ 55        return p-&gt;second;
+ 56     return 0; <font color="#000099">// not found</font>
+ 57  }
+ 58  
+ 59  void TelephoneDirectory::print_all(ostream&amp; out) const
+ 60  {
+ 61     iterator current = database.begin();
+ 62     iterator stop = database.end();
+ 63     while (current != stop)
+ 64     {
+ 65        out &lt;&lt; current-&gt;first &lt;&lt; " : " &lt;&lt; current-&gt;second &lt;&lt; "\n";
+ 66        ++current;
+ 67     }
+ 68  }
+ 69  
+ 70  void TelephoneDirectory::print_by_number(ostream&amp; out) const
+ 71  {
+ 72     multimap&lt;int, string&gt; inverse_database;
+ 73     typedef multimap&lt;int, string&gt;::iterator miterator;
+ 74     iterator current = database.begin();
+ 75     iterator stop = database.end();
+ 76     while (current != stop)
+ 77     {
+ 78        inverse_database.insert(
+ 79           multimap&lt;int, string&gt;::value_type(current-&gt;second, current-&gt;first));
+ 80        ++current;
+ 81     }
+ 82     miterator icurrent = inverse_database.begin();
+ 83     miterator istop = inverse_database.end();
+ 84     while (icurrent != istop)
+ 85     {
+ 86        cout &lt;&lt; icurrent-&gt;first &lt;&lt; " : " &lt;&lt; icurrent-&gt;second &lt;&lt; "\n";
+ 87        ++icurrent;
+ 88     }
+ 89  }
+ 90  
+ 91  int main()
+ 92  {
+ 93     TelephoneDirectory data;
+ 94     data.add_entry("Fred", 7235591);
+ 95     data.add_entry("Mary", 3841212);
+ 96     data.add_entry("Sarah", 3841212);
+ 97     cout &lt;&lt; "Number for Fred " &lt;&lt; data.find_entry("Fred") &lt;&lt; "\n";
+ 98     cout &lt;&lt; "Printing by name \n";
+ 99     data.print_all(cout);
+100     cout &lt;&lt; "Printing by number \n";
+101     data.print_by_number(cout);
+102     return 0;
+103  }</pre>
+
+
+</body></html>

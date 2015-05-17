@@ -1,0 +1,114 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+	<title>inventory.cpp</title>
+</head>
+
+<body>
+<pre>  1  #include &lt;iostream&gt;
+  2  #include &lt;list&gt;
+  3  
+  4  using namespace std;
+  5  
+  <font color="#0000cc">6  /**
+  7     Describes a product by identification number.
+  8  */</font>
+  9  class Product
+ 10  {
+ 11  public:
+ 12     Product(int id = 0);
+ <font color="#0000cc">13     /**
+ 14        Gets the product identification number
+ 15        @return the identification number
+ 16     */</font>
+ 17     int get_id() const;
+ 18  private:
+ 19     int identification_number;
+ 20  };
+ 21  
+ 22  inline int Product::get_id() const
+ 23  {
+ 24     return identification_number;
+ 25  }
+ 26  
+ 27  inline ostream&amp; operator&lt;&lt;(ostream&amp; out, const Product&amp; p)
+ 28  {
+ 29     out &lt;&lt; "Product " &lt;&lt; p.get_id();
+ 30     return out;
+ 31  }
+ 32  
+ 33  inline Product::Product(int id)
+ 34  {
+ 35     identification_number = id;
+ 36  }
+ 37  
+ <font color="#0000cc">38  /**
+ 39     Maintains an inventory list of products on hand and back orders.
+ 40  */</font>
+ 41  class Inventory
+ 42  {
+ 43  public:
+ <font color="#0000cc">44     /**
+ 45        Processes an order for a product with a given number.
+ 46        @param pid product id number
+ 47     */</font>
+ 48     void order(int pid);
+ 49  
+ <font color="#0000cc">50     /**
+ 51        Processes receipt of shipment for a product.
+ 52        @param newp new product
+ 53     */</font>
+ 54     void receive(const Product&amp; newp);
+ 55  private:
+ 56     list&lt;Product&gt; on_hand;
+ 57     list&lt;int&gt; on_order;
+ 58  };
+ 59  
+ 60  void Inventory::order(int pid)
+ 61  {
+ 62     cout &lt;&lt; "Received order for product " &lt;&lt; pid &lt;&lt; "\n";
+ 63     list&lt;Product&gt;::iterator we_have = on_hand.begin();
+ 64     while (we_have != on_hand.end()) 
+ 65     {
+ 66        if (we_have-&gt;get_id() == pid)
+ 67        {
+ 68           <font color="#000099">// Have it, ship</font>
+ 69           cout &lt;&lt; "Ship " &lt;&lt; *we_have &lt;&lt; "\n";
+ 70           on_hand.erase(we_have);
+ 71           return;
+ 72        }
+ 73        ++we_have;
+ 74     }
+ 75     <font color="#000099">// Don't have it, back order</font>
+ 76     cout &lt;&lt; "Back order product " &lt;&lt; pid &lt;&lt; "\n";
+ 77     on_order.push_back(pid);
+ 78  }
+ 79  
+ 80  void Inventory::receive(const Product&amp; newp)
+ 81  {
+ 82     cout &lt;&lt; "Received shipment of product " &lt;&lt; newp &lt;&lt; "\n";
+ 83     list&lt;int&gt;::iterator we_need = 
+ 84        find(on_order.begin(), on_order.end(), newp.get_id());
+ 85     if (we_need != on_order.end())
+ 86     {
+ 87        cout &lt;&lt; "Ship " &lt;&lt; newp &lt;&lt; " to fill back order\n";
+ 88        on_order.erase(we_need);
+ 89     }
+ 90     else
+ 91        on_hand.push_front(newp);
+ 92  }
+ 93  
+ 94  int main()
+ 95  {
+ 96     Inventory inv;
+ 97     inv.receive(Product(37));
+ 98     inv.receive(Product(14));
+ 99     inv.order(37);
+100     inv.order(37);
+101     inv.receive(Product(21));
+102     inv.order(14);
+103     inv.receive(Product(37));
+104     return 0;
+105  }</pre>
+
+
+</body></html>
