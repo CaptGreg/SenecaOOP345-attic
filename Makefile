@@ -8,8 +8,8 @@ CXX      = g++-5
 CXX5     = g++-5
 # May 15, 2015, clang++ has missing/corrupt header files: won't compile fastforward, inlcudes fail
 # use g++ for fastforward
-CXX      = clang++
 CXX      = g++
+CXX      = clang++
 
 ifeq ($(HOSTNAME),amd1100t)
   CC   = gcc-5
@@ -55,7 +55,7 @@ LFLAGS      = $(OPTLFLAGS)
 % : %.cpp Makefile
 	$(CXX) $(CXXFLAGS) $< -o $@ $(LFLAGS)
 
-# compile fastforward with g++.  Clang++ has header problems.
+# compile fastforward with g++.  Clang++ on matrix has header problems.
 fastforward : fastforward.cpp Makefile
 	g++ $(CXXFLAGS)  $< -o $@ -pthread
 
