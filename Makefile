@@ -13,6 +13,8 @@ CXX      = clang++
 
 ifeq ($(HOSTNAME),amd1100t)
   CC   = gcc-5
+  CXX  = g++
+  CXX  = clang++
   CXX  = g++-5
   CC5  = gcc-5
   CXX5 = g++-5
@@ -56,8 +58,9 @@ LFLAGS      = $(OPTLFLAGS)
 	$(CXX) $(CXXFLAGS) $< -o $@ $(LFLAGS)
 
 # compile fastforward with g++.  Clang++ on matrix has header problems.
-fastforward : fastforward.cpp Makefile
-	g++ $(CXXFLAGS)  $< -o $@ -pthread
+# compiles fine on matrix with /usr/local/gcc/gcc-cilk/bin/g++
+# fastforward : fastforward.cpp Makefile
+	# $(CXX) -std=c++0x  $< -o $@ -pthread
 
 
 camera : camera.cpp Makefile
