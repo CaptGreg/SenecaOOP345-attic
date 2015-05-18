@@ -1,6 +1,7 @@
 // OOP345 FastForward.cpp - sumarize entire course in one program
 // Author Greg Blair
 // Date   January 11, 2015
+// Date   May, 2015, updated some things, added composition, association, aggregation examples.
 
 #ifdef __GNUC__
   // turn off most compiler warnings
@@ -474,14 +475,14 @@ void Aggregation()
     Motor* motor;  // A car "has-a" motor.
   public:
     Car()          : motor(nullptr) {}
-    Car(Motor* e) : motor(e)       {}
-    void newMotor(Motor* e) { if(motor) delete motor; motor = e; }
+    Car(Motor* m) : motor(m)       {}
+    void newMotor(Motor* m) { if(motor) delete motor; motor = m; }
     Motor* pullMotor() { Motor* ret = motor; motor = nullptr; return ret; }
     ~Car() { if(motor) delete motor; }
   };
 
   // A duck can exist without a pond
-  // A pond can exists with a duck
+  // A pond can exist with a duck
   // A duck can only be in one pond.
   class Duck {};
   class Pond {
