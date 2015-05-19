@@ -7,7 +7,7 @@
 // 2017744 microseconds for setup of 100000000 floats, compiling the OpenCL kernel
 // 4391718 microseconds for adding 100000000 floats // cl::Context(CL_DEVICE_TYPE_GPU);
 
-// GB timings May 18, 2015 on 
+// GB timings May 19, 2015 on 
 //  a 2010 vintage AMD 1100T 6-core CPU 
 //  a 2010 vintage Radeon HD 6970 GPU
 // clang++ -Wall -std=c++11  -Ofast  ocl_c++11.cpp -lOpenCL -o ocl_c++11 -pthread
@@ -31,6 +31,62 @@
 // 46313 microseconds for 20000000 valarray elements, c = a + b
 // 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75
 // +++++++++++++++++++++++++
+
+// GB timings May 19, 2015 on 
+//  a 2010 MSII gx660 gaming laptop with an Intel I5-460M 4-core mobile CPU 
+//  and a Radeon HD 5870 GPU
+// +++++++++++++++++++++++++
+// g++ compiler 4.9.2
+// +++++++++++++++++++++++++
+// 295768 microseconds for setup of 20000000 floats, compiling the OpenCL kernel
+// 81969 microseconds for adding 20000000 floats
+// 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75
+// +++++++++++++++++++++++++
+// 62395 microseconds for vector setup of 20000000 floats
+// 40387 microseconds for adding 20000000 vector elements, for(...) c[i] = a[i] + b[i]
+// 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75
+// +++++++++++++++++++++++++
+// 68573 microseconds for vector setup of 20000000 floats
+// 779080 microseconds for adding 20000000 vector elements, with 4 threads
+// 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75
+// +++++++++++++++++++++++++
+// 68927 microseconds for valarray setup of 20000000 floats
+// 43695 microseconds for 20000000 valarray elements, c = a + b
+// 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75
+// +++++++++++++++++++++++++
+
+//clinfo for HD5870 laptop GPU
+//Number of platforms:				 1
+//  Platform Profile:				 FULL_PROFILE
+//  Platform Version:				 OpenCL 2.0 AMD-APP (1642.5)
+//  Platform Name:				 AMD Accelerated Parallel Processing
+//  Platform Vendor:				 Advanced Micro Devices, Inc.
+//  Platform Extensions:			 cl_khr_icd cl_amd_event_callback cl_amd_offline_devices 
+//
+//
+//  Platform Name:				 AMD Accelerated Parallel Processing
+//Number of devices:				 2
+//  Device Type:				 CL_DEVICE_TYPE_GPU
+//  Vendor ID:					 1002h
+//  Board name:					 AMD Mobility Radeon HD 5800 Series
+//  Max compute units:				 10
+//  Max work group size:			 256
+//  Max memory allocation:			 134217728
+//  Cache size:					 0
+//  Global memory size:				 536870912
+//  Constant buffer size:			 65536
+//  Local memory size:				 32768
+//  Kernel Preferred work group size multiple:	 64
+//  Unified memory for Host and Device:		 0
+//  Platform ID:				 0x7f9343f47fd0
+//  Name:					 Juniper
+//  Vendor:					 Advanced Micro Devices, Inc.
+//  Device OpenCL C version:			 OpenCL C 1.2 
+//  Driver version:				 1642.5
+//  Profile:					 FULL_PROFILE
+//  Version:					 OpenCL 1.2 AMD-APP (1642.5)
+//  Extensions:					 cl_khr_global_int32_base_atomics cl_khr_global_int32_extended_atomics cl_khr_local_int32_base_atomics cl_khr_local_int32_extended_atomics cl_khr_3d_image_writes cl_khr_byte_addressable_store cl_khr_gl_sharing cl_ext_atomic_counters_32 cl_amd_device_attribute_query cl_amd_vec3 cl_amd_printf cl_amd_media_ops cl_amd_media_ops2 cl_amd_popcnt cl_amd_image2d_from_buffer_read_only cl_khr_spir cl_khr_gl_event 
+
 
 
 // GB timings May 18, 2015 on 
