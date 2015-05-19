@@ -8,6 +8,32 @@
 // 4391718 microseconds for adding 100000000 floats // cl::Context(CL_DEVICE_TYPE_GPU);
 
 // GB timings May 18, 2015 on 
+//  a 2010 vintage AMD 1100T 6-core CPU 
+//  a 2010 vintage Radeon HD 6970 GPU
+// clang++ -Wall -std=c++11  -Ofast  ocl_c++11.cpp -lOpenCL -o ocl_c++11 -pthread
+// 2017744 microseconds for setup of 100000000 floats, compiling the OpenCL kernel
+// +++++++++++++++++++++++++
+// clang++ compiler 4.2.1 Compatible Clang 3.3 (tags/RELEASE_33/final)
+// +++++++++++++++++++++++++
+// 7643138 microseconds for setup of 20000000 floats, compiling the OpenCL kernel
+// 109509 microseconds for adding 20000000 floats
+// 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75
+// +++++++++++++++++++++++++
+// 90243 microseconds for vector setup of 20000000 floats
+// 63154 microseconds for adding 20000000 vector elements, for(...) c[i] = a[i] + b[i]
+// 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75
+// +++++++++++++++++++++++++
+// 90140 microseconds for vector setup of 20000000 floats
+// 1136568 microseconds for adding 20000000 vector elements, with 6 threads
+// 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75
+// +++++++++++++++++++++++++
+// 92864 microseconds for valarray setup of 20000000 floats
+// 46313 microseconds for 20000000 valarray elements, c = a + b
+// 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75
+// +++++++++++++++++++++++++
+
+
+// GB timings May 18, 2015 on 
 // on an inexpensive AMD E1, dual core laptop with integrated GPU/CPU (no need to copy CPU<->GPU):
 
 // g++ -std=c++11 -pthread -I /opt/AMDAPPSDK-3.0-0-Beta/include/  ocl_c++11.cpp -lOpenCL -o ocl_c++11 && ./ocl_c++11 
