@@ -1,37 +1,107 @@
 // GB, not sure how effective this code is at utilizing the GPU
 // GB - try two pass, P1 = elements rounded to 256, P2 = balance
 
-// GB timings April 19, 2015 on 
-//  a 2010 vintage AMD 1100T 6-core CPU 
-//  a 2010 vintage Radeon HD 6970 GPU
-// 2017744 microseconds for setup of 100000000 floats, compiling the OpenCL kernel
-// 4391718 microseconds for adding 100000000 floats // cl::Context(CL_DEVICE_TYPE_GPU);
-
 // GB timings May 19, 2015 on 
 //  a 2010 vintage AMD 1100T 6-core CPU 
 //  a 2010 vintage Radeon HD 6970 GPU
-// clang++ -Wall -std=c++11  -Ofast  ocl_c++11.cpp -lOpenCL -o ocl_c++11 -pthread
-// 2017744 microseconds for setup of 100000000 floats, compiling the OpenCL kernel
+//  g++-5 -Wall -std=c++11 -Ofast -pthread  ocl_c++11.cpp -lOpenCL -o ocl_c++11 && ./ocl_c++11 
 // +++++++++++++++++++++++++
-// clang++ compiler 4.2.1 Compatible Clang 3.3 (tags/RELEASE_33/final)
+// g++ compiler version 5.1.0
+// AuthenticAMD AMD Phenom(tm) II X6 1100T Processor
+// This is a 6 core machine.
 // +++++++++++++++++++++++++
-// 7643138 microseconds for setup of 20000000 floats, compiling the OpenCL kernel
-// 109509 microseconds for adding 20000000 floats
+// 481938 microseconds for setup of 20000000 floats, compiling the OpenCL kernel
+// 112918 microseconds for adding 20000000 floats
 // 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75
 // +++++++++++++++++++++++++
-// 90243 microseconds for vector setup of 20000000 floats
-// 63154 microseconds for adding 20000000 vector elements, for(...) c[i] = a[i] + b[i]
+// 91863 microseconds for vector setup of 20000000 floats
+// 54214 microseconds for adding 20000000 vector elements, for(...) c[i] = a[i] + b[i]
 // 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75
 // +++++++++++++++++++++++++
-// 90140 microseconds for vector setup of 20000000 floats
-// 1136568 microseconds for adding 20000000 vector elements, with 6 threads
+// 93778 microseconds for vector setup of 20000000 floats
+// 1197533 microseconds for adding 20000000 vector elements, with 6 threads
 // 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75
 // +++++++++++++++++++++++++
-// 92864 microseconds for valarray setup of 20000000 floats
-// 46313 microseconds for 20000000 valarray elements, c = a + b
+// 92231 microseconds for valarray setup of 20000000 floats
+// 50321 microseconds for 20000000 valarray elements, c = a + b
+// 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75
+// +++++++++++++++++++++++++
+//  g++ -Wall -std=c++11 -Ofast -pthread  ocl_c++11.cpp -lOpenCL -o ocl_c++11 && ./ocl_c++11 ; !2018
+// +++++++++++++++++++++++++
+// g++ compiler version 4.9.2
+// AuthenticAMD AMD Phenom(tm) II X6 1100T Processor
+// This is a 6 core machine.
+// +++++++++++++++++++++++++
+// 466709 microseconds for setup of 20000000 floats, compiling the OpenCL kernel
+// 114916 microseconds for adding 20000000 floats
+// 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75
+// +++++++++++++++++++++++++
+// 94316 microseconds for vector setup of 20000000 floats
+// 51819 microseconds for adding 20000000 vector elements, for(...) c[i] = a[i] + b[i]
+// 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75
+// +++++++++++++++++++++++++
+// 94116 microseconds for vector setup of 20000000 floats
+// 1357244 microseconds for adding 20000000 vector elements, with 6 threads
+// 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75
+// +++++++++++++++++++++++++
+// 94430 microseconds for valarray setup of 20000000 floats
+// 53021 microseconds for 20000000 valarray elements, c = a + b
+// 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75
+// +++++++++++++++++++++++++
+//  clang++ -Wall -std=c++11 -Ofast -pthread  ocl_c++11.cpp -lOpenCL -o ocl_c++11 && ./ocl_c++11
+// +++++++++++++++++++++++++
+// clang++ compiler version 4.2.1 Compatible Clang 3.3 (tags/RELEASE_33/final)
+// AuthenticAMD AMD Phenom(tm) II X6 1100T Processor
+// This is a 6 core machine.
+// +++++++++++++++++++++++++
+// 478446 microseconds for setup of 20000000 floats, compiling the OpenCL kernel
+// 123572 microseconds for adding 20000000 floats
+// 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75
+// +++++++++++++++++++++++++
+// 100841 microseconds for vector setup of 20000000 floats
+// 67141 microseconds for adding 20000000 vector elements, for(...) c[i] = a[i] + b[i]
+// 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75
+// +++++++++++++++++++++++++
+// 97625 microseconds for vector setup of 20000000 floats
+// 1164903 microseconds for adding 20000000 vector elements, with 6 threads
+// 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75
+// +++++++++++++++++++++++++
+// 91962 microseconds for valarray setup of 20000000 floats
+// 52658 microseconds for 20000000 valarray elements, c = a + b
 // 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75
 // +++++++++++++++++++++++++
 
+// clinfo
+//   Platform Profile:				 FULL_PROFILE
+//   Platform Version:				 OpenCL 1.2 AMD-APP (1214.3)
+//   Platform Name:				 AMD Accelerated Parallel Processing
+//   Platform Vendor:				 Advanced Micro Devices, Inc.
+//   Platform Extensions:			 cl_khr_icd cl_amd_event_callback cl_amd_offline_devices
+//   Platform Name:				 AMD Accelerated Parallel Processing
+//   Device Type:				 CL_DEVICE_TYPE_GPU
+//   Board name:				 AMD Radeon HD 6900 Series
+//   Max compute units:				 24
+//   Max work items dimensions:			 3
+//     Max work items[0]:			 256
+//     Max work items[1]:			 256
+//     Max work items[2]:			 256
+//   Max work group size:			 256
+//   Max clock frequency:			 880Mhz
+//   Max memory allocation:			 536870912
+//   Global memory size:			 2075131904
+//   Constant buffer size:			 65536
+//   Local memory size:				 32768
+//   Kernel Preferred work group size multiple:	 64
+//   Platform ID:				 0x00007f70428dffc0
+//   Name:					 Cayman
+//   Vendor:					 Advanced Micro Devices, Inc.
+//   Device OpenCL C version:			 OpenCL C 1.2 
+//   Driver version:				 1214.3 (VM)
+//   Profile:					 FULL_PROFILE
+//   Version:					 OpenCL 1.2 AMD-APP (1214.3)
+//   Extensions:				 cl_khr_fp64 cl_amd_fp64 cl_khr_global_int32_base_atomics cl_khr_global_int32_extended_atomics cl_khr_local_int32_base_atomics cl_khr_local_int32_extended_atomics cl_khr_3d_image_writes cl_khr_byte_addressable_store cl_khr_gl_sharing cl_ext_atomic_counters_32 cl_amd_device_attribute_query cl_amd_vec3 cl_amd_printf cl_amd_media_ops cl_amd_media_ops2 cl_amd_popcnt cl_amd_image2d_from_buffer_read_only 
+
+// 
 // GB timings May 19, 2015 on 
 //  a 2010 MSII gx660 gaming laptop with an Intel I5-460M 4-core mobile CPU 
 //  and a Radeon HD 5870 GPU
@@ -56,16 +126,11 @@
 // +++++++++++++++++++++++++
 
 //clinfo for HD5870 laptop GPU
-//Number of platforms:				 1
 //  Platform Profile:				 FULL_PROFILE
 //  Platform Version:				 OpenCL 2.0 AMD-APP (1642.5)
 //  Platform Name:				 AMD Accelerated Parallel Processing
 //  Platform Vendor:				 Advanced Micro Devices, Inc.
-//  Platform Extensions:			 cl_khr_icd cl_amd_event_callback cl_amd_offline_devices 
-//
-//
 //  Platform Name:				 AMD Accelerated Parallel Processing
-//Number of devices:				 2
 //  Device Type:				 CL_DEVICE_TYPE_GPU
 //  Vendor ID:					 1002h
 //  Board name:					 AMD Mobility Radeon HD 5800 Series
@@ -146,7 +211,6 @@
 //                                                          // GB: 3 36M float element buffers are 426 MBytes <-- throws
 
 //  clinfo for E1 laptop:
-// Number of platforms:				 1
 //   Platform Profile:				 FULL_PROFILE
 //   Platform Version:				 OpenCL 2.0 AMD-APP (1642.5)
 //   Platform Name:				 AMD Accelerated Parallel Processing
@@ -163,8 +227,6 @@
 //   Cache size:				 16384
 //   Global memory size:			 569376768
 //   Constant buffer size:			 65536
-//   Max number of constant args:		 8
-//   Local memory type:				 Scratchpad
 //   Local memory size:				 32768
 //   Kernel Preferred work group size multiple:	 64
 //   Unified memory for Host and Device:	 1
@@ -214,16 +276,54 @@ public:
  }
 };
 
+#ifdef __GNUC__
+static inline void cpuid(uint32_t op, uint32_t *eax, uint32_t *ebx,
+  uint32_t *ecx, uint32_t *edx)
+{
+  asm("cpuid" : "=a" (*eax), "=b" (*ebx), "=c" (*ecx), "=d" (*edx) : "a" (op) : "cc");
+}
+static inline uint32_t cpuid_string(uint32_t op, uint32_t r[4]) 
+{
+  asm volatile("cpuid":"=a"(*r),"=b"(*(r+1)), "=c"(*(r+2)),"=d"(*(r+3)):"a"(op));
+  return (uint32_t)r[0];
+}
+char *CPUVendor(void)
+{
+   uint32_t eax, ebx, ecx, edx;
+   static uint32_t Vendor[4];
+
+   eax = 0; cpuid(eax, &eax, &ebx, &ecx, &edx);
+   Vendor[0] = ebx; Vendor[1] = edx; Vendor[2] = ecx; Vendor[3] = 0;
+   return (char *) Vendor;
+}
+char *CPUName(void)
+{
+  uint32_t eax;
+  static uint32_t Name[13];
+  //                           &eax      &ebx      &ecx      &edx
+  eax = 0x80000002; cpuid(eax, Name + 0, Name + 1, Name + 2, Name + 3);
+  eax = 0x80000003; cpuid(eax, Name + 4, Name + 5, Name + 6, Name + 7);
+  eax = 0x80000004; cpuid(eax, Name + 8, Name + 9, Name +10, Name +11);
+  Name[12] = 0;
+
+  return (char *) Name;
+}
+
+#endif
+
 int main(int argc, char* argv[]) 
 {
   std::cout << "+++++++++++++++++++++++++\n";
   #ifdef __GNUC__
     #ifdef __clang__
-      std::cout << "clang++ compiler " << __VERSION__ << "\n";
+      std::cout << "clang++ compiler version " << __VERSION__ << "\n";
     #else
-      std::cout << "g++ compiler " << __VERSION__ << "\n";
+      std::cout << "g++ compiler version " << __VERSION__ << "\n";
     #endif
+   std::cout << CPUVendor() << " " << CPUName() << "\n";
+
   #endif
+  std::cout << "This is a " << std::thread::hardware_concurrency() << " core machine.\n";
 
   try {
     Timer stopWatch;
@@ -269,7 +369,7 @@ int main(int argc, char* argv[])
 
     stopWatch.Start();
 
-#define NAIVE
+// #define NAIVE
 #ifdef NAIVE
     // all at once, runs on GCD(elements,256) compute elements per compute unit
     add(cl::EnqueueArgs(elements), a, b, c);
