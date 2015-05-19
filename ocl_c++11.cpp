@@ -10,7 +10,7 @@
 // GB timings May 18, 2015 on 
 // on an inexpensive AMD E1, dual core laptop with integrated GPU/CPU (no need to copy CPU<->GPU):
 
-// g++ -std=c++11  -I /opt/AMDAPPSDK-3.0-0-Beta/include/  ocl_c++11.cpp -lOpenCL -o ocl_c++11 && ./ocl_c++11 
+// g++ -std=c++11 -pthread -I /opt/AMDAPPSDK-3.0-0-Beta/include/  ocl_c++11.cpp -lOpenCL -o ocl_c++11 && ./ocl_c++11 
 // +++++++++++++++++++++++++
 // 1610079 microseconds for setup of 20000000 floats, compiling the OpenCL kernel
 // 282017 microseconds for adding 20000000 floats
@@ -25,7 +25,7 @@
 // 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75
 // +++++++++++++++++++++++++
 
-// g++ -std=c++11 -Ofast -I /opt/AMDAPPSDK-3.0-0-Beta/include/  ocl_c++11.cpp -lOpenCL -o ocl_c++11 && ./ocl_c++11 
+// g++ -std=c++11 -Ofast -pthread -I /opt/AMDAPPSDK-3.0-0-Beta/include/  ocl_c++11.cpp -lOpenCL -o ocl_c++11 && ./ocl_c++11 
 // +++++++++++++++++++++++++
 // 1474919 microseconds for setup of 20000000 floats, compiling the OpenCL kernel
 // 212118 microseconds for adding 20000000 floats
@@ -118,7 +118,7 @@ std::string now() {
     return std::string(buffer);
 }
 
-class Timer {
+class Timer { // use C++11 std::chrono features to create a stop-watch timer class
   std::chrono::time_point<std::chrono::high_resolution_clock> start;
   std::chrono::time_point<std::chrono::high_resolution_clock> stop;
 public:
@@ -134,6 +134,15 @@ public:
 
 int main(int argc, char* argv[]) 
 {
+  std::cout << "+++++++++++++++++++++++++\n";
+  #ifdef __GNUC__
+    #ifdef __clang__
+      std::cout << "clang++ compiler " << __VERSION__ << "\n";
+    #else
+      std::cout << "g++ compiler " << __VERSION__ << "\n";
+    #endif
+  #endif
+
   try {
     Timer stopWatch;
 
@@ -142,7 +151,7 @@ int main(int argc, char* argv[])
 
     // ::size_t elements = 100 * 1000 * 1000; // too big for HP laptop
     // cl::Error: clCreateBuffer(-61)
-    ::size_t elements = 20 * 1000 * 1000;
+    size_t elements = 20 * 1000 * 1000;
     if(argc  > 1) elements = atoi(argv[1]);
 
     std::vector<float> vecA(elements, 5.50f);
@@ -153,9 +162,9 @@ int main(int argc, char* argv[])
     // cl::Context(CL_DEVICE_TYPE_CPU);    // 4396792 microseconds for adding 100000000 floats
 
     bool readOnly;
-    bool useHostPtr;
-    cl::Buffer a(begin(vecA) , end(vecA) , readOnly=true, useHostPtr=false);
-    cl::Buffer b(begin(vecB) , end(vecB) , readOnly=true, useHostPtr=false);
+    bool useHostPtr=false; // AMD E1 laptop: useHostPtr=true is 5 x slower 985 ms vs 170 ms
+    cl::Buffer a(begin(vecA), end(vecA), readOnly=true, useHostPtr);
+    cl::Buffer b(begin(vecB), end(vecB), readOnly=true, useHostPtr);
     cl::Buffer c(CL_MEM_READ_WRITE, elements * sizeof(float));
 
     bool build;
@@ -180,7 +189,7 @@ int main(int argc, char* argv[])
 
 #define NAIVE
 #ifdef NAIVE
-    // all at once, runs GCD(elements,256) per compute unit
+    // all at once, runs on GCD(elements,256) compute elements per compute unit
     add(cl::EnqueueArgs(elements), a, b, c);
 #else
     // two pass
@@ -206,72 +215,82 @@ int main(int argc, char* argv[])
     }
 3.25f, 
     std::cout << "+++++++++++++++++++++++++\n";
-    stopWatch.Start();
-    std::vector<float>  vec_a(elements, 5.50f);
-    std::vector<float>  vec_b(elements, 3.25f);
-    std::vector<float>  vec_c(elements);
-    stopWatch.Stop();
-    std::cout << stopWatch.usecs() << " microseconds for vector setup of " << elements << " floats\n";
-    stopWatch.Start();
-    // vec_c = vec_a + vec_b; // works with std::valarray, not with std::vector
-    for(int i = vec_a.size() - 1; i >= 0; i--)
-        vec_c[i] = vec_a[i] + vec_b[i];
-    stopWatch.Stop();
-    std::cout << stopWatch.usecs() << " microseconds for adding " << elements << " vector elements, for(...) c[i] = a[i] + b[i]\n";
+    {
+      stopWatch.Start();
+      std::vector<float>  vec_a(elements, 5.50f);
+      std::vector<float>  vec_b(elements, 3.25f);
+      std::vector<float>  vec_c(elements);
+      stopWatch.Stop();
+      std::cout << stopWatch.usecs() << " microseconds for vector setup of " << elements << " floats\n";
+      stopWatch.Start();
+      // vec_c = vec_a + vec_b; // works with std::valarray, not with std::vector
+      for(int i = vec_a.size() - 1; i >= 0; i--)
+          vec_c[i] = vec_a[i] + vec_b[i];
+      stopWatch.Stop();
+      std::cout << stopWatch.usecs() << " microseconds for adding " << elements << " vector elements, for(...) c[i] = a[i] + b[i]\n";
 
-    if(vec_c.size() < 100) // creating vectors with millions of entries.
-      std::copy(begin(vec_c), end(vec_c), std::ostream_iterator<float>(std::cout, ", "));
-    else { // print the first 10 entries
-      std::cout<<vec_c[0]; for(int i = 1 ; i < 10 ; i++ ) std::cout<<", "<<vec_c[i]; std::cout<<"\n";
+      if(vec_c.size() < 100) // creating vectors with millions of entries.
+        std::copy(begin(vec_c), end(vec_c), std::ostream_iterator<float>(std::cout, ", "));
+      else { // print the first 10 entries
+        std::cout<<vec_c[0]; for(int i = 1 ; i < 10 ; i++ ) std::cout<<", "<<vec_c[i]; std::cout<<"\n";
+      }
     }
-
     std::cout << "+++++++++++++++++++++++++\n";
-    stopWatch.Start();
+    {
+      stopWatch.Start();
+      std::vector<float>  vec_a(elements, 5.50f);
+      std::vector<float>  vec_b(elements, 3.25f);
+      std::vector<float>  vec_c(elements);
+      stopWatch.Stop();
+      std::cout << stopWatch.usecs() << " microseconds for vector setup of " << elements << " floats\n";
+      stopWatch.Start();
 
-    int num_procs = std::thread::hardware_concurrency();
-    std::vector<std::thread> t(num_procs);
-    size_t thread_chunk = elements / num_procs;
-    for(int n = 0; n < num_procs; n++) {
-        size_t s = n * thread_chunk;
-        size_t e = s + thread_chunk;
-        if(n == num_procs -1 ) e = elements;
-        auto f =  [vec_a, vec_b, &vec_c] (size_t s, size_t e) 
-            {
-                for(size_t i = s; i < e; i++)
-                    vec_c[i] = vec_a[i] + vec_b[i];
-             };
-        t[n] = std::thread(f , s, e);
+      int num_procs = std::thread::hardware_concurrency();
+      std::vector<std::thread> t(num_procs);
+      size_t thread_chunk = elements / num_procs;
+      for(int n = 0; n < num_procs; n++) {
+          size_t s = n * thread_chunk;
+          size_t e = s + thread_chunk;
+          if(n == num_procs - 1) e = elements;
+          auto f =  [vec_a, vec_b, &vec_c] (size_t s, size_t e) 
+              {
+                  for(size_t i = s; i < e; i++)
+                      vec_c[i] = vec_a[i] + vec_b[i];
+               };
+          t[n] = std::thread(f, s, e);
+      }
+      for(auto& e: t) e.join();
+
+      stopWatch.Stop();
+      std::cout << stopWatch.usecs() << " microseconds for adding " 
+                << elements << " vector elements, with " << num_procs << " threads\n";
+
+      if(vec_c.size() < 100) // creating vectors with millions of entries.
+        std::copy(begin(vec_c), end(vec_c), std::ostream_iterator<float>(std::cout, ", "));
+      else { // print the first 10 entries
+        std::cout<<vec_c[0]; for(int i = 1 ; i < 10 ; i++ ) std::cout<<", "<<vec_c[i]; std::cout<<"\n";
+      }
     }
-    for(auto& e: t) e.join();
-
-    stopWatch.Stop();
-    std::cout << stopWatch.usecs() << " microseconds for adding " 
-              << elements << " vector elements, with " << num_procs << " threads\n";
-
-    if(vec_c.size() < 100) // creating vectors with millions of entries.
-      std::copy(begin(vec_c), end(vec_c), std::ostream_iterator<float>(std::cout, ", "));
-    else { // print the first 10 entries
-      std::cout<<vec_c[0]; for(int i = 1 ; i < 10 ; i++ ) std::cout<<", "<<vec_c[i]; std::cout<<"\n";
-    }
-
     std::cout << "+++++++++++++++++++++++++\n";
-    stopWatch.Start();
-    std::valarray<float>  va_a(5.50f, elements);
-    std::valarray<float>  va_b(3.25f, elements);
-    std::valarray<float>  va_c(elements);
-    stopWatch.Stop();
-    std::cout << stopWatch.usecs() << " microseconds for valarray setup of " << elements << " floats\n";
-    stopWatch.Start();
-    va_c = va_a + va_b;
-    stopWatch.Stop();
-    std::cout << stopWatch.usecs() << " microseconds for " << elements << " valarray elements, c = a + b\n";
+    {
+      stopWatch.Start();
+      std::valarray<float>  va_a(5.50f, elements);
+      std::valarray<float>  va_b(3.25f, elements);
+      std::valarray<float>  va_c(elements);
+      stopWatch.Stop();
+      std::cout << stopWatch.usecs() << " microseconds for valarray setup of " << elements << " floats\n";
+      stopWatch.Start();
+      va_c = va_a + va_b;
+      stopWatch.Stop();
+      std::cout << stopWatch.usecs() << " microseconds for " << elements << " valarray elements, c = a + b\n";
 
-    if(va_c.size() < 100) // creating vectors with millions of entries.
-      std::copy(begin(va_c), end(va_c), std::ostream_iterator<float>(std::cout, ", "));
-    else { // print the first 10 entries
-      std::cout<<va_c[0]; for(int i = 1 ; i < 10 ; i++ ) std::cout<<", "<<va_c[i]; std::cout<<"\n";
+      if(va_c.size() < 100) // creating vectors with millions of entries.
+        std::copy(begin(va_c), end(va_c), std::ostream_iterator<float>(std::cout, ", "));
+      else { // print the first 10 entries
+        std::cout<<va_c[0]; for(int i = 1 ; i < 10 ; i++ ) std::cout<<", "<<va_c[i]; std::cout<<"\n";
+      }
+
     }
-
     std::cout << "+++++++++++++++++++++++++\n";
   } catch (const cl::Error& e) {
       std::cerr << "threw cl::Error: " << e.what() << "(" << e.err() << ")" << std::endl;

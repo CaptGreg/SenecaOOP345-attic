@@ -474,7 +474,7 @@ void Aggregation()
   class Car{
     Motor* motor;  // A car "has-a" motor.
   public:
-    Car()          : motor(nullptr) {}
+    Car()         : motor(nullptr) {}
     Car(Motor* m) : motor(m)       {}
     void newMotor(Motor* m) { if(motor) delete motor; motor = m; }
     Motor* pullMotor() { Motor* ret = motor; motor = nullptr; return ret; }
@@ -826,13 +826,19 @@ void QuadraticComplexity()
   public:
     Timer() {}
     void Start() { start = std::chrono::high_resolution_clock::now(); }
-    uint64_t PrintMicroSeconds(std::string msg) {
-      stop  = std::chrono::high_resolution_clock::now();
+    void Stop () { stop  = std::chrono::high_resolution_clock::now(); }
+    uint64_t usecs() {
       typedef std::chrono::duration<int,std::micro> microsecs_t ;
       microsecs_t duration_get( std::chrono::duration_cast<microsecs_t>(stop-start) ) ;
-      uint64_t elapsedTime = duration_get.count();
-      std::cout << msg << elapsedTime << " usecs\n";
-      return elapsedTime;
+      uint64_t us = duration_get.count();
+      return us;
+    }
+
+    uint64_t PrintMicroSeconds(std::string msg) {
+      Stop();
+      uint64_t elapsedMicroseconds = usecs();
+      std::cout << msg << elapsedMicroseconds << " usecs\n";
+      return elapsedMicroseconds;
     }
   };
 
@@ -1103,29 +1109,37 @@ int main(int argc, char**argv)
 #endif
 
 #ifdef __GNUC__  // either g++ or clang++
-  std::cout << R"gnu(
+  std::cout << "\nFILE '" << __FILE__ << "' compiled " 
+            << __DATE__ << " at " << __TIME__ << " by\n";
+  #ifdef __clang__
+    std::cout << "clang++ compiler " << __VERSION__ << "\n";
+  #else
+    std::cout << "g++ compiler " << __VERSION__ << "\n";
+  #endif
+  std::cout << "--> " << "generating " << 8*sizeof(void*) << "-bit code\n";
 
-  /*****************************************************************\
-  | This program was developed on a 64-bit Ubuntu 14.04 LTS system. |
-  | It runs correctly in this environment.                          |
-  |                                                                 |
-  | Compile with either g++ or clang++                              | 
-  |   g++     -std=c++11 fastforward.cpp -o fastfoward -pthread     |
-  |   clang++ -std=c++11 fastforward.cpp -o fastfoward -pthread     |
-  |                                                                 |
-  | It also runs fine on Matrix, a 32-bit SUSE linux system.        |
-  | Compile with either g++ with the -std=c++0x flag or             | 
-  |   /usr/local/gcc/gcc-cilk/bin/g++ with the -std=c++11 flag      |
-  |                                                                 |
-  |   g++ -std=c++0x fastforward.cpp -o fastfoward -pthread         |
-  |   /usr.../g++ -std=c++11 fastforward.cpp -o fastfoward -pthread |
-  |                                                                 |
-  | NOTE:                                                           |
-  | The Matrix clang++ will not compile fastforward.cpp.            |
-  | The Matrix clang++ (version 3.4) chrono header files are broken.|
-  | Just including <chrono.h> generates syntax errors.              |
-  |     (use g++ instead)                                           |
-  \*****************************************************************/
+  std::cout << R"gnu(
+  /******************************************************************\
+  | This program was developed on a 64-bit Ubuntu 14.04 LTS system.  |
+  | It runs correctly in this environment.                           |
+  |                                                                  |
+  | Compile with either g++ or clang++                               | 
+  |   g++     -std=c++11 fastforward.cpp -o fastfoward -pthread      |
+  |   g++-5   -std=c++11 fastforward.cpp -o fastfoward -pthread      |
+  |   clang++ -std=c++11 fastforward.cpp -o fastfoward -pthread      |
+  |                                                                  |
+  | It also runs fine on Matrix, a 2011 32-bit SUSE linux system.    |
+  | Compile with either g++ 4.9.0 using the -std=c++11 flag          |
+  |   /usr/local/gcc/gcc-cilk/bin/g++ -std=c++11 fastforward.cpp ... |
+  | or compile with /usr/bin/g++ 4.6.2 using the -std=c++0x flag     |
+  |   g++ -std=c++0x fastforward.cpp -o fastfoward -pthread          |
+  |                                                                  |
+  | NOTE:                                                            |
+  | The Matrix clang++ will not compile fastforward.cpp.             |
+  | The Matrix clang++ (version 3.4) chrono header files are broken. |
+  | Just including <chrono.h> generates syntax errors.               |
+  |     (use g++ instead)                                            |
+  \******************************************************************/
 
   )gnu";
 #endif
@@ -1191,7 +1205,7 @@ int main(int argc, char**argv)
   Greg Blair, 
   john.blair@senecacollege.ca
 
-  Office Hours TEL Building either T2105 or Open Lab: 
+  2015 Summer Semester Office Hours TEL Building either T2105 or Open Lab: 
     Tuesday,    after 345A (S2158) 8:00 to 09:45 class
     Wednesday,  after 345B (S2174) 8:00 to 09:45 class
     Thursday,   after 345A (T3074) 8:55 to 10:40 class
