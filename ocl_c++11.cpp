@@ -157,47 +157,68 @@
 // GB timings May 18, 2015 on 
 // on an inexpensive AMD E1, dual core laptop with integrated GPU/CPU (no need to copy CPU<->GPU):
 
-// g++ -std=c++11 -pthread -I /opt/AMDAPPSDK-3.0-0-Beta/include/  ocl_c++11.cpp -lOpenCL -o ocl_c++11 && ./ocl_c++11 
+// for i in g++-5 g++ clang++ ; do $i -std=c++11 -Ofast  -I /opt/AMDAPPSDK-3.0-0-Beta/include/  ocl_c++11.cpp -lOpenCL -o ocl_c++11 -pthread && ./ocl_c++11; done
 // +++++++++++++++++++++++++
-// 1610079 microseconds for setup of 20000000 floats, compiling the OpenCL kernel
-// 282017 microseconds for adding 20000000 floats
+// g++ compiler version 5.1.0
+// AuthenticAMD AMD E1-6010 APU with AMD Radeon R2 Graphics    
+// This is a 2 core machine.
+// +++++++++++++++++++++++++
+// 1262528 microseconds for setup of 20000000 floats, compiling the OpenCL kernel
+// 181426 microseconds for adding 20000000 floats
 // 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75
 // +++++++++++++++++++++++++
-// 552950 microseconds for vector setup of 20000000 floats
-// 517257 microseconds for adding 20000000 vector elements, for(...) c[i] = a[i] + b[i]
+// 214985 microseconds for vector setup of 20000000 floats
+// 94360 microseconds for adding 20000000 vector elements, for(...) c[i] = a[i] + b[i]
 // 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75
 // +++++++++++++++++++++++++
-// 393789 microseconds for valarray setup of 20000000 floats
-// 834395 microseconds for 20000000 valarray elements, c = a + b
+// 219469 microseconds for vector setup of 20000000 floats
+// 660190 microseconds for adding 20000000 vector elements, with 2 threads
 // 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75
 // +++++++++++++++++++++++++
-
-// g++ -std=c++11 -Ofast -pthread -I /opt/AMDAPPSDK-3.0-0-Beta/include/  ocl_c++11.cpp -lOpenCL -o ocl_c++11 && ./ocl_c++11 
-// +++++++++++++++++++++++++
-// 1474919 microseconds for setup of 20000000 floats, compiling the OpenCL kernel
-// 212118 microseconds for adding 20000000 floats
+// 213201 microseconds for valarray setup of 20000000 floats
+// 94375 microseconds for 20000000 valarray elements, c = a + b
 // 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75
 // +++++++++++++++++++++++++
-// 338470 microseconds for vector setup of 20000000 floats
-// 130814 microseconds for adding 20000000 vector elements, for(...) c[i] = a[i] + b[i]
+// +++++++++++++++++++++++++
+// g++ compiler version 4.9.2
+// AuthenticAMD AMD E1-6010 APU with AMD Radeon R2 Graphics    
+// This is a 2 core machine.
+// +++++++++++++++++++++++++
+// 1273511 microseconds for setup of 20000000 floats, compiling the OpenCL kernel
+// 183697 microseconds for adding 20000000 floats
 // 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75
 // +++++++++++++++++++++++++
-// 331069 microseconds for valarray setup of 20000000 floats
-// 125577 microseconds for 20000000 valarray elements, c = a + b
+// 217390 microseconds for vector setup of 20000000 floats
+// 95378 microseconds for adding 20000000 vector elements, for(...) c[i] = a[i] + b[i]
 // 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75
 // +++++++++++++++++++++++++
-
-// +++++++++++++++++++++++++
-// 1610079 microseconds for setup of 20000000 floats, compiling the OpenCL kernel
-// 282017 microseconds for adding 20000000 floats
+// 218317 microseconds for vector setup of 20000000 floats
+// 933871 microseconds for adding 20000000 vector elements, with 2 threads
 // 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75
 // +++++++++++++++++++++++++
-// 552950 microseconds for vector setup of 20000000 floats
-// 517257 microseconds for adding 20000000 vector elements, for(...) c[i] = a[i] + b[i]
+// 219812 microseconds for valarray setup of 20000000 floats
+// 92750 microseconds for 20000000 valarray elements, c = a + b
 // 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75
 // +++++++++++++++++++++++++
-// 393789 microseconds for valarray setup of 20000000 floats
-// 834395 microseconds for 20000000 valarray elements, c = a + b
+// +++++++++++++++++++++++++
+// clang++ compiler version 4.2.1 Compatible Ubuntu Clang 3.4 (tags/RELEASE_34/final)
+// AuthenticAMD AMD E1-6010 APU with AMD Radeon R2 Graphics    
+// This is a 2 core machine.
+// +++++++++++++++++++++++++
+// 1264073 microseconds for setup of 20000000 floats, compiling the OpenCL kernel
+// 187613 microseconds for adding 20000000 floats
+// 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75
+// +++++++++++++++++++++++++
+// 211946 microseconds for vector setup of 20000000 floats
+// 107473 microseconds for adding 20000000 vector elements, for(...) c[i] = a[i] + b[i]
+// 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75
+// +++++++++++++++++++++++++
+// 217798 microseconds for vector setup of 20000000 floats
+// 755129 microseconds for adding 20000000 vector elements, with 2 threads
+// 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75
+// +++++++++++++++++++++++++
+// 212545 microseconds for valarray setup of 20000000 floats
+// 92757 microseconds for 20000000 valarray elements, c = a + b
 // 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75
 // +++++++++++++++++++++++++
 
@@ -209,7 +230,6 @@
 //                                                          // GB: our 3 20M float element buffers are 240 MBytes
 //                                                          // GB: 3 35M float element buffers are 420 MBytes
 //                                                          // GB: 3 36M float element buffers are 426 MBytes <-- throws
-
 //  clinfo for E1 laptop:
 //   Platform Profile:				 FULL_PROFILE
 //   Platform Version:				 OpenCL 2.0 AMD-APP (1642.5)
@@ -249,6 +269,10 @@
 #include <iterator>     // ostream_iterator
 #include <valarray>     // C++11 optimized array
 #include <thread>       // C++11 threads
+#include <atomic>       // C++11 threads
+#include <mutex>
+#include <condition_variable>
+
 // #include <algorithm> // compiles without
 
 // using namespace cl;
@@ -336,8 +360,7 @@ int main(int argc, char* argv[])
     size_t elements = 20 * 1000 * 1000;
     if(argc  > 1) elements = atoi(argv[1]);
 
-    std::vector<float> vecA(elements, 5.50f);
-    std::vector<float> vecB(elements, 3.25f);
+    std::vector<float> vecA(elements, 5.50f), vecB(elements, 3.25f), vecC(elements);
 
     // cl::Context(CL_DEVICE_TYPE_DEFAULT);   // 4405826 microseconds for adding 100000000 floats
     cl::Context(CL_DEVICE_TYPE_GPU);    // 4391718 microseconds for adding 100000000 floats
@@ -384,7 +407,6 @@ int main(int argc, char* argv[])
     add(cl::EnqueueArgs(elements - chunk), a, b, c); // need to do balance, not re-do first bit
 #endif
 
-    std::vector<float> vecC(elements);
     cl::copy(c, begin(vecC), end(vecC));
 
     stopWatch.Stop();
@@ -399,9 +421,7 @@ int main(int argc, char* argv[])
     std::cout << "+++++++++++++++++++++++++\n";
     {
       stopWatch.Start();
-      std::vector<float>  vec_a(elements, 5.50f);
-      std::vector<float>  vec_b(elements, 3.25f);
-      std::vector<float>  vec_c(elements);
+      std::vector<float>  vec_a(elements, 5.50f), vec_b(elements, 3.25f), vec_c(elements);
       stopWatch.Stop();
       std::cout << stopWatch.usecs() << " microseconds for vector setup of " << elements << " floats\n";
       stopWatch.Start();
@@ -420,9 +440,7 @@ int main(int argc, char* argv[])
     std::cout << "+++++++++++++++++++++++++\n";
     {
       stopWatch.Start();
-      std::vector<float>  vec_a(elements, 5.50f);
-      std::vector<float>  vec_b(elements, 3.25f);
-      std::vector<float>  vec_c(elements);
+      std::vector<float>  vec_a(elements, 5.50f), vec_b(elements, 3.25f), vec_c(elements);
       stopWatch.Stop();
       std::cout << stopWatch.usecs() << " microseconds for vector setup of " << elements << " floats\n";
       stopWatch.Start();
@@ -445,7 +463,69 @@ int main(int argc, char* argv[])
 
       stopWatch.Stop();
       std::cout << stopWatch.usecs() << " microseconds for adding " 
-                << elements << " vector elements, with " << num_procs << " threads\n";
+                << elements << " vector elements, using " << num_procs << " threads\n";
+
+      if(vec_c.size() < 100) // creating vectors with millions of entries.
+        std::copy(begin(vec_c), end(vec_c), std::ostream_iterator<float>(std::cout, ", "));
+      else { // print the first 10 entries
+        std::cout<<vec_c[0]; for(int i = 1 ; i < 10 ; i++ ) std::cout<<", "<<vec_c[i]; std::cout<<"\n";
+      }
+    }
+    std::cout << "+++++++++++++++++++++++++\n";
+    {
+      // Start up threads and measure the time the threads worked on the problem.
+      stopWatch.Start();
+      std::vector<float>  vec_a(elements, 5.50f), vec_b(elements, 3.25f), vec_c(elements);
+      stopWatch.Stop();
+      std::cout << stopWatch.usecs() << " microseconds for vector setup of " << elements << " floats\n";
+      stopWatch.Start();
+
+      int num_procs = std::thread::hardware_concurrency();
+      std::vector<std::thread> t(num_procs);
+
+      bool                     threadReady[num_procs]; for(auto& e: threadReady) e = false;;
+      std::mutex               cvMutex;
+      std::condition_variable  cv;
+      bool                     everyoneReady = false;
+
+      size_t thread_chunk = elements / num_procs;
+      for(int n = 0; n < num_procs; n++) {
+          size_t s = n * thread_chunk;
+          size_t e = s + thread_chunk;
+          if(n == num_procs - 1) e = elements;
+          auto f =  [n, &threadReady, everyoneReady, &cvMutex, &cv, vec_a, vec_b, &vec_c] (size_t s, size_t e)
+              {
+                  // let main know we are alive
+                  threadReady[n] = true;
+
+                  // wait until told to go
+                  { // acquire lock
+                    std::unique_lock<std::mutex> lock(cvMutex);
+                    if(!everyoneReady) cv.wait(lock);
+                  }
+
+                  // DO IT!
+                  for(size_t i = s; i < e; i++)
+                      vec_c[i] = vec_a[i] + vec_b[i];
+               };
+          t[n] = std::thread(f, s, e);
+      }
+
+      // wait until all threads alive
+      for(auto e : threadReady) if(e == false) std::this_thread::yield();
+
+      // GO!
+      everyoneReady = true;
+      cv.notify_all();
+
+      stopWatch.Stop();
+      std::cout << stopWatch.usecs() << " microseconds for starting up single use thread pool with " << num_procs << " threads\n";
+      
+      stopWatch.Start();
+      for(auto& e: t) e.join();
+      stopWatch.Stop();
+      std::cout << stopWatch.usecs() << " microseconds for thread pool to add " 
+                << elements << " vector elements, using " << num_procs << " threads\n";
 
       if(vec_c.size() < 100) // creating vectors with millions of entries.
         std::copy(begin(vec_c), end(vec_c), std::ostream_iterator<float>(std::cout, ", "));

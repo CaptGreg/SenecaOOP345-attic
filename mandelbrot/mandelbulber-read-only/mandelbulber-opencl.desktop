@@ -1,0 +1,15 @@
+[Desktop Entry]
+Categories=Graphics;3DGraphics;Math;Science;
+Comment=Visit 3D Fractal World
+Exec=mandelbulber-opencl
+GenericName=Mandelbulber - Advanced 3D fractal generator
+Icon=/usr/share/mandelbulber/icons/mandelbulber.png
+MimeType=
+Name=Mandelbulber-OpenCL
+StartupNotify=true
+Terminal=false
+Type=Application
+X-DBUS-ServiceName=
+X-DBUS-StartupType=none
+X-KDE-SubstituteUID=false
+X-KDE-Username=

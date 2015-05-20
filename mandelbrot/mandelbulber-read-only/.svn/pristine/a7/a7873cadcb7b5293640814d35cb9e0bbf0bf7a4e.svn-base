@@ -1,0 +1,19 @@
+#!/bin/bash
+
+echo Do you want to uninstall Mandelbulber program now? [y/n]
+read answer
+if [ "$answer" = "y" ] ; then
+	sudo rm /usr/share/mandelbulber -r
+	sudo rm /usr/bin/mandelbulber
+	
+	echo Do you want to uninstall also Mandelbulber user files? [y/n]
+	read answer
+	if [ "$answer" = "y" ] ; then
+		rm $HOME/.mandelbulber -r
+	fi
+	echo mandelbulber uninstalled
+else
+	echo Uninstall aborted
+fi
+
+
