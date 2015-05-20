@@ -269,9 +269,10 @@
 #include <iterator>     // ostream_iterator
 #include <valarray>     // C++11 optimized array
 #include <thread>       // C++11 threads
-#include <atomic>       // C++11 threads
+#include <future>
 #include <mutex>
 #include <condition_variable>
+#include <memory>        // unique_ptr
 
 // #include <algorithm> // compiles without
 
@@ -483,7 +484,9 @@ int main(int argc, char* argv[])
       int num_procs = std::thread::hardware_concurrency();
       std::vector<std::thread> t(num_procs);
 
-      bool                     threadReady[num_procs]; for(auto& e: threadReady) e = false;;
+      // std::promise<bool>       p[num_procs]; // g++ fine, clang++ error
+      std::promise<bool>*      p = new std::promise<bool> [num_procs];
+      // std::unique_ptr<std::promise<bool>> p(new std::promise<bool> [num_procs]);
       std::mutex               cvMutex;
       std::condition_variable  cv;
       bool                     everyoneReady = false;
@@ -493,10 +496,12 @@ int main(int argc, char* argv[])
           size_t s = n * thread_chunk;
           size_t e = s + thread_chunk;
           if(n == num_procs - 1) e = elements;
-          auto f =  [n, &threadReady, everyoneReady, &cvMutex, &cv, vec_a, vec_b, &vec_c] (size_t s, size_t e)
+          auto f =  [&p, everyoneReady, &cvMutex, &cv, vec_a, vec_b, &vec_c] (int n, size_t s, size_t e)
+          // auto f =  [&] (int n, size_t s, size_t e) // args to ensure value at time of call is used
+          // [&] method hangs with clang
               {
                   // let main know we are alive
-                  threadReady[n] = true;
+                  p[n].set_value(true);
 
                   // wait until told to go
                   { // acquire lock
@@ -508,11 +513,12 @@ int main(int argc, char* argv[])
                   for(size_t i = s; i < e; i++)
                       vec_c[i] = vec_a[i] + vec_b[i];
                };
-          t[n] = std::thread(f, s, e);
+          t[n] = std::thread(f, n, s, e);
       }
 
-      // wait until all threads alive
-      for(volatile auto e : threadReady) while(e == false) std::this_thread::yield();
+      // wait for threads to start
+      for(int n = 0 ; n < num_procs; n++)  {auto f = p[n].get_future(); f.get(); }
+      std::cout << "all threads alive\n";
 
       // GO!
       { // acquire lock
@@ -522,13 +528,14 @@ int main(int argc, char* argv[])
       }
 
       stopWatch.Stop();
-      std::cout << stopWatch.usecs() << " microseconds for starting up single use thread pool with " << num_procs << " threads\n";
+      std::cout << stopWatch.usecs() << " microseconds for starting up " << num_procs << " threads\n";
       
       stopWatch.Start();
       for(auto& e: t) e.join();
       stopWatch.Stop();
-      std::cout << stopWatch.usecs() << " microseconds for thread pool to add " 
+      std::cout << stopWatch.usecs() << " microseconds to add " 
                 << elements << " vector elements, using " << num_procs << " threads\n";
+      delete [] p;
 
       if(vec_c.size() < 100) // creating vectors with millions of entries.
         std::copy(begin(vec_c), end(vec_c), std::ostream_iterator<float>(std::cout, ", "));
