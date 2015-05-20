@@ -1,0 +1,28 @@
+#!/bin/bash
+
+if [ -f makefiles/mandelbulber-opencl ] ; then
+  sudo install makefiles/mandelbulber-opencl /usr/bin
+elif [ -f usr/bin/mandelbulber-opencl ] ; then
+  sudo install usr/bin/mandelbulber-opencl /usr/bin
+else
+  echo Binary file not found. Program not compilled.
+  echo Do you want to compile program now? [y/n]
+  read answer
+  if [ "$answer" = "y" ] ; then
+    cd makefiles/
+	make all
+	rm src/*.o
+	rm src/*.d
+	cd ..
+	mv makefiles/mandelbulber-opencl usr/bin/mandelbulber-opencl
+	sudo install usr/bin/mandelbulber-opencl /usr/bin
+  fi
+fi
+
+sudo mkdir /usr/share/mandelbulber
+sudo cp -ua usr/share/* /usr/share/mandelbulber
+
+sudo desktop-file-install mandelbulber-opencl.desktop
+
+echo Mandelbulber-OpenCL installed successfully
+echo to run please type "mandelbulber-opencl" or select from system menu
