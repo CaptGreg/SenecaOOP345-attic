@@ -1,6 +1,59 @@
 // GB, not sure how effective this code is at utilizing the GPU
 // GB - try two pass, P1 = elements rounded to 256, P2 = balance
 
+// GB timings May 20, 2015 T2108 hot machine, no OpenCL, Ubuntu 14.04 
+// +++++++++++++++++++++++++
+// g++ compiler version 4.9.2
+// GenuineIntel Intel(R) Core(TM) i7-4771 CPU @ 3.50GHz
+// This is a 8 core machine.
+// +++++++++++++++++++++++++
+// threw cl::Error: clGetPlatformIDs(-1001)
+// +++++++++++++++++++++++++
+// 24025 microseconds for vector setup of 20000000 floats
+// 19173 microseconds for adding 20000000 vector elements, for(...) c[i] = a[i] + b[i]
+// 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75
+// +++++++++++++++++++++++++
+// 24284 microseconds for vector setup of 20000000 floats
+// 552601 microseconds for adding 20000000 vector elements, using 8 threads
+// 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75
+// +++++++++++++++++++++++++
+// 23793 microseconds for vector setup of 20000000 floats
+// all threads alive
+// 521487 microseconds for starting up 8 threads
+// 21696 microseconds to add 20000000 vector elements, using 8 threads
+// 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75
+// +++++++++++++++++++++++++
+// 24119 microseconds for valarray setup of 20000000 floats
+// 19723 microseconds for 20000000 valarray elements, c = a + b
+// 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75
+// +++++++++++++++++++++++++
+// +++++++++++++++++++++++++
+// clang++ compiler version 4.2.1 Compatible Ubuntu Clang 3.4 (tags/RELEASE_34/final)
+// GenuineIntel Intel(R) Core(TM) i7-4771 CPU @ 3.50GHz
+// This is a 8 core machine.
+// +++++++++++++++++++++++++
+// threw cl::Error: clGetPlatformIDs(-1001)
+// +++++++++++++++++++++++++
+// 23886 microseconds for vector setup of 20000000 floats
+// 20822 microseconds for adding 20000000 vector elements, for(...) c[i] = a[i] + b[i]
+// 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75
+// +++++++++++++++++++++++++
+// 23985 microseconds for vector setup of 20000000 floats
+// 510437 microseconds for adding 20000000 vector elements, using 8 threads
+// 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75
+// +++++++++++++++++++++++++
+// 23758 microseconds for vector setup of 20000000 floats
+// all threads alive
+// 492450 microseconds for starting up 8 threads
+// 22297 microseconds to add 20000000 vector elements, using 8 threads
+// 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75
+// +++++++++++++++++++++++++
+// 24176 microseconds for valarray setup of 20000000 floats
+// 19416 microseconds for 20000000 valarray elements, c = a + b
+// 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75
+// +++++++++++++++++++++++++
+
+
 // GB timings May 20, 2015 OpenLAB machine, no OpenCL, Ubuntu 14.04 
 // +++++++++++++++++++++++++
 // clang++ compiler version 4.2.1 Compatible Ubuntu Clang 3.4 (tags/RELEASE_34/final)
