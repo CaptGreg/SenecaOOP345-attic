@@ -48,26 +48,30 @@
 // 53021 microseconds for 20000000 valarray elements, c = a + b
 // 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75
 // +++++++++++++++++++++++++
-//  clang++ -Wall -std=c++11 -Ofast -pthread  ocl_c++11.cpp -lOpenCL -o ocl_c++11 && ./ocl_c++11
-// +++++++++++++++++++++++++
 // clang++ compiler version 4.2.1 Compatible Clang 3.3 (tags/RELEASE_33/final)
 // AuthenticAMD AMD Phenom(tm) II X6 1100T Processor
 // This is a 6 core machine.
 // +++++++++++++++++++++++++
-// 478446 microseconds for setup of 20000000 floats, compiling the OpenCL kernel
-// 123572 microseconds for adding 20000000 floats
+// 506386 microseconds for setup of 20000000 floats, compiling the OpenCL kernel
+// 78573 microseconds for adding 20000000 floats
 // 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75
 // +++++++++++++++++++++++++
-// 100841 microseconds for vector setup of 20000000 floats
-// 67141 microseconds for adding 20000000 vector elements, for(...) c[i] = a[i] + b[i]
+// 93596 microseconds for vector setup of 20000000 floats
+// 67436 microseconds for adding 20000000 vector elements, for(...) c[i] = a[i] + b[i]
 // 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75
 // +++++++++++++++++++++++++
-// 97625 microseconds for vector setup of 20000000 floats
-// 1164903 microseconds for adding 20000000 vector elements, with 6 threads
+// 94592 microseconds for vector setup of 20000000 floats
+// 1178448 microseconds for adding 20000000 vector elements, using 6 threads
 // 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75
 // +++++++++++++++++++++++++
-// 91962 microseconds for valarray setup of 20000000 floats
-// 52658 microseconds for 20000000 valarray elements, c = a + b
+// 93573 microseconds for vector setup of 20000000 floats
+// all threads alive
+// 1138494 microseconds for starting up 6 threads
+// 44623 microseconds to add 20000000 vector elements, using 6 threads
+// 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75
+// +++++++++++++++++++++++++
+// 90942 microseconds for valarray setup of 20000000 floats
+// 53305 microseconds for 20000000 valarray elements, c = a + b
 // 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75
 // +++++++++++++++++++++++++
 
