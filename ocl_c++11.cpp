@@ -452,12 +452,12 @@ int main(int argc, char* argv[])
           size_t s = n * thread_chunk;
           size_t e = s + thread_chunk;
           if(n == num_procs - 1) e = elements;
-          auto f =  [vec_a, vec_b, &vec_c] (size_t s, size_t e) 
+          auto f =  [vec_a, vec_b, &vec_c, s, e] () 
               {
                   for(size_t i = s; i < e; i++)
                       vec_c[i] = vec_a[i] + vec_b[i];
                };
-          t[n] = std::thread(f, s, e);
+          t[n] = std::thread(f);
       }
       for(auto& e: t) e.join();
 
@@ -512,11 +512,14 @@ int main(int argc, char* argv[])
       }
 
       // wait until all threads alive
-      for(auto e : threadReady) if(e == false) std::this_thread::yield();
+      for(volatile auto e : threadReady) while(e == false) std::this_thread::yield();
 
       // GO!
-      everyoneReady = true;
-      cv.notify_all();
+      { // acquire lock
+        std::unique_lock<std::mutex> lock(cvMutex);
+        everyoneReady = true;
+        cv.notify_all();
+      }
 
       stopWatch.Stop();
       std::cout << stopWatch.usecs() << " microseconds for starting up single use thread pool with " << num_procs << " threads\n";
