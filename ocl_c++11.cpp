@@ -1,6 +1,34 @@
 // GB, not sure how effective this code is at utilizing the GPU
 // GB - try two pass, P1 = elements rounded to 256, P2 = balance
 
+// GB timings May 20, 2015 OpenLAB machine, no OpenCL, Ubuntu 14.04 
+// +++++++++++++++++++++++++
+// clang++ compiler version 4.2.1 Compatible Ubuntu Clang 3.4 (tags/RELEASE_34/final)
+// GenuineIntel Intel(R) Core(TM)2 Quad CPU    Q9550  @ 2.83GHz
+// This is a 4 core machine.
+// +++++++++++++++++++++++++
+// threw cl::Error: clGetPlatformIDs(-1001)
+// +++++++++++++++++++++++++
+// 200177 microseconds for vector setup of 20000000 floats
+// 234508 microseconds for adding 20000000 vector elements, for(...) c[i] = a[i] + b[i]
+// 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75
+// +++++++++++++++++++++++++
+// 199985 microseconds for vector setup of 20000000 floats
+// 7629568 microseconds for adding 20000000 vector elements, using 4 threads
+// 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75
+// +++++++++++++++++++++++++
+// 202076 microseconds for vector setup of 20000000 floats
+// all threads alive
+// 7569754 microseconds for starting up 4 threads
+// 80855 microseconds to add 20000000 vector elements, using 4 threads
+// 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75
+// +++++++++++++++++++++++++
+// 194200 microseconds for valarray setup of 20000000 floats
+// 390204 microseconds for 20000000 valarray elements, c = a + b
+// 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75
+// +++++++++++++++++++++++++
+
+
 // GB timings May 19, 2015 on 
 //  a 2010 vintage AMD 1100T 6-core CPU 
 //  a 2010 vintage Radeon HD 6970 GPU
