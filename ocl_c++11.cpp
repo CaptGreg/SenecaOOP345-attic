@@ -354,16 +354,17 @@ int main(int argc, char* argv[])
   #endif
   std::cout << "This is a " << std::thread::hardware_concurrency() << " core machine.\n";
 
+  Timer stopWatch;
+
+  // ::size_t elements = 100 * 1000 * 1000; // too big for HP laptop
+  // cl::Error: clCreateBuffer(-61)
+  size_t elements = 20 * 1000 * 1000;
+  if(argc  > 1) elements = atoi(argv[1]);
+
   try {
-    Timer stopWatch;
 
     std::cout << "+++++++++++++++++++++++++\n";
     stopWatch.Start();
-
-    // ::size_t elements = 100 * 1000 * 1000; // too big for HP laptop
-    // cl::Error: clCreateBuffer(-61)
-    size_t elements = 20 * 1000 * 1000;
-    if(argc  > 1) elements = atoi(argv[1]);
 
     std::vector<float> vecA(elements, 5.50f), vecB(elements, 3.25f), vecC(elements);
 
@@ -422,6 +423,12 @@ int main(int argc, char* argv[])
     else { // print the first 10 entries
       std::cout<<vecC[0]; for(int i = 1 ; i < 10 ; i++ ) std::cout<<", "<<vecC[i]; std::cout<<"\n";
     }
+  } catch (const cl::Error& e) {
+      std::cerr << "threw cl::Error: " << e.what() << "(" << e.err() << ")" << std::endl;
+  } catch (const std::exception& e) {
+      std::cerr << "threw std::exception: " << e.what() << "\n";
+  }
+  try {
 
     std::cout << "+++++++++++++++++++++++++\n";
     {
@@ -568,8 +575,6 @@ int main(int argc, char* argv[])
 
     }
     std::cout << "+++++++++++++++++++++++++\n";
-  } catch (const cl::Error& e) {
-      std::cerr << "threw cl::Error: " << e.what() << "(" << e.err() << ")" << std::endl;
   } catch (const std::exception& e) {
       std::cerr << "threw std::exception: " << e.what() << "\n";
   }
