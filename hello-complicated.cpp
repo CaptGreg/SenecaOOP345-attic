@@ -84,12 +84,25 @@ int main()
 {
    bool b = static_cast<bool> (std::endl (operator<< (std::cout, "#1 Hello, World!") ) );
    int  i = static_cast<int>  (b);
+   // can we cast to int in one step?
+   // i = static_cast<int> (std::endl (operator<< (std::cout, "#1a Hello, World!") ) );
+   // NO!
+   // error: cannot convert 'basic_ostream<char, std::char_traits<char> >' to 'int' without a conversion operator
 
-   std::endl (operator<< (std::cout, "#2 Hello, World!") );
+   operator<< (std::cout, "#2 Hello, World!\n");
+   // can we pick up the 'ostream&' return value from 'operator<<' ?
+   // auto os = operator<< (std::cout, "#2a Hello, World!\n");
+   // std::ostream os = operator<< (std::cout, "#2a Hello, World!\n");
+   // NO!
+   // error: call to deleted constructor of 'std::ostream' (aka 'basic_ostream<char>')
+   //   note: function has been explicitly marked deleted here
+   //   basic_ostream(const basic_ostream&) = delete;
 
-   std::endl ( std::endl (operator<< (std::cout, "#3 Hello, World!") ) );
 
-   operator<< (std::cout, "#4 Hello, World!\n");
+   std::endl (operator<< (std::cout, "#3 Hello, World!") );
 
-   return static_cast<int> (static_cast<bool> (std::endl (operator<< (std::cout, "#5 Hello, World!") )) );
+   std::endl ( std::endl (operator<< (std::cout, "#4 Hello, World!") ) );
+   operator<< (std::cout, "#5 Hello, World!\n");
+
+   return static_cast<int> (static_cast<bool> (std::endl (operator<< (std::cout, "#6 Hello, World!") )) );
 }
