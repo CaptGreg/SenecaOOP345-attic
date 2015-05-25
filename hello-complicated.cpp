@@ -7,6 +7,16 @@
 
 #include <iostream>
 
+int main1()
+{
+   std::cout << "code for humans:-\n";
+   std::cout << "Hello, World!" << std::endl;
+
+   std::cout << "Code for C++ nerds, dogs, robots, or aliens:-\n";
+   return static_cast<int> (static_cast<bool> (std::endl (operator<< (std::cout, "Hello, World!") )) );
+}
+
+
 // http://www.cplusplus.com/reference/ostream/endl/
 // ostream& endl (ostream& os);
 
@@ -82,6 +92,11 @@
 
 int main()
 {
+   main1();
+   
+
+   std::cout << "\nLet's break down the code for C++ nerds, dogs, robots, or aliens.\n";
+
    bool b = static_cast<bool> (std::endl (operator<< (std::cout, "#1 Hello, World!") ) );
    int  i = static_cast<int>  (b);
    // can we cast to int in one step?
@@ -91,6 +106,8 @@ int main()
 
    operator<< (std::cout, "#2 Hello, World!\n");
    // can we pick up the 'ostream&' return value from 'operator<<' ?
+   //
+   // NO!
    // auto os = operator<< (std::cout, "#2a Hello, World!\n");
    // std::ostream os = operator<< (std::cout, "#2a Hello, World!\n");
    // NO!
