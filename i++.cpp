@@ -9,7 +9,7 @@ int main(int argc, char ** argv)
    cout << "After 'i = --i;', i = " << i << "\n";
 
    i = 2; cout << "i = " << i << "\n";
-   i = i++; // this generates some discussion.
+   i = i++; // this generates some discussion and is a classic JAVA final exam question.
    cout << "After 'i = i++;', i = " << i << "\n";
 
    cout << "NOTE: 'i++ = i++;'  does not compile - error: expression is not assignable\n";
@@ -56,7 +56,7 @@ int main(int argc, char ** argv)
    cout << "char broiled:"; for(auto e : broiled) cout << e; cout << "\n";
 
    cout << "\nSo there you go.\n";
-   cout << "'i=i++', 'array[i]=array[i++]', 'i++=i++', array[i++]=array[i++] behave differently\n";
+   cout << "'i=i++', 'array[i]=array[i++]', array[i++]=array[i++] behave differently\n";
    cout << "  ('i++=i++' does not compile - error: expression is not assignable)\n";
 
    // i = 3++;  // will this compile?  *** NO! ***
