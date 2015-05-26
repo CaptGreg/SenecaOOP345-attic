@@ -1,0 +1,586 @@
+/*  
+Theme Name: Grid Focus
+Theme URI: http://5thirtyone.com/
+Description: Grid aligned WordPress theme
+Version: 1.1
+Author: Derek Punsalan
+Author URI: http://5thirtyone.com/
+Tags: white, grid, whitespace, minimal, clean, widgets
+
+Grid Focus was designed and coded by Derek Punsalan. Find
+more info about the guy at http://5hthirtyone.com
+
+Notes: Inspired and created for minimalist, content focused blogs 
+or websites. Customize, edit, poke, prod, and adapt to your own 
+style. Please leave credit where credit is due so that others may
+find the source for your site and adapt a suitable version for their
+own website.
+
+See line 53 for a collection of the main font rules - size, line-height,
+and color - combined for your convenience.
+
+*/
+
+* {
+	margin: 0;
+	padding: 0;
+}
+body {
+	background: #fff;
+	color: #333;
+	font-size: 62.5%;
+	font-family: arial, verdana, sans-serif;
+	text-align: center;
+} 
+h1 {
+	font-size: 2em;
+}
+h2 {
+	font-size: 1.6em;
+}
+h3 {
+	font-size: 1.4em;
+}
+h4 {
+	font-size: 1.2em;
+}
+a {
+	color: #000;
+	outline: none;
+	text-decoration: none;
+}
+a:hover {
+	color: #3c6c92;
+}
+code {
+	color: #000000;
+	font-size: 1.2em;
+}
+
+/* =----------------------------------- oh the convenience */
+#wrapper {
+	/* 
+		sets the minimum(s) for the entire site
+		off of which everything else is based on
+	*/
+	font-size: 1.2em;
+	line-height: 1.4em;
+}
+.nav li {
+	line-height: 1.2em;
+}
+.nav li a {
+	font-weight: bold;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+}
+.nav li a span {
+	color: #888;
+	font-size: 0.9em;
+	font-weight: normal;
+	text-transform: lowercase;
+}
+.nav li a.focus span {
+	color: #ccc;
+}
+.nav li a:hover,
+.nav li a.focus {
+	color: #fff;
+}
+.nav .searchField input {
+	color: #777;
+}
+.toggleCategories li a {
+	color: #fff;
+}
+.toggleCategories li a:hover {
+	color: #ccc;
+}
+.postMeta {
+	font-size: 0.9em;
+	text-transform: uppercase;
+}
+.postMeta span.date {
+	color: #777;
+}
+.postMeta span.comments a,
+.postMeta span.date a {
+	color: #3c6c92;
+}
+.post h2 {
+	line-height: 1.2em;
+}
+.entry a,
+.secondaryColumn a,
+#commentsContainer h3 a,
+.commentlist .comment-author a {
+	border-bottom: 1px solid #ddd;
+	color: #3c6c92;
+	font-weight: bold;
+}
+.entry a:hover,
+.secondaryColumn a:hover,
+#commentsContainer h3 a:hover,
+.commentlist .comment-author a:hover,
+.commentlist .comment-meta a:hover {
+	color: #3c6c92;
+	border-bottom: 1px solid #3c6c92;
+}
+.secondaryColumn a {
+	font-weight: normal;
+}
+.entry ul,
+.entry ol,
+.entry blockquote {
+	color: #555;
+	background-color: #efefef;
+}
+
+.secondaryColumn h3,
+#commentsContainer h3 {
+	font-size: 1.2em;
+}
+#cancel-comment-reply-link {
+	color: #3C6C92;
+	font-size: 0.8em;
+}
+.commentlist .comment-meta a {
+	color: #777;
+}
+.commentlist .comment-author cite {
+	font-style: normal;
+	font-weight: bold;
+}
+.commentlist .comment-meta {
+	font-size: 0.8em;
+}
+#commentform p span input,
+#commentform span textarea {
+	color: #333;
+	font-family: arial,verdana,sans-serif;
+	font-size: 1em;
+}
+#paginateIndex {
+	font-size: 0.9em;
+	text-transform: uppercase;
+}
+#footer {
+	clear: both;
+}
+#footer p a {
+	font-weight: bold;
+	color:#333;
+}
+
+/* =----------------------------------- main structure */
+#wrapper {
+	border-top: 1px solid #3c6c92;
+	margin: 20px auto;
+	text-align: left;
+	width: 970px;
+	padding: 0 5px;
+}
+#masthead {
+	padding: 7px 0
+}
+#filler {}
+#mainColumn {
+	float: left;
+	margin: 28px 0 0 0;
+	width: 640px;
+}
+.secondaryColumn {
+	float: left;
+	margin: 28px 0 0 30px;
+	overflow: hidden;
+	width: 240px;
+}
+
+/* =----------------------------------- header elements */
+#masthead h1 {
+	float: left;
+	margin: 15px 0 0 7px;
+}
+#masthead h1 a {
+	text-transform: uppercase;
+	width: 400px;
+}
+#blogLead img {
+	background: #fff;
+	border: none;
+	float: right;
+	height: 42px;
+	margin: 0 7px;
+	padding: 2px;
+	width: 42px;
+}
+#authorIntro {
+	float: right;
+	margin: 8px 0 0 0;
+	width: 340px;
+}
+
+/* =----------------------------------- top + bottom navigation */
+.navStripWrapper {
+	position: relative;
+	clear: both;
+}
+.nav {
+	background: #eee;
+}
+.nav li {
+	border-right: 1px solid #ccc;
+	display: block;
+	float: left;
+}
+.nav li a {
+	display: block;
+	padding: 7px 4px 0 7px;
+	width: 110px;
+	height: 42px;
+}
+.nav li a span {}
+.nav li a:hover {
+	background: #333;
+}
+.nav li a.focus {
+	background: #3c6c92;
+}
+.nav li.searchField {
+	float: right;
+	border: 0;
+}
+.nav .searchField div {
+	margin: 9px 8px 0 0;
+}
+.nav .searchField span {
+	background: #fff;
+	border: 1px solid #ccc;
+	border-left-color: #bbb;
+	border-bottom-color: #bbb;
+	display: block;
+	padding: 2px;
+}
+.nav .searchField input {
+	border: 1px solid #bbb;
+	outline: none;
+	padding: 4px;
+	width: 220px;
+}
+.toggleCategories {
+	background: #3c6c92;
+}
+.toggleCategories ul,
+.toggleCategories2 ul {
+	padding: 8px 7px 7px;
+}
+.toggleCategories ul li {
+	display: block;
+	float: left;
+	width: 102px;
+}
+.toggleCategories li a {
+	margin: 3px 0 4px 5px;
+}
+
+/* =----------------------------------- meta lead for each post */
+.postMeta {
+	border-top: 1px solid #ccc;
+	text-align: right;
+	margin-bottom: 14px;
+	position: relative;
+}
+.postMeta .container {
+	position: absolute;
+	top: -9px;
+	right: 0;
+}
+.postMeta span.date {
+	background: #fff;
+	padding: 0 4px;
+}
+.postMeta span.comments {
+	background: #fff url(images/chat_grey.gif) no-repeat 2px -1px;
+	padding-left: 18px;
+}
+
+/* =----------------------------------- general post */
+.post {
+	margin: 0 0 21px 0;
+}
+.post h2 {
+	margin-bottom: 10px;
+	padding: 0 3px;
+}
+.post h2 a {
+	display:block;
+}
+
+/* =----------------------------------- entry body */
+.entry {
+	padding: 0 3px;
+	overflow: hidden;
+}
+.entry p {
+	line-height: 1.6em;
+	margin: 10px 0;
+}
+.entry ul,
+.entry ol,
+.entry blockquote {
+	margin: 0 14px;
+}
+.entry ol {
+	list-style: decimal;
+}
+.entry ul li,
+.entry ol li {
+	margin: 0 0 7px 18px;
+}
+.entry ul li {
+	list-style: circle;
+}
+.entry blockquote {
+	border-left: 1px solid #ccc;
+	font-size: 1.1em;
+	line-height: 1.4em;
+	margin-left: 21px;
+	padding-left: 10px;
+}
+.entry img,
+.entry a img {
+	background: #fff;
+	border: none;
+	padding: 2px;
+}
+.entry a:hover img {
+	border-color: #3c6c92;
+}
+
+.entry.meta {
+	background: #eee;
+	border: 1px solid #ccc;
+	border-width: 1px 0;
+}
+.entry.meta p {
+	margin: 5px 7px;
+}
+.entry.meta .highlight {
+	text-transform: uppercase;
+	font-size: 10px;
+}
+.entry.meta a {
+	color: #333;
+	border-color: #bbb;
+}
+.entry.meta a:hover {
+	color: #000;
+	border-color: #000;
+}
+
+/* =----------------------------------- main index pagination */
+#paginateIndex { 
+	margin-bottom: 25px;
+}
+#paginateIndex a,
+.commentlist li .reply a {
+	color: #777;
+	font-size: 0.9em;
+	text-transform: uppercase;
+	display: block;
+	padding: 4px 7px 3px;
+	background: #fff;
+	border: 1px solid #ddd;
+}
+.commentlist li .reply a {
+	color: #aaa;
+}
+#paginateIndex a:hover,
+.commentlist li .reply a:hover {
+	color: #3c6c92;
+	border-color: #3c6c92;
+	background: #eee;
+}
+
+/* =----------------------------------- widget enabled sidebar */
+.secondaryColumn h3 {
+	border-top: 1px solid #ccc;
+	border-bottom: 1px solid #eee;
+	margin: 0 0 10px 0;
+	padding: 7px 4px;
+}
+.widgetContainer {
+	margin: 0 0 20px 0;
+}
+.widgetContainer ul li {
+	margin: 0 3px 7px 21px;
+	list-style: circle;
+}
+.widgetContainer ul li ul {
+	margin-top: 5px;
+}
+.widgetContainer .textwidget {
+	margin: 0 3px;
+	line-height: 1.5em;
+}
+.widgetContainer #wp-calendar {
+	border-collapse: collapse;
+	width: 100%;
+}
+#wp-calendar caption {
+	font-weight: bold;
+	margin-bottom: 7px;
+}
+#wp-calendar thead {}
+#wp-calendar thead th {
+	padding: 4px 0 4px 3px;
+	border: 1px solid #ccc;
+	border-width: 1px 0;
+}
+#wp-calendar td {
+	padding: 3px 0 4px 3px;
+	color: #777;
+}
+#wp-calendar td a {
+	font-weight: bold;
+}
+
+/* =----------------------------------- style some comments */
+#commentsContainer {
+	margin-bottom: 30px;
+}
+#commentsContainer span.hook {
+	position: relative;
+	display: block;
+}
+#commentsContainer h3 {
+	display: block;
+	margin: 10px 0;
+	padding: 7px 4px 0;
+	border-top: 1px solid #3c6c92;
+}
+.cancel-comment-reply {
+	position: absolute;
+	top: -1px;
+	right: 4px;
+}
+.commentlist {
+	list-style: none;
+	margin: 0 0 20px;
+}
+.commentlist .comment-author {
+	border-top: 1px solid #ccc;
+	padding-top: 7px;
+	margin-top: 10px;
+	overflow: hidden;
+}
+.commentlist .comment-author img.avatar {
+	display: block;
+	float: left;
+	height: 16px;
+	width: 16px;
+	margin: 0 4px 0 0;
+}
+.commentlist .comment-meta {
+	margin: 0 0 0 20px;
+}
+.commentlist li .reply {
+	text-align: right;
+	padding-bottom: 10px;
+}
+.commentlist li .reply a {
+	display:inline;
+}
+.commentlist li p {
+	margin: 1em 0;
+	padding: 0 3px;
+}
+.commentlist li ul,
+.commentlist li ol,
+.commentlist li blockquote {
+	margin: 0 20px;
+}
+.commentlist .children {
+	margin: 0 0 0 40px;
+}
+.commentlist .children li {
+	list-style: none;
+}
+#commentform .contain {
+	margin: 0 0 10px 0 !important;
+}
+#commentform #author,
+#commentform #email,
+#commentform #url,
+#commentform textarea {
+	padding: 4px 3px;
+	border: 1px solid #ccc;
+	border-left-color: #bbb;
+	border-bottom-color: #bbb;
+	background: #fff;
+	margin-right: 4px;
+}
+#commentform #author,
+#commentform #email,
+#commentform #url,
+#commentform textarea {
+	border: 1px solid #bbb;
+	outline: none;
+	padding: 4px 3px;
+	width: 160px;
+}
+#commentform p label {
+	margin: 4px 0 0 0;
+}
+#commentform textarea {
+	float: none;
+	width: 98%;
+	overflow: auto;
+}
+
+/* =----------------------------------- boring footer */
+#footer {
+	border-top: 1px solid #3c6c92;
+	margin: 35px 0;
+}
+#footer p {
+	padding: 14px 3px 0; 
+}
+
+/* =----------------------------------- floats + clearing rule */
+.floatleft,
+.alignleft {
+	float: left;
+	margin: 3px 7px 0 0;
+}
+.floatright,
+.alignright {
+	float: right;
+	margin: 3px 0 0 7px;
+}
+.right {
+	float:right;
+}
+.left {
+	float: left;
+}
+.clear {
+	clear: both;
+}
+.fix:after {
+	content: ".";
+	display: block;
+	height: 0;
+	clear: both;
+	visibility: hidden;
+}
+.fix {
+	display: inline-block;
+} 
+* html .fix{
+	height: 1%;
+}
+.fix{
+	display:
+	block;
+}
