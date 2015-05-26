@@ -18,7 +18,7 @@
 // 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75
 // +++++++++++++++++++++++++
 // 23793 microseconds for vector setup of 20000000 floats
-// all threads alive
+// all threads flying
 // 521487 microseconds for starting up 8 threads
 // 21696 microseconds to add 20000000 vector elements, using 8 threads
 // 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75
@@ -43,7 +43,7 @@
 // 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75
 // +++++++++++++++++++++++++
 // 23758 microseconds for vector setup of 20000000 floats
-// all threads alive
+// all threads flying
 // 492450 microseconds for starting up 8 threads
 // 22297 microseconds to add 20000000 vector elements, using 8 threads
 // 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75
@@ -71,7 +71,7 @@
 // 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75
 // +++++++++++++++++++++++++
 // 202076 microseconds for vector setup of 20000000 floats
-// all threads alive
+// all threads flying
 // 7569754 microseconds for starting up 4 threads
 // 80855 microseconds to add 20000000 vector elements, using 4 threads
 // 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75
@@ -146,7 +146,7 @@
 // 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75
 // +++++++++++++++++++++++++
 // 93573 microseconds for vector setup of 20000000 floats
-// all threads alive
+// all threads flying
 // 1138494 microseconds for starting up 6 threads
 // 44623 microseconds to add 20000000 vector elements, using 6 threads
 // 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75, 8.75
@@ -343,10 +343,6 @@
 // 
 
 
-// NOTE compiler warnings: clCreateSampler + clCreateCommandQueue deprecated
-#define __CL_ENABLE_EXCEPTIONS
-#include <CL/cl.hpp>
-
 #include <vector>       // want std::vector, not cl::vector
 #include <iostream>     // std::cout
 #include <exception>    // std::bad_alloc + friends
@@ -358,6 +354,11 @@
 #include <mutex>
 #include <condition_variable>
 #include <memory>        // unique_ptr
+
+// NOTE compiler warnings: clCreateSampler + clCreateCommandQueue deprecated
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations" // ignore Khronos cl.hpp header file warnings
+#define __CL_ENABLE_EXCEPTIONS
+#include <CL/cl.hpp>
 
 // #include <algorithm> // compiles without
 
@@ -433,7 +434,21 @@ int main(int argc, char* argv[])
    std::cout << CPUVendor() << " " << CPUName() << "\n";
 
   #endif
+
   std::cout << "This is a " << std::thread::hardware_concurrency() << " core machine.\n";
+
+  #ifdef CL_VERSION_2_0           
+    std::cout << "CL_VERSION 2.0\n";
+  #elif CL_VERSION_1_2
+    std::cout << "CL_VERSION 1.2\n";
+  #elif CL_VERSION_1_1
+    std::cout << "CL_VERSION 1.1\n";
+  #elif CL_VERSION_1_0
+    std::cout << "CL_VERSION 1.0\n";
+  #else
+    std::cout << "Unknown CL_VERSION\n";
+  #endif
+
 
   Timer stopWatch;
 
@@ -592,7 +607,7 @@ int main(int argc, char* argv[])
           // auto f =  [&] (int n, size_t s, size_t e) // args to ensure value at time of call is used
           // [&] method hangs with clang
               {
-                  // let main know we are alive
+                  // let main know we are flying
                   p[n].set_value(true);
 
                   // wait until told to go
@@ -610,7 +625,7 @@ int main(int argc, char* argv[])
 
       // wait for threads to start
       for(int n = 0 ; n < num_procs; n++)  {auto f = p[n].get_future(); f.get(); }
-      std::cout << "all threads alive\n";
+      std::cout << "all threads flying\n";
 
       // GO!
       { // acquire lock
