@@ -20,9 +20,14 @@ public:
  ~X()                  {cout<<"X dtor:"<<name<<"\n"; if(trouble) delete [] trouble;}  // dtor
  X(X& rhs) { // copy ctor C++98/C++03
    cout<<"X copy ctor (deep copy of rhs)\n"; 
+#if 0
    trouble = new double[SIZE]; 
    memcpy(trouble, rhs.trouble, SIZE * sizeof(double)); // deep copy
    name = rhs.name;
+#else
+   trouble = nullptr;
+   *this = rhs;          // let assigment operator do the work
+#endif
  }
  X& operator= (const X& rhs) {  // assignment operator C++98/C++03
    cout << "assignment operator: " << name << "=" << rhs.name << "\n";  
@@ -41,8 +46,8 @@ public:
  }
  X(X&& rhs) { // move ctor C++11
    cout<<"X move ctor (move rhs pointer)\n"; 
-   trouble = rhs.trouble; rhs.trouble = nullptr;
-   name = rhs.name;       rhs.name.clear();
+   trouble = nullptr;
+   *this = std::move(rhs);  // let move assignment operator do the work.
  }
  X&& operator= (X&& rhs) {  // assignment operator C++11
    cout << "move assignment operator: " 
