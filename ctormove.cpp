@@ -9,7 +9,7 @@ void print(int &  i) { cout << i <<  " is a l-value\n"; }
 void print(int && i) { cout << i <<  " is a r-value\n"; }
 
 class X {
-  const static int SIZE = 125000000; // 125 million doubles * sizeof(double) = 1 GByte
+  const static size_t SIZE = 125000000; // 125 million doubles * sizeof(double) = 1 GByte
   double *trouble;
   string name;
 public:
