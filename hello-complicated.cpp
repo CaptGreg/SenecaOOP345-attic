@@ -12,6 +12,9 @@ int main1()
    std::cout << "code for humans:-\n";
    std::cout << "Hello, World!" << std::endl;
 
+   std::cout << "even better code for humans:-\n";
+   std::cout << "Hello, World!\n";
+
    std::cout << "Code for C++ nerds, dogs, robots, or aliens:-\n";
    return static_cast<int> (static_cast<bool> (std::endl (operator<< (std::cout, "Hello, World!") )) );
 }
