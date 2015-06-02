@@ -390,6 +390,15 @@ void Templates()
   std::cout << "templates OOP244\n";
 
   // C++ OOP244 function template
+   // templates were motivated from #define macros
+  #define myMinMacro(a,b) (a < b? a: b)
+  std::cout << "myMinMacro(-100,,99.)=" << myMinMacro(-100.,99.) << "\n";
+  double a=1, b = 2;
+  std::cout <<"a,b=" << a << "," << b << "\n";
+  std::cout << "myMinMacro(a,b))=" << myMinMacro(a,b) << "\n";
+  std::cout << "myMinMacro(a++,b++))=" << myMinMacro(a++,b++) << "\n";
+  std::cout <<"a,b=" << a << "," << b << "\n";
+
   double trouble = myMin(-100., 99.);        // calls templated myMin
   const char*  broiled = myMin("chicken", "pig");  // calls 'specialized' myMin
 
@@ -432,6 +441,15 @@ void Composition()
     void AddRoom(std::string name) {rooms.push_back(new Room(name));}
     ~House() { for(auto e : rooms) delete e; } 
   }; 
+
+  House myHouse;
+  myHouse.AddRoom("kitchen");
+  myHouse.AddRoom("dining room");
+  myHouse.AddRoom("bedroom 1");
+  myHouse.AddRoom("bedroom 2");
+  myHouse.AddRoom("bedroom 3");
+  myHouse.AddRoom("bathroom");
+  myHouse.AddRoom("basement");
 }
 
 void Association()
@@ -456,6 +474,31 @@ void Association()
   public:
     void AddStudent(Student* student) { students.push_back(student); }
   };
+
+  College Seneca;
+  College Centennial;
+  College Sheridan;
+
+  Student Tom;
+  Student Dick;
+  Student Jane;
+  Student Mary;
+  
+  Tom.AddCollege(&Seneca);
+  Tom.AddCollege(&Sheridan);
+
+  Seneca.AddStudent(&Tom);
+  Sheridan.AddStudent(&Tom);
+
+  Dick.AddCollege(&Seneca);
+  Seneca.AddStudent(&Dick);
+  
+  Jane.AddCollege(&Seneca);
+  Seneca.AddStudent(&Jane);
+  
+  Mary.AddCollege(&Centennial);
+  Centennial.AddStudent(&Mary);
+  
 }
 
 void Aggregation()
@@ -490,6 +533,28 @@ void Aggregation()
     public:
     void Addduck(Duck duck) { ducks.push_back(duck); }
   };
+
+  Pond golden;
+  Pond oxbow;
+
+  Duck donald;
+  Duck ronald;
+  Duck daffy;
+  Duck black;
+  Duck bad;
+  Duck good;
+  Duck evil;
+  Duck neutral;
+
+  golden.Addduck(donald);
+  golden.Addduck(ronald);
+  golden.Addduck(daffy);
+  golden.Addduck(black);
+  golden.Addduck(good);
+  golden.Addduck(neutral);
+
+  oxbow.Addduck(bad);
+  oxbow.Addduck(evil);
 }
 
 void Expressions()
