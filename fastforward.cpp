@@ -381,8 +381,8 @@ void Inheritance()
   template <typename First, typename... Rest>  // a C++11 variable argument (variadic) template
   void print(const First& first, const Rest&... rest) {
     // std::cout << __PRETTY_FUNCTION__ << "\n";
-    std::cout << first << ", ";
-    print(rest...); // recursive call using pack expansion syntax
+    print(first); // calls above function template
+    print(rest...); // recursively call this variadic template using 'pack expansion' '(const Rest&...)'
   }
 
 void Templates()
