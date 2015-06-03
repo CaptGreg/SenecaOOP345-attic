@@ -392,11 +392,20 @@ void Templates()
   // C++ OOP244 function template
    // templates were motivated from #define macros
   #define myMinMacro(a,b) (a < b? a: b)
-  std::cout << "myMinMacro(-100,,99.)=" << myMinMacro(-100.,99.) << "\n";
+  std::cout << "myMinMacro(-100.,99.)=" << myMinMacro(-100.,99.) << "\n";
   double a=1, b = 2;
   std::cout <<"a,b=" << a << "," << b << "\n";
   std::cout << "myMinMacro(a,b))=" << myMinMacro(a,b) << "\n";
+  a=1, b=2;
   std::cout << "myMinMacro(a++,b++))=" << myMinMacro(a++,b++) << "\n";
+  std::cout <<"a,b=" << a << "," << b << "\n";
+  a=1, b=2;
+  std::cout << "myMinMacro(2*a+9,3*b+5))=" << myMinMacro(2*a+9,3*b+5) << "\n";
+  std::cout <<"a,b=" << a << "," << b << "\n";
+  a=1, b=2;
+
+  #define myMinMacro2(a,b) ((a) < (b)? (a): (b))
+  std::cout << "myMinMacro2(2*a+9,3*b+5))=" << myMinMacro2(2*a+9,3*b+5) << "\n";
   std::cout <<"a,b=" << a << "," << b << "\n";
 
   double trouble = myMin(-100., 99.);        // calls templated myMin
