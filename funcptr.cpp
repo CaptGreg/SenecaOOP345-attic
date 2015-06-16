@@ -80,7 +80,7 @@ int main(int argc, char**argv)
 
   class my_function_objectCStyle  // same thing but with C-style function pointers
   {
-    double (*f) (double);
+    double (*f) (double);  // a C style (1977) function pointer
   public :
     my_function_objectCStyle(double (*function) (double)) : f(function) {}
     double operator () (double d) const { return f(d); }
