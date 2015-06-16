@@ -26,18 +26,18 @@ int main(int argc, char**argv)
     // these call the second overloaded variadic template, 
     // which uses recursive template expansion as needed.
     print(10, 20);
-    // expands templete which generates
+    // expands template which generates
     // print(10);
     // print(20);
 
     print(100, 200, 300);
-    // expands templete which generates
+    // expands template which generates
     // print(100);
     // print(200);
     // print(300);
 
     print("first", 2, "third", 3.14159);
-    // expands templete which generates
+    // expands template which generates
     // print("first");
     // print(2);
     // print("third");
