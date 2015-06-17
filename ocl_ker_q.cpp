@@ -9,18 +9,30 @@
 #define __CL_ENABLE_EXCEPTIONS
 #include <CL/cl.hpp>
 
-class Timer { // use C++11 std::chrono features to create a stop-watch timer class
+class Timer { // C++11 chrono stop-watch timer class. Needs "#include <chrono>".
   std::chrono::time_point<std::chrono::high_resolution_clock> start;
   std::chrono::time_point<std::chrono::high_resolution_clock> stop;
 public:
-  void Start() { start  = std::chrono::high_resolution_clock::now(); }
-  void Stop()  { stop   = std::chrono::high_resolution_clock::now(); }
-  uint64_t usecs() {
+ void Start() { start  = std::chrono::high_resolution_clock::now(); }
+ void Stop()  { stop   = std::chrono::high_resolution_clock::now(); }
+ uint64_t msecs() {
+    typedef std::chrono::duration<int,std::milli> millisecs_t ;
+    millisecs_t duration_get( std::chrono::duration_cast<millisecs_t>(stop-start) ) ;
+    uint64_t ms = duration_get.count();
+    return ms;
+ }
+ uint64_t usecs() {
     typedef std::chrono::duration<int,std::micro> microsecs_t ;
     microsecs_t duration_get( std::chrono::duration_cast<microsecs_t>(stop-start) ) ;
     uint64_t us = duration_get.count();
     return us;
-  }
+ }
+ uint64_t nsecs() {
+    typedef std::chrono::duration<int,std::nano> nanosecs_t ;
+    nanosecs_t duration_get( std::chrono::duration_cast<nanosecs_t>(stop-start) ) ;
+    uint64_t ns = duration_get.count();
+    return ns;
+ }
 };
 
 int main(int argc, char* argv[]) 
