@@ -5,25 +5,25 @@
 #include <iostream>
 using namespace std;
 
-template <typename T> 
+template <typename T>                            // C++ function template
 void print(const T& t) {
-// std::cout << __PRETTY_FUNCTION__ << "\n";
+    // std::cout << __PRETTY_FUNCTION__ << "\n";
     cout << t << endl;
 }
 
-template <typename First, typename... Rest> 
+template <typename First, typename... Rest>      // C++11 variable argument (variadic) template
 void print(const First& first, const Rest&... rest) {
-// std::cout << __PRETTY_FUNCTION__ << "\n";
-    cout << first << ", ";
+    // std::cout << __PRETTY_FUNCTION__ << "\n";
+    print(first);
     print(rest...); // recursive call using pack expansion syntax
 }
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 int main(int argc, char**argv)
 {
-    print(1); // calls first overloaded template
+    print(1); // calls function template template
     
-    // these call the second overloaded variadic template, 
+    // these call the variadic template
     // which uses recursive template expansion as needed.
     print(10, 20);
     // expands template which generates
