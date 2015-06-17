@@ -158,7 +158,7 @@ int main(int argc, char**argv)
   t.join(); // wait for thread to finish
   cout << "threadRandom returned " << result << "\n";
 
-  // pass an address to a structure with paramerters and return value
+  // pass an address to a structure with parameters and return value
   struct parms_s{
     int m;
     int x;
