@@ -1,7 +1,7 @@
 #include <string>     // throw message
 #include <iostream>
 #include <functional> // std::function + std::bind
-#include <cmath>      // sin + M_PI
+#include <cmath>      // sin + cos + M_PI
 using namespace std;
 
 template <typename T>
