@@ -1,6 +1,7 @@
 #include <stack>
 #include <string>
 #include <iostream>
+#include <exception>
 using namespace std;
 
 int main(int argc, char **argv)
@@ -55,11 +56,13 @@ int main(int argc, char **argv)
 
     size_t num = s.size();
     for(size_t i = 1 ; i <= num + 1; i++) {
-      if(s.empty()) throw "popping an empty stack.\n";
+      if(s.empty()) throw "popping an empty stack.\n";  // SEGFAULTS! IF EMPTY
       cout << s.top() << endl;
       s.pop();
     }
+  } catch (exception& err) {
+    cout << "caught a std::exception =" << err.what() << endl;
   } catch (const char* err) {
-    cout << "caught a char* err=" << err << endl;
+    cout << "caught a 'const char*' err=" << err << endl;
   }
 }
