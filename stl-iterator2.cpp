@@ -13,24 +13,23 @@ void printContainer(T& container)
 }
  
 template <class T>
-void printContainer11(T& container)
+void printContainer11(T& container)  // C++11 function template range based for compile error
 {
-   for(typename T::iterator i = container.begin(); i != container.end(); i++) {
-      cout << "c++11 container value of i = " << *i << endl;
+   for(auto it = container.begin(); it != container.end(); it++) { // auto is C++ 11
+      cout << "c++11 auto iterator container value of it = " << *it << endl;
    }
 
-   // for(typename T i : container)
-   // for(T i : container)
-   // {
-      // cout << "c++11 container value of i = " << i << endl;
-   // }
+   for(auto e : container)   // error
+   {
+      cout << "c++11 range-based for container value of e = " << e << endl;
+   }
 }
 
 int main()
 {
    // create a vector to store double
    vector<double> vec; 
-   vector<double>::iterator v;
+   vector<double>::iterator it;
    // vector<int> vec; 
    double i;
 
@@ -52,12 +51,18 @@ int main()
    for(double d : vec) {
       cout << "c++11 range-based for loop value of vec " << d << endl;
    }
+   for(auto e : vec) {
+      cout << "c++11 range-based for loop with auto value of vec " << e << endl;
+   }
 
    // use iterator to access the values
-   v = vec.begin();
-   while( v != vec.end()) {
-      cout << "value of v = " << *v << endl;
-      v++;
+   it = vec.begin();
+   while( it != vec.end()) {
+      cout << "while loop: value of it = " << *it << endl;
+      it++;
+   }
+   for(it = vec.begin(); it != vec.end() ;  it++) {
+      cout << "for loop: value of it = " << *it << endl;
    }
    printContainer(vec);
    printContainer11(vec);
