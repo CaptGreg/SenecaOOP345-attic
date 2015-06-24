@@ -11,17 +11,18 @@
 //  - if no work to do, all threads finished, ~ThreadPool() active, let ~ThreadPool() 
 //    signal the threads to exit and join the threads.
 
-#include <string>
-#include <deque>
-#include <vector>
-#include <iostream>      // cout
-#include <chrono>        // sleep
-#include <sstream>       // stringstream
+#include <queue>         // GB queue works fine, was deque
+#include <vector>        // used to hold tid's so we can join threads
 #include <atomic>
-
 #include <thread>
 #include <mutex>
 #include <condition_variable>
+
+#include <iostream>      // cout
+#include <chrono>        // sleep
+#include <sstream>       // stringstream
+#include <cstdlib>       // random number generator, 'random()'
+#include <ctime>         // initialize random number generator with 'time(0L)', the current time
 
 using namespace std;
  
@@ -29,28 +30,22 @@ class ThreadPool;
   
 // our worker thread objects
 class Worker {
+    ThreadPool &pool;
+    std::thread::id tid; // GB for debugging
 public:
     Worker(ThreadPool &s) : pool(s), tid(this_thread::get_id()) { }
     void operator()();
-private:
-    ThreadPool &pool;
-    std::thread::id tid; // GB for debugging
 };
   
 // the actual thread pool
 class ThreadPool {
-public:
-    ThreadPool(size_t);
-    template<class F> void enqueue(F f);
-    ~ThreadPool();
-private:
     friend class Worker;
  
     // need to keep track of threads so we can join them
-    std::vector< std::thread > workers;
+    std::vector< std::thread > threadVector;
  
     // the task queue
-    std::deque< std::function<void()> > tasks;
+    std::queue< std::function<void()> > taskQueue;
  
     // synchronization
     std::mutex              queue_mutex;
@@ -59,6 +54,10 @@ private:
     std::atomic<int>        active;     // GB active thread count.
     std::mutex              idle_mutex; // GB
     std::condition_variable idle_cv;    // GB
+public:
+    ThreadPool(size_t);
+    template<class F> void enqueue(F f);
+    ~ThreadPool();
 };
 
 void Worker::operator()()
@@ -69,23 +68,22 @@ void Worker::operator()()
             std::unique_lock<std::mutex> lock(pool.queue_mutex);
              
             // look for a work item
-            while(!pool.stop && pool.tasks.empty()) { // if there are none wait for notification
+            while(!pool.stop && pool.taskQueue.empty()) // if there are none wait for notification
                 pool.condition.wait(lock);
-            }
  
             if(pool.stop) return;// exit if the pool is stopped
  
-            // get the task from the queue
-            task = pool.tasks.front();
-            pool.tasks.pop_front();
+            // get the next task from the task queue
+            task = pool.taskQueue.front();
+            pool.taskQueue.pop();
         }   // release lock
 
         // GB active count and cv for notifying ThreadPool dtor to shut it down.
+
         pool.active++; // atomic data type, ++ overload
-
         task(); // execute the task
-
         pool.active--; // atomic data type, -- overload
+
         if(!pool.active.load()) // ThreadPool destructor should be waiting for the last thread to finish
         { // acquire lock
             std::unique_lock<std::mutex> lck(pool.idle_mutex);
@@ -93,13 +91,13 @@ void Worker::operator()()
         } // release lock
     }
 }
-// the constructor just launches some amount of workers
-ThreadPool::ThreadPool(size_t threads) :   stop(false)
+// the constructor just launches some amount of threadVector
+ThreadPool::ThreadPool(size_t threads) :   stop(false), active(0)
 {
     active = 0; // atomic data type, = overload
     cout << "ThreadPool:  launching " << threads << " worker threads\n";
-    for(size_t i = 0;i<threads;++i)
-        workers.push_back(std::thread(Worker(*this)));
+    for(size_t t = 0; t<threads; t++)
+        threadVector.push_back(std::thread(Worker(*this)));
 }
    
 // the destructor joins all threads
@@ -115,7 +113,7 @@ ThreadPool::~ThreadPool()
     stop = true;
     condition.notify_all();
      
-    for( auto& w : workers ) w.join(); // join them
+    for( auto& w : threadVector ) w.join(); // join them
 }
 
 // add new work item to the pool
@@ -124,7 +122,7 @@ void ThreadPool::enqueue(F f)
 {
     { // acquire lock
         std::unique_lock<std::mutex> lock(queue_mutex);
-        tasks.push_back(std::function<void()>(f)); // add the task
+        taskQueue.push(std::function<void()>(f)); // add the task (queue)
     } // release lock
      
     condition.notify_one(); // wake up one thread
@@ -132,24 +130,35 @@ void ThreadPool::enqueue(F f)
 
 int main(int argc,char**argv)
 {
-    ThreadPool pool(3); // create a thread pool of worker threads
+    srandom(time(0L)); // comment this out to generate the same repeatible random number sequence
+
+    const int THREADS_IN_POOL = 3;
+    ThreadPool threadPool(THREADS_IN_POOL); // create a thread pool of worker threads
  
-    for(int i = 0;i<9;++i) // queue a bunch of "work items"
+    for(int wi = 0; wi<11; wi++) // queue some "work items"
     {
-        stringstream ss; ss << "main: enqueuing " << i << "\n"; cout << ss.str();
-        pool.enqueue([i] () -> void // compiles fine without the '() -> void'
+        stringstream ss; 
+        ss << "main: enqueuing " << wi << "\n"; cout << ss.str();
+        auto workItem = [wi] () -> void // compiles fine without the '() -> void'
             {
-                std::thread::id tid = this_thread::get_id();
+                // std::thread::id tid = this_thread::get_id();
                 stringstream ss; 
-                ss << ">>> hello " << i << " tid=(" << tid << ')' << '\n'; 
+                ss << ">>> hello " << wi 
+                   // << " tid=(" << tid << ')' 
+                   << '\n'; 
                 cout << ss.str(); 
     
-                this_thread::sleep_for (chrono::milliseconds(1000)); 
+                int nap =  random() % 5000; 
+                this_thread::sleep_for (chrono::milliseconds(nap));
     
-                ss.str("");
-                ss << ">>> world " << i << " tid=(" << tid << ')' << '\n'; 
+                // ss.str("");
+                ss.clear();
+                ss << ">>> world " << wi 
+                   // << " tid=(" << tid << ')' 
+                   << " " << nap << " milliseconds"
+                   << '\n'; 
                 cout << ss.str(); 
-            }
-        );
+            };
+        threadPool.enqueue(workItem);
     }
 }
