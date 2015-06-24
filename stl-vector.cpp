@@ -17,9 +17,9 @@ int main()
     inventory.push_back("sword");
     cout << "After one insertion, your capacity is " << inventory.capacity() << " items.\n";
     inventory.push_back("armor");
-    cout << "After two insertion, your capacity is " << inventory.capacity() << " items.\n";
+    cout << "After two insertions, your capacity is " << inventory.capacity() << " items.\n";
     inventory.push_back("shield");
-    cout << "After three insertion, your capacity is " << inventory.capacity() << " items.\n";
+    cout << "After three insertions, your capacity is " << inventory.capacity() << " items.\n";
 
     cout << "You have " << inventory.size() << " items.\n";
 

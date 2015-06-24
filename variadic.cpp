@@ -19,18 +19,31 @@
 
 
 #if 0
- // it would be great if we could wrap << with a mutex.
+ // Can we use a variadic templete with an operator overload?
+ // NO!   - It doesn't compile :-( 
  template <typename T>
- std::ostream& operator<<(std::ostream& os, const T& t) {
+ std::ostream& operator<< (std::ostream& os, const T& t) 
+ {
      os << "my<< " << t;
+     return os;
  }
 
+#if 0
+ // isolate error message by coding an operator different  from '<<'
+ // try with '!='
  template <typename T, typename... etc>
- std::ostream& operator<<(std::ostream& os, const T& t ,const etc&... pp) {
+ std::ostream& operator<< (std::ostream& os, const T& t ,const etc&... pp) 
+ // error: overloaded 'operator<<' must be a binary operator (has 3 parameters)
+ // std::ostream& operator!= (std::ostream& os, const T& t ,const etc&... pp) 
+ // error: overloaded 'operator!= must be a binary operator (has 3 parameters)
+
+ {
 // error: overloaded 'operator<<' must be a binary operator (has 3 parameters)
      os << t;
      os << (pp...);
+     return os;
  }
+#endif
 #endif
 
  int main() {
