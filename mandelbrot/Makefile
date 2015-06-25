@@ -9,7 +9,7 @@ AMDAPP=/opt/AMDAPP
 
 #include $(AMDAPP)/make/openclsdkdefs.mk 
 
-CXXFLAGS   = $(CFLAGSOPENCV)  -I/opt/AMDAPP/include -Ofast -std=c++11 -fopenmp
+CXXFLAGS   = $(CFLAGSOPENCV)  -I/opt/AMDAPP/include -Ofast -std=c++11 -fopenmp -Ofast
 
 LFLAGS    = $(LFLAGSOPENCV) -lOpenCL -lSDL
 
