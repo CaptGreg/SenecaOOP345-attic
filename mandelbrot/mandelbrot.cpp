@@ -41,7 +41,7 @@ static uint32_t mandelbrot_point(double cx, double cy, double max_value_sq,
   return iter;
 }
 
-static void calc_lines(uint32_t start, uint32_t end, uint32_t* lines,
+static void calc_pixels(uint32_t start, uint32_t end, uint32_t* pixels,
                        double max_values_sq, uint32_t max_iter)
 {
   uint32_t i, iter, icolor;
@@ -57,7 +57,7 @@ static void calc_lines(uint32_t start, uint32_t end, uint32_t* lines,
     iter = mandelbrot_point(cx, cy, max_values_sq, max_iter);
 
     icolor = (double)iter/ (double)max_iter * (1u << 24);
-    lines[i-start] = icolor;
+    pixels[i-start] = icolor;
   }
 }
 
@@ -81,7 +81,7 @@ int main(int argc, char* argv[])
     max_iter = 5000;
 
     tStart = std::chrono::high_resolution_clock::now();
-    calc_lines(start = 0, end= MAX_X * MAX_Y, pixels, max_values_sq, max_iter);
+    calc_pixels(start = 0, end= MAX_X * MAX_Y, pixels, max_values_sq, max_iter);
     tStop = std::chrono::high_resolution_clock::now();
     millisecs_t duration( std::chrono::duration_cast<millisecs_t>(tStop-tStart) ) ;
     long elapsed = duration.count();
@@ -114,4 +114,4 @@ int main(int argc, char* argv[])
   }
 
   return 0;
-  }
+}
