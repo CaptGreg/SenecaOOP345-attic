@@ -45,7 +45,7 @@ static Uint32 mandelbrot_point(double cx, double cy, double max_value_sq,
   return iter;
 }
 
-static void calc_lines(Uint32 start, Uint32 end, Uint32* lines,
+static void calc_pixels(Uint32 start, Uint32 end, Uint32* pixels,
                        double max_values_sq, Uint32 max_iter)
 {
   Uint32 i, iter, icolor;
@@ -62,7 +62,7 @@ static void calc_lines(Uint32 start, Uint32 end, Uint32* lines,
     iter= mandelbrot_point(cx, cy, max_values_sq, max_iter);
 
     icolor = (double)iter/ (double)max_iter * (1u << 24);
-    lines[i-start] = icolor;
+    pixels[i-start] = icolor;
   }
 }
 
@@ -101,11 +101,11 @@ int main(int argc, char* argv[])
     end = (tile == numprocs - 2) ? MAX_X * MAX_Y : (tile + 1) * edge;
     pixel_count = end - start;
 
-    pixels = (Uint32*) malloc(pixel_count * sizeof(Uint32));
-    calc_lines(start, end, pixels, max_values_sq, max_iter);
+    pixels = new Uint32[pixel_count];
+    calc_pixels(start, end, pixels, max_values_sq, max_iter);
 
     MPI_Send((void*)pixels, pixel_count, MPI_INT, 0, 0, MPI_COMM_WORLD);
-    free(pixels);
+    delete [] pixels;
   }
   else /* rank == 0 */
   {
@@ -113,7 +113,7 @@ int main(int argc, char* argv[])
     int tile, recv_count = (edge + 1);
     char title[100];
 
-    Uint32* field = (Uint32*) malloc(MAX_X * MAX_Y * sizeof(Uint32));
+    Uint32* field = new Uint32[MAX_X * MAX_Y];
     Uint32* fieldpos;
 
     SDL_Surface* sdlSurface;
@@ -163,7 +163,7 @@ int main(int argc, char* argv[])
     SDL_FreeSurface(sdlSurface);
     SDL_Quit();
 
-    free(field);
+    delete [] field;
   }
 
   MPI_Finalize();
