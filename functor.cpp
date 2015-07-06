@@ -1,3 +1,10 @@
+// GB: some simple through complex functor examples
+
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>  // for_each
+using namespace std;
 
 /*
  * Function Objects (functors)
@@ -11,10 +18,11 @@ class X {
    }  
 };
 
-int main()
+int main1()
 {
    X foo;
    foo("Hi");    // Calling functor X with parameter Hi
+   return 0;
 }
 /*
  * Benefits of functor:
@@ -23,15 +31,8 @@ int main()
  * 2. It can have its own type.
  */
 
-
-
-
-
-
 // 
 //   operator string () const { return "X"; }
-
-
 
 /*
  * Benefits of functor:
@@ -44,66 +45,58 @@ int main()
 /*
  * Parameterized Function
  */
-class X {
-   public:
-   X(int i) {}
+class XX {
+   int count;
+public:
+   XX()      : count(1)  {}
+   XX(int c) : count(c)  {}
    void operator()(string str) { 
-      cout << "Calling functor X with parameter " << str<< endl;
+      for(int i = 0; i < count; i++)
+         cout << "Calling functor X with parameter " << str << endl;
    }
 };
 
-int main()
+int main2()
 {
-   X(8)("Hi");
+   XX xx(5);
+   xx("Hi");
+   return 0;
 }
 
 
-
-
-
-
-
-
-void add2(int i) {
-   cout << i+2 << endl;
-}
+void add2(int i) { cout << i+2 << endl; }
 
 template<int val>
-void addVal(int i) {
-   cout << val+i << endl;
-}
+void addVal(int i) { cout << val+i << endl; }
 
 class AddValue {
    int val;
-   public:
+public:
    AddValue(int j) : val(j) { }
    void operator()(int i) {
       cout << i+val << endl;
    }
 };
 
-int main()
+int main3()
 {
    vector<int> vec = { 2, 3, 4, 5};   
    //for_each(vec.begin(), vec.end(), add2); // {4, 5, 6, 7}
    int x = 2;
    //for_each(vec.begin(), vec.end(), addVal<x>); // {4, 5, 6, 7}
    for_each(vec.begin(), vec.end(), AddValue(x)); // {4, 5, 6, 7}
+   return 0;
 }
 
+int main()
+{
+   main1();
+   main2();
+   main3();
+   return 0;
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
+#if 0
 
 /* Notes:
 //global variable: int val;
@@ -127,32 +120,17 @@ class AddValue {
 */
 
 
-
-
-
-
-
-
 /*
  * Build-in Functors
  */
-less greater  greater_equal  less_equal  not_equal_to
-logical_and  logical_not  logical_or
-multiplies minus  plus  divide  modulus  negate
+// less greater  greater_equal  less_equal  not_equal_to
+// logical_and  logical_not  logical_or
+// multiplies minus  plus  divide  modulus  negate
 
 int x = multiplies<int>()(3,4);  //  x = 3 * 4 
 
 if (not_equal_to<int>()(x, 10))   // if (x != 10)
    cout << x << endl;
-
-
-
-
-
-
-
-
-
 
 /*
  * Parameter Binding
@@ -171,36 +149,19 @@ transform(myset.begin(), myset.end(),    // source
     // vec: {20, 30, 40, 50}
 
 
-void addVal(int i, int val) {
-   cout << i+val << endl;
-}
+void addVal(int i, int val) { cout << i+val << endl; }
 for_each(vec.begin(), vec.end(), bind(addVal, placeholders::_1, 2));
 
 // C++ 03: bind1st, bind2nd
 
-
-
-
-
-
-
-
-void addVal(int i, int val) {
-   cout << i+val << endl;
-}
+void addVal(int i, int val) { cout << i+val << endl; }
 for_each(vec.begin(), vec.end(), bind(addVal, placeholders::_1, 2));
 
 
 // C++ 03: bind1st, bind2nd
-
-
-
-
 
 // Convert a regular function to a functor
-double Pow(double x, double y) {
-	return pow(x, y);
-}
+double Pow(double x, double y) { return pow(x, y); }
 
 int main()
 {
@@ -213,12 +174,6 @@ int main()
             //  d: {1, 9, 49, 144, 625}
 }
 // C++ 03 uses ptr_fun 
-
-
-
-
-
-
 
 set<int> myset = {3, 1, 25, 7, 12};
 // when (x > 20) || (x < 5),  copy from myset to d
@@ -240,16 +195,6 @@ transform(myset.begin(), myset.end(),     // source
           [](int x){return (x>20)||(x<5);}
           );
 
-
-
-
-
-
-
-
-
-
-
 /*
           bind(logical_or<bool>, 
               bind(greater<int>(), placeholders::_1, 20),
@@ -265,21 +210,6 @@ bool needCopy(int x){
    return (x>20)||(x<5);
 }
 */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /*
  * Why do we need functor in STL?
@@ -305,16 +235,6 @@ int main()
   set<int, Lsb_less> myset = {3, 1, 25, 7, 12};  // myset: {1,12,3,25,7}
   ...
 }
-
-
-
-
-
-
-
-
-
-
 
 /* Notes
  
@@ -351,25 +271,5 @@ transform(myset.begin(), myset.end(),     // source
           );
 
 // Predicate is used for comparison or condition check
-
-
-
-
-
-
-
-
-
 // More About Functors
-
-
-
-
-
-
-
-
-
-
-
-
+#endif
