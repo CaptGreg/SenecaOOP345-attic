@@ -1,3 +1,5 @@
+// http://alexagafonov.com/programming/thread-pool-implementation-in-c-11/
+
 #include "ThreadPool.h"
 
 // Constructor.
@@ -5,10 +7,10 @@ ThreadPool::ThreadPool(int threads) :
 	terminate(false),
 	stopped(false)
 {
-	// Create number of required threads and add them to the thread pool vector.
+    // Create number of required threads and add them to the thread pool vector.
     for(int i = 0; i < threads; i++)
     {
-    	threadPool.emplace_back(thread(&ThreadPool::Invoke, this));
+    	threadPool.emplace_back( thread(&ThreadPool::Invoke, this) );
     }
 }
 
