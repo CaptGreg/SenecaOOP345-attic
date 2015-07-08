@@ -1,0 +1,564 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"><!-- Website design and programming ©2011-2014 Cameron Desrochers --><head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		
+		<meta http-equiv="X-UA-Compatible" content="IE=edge"><!-- In IE, use the highest 
+version possible to render content -->
+
+						
+		<title>A Fast Lock-Free Queue for C++</title>
+
+	
+												<link rel="stylesheet" href="A%20Fast%20Lock-Free%20Queue%20for%20C++_files/base.css" type="text/css">
+		
+	
+			
+						<script src="A%20Fast%20Lock-Free%20Queue%20for%20C++_files/ga.js" async="" type="text/javascript"></script><script src="A%20Fast%20Lock-Free%20Queue%20for%20C++_files/jquery_002.js" type="text/javascript"></script>
+		
+
+	<script src="A%20Fast%20Lock-Free%20Queue%20for%20C++_files/jquery.js" type="text/javascript"></script>
+
+	<script type="text/javascript">
+		$(function() {
+			$.timeago.settings.dateOnly = true;
+			$('time.timeago').timeago();
+		});
+	</script>
+
+	
+
+		<script type="text/javascript">
+		  var _gaq = _gaq || [];
+		  _gaq.push(['_setAccount', 'UA-26980534-1']);
+		  _gaq.push(['_trackPageview']);
+
+		  (function() {
+		    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		  })();
+		</script>
+	<script src="A%20Fast%20Lock-Free%20Queue%20for%20C++_files/embed.js" async="" type="text/javascript"></script></head>
+	
+	<body>
+		<div id="wrapper">
+			<div id="header">
+				<ul id="menu">
+																	<li><a href="http://moodycamel.com/">Home</a></li>
+																	<li><a href="http://moodycamel.com/blog" class="current">Blog</a></li>
+																	<li><a href="http://moodycamel.com/projects">Projects</a></li>
+																	<li><a href="http://moodycamel.com/about">About</a></li>
+									</ul>
+			</div>
+
+			<div id="content">
+				<h1 class="post-title">
+<a href="http://moodycamel.com/blog/2013/a-fast-lock-free-queue-for-c++">
+A Fast Lock-Free Queue for C++
+</a>
+</h1>
+
+<time title="Posted February 07, 2013" class="timeago post-timestamp" datetime="2013-02-07T05:00:00Z" pubdate="pubdate">2 years ago</time>
+
+<div class="post-body">
+<p><span class="note">Update Nov 6, 2014:
+    I've also just written a <a href="http://moodycamel.com/blog/2014/a-fast-general-purpose-lock-free-queue-for-c++">multi-producer multi-consumer lock-free queue</a>.
+</span></p>
+<p>Sharing data between threads in annoying. Really annoying.
+If you do it wrong, the data is likely to become corrupted.
+Even more error-prone is ensuring the shared data is perceived
+in the right order (relative to other data reads/writes).</p>
+<p>There are, as always, two ways to deal with this: The easy way, and
+the hard way.</p>
+<h3>The easy way</h3>
+<p>Use the locks (e.g. mutexes, critical sections, or equivalent)
+that come with your platform. They're not too hard to understand
+conceptually, and even easier to use. You don't have to worry about
+ordering problems, because the libraries/OS take care of that for you.
+The only general problem with locks is that they tend to be slow
+("slow" being relative here; for general use, they're plenty speedy enough).</p>
+<h3>The catch</h3>
+<p>I was looking into doing some audio programming, where the audio callback (which gets called
+when the device needs more samples to fill its buffer)
+was on another thread. The goal with audio programming is
+to <a href="http://www.rossbencina.com/code/real-time-audio-programming-101-time-waits-for-nothing">never let the audio "glitch"</a> -- which means your callback code must be
+as close to real-time programming as you can get on a conventional OS.
+So, the faster things compute, the better, but what really matters with real-time
+programming is how <em>deterministic</em> the computation time will be -- will your code
+reliably take 5ms or could there be an occasional 300ms spike?</p>
+<p>What does this mean? Well, for starters you can't allocate heap memory --
+because that might involve an OS call, which might take a non-deterministic amount
+of time to complete (e.g. if you have to wait for a page to be swapped to disk).
+In fact, it's best to avoid calling into the kernel at all.
+But, this actually isn't the main problem.</p>
+<p>The main problem is synchronizing the audio thread with the main thread. We can't use locks,
+because aside from non-negligible overhead (considering the frequency of callbacks), they
+can cause <a href="http://en.wikipedia.org/wiki/Priority_inversion">priority inversion</a> -- you don't want a high-priority audio thread
+waiting to enter a critical section that some background thread is obliviously taking
+its time releasing, causing the audio to glitch.</p>
+<h3>The hard way</h3>
+<p>Enter lock-free programming.</p>
+<p>Lock-free programming is a way of writing thread-safe code such that in the case
+of contention, the system is guaranteed to advance as a whole. "Wait-free"
+programming takes this a step further: the code is set up such that each
+thread can always advance regardless of what the other is doing. This also
+has the benefit of avoiding expensive locks.</p>
+<p>Why doesn't everyone use lock-free programming? Well, it's not easy to get
+right. You have to be very careful never to corrupt data under any circumstances,
+regardless of what each of the threads are doing. But even harder to get right
+are guarantees related to ordering. Consider this example (<code>a</code> and <code>b</code> start at 0):</p>
+<pre><code>Thread A    Thread B
+b = 42
+a = 1
+            print(a)
+            print(b)
+</code></pre>
+<p>What are the possible sets of values that thread B could output? It could be any one
+of {0 0}, {1 42}, {0 42}, and {1 0}. {0 0}, {1 42}, and {0 42} make sense (which one
+actually results depends on timing), but how can {1 0} happen?
+This is because the compiler is allowed
+to re-order the loads and stores (or even remove some or invent others)
+in order to improve efficiency, <em>as long as it appears to do the same thing on that thread</em>.
+But when another thread starts interacting with the first, this re-ordering can
+become apparent.</p>
+<p>It gets worse. You can force the compiler to not reorder specific reads or writes,
+but the <em>CPU</em> is allowed to (and does, all the time!) re-order instructions too, again as long it appears to do the
+same thing on the core that the instructions are running on.</p>
+<h3>Memory barriers</h3>
+<p>Fortunately, you can force certain ordering guarantees all the way down to the CPU level using <a href="http://preshing.com/20120710/memory-barriers-are-like-source-control-operations"><em>memory barriers</em></a>. Unfortunately,
+they are extremely tricky to use properly. In fact, a major problem with lock-free code is
+that it's prone to bugs that can only be reproduced by specific non-deterministic interleavings of
+thread operations. This means a lock-free algorithm with a bug may work 95% of the time and only fail the other 5%. Or
+it may work all of the time on a developer's CPU, but fail occasionally on another CPU.</p>
+<p>This is why lock-free programming is generally considered hard: It's easy to get something that <em>looks</em> right,
+but it requires much more effort and thought to create something which is <em>guaranteed</em> to work under all circumstances.
+Luckily, there are a few tools to help verify implementations. One such tool is <a href="http://www.1024cores.net/home/relacy-race-detector">Relacy</a>: It works by running unit
+tests (that you write) under every possible permutation of thread interleaving, which is really cool.</p>
+<p>Back to memory barriers: At the lowest level of the CPU, different cores each
+have their own cache, and these caches need to be kept in sync with
+each other (a sort of eventual consistency). This is accomplished
+with a sort of internal messaging system between the various CPU
+cores (sounds slow? It is. So it was highly optimized with, you guessed
+it, more caching!). Since both cores are running code at the same time, this
+can lead to some interesting orderings of memory loads/stores (like in the example above).
+Some stronger ordering guarantees can be built on top of this messaging system; that's what memory barriers do.
+The types of memory barriers that I found most powerful were the <a href="http://preshing.com/20120913/acquire-and-release-semantics">acquire and release</a>
+ memory barriers.
+A release memory barrier tells the CPU that any writes that came before 
+the barrier should be made visible in other cores
+if any of the writes after the barrier become visible, provided that the
+ other cores perform a read barrier
+after reading the data that was written to after the write barrier. In 
+other words, if a thread B can see a new value
+that was written after a write barrier on a separate thread A, then 
+after doing a read-barrier (on thread B), all writes
+that occurred before the write barrier on thread A are guaranteed to be 
+visible on thread B. Once nice feature of acquire
+and release semantics is that they boil down to no-ops on x86 -- every 
+write implicitly has release semantics, and every
+read implicitly has acquire semantics! You still need to add the 
+barriers, though, because they prevent compiler re-ordering
+(and they'll generate the right assembly code on other processor 
+architectures which don't have as strong a memory-ordering model).</p>
+<p>If this sounds confusing, it is! But don't give up hope, because there's many well-explained resources; a good starting
+point is <a href="http://preshing.com/20120612/an-introduction-to-lock-free-programming">Jeff Preshing's very helpful articles on the subject</a>. There's also a short list of links in
+<a href="http://stackoverflow.com/a/14185300/21475">this answer on Stack Overflow</a>. </p>
+<h3>A wait-free single-producer, single consumer queue</h3>
+<p>Since I apparently find tangents irresistible, I, of course, set out 
+to build my own lock-free
+data structure. I went for a wait-free queue for a single producer, 
+single consumer
+architecture (which means there's only ever two threads involved). If 
+you need a data structure which is safe to use from several threads
+at once, you'll need to find another implementation (MSVC++ comes with 
+one). I chose this restriction
+because it's much easier to work with than one where there's a 
+free-for-all of concurrent threads, and because
+it was all I needed.</p>
+<p>I had looked
+at using some existing libraries (particularly <a href="http://liblfds.org/">liblfds</a>), but I wasn't satisfied with the memory management (I wanted
+a queue that wouldn't allocate any memory at all on the critical thread, making it suitable for real-time programming).
+So, I ignored the copious advice about only doing lock-free programming if you're already an expert in it (how
+does anyone <em>become</em> an expert like that?), and was able to successfully implement a queue!</p>
+<p>The design is as follows:</p>
+<p>A contiguous circular buffer is used to store elements in the queue. This allows memory to be allocated up front, and
+may provide better cache usage. I call this buffer a "block".</p>
+<p>To allow the queue to grow dynamically without needing to copy all 
+the existing elements into a new block when the block
+becomes too small (which isn't lock-free friendly anyway), multiple 
+blocks (of independent size) are chained together in a circular linked 
+list. This makes for
+a queue of queues, essentially.</p>
+<p>The block at which elements are currently being inserted is called the "tail block". The block at which elements are
+currently being consumed is called the "front block". Similarly, within each block there is a "front" index and a "tail"
+index. The front index indicates the next full slot to read from; the tail index indicates the next empty slot to insert
+into. If these two indices are equal, the block is empty (exactly one slot is left empty when the queue is full in order
+to avoid ambiguity between a full block and an empty block both having equal head and tail indices).</p>
+<p>In order to keep the queue consistent while two threads are operating on the same data structure, we can take advantage
+of the fact that the producing thread always goes in one direction in the queue, and the same can be said for the consuming
+thread. This means that even if a variable's value is out of date on a given thread, we know what range it can possibly be in.
+For example, when we dequeue from a block, we can check the value of the tail index (owned by the other thread) in order to
+compare it against the front index (which the dequeue thread owns, and is hence always up-to-date).
+We may get a stale value for the tail index from the CPU cache; the enqueue thread could have added more elements since
+then. But, we know that <em>the tail will never go backwards</em> -- more elements could have been added, but as long as the tail
+was not equal to the front <em>at the time we checked it</em>, there's guaranteed to be at least one element to dequeue.</p>
+<p>Using these sort of guarantees, and some memory barriers to prevent 
+things like the tail from being incremented before (or perceived as 
+being
+incremented before) the
+element is actually added to the queue, it's possible to design a simple
+ algorithm to safely enqueue and dequeue elements
+under all possible thread interleavings. Here's the pseudocode:</p>
+<pre><code># Enqueue
+If room in tail block, add to tail
+Else check next block
+    If next block is not the head block, enqueue on next block
+    Else create a new block and enqueue there
+    Advance tail to the block we just enqueued to
+
+# Dequeue
+Remember where the tail block is
+If the front block has an element in it, dequeue it
+Else
+    If front block was the tail block when we entered the function, return false
+    Else advance to next block and dequeue the item there
+</code></pre>
+<p>The algorithms for enqueueing and dequeueing within a single block are even simpler since the block is of fixed size:</p>
+<pre><code># Enqueue within a block (assuming we've already checked that there's room in the block)
+Copy/move the element into the block's contiguous memory
+Increment tail index (wrapping as needed)
+
+# Dequeue from a block (assuming we've already checked that it's not empty)
+Copy/move the element from the block's contiguous memory into the output parameter
+Increment the front index (wrapping as needed)
+</code></pre>
+<p>Obviously, this pseudocode glosses over some stuff (like where memory barriers are placed), but the <a href="https://github.com/cameron314/readerwriterqueue">actual code</a> is not much
+more complex if you want to check out the lower-level details.</p>
+<p>When thinking about this data structure, it's helpful to make the 
+distinction between variables that are "owned" by (i.e. written
+to exclusively by) the consumer or producer threads. A variable that is 
+owned by a given thread is never out of date on that
+thread. A variable that is owned by a thread may have a stale value when
+ it is read on a different thread, but by using memory
+barriers carefully we can guarantee that the rest of the data is at 
+least as up to date as the variable's value indicates when
+reading it from the non-owning thread.</p>
+<p>To allow the queue to potentially be created and/or destroyed by any thread (independent from the two doing the producing
+and consuming), a full memory barrier (memory_order_seq_cst) is used at the end of the constructor and at the beginning of
+the destructor; <a href="http://stackoverflow.com/q/13206148/21475">this effectively forces all the CPU cores to synchronize outstanding changes</a>. Obviously, the producer and
+consumer must have stopped using the queue before the destructor can be safely called.</p>
+<h3>Give me teh codes</h3>
+<p>What's the use of a design without a solid (tested) implementation? :-)</p>
+<p>I've <a href="https://github.com/cameron314/readerwriterqueue">released my implementation on GitHub</a>.
+Feel free to fork it! It consists of two headers, one for the queue and a header it depends on which contains some helpers.</p>
+<p>It has several nice characteristics:</p>
+<ul>
+<li>Compatible with C++11 (supports moving objects instead of making copies)</li>
+<li>Fully generic (templated container of any type) -- just like <code>std::queue</code>, you never need to allocate memory for elements yourself
+  (which saves you the hassle of writing a lock-free memory manager to hold the elements you're queueing)</li>
+<li>Allocates memory up front, in contiguous blocks</li>
+<li>Provides a <code>try_enqueue</code> method which is guaranteed never to allocate memory (the queue starts with an initial capacity)</li>
+<li>Also provides an <code>enqueue</code> method which can dynamically grow the size of the queue as needed</li>
+<li>Doesn't use a compare-and-swap loop; this means enqueue and dequeue are O(1) (not counting memory allocation)</li>
+<li>On x86, the memory barriers compile down to no-ops, meaning enqueue 
+and dequeue are just a simple series of loads and stores (and branches)</li>
+<li>Compiles under MSVC2010+ and GCC 4.7+ (and should work on any C++11 compliant compiler)</li>
+</ul>
+<p>It should be noted that this code will only work on CPUs that treat 
+aligned integer and native-pointer-size loads/stores atomically;
+fortunately, this includes every modern processor (including ARM, 
+x86/x86-64, and PowerPC). It is <em>not</em> designed to work on the DEC
+Alpha (which seems to have the weakest memory-ordering guarantees of all time).</p>
+<p>I'm releasing the code and algorithm under the terms of the <a href="http://opensource.org/licenses/BSD-2-Clause">simplified BSD license</a>.
+Use it at your own risk; in particular, lock-free programming is a patent
+minefield, and this code may very well violate a pending patent (I haven't looked). It's worth
+noting that I came up with the algorithm and implementation from scratch, independent of any existing lock-free queues.</p>
+<h3>Performance and correctness</h3>
+<p>In addition to agonizing over the design for quite some time, I 
+tested the algorithm using several billion randomized operations in a 
+simple stability
+test (on x86). This, of course, helps inspire confidence, but proves 
+nothing about the correctness. In order to ensure it was correct, I
+also tested using Relacy, which ran all the possible interleavings for a
+ simple test which turned up no errors; it turns out this simple test
+wasn't comprehensive, however, since I eventually did find a bug later 
+using a different set of randomized runs (which I then fixed).</p>
+<p>I've only tested this queue on x86-64, which is rather forgiving as 
+memory ordering goes. If somebody is willing to test this code on 
+another
+architecture, let me know! The quick stability test I whipped up is 
+available <a href="https://gist.github.com/cameron314/4728904">here</a>.</p>
+<p>In terms of performance, it's <em>fast</em>. Really fast. In my tests, I was able to get up to about 12+ million <em>concurrent</em>
+ enqueue/dequeue pairs per second!
+(The dequeue thread had to wait for the enqueue thread to catch up if 
+there was nothing in the queue.)
+After I had implemented my queue, though, I found another 
+single-consumer, single-producer templated queue (written by the author 
+of Relacy) <a href="http://software.intel.com/en-us/articles/single-producer-single-consumer-queue">published
+on Intel's website</a>;
+his queue is roughly twice as fast, though it doesn't have all the 
+features that mine does, and his only works on x86 (and, at this
+scale, "twice as fast" means the difference in enqueue/dequeue time is 
+in the nanosecond range). [Update: Mine is now competitive speed-wise 
+with his.]</p>
+<div class="update">
+    <a name="benchmarks"></a>
+    <h4>Update</h4><time title="Updated May 06, 2013" class="timeago" datetime="2013-05-06T05:00:00Z" pubdate="pubdate">2 years ago</time>
+
+    <p>I spent some time properly benchmarking, profiling, and optimizing the code, using Dmitry's single-producer,
+    single-consumer lock-free queue (published on Intel's website) as a baseline for comparison. Mine's now faster
+    in general, particularly when it comes to enqueueing many elements (mine uses a contiguous block instead of separate
+    linked elements). Note that different compilers give different results, and even the same compiler on different
+    hardware yields significant speed variations. The 64-bit version is generally faster than the 32-bit one, and for
+    some reason my queue is much faster under GCC on a Linode. Here are the benchmark results in full:</p>
+
+    <pre><code class="condensed-text">
+32-bit, MSVC2010, on AMD C-50 @ 1GHz
+------------------------------------
+                  |        Min        |        Max        |        Avg
+Benchmark         |   RWQ   |  SPSC   |   RWQ   |  SPSC   |   RWQ   |  SPSC   | Mult
+------------------+---------+---------+---------+---------+---------+---------+------
+Raw add           | 0.0039s | 0.0268s | 0.0040s | 0.0271s | 0.0040s | 0.0270s | 6.8x
+Raw remove        | 0.0015s | 0.0017s | 0.0015s | 0.0018s | 0.0015s | 0.0017s | 1.2x
+Raw empty remove  | 0.0048s | 0.0027s | 0.0049s | 0.0027s | 0.0048s | 0.0027s | 0.6x
+Single-threaded   | 0.0181s | 0.0172s | 0.0183s | 0.0173s | 0.0182s | 0.0173s | 0.9x
+Mostly add        | 0.0243s | 0.0326s | 0.0245s | 0.0329s | 0.0244s | 0.0327s | 1.3x
+Mostly remove     | 0.0240s | 0.0274s | 0.0242s | 0.0277s | 0.0241s | 0.0276s | 1.1x
+Heavy concurrent  | 0.0164s | 0.0309s | 0.0349s | 0.0352s | 0.0236s | 0.0334s | 1.4x
+Random concurrent | 0.1488s | 0.1509s | 0.1500s | 0.1522s | 0.1496s | 0.1517s | 1.0x
+
+Average ops/s:
+    ReaderWriterQueue: 23.45 million
+    SPSC queue:        28.10 million
+
+64-bit, MSVC2010, on AMD C-50 @ 1GHz
+------------------------------------
+                  |        Min        |        Max        |        Avg
+Benchmark         |   RWQ   |  SPSC   |   RWQ   |  SPSC   |   RWQ   |  SPSC   | Mult
+------------------+---------+---------+---------+---------+---------+---------+------
+Raw add           | 0.0022s | 0.0210s | 0.0022s | 0.0211s | 0.0022s | 0.0211s | 9.6x
+Raw remove        | 0.0011s | 0.0022s | 0.0011s | 0.0023s | 0.0011s | 0.0022s | 2.0x
+Raw empty remove  | 0.0039s | 0.0024s | 0.0039s | 0.0024s | 0.0039s | 0.0024s | 0.6x
+Single-threaded   | 0.0060s | 0.0054s | 0.0061s | 0.0054s | 0.0061s | 0.0054s | 0.9x
+Mostly add        | 0.0080s | 0.0259s | 0.0081s | 0.0263s | 0.0080s | 0.0261s | 3.3x
+Mostly remove     | 0.0092s | 0.0109s | 0.0093s | 0.0110s | 0.0093s | 0.0109s | 1.2x
+Heavy concurrent  | 0.0150s | 0.0175s | 0.0181s | 0.0200s | 0.0165s | 0.0190s | 1.2x
+Random concurrent | 0.0367s | 0.0349s | 0.0369s | 0.0352s | 0.0368s | 0.0350s | 1.0x
+
+Average ops/s:
+    ReaderWriterQueue: 34.90 million
+    SPSC queue:        32.50 million
+
+32-bit, MSVC2010, on Intel Core 2 Duo T6500 @ 2.1GHz
+----------------------------------------------------
+                  |        Min        |        Max        |        Avg
+Benchmark         |   RWQ   |  SPSC   |   RWQ   |  SPSC   |   RWQ   |  SPSC   | Mult
+------------------+---------+---------+---------+---------+---------+---------+------
+Raw add           | 0.0011s | 0.0097s | 0.0011s | 0.0099s | 0.0011s | 0.0098s | 9.2x
+Raw remove        | 0.0005s | 0.0006s | 0.0005s | 0.0006s | 0.0005s | 0.0006s | 1.1x
+Raw empty remove  | 0.0018s | 0.0011s | 0.0019s | 0.0011s | 0.0018s | 0.0011s | 0.6x
+Single-threaded   | 0.0047s | 0.0040s | 0.0047s | 0.0040s | 0.0047s | 0.0040s | 0.9x
+Mostly add        | 0.0052s | 0.0114s | 0.0053s | 0.0116s | 0.0053s | 0.0115s | 2.2x
+Mostly remove     | 0.0055s | 0.0067s | 0.0056s | 0.0068s | 0.0055s | 0.0068s | 1.2x
+Heavy concurrent  | 0.0044s | 0.0089s | 0.0075s | 0.0128s | 0.0066s | 0.0107s | 1.6x
+Random concurrent | 0.0294s | 0.0306s | 0.0295s | 0.0312s | 0.0294s | 0.0310s | 1.1x
+
+Average ops/s:
+    ReaderWriterQueue: 71.18 million
+    SPSC queue:        61.02 million
+
+64-bit, MSVC2010, on Intel Core 2 Duo T6500 @ 2.1GHz
+----------------------------------------------------
+                  |        Min        |        Max        |        Avg
+Benchmark         |   RWQ   |  SPSC   |   RWQ   |  SPSC   |   RWQ   |  SPSC   | Mult
+------------------+---------+---------+---------+---------+---------+---------+------
+Raw add           | 0.0007s | 0.0097s | 0.0007s | 0.0100s | 0.0007s | 0.0099s | 13.6x
+Raw remove        | 0.0004s | 0.0015s | 0.0004s | 0.0020s | 0.0004s | 0.0018s | 4.6x
+Raw empty remove  | 0.0014s | 0.0010s | 0.0014s | 0.0010s | 0.0014s | 0.0010s | 0.7x
+Single-threaded   | 0.0024s | 0.0022s | 0.0024s | 0.0022s | 0.0024s | 0.0022s | 0.9x
+Mostly add        | 0.0031s | 0.0112s | 0.0031s | 0.0115s | 0.0031s | 0.0114s | 3.7x
+Mostly remove     | 0.0033s | 0.0041s | 0.0033s | 0.0041s | 0.0033s | 0.0041s | 1.2x
+Heavy concurrent  | 0.0042s | 0.0035s | 0.0067s | 0.0039s | 0.0054s | 0.0038s | 0.7x
+Random concurrent | 0.0142s | 0.0141s | 0.0145s | 0.0144s | 0.0143s | 0.0142s | 1.0x
+
+Average ops/s:
+    ReaderWriterQueue: 101.21 million
+    SPSC queue:        71.42 million
+
+32-bit, Intel ICC 13, on Intel Core 2 Duo T6500 @ 2.1GHz
+--------------------------------------------------------
+                  |        Min        |        Max        |        Avg
+Benchmark         |   RWQ   |  SPSC   |   RWQ   |  SPSC   |   RWQ   |  SPSC   | Mult
+------------------+---------+---------+---------+---------+---------+---------+------
+Raw add           | 0.0014s | 0.0095s | 0.0014s | 0.0097s | 0.0014s | 0.0096s | 6.8x
+Raw remove        | 0.0007s | 0.0006s | 0.0007s | 0.0007s | 0.0007s | 0.0006s | 0.9x
+Raw empty remove  | 0.0028s | 0.0013s | 0.0028s | 0.0018s | 0.0028s | 0.0015s | 0.5x
+Single-threaded   | 0.0039s | 0.0033s | 0.0039s | 0.0033s | 0.0039s | 0.0033s | 0.8x
+Mostly add        | 0.0049s | 0.0113s | 0.0050s | 0.0116s | 0.0050s | 0.0115s | 2.3x
+Mostly remove     | 0.0051s | 0.0061s | 0.0051s | 0.0062s | 0.0051s | 0.0061s | 1.2x
+Heavy concurrent  | 0.0066s | 0.0036s | 0.0084s | 0.0039s | 0.0076s | 0.0038s | 0.5x
+Random concurrent | 0.0291s | 0.0282s | 0.0294s | 0.0287s | 0.0292s | 0.0286s | 1.0x
+
+Average ops/s:
+    ReaderWriterQueue: 55.65 million
+    SPSC queue:        63.72 million
+
+64-bit, Intel ICC 13, on Intel Core 2 Duo T6500 @ 2.1GHz
+--------------------------------------------------------
+                  |        Min        |        Max        |        Avg
+Benchmark         |   RWQ   |  SPSC   |   RWQ   |  SPSC   |   RWQ   |  SPSC   | Mult
+------------------+---------+---------+---------+---------+---------+---------+------
+Raw add           | 0.0010s | 0.0099s | 0.0010s | 0.0100s | 0.0010s | 0.0099s | 9.8x
+Raw remove        | 0.0006s | 0.0015s | 0.0006s | 0.0018s | 0.0006s | 0.0017s | 2.7x
+Raw empty remove  | 0.0024s | 0.0016s | 0.0024s | 0.0016s | 0.0024s | 0.0016s | 0.7x
+Single-threaded   | 0.0026s | 0.0023s | 0.0026s | 0.0023s | 0.0026s | 0.0023s | 0.9x
+Mostly add        | 0.0032s | 0.0114s | 0.0032s | 0.0118s | 0.0032s | 0.0116s | 3.6x
+Mostly remove     | 0.0037s | 0.0042s | 0.0037s | 0.0044s | 0.0037s | 0.0044s | 1.2x
+Heavy concurrent  | 0.0060s | 0.0092s | 0.0088s | 0.0096s | 0.0077s | 0.0095s | 1.2x
+Random concurrent | 0.0168s | 0.0166s | 0.0168s | 0.0168s | 0.0168s | 0.0167s | 1.0x
+
+Average ops/s:
+    ReaderWriterQueue: 68.45 million
+    SPSC queue:        50.75 million
+
+64-bit, GCC 4.7.2, on Linode 1GB virtual machine (Intel Xeon L5520 @ 2.27GHz)
+-----------------------------------------------------------------------------
+                  |        Min        |        Max        |        Avg
+Benchmark         |   RWQ   |  SPSC   |   RWQ   |  SPSC   |   RWQ   |  SPSC   | Mult
+------------------+---------+---------+---------+---------+---------+---------+------
+Raw add           | 0.0004s | 0.0055s | 0.0005s | 0.0055s | 0.0005s | 0.0055s | 12.1x
+Raw remove        | 0.0004s | 0.0030s | 0.0004s | 0.0030s | 0.0004s | 0.0030s | 8.4x
+Raw empty remove  | 0.0009s | 0.0060s | 0.0010s | 0.0061s | 0.0009s | 0.0060s | 6.4x
+Single-threaded   | 0.0034s | 0.0052s | 0.0034s | 0.0052s | 0.0034s | 0.0052s | 1.5x
+Mostly add        | 0.0042s | 0.0096s | 0.0042s | 0.0106s | 0.0042s | 0.0103s | 2.5x
+Mostly remove     | 0.0042s | 0.0057s | 0.0042s | 0.0058s | 0.0042s | 0.0058s | 1.4x
+Heavy concurrent  | 0.0030s | 0.0164s | 0.0036s | 0.0216s | 0.0032s | 0.0188s | 5.8x
+Random concurrent | 0.0256s | 0.0282s | 0.0257s | 0.0290s | 0.0257s | 0.0287s | 1.1x
+
+Average ops/s:
+    ReaderWriterQueue: 137.88 million
+    SPSC queue:        24.34 million</code></pre>
+
+    <p>In short, my queue is blazingly fast, and actually <em>doing</em> anything with it will eclipse the overhead of
+    the data structure itself.</p>
+
+    <p>The benchmarking code is available <a href="https://github.com/cameron314/readerwriterqueue-bench">here</a> (compile and run with full optimizations).</p>
+
+    <a name="benchmarks-update"></a>
+    <p><strong>Update update</strong> (May 20, '13): I've since changed the benchmark to preallocate the queues' memory, and added a comparison against
+            <a href="https://github.com/facebook/folly/blob/master/folly/ProducerConsumerQueue.h">Facebook's folly::ProducerConsumerQueue</a> (which is a smidgeon faster but cannot grow as needed). Here are the results:</p>
+
+<pre><code class="condensed-text">64-bit, GCC 4.7.2, on Linode 1GB virtual machine (Intel Xeon L5520 @ 2.27GHz)
+-----------------------------------------------------------------------------
+                  |-----------  Min ------------|------------ Max ------------|------------ Avg ------------|
+Benchmark         |   RWQ   |  SPSC   |  Folly  |   RWQ   |  SPSC   |  Folly  |   RWQ   |  SPSC   |  Folly  | xSPSC | xFolly
+------------------+---------+---------+---------+---------+---------+---------+---------+---------+---------+-------+-------
+Raw add           | 0.0003s | 0.0018s | 0.0003s | 0.0003s | 0.0018s | 0.0003s | 0.0003s | 0.0018s | 0.0003s | 5.52x | 0.96x
+Raw remove        | 0.0003s | 0.0030s | 0.0004s | 0.0003s | 0.0030s | 0.0004s | 0.0003s | 0.0030s | 0.0004s | 8.58x | 1.28x
+Raw empty remove  | 0.0009s | 0.0061s | 0.0006s | 0.0010s | 0.0061s | 0.0006s | 0.0010s | 0.0061s | 0.0006s | 6.40x | 0.61x
+Single-threaded   | 0.0034s | 0.0053s | 0.0033s | 0.0034s | 0.0053s | 0.0033s | 0.0034s | 0.0053s | 0.0033s | 1.54x | 0.97x
+Mostly add        | 0.0042s | 0.0046s | 0.0042s | 0.0043s | 0.0046s | 0.0042s | 0.0042s | 0.0046s | 0.0042s | 1.09x | 0.99x
+Mostly remove     | 0.0042s | 0.0049s | 0.0043s | 0.0042s | 0.0051s | 0.0043s | 0.0042s | 0.0050s | 0.0043s | 1.20x | 1.02x
+Heavy concurrent  | 0.0025s | 0.0100s | 0.0024s | 0.0028s | 0.0101s | 0.0026s | 0.0026s | 0.0100s | 0.0025s | 3.88x | 0.97x
+Random concurrent | 0.0265s | 0.0268s | 0.0262s | 0.0273s | 0.0287s | 0.0284s | 0.0269s | 0.0280s | 0.0271s | 1.04x | 1.01x
+
+Average ops/s:
+    ReaderWriterQueue: 142.60 million
+    SPSC queue:        33.86 million
+    Folly queue:       181.16 million</code></pre>
+
+    <p></p>
+    <a name="benchmarks-update2"></a>
+    <p><strong>Another update</strong> (Jan 28, '15): I optimized my queue a bit further, vastly improving its cache-friendliness under heavy contention
+    (using a trick inspired by the <a href="http://www.cse.cuhk.edu.hk/%7Epclee/www/pubs/ancs09poster.pdf">MCRingBuffer paper</a>).
+
+    Note that my queue is now generally roughly comparable or 
+significantly better than the SPSC and Folly ones, except when it comes 
+to trying to dequeue
+    from an empty queue, which the others can do faster. This skews the 
+final average ops/s summary numbers a little, alas.
+    (We're talking about single-digit nanoseconds here -- a "slow" 
+failed dequeue operation with my queue still only takes 7ns, and that's
+    on my 1GHz C-50 netbook processor.) The results in full:</p>
+
+<pre><code class="condensed-text">64-bit, GCC 4.8.1, on Linode 1GB virtual machine (Intel Xeon L5520 @ 2.27GHz)
+-----------------------------------------------------------------------------
+                  |-----------  Min ------------|------------ Max ------------|------------ Avg ------------|
+Benchmark         |   RWQ   |  SPSC   |  Folly  |   RWQ   |  SPSC   |  Folly  |   RWQ   |  SPSC   |  Folly  | xSPSC | xFolly
+------------------+---------+---------+---------+---------+---------+---------+---------+---------+---------+-------+-------
+Raw add           | 0.0004s | 0.0005s | 0.0004s | 0.0004s | 0.0005s | 0.0004s | 0.0004s | 0.0005s | 0.0004s | 1.12x | 0.95x
+Raw remove        | 0.0004s | 0.0004s | 0.0005s | 0.0005s | 0.0004s | 0.0005s | 0.0004s | 0.0004s | 0.0005s | 0.96x | 1.21x
+Raw empty remove  | 0.0061s | 0.0024s | 0.0023s | 0.0061s | 0.0025s | 0.0023s | 0.0061s | 0.0024s | 0.0023s | 0.40x | 0.38x
+Single-threaded   | 0.0121s | 0.0113s | 0.0112s | 0.0122s | 0.0113s | 0.0113s | 0.0122s | 0.0113s | 0.0113s | 0.93x | 0.93x
+Mostly add        | 0.0059s | 0.0103s | 0.0096s | 0.0059s | 0.0112s | 0.0109s | 0.0059s | 0.0110s | 0.0107s | 1.86x | 1.81x
+Mostly remove     | 0.0072s | 0.0060s | 0.0061s | 0.0073s | 0.0061s | 0.0077s | 0.0072s | 0.0061s | 0.0069s | 0.84x | 0.95x
+Heavy concurrent  | 0.0053s | 0.0082s | 0.0151s | 0.0087s | 0.0106s | 0.0158s | 0.0071s | 0.0095s | 0.0155s | 1.34x | 2.17x
+Random concurrent | 0.0310s | 0.0328s | 0.0278s | 0.0310s | 0.0329s | 0.0279s | 0.0310s | 0.0328s | 0.0278s | 1.06x | 0.90x
+
+Average ops/s:
+    ReaderWriterQueue: 164.08 million
+    SPSC queue:        204.05 million
+    Folly queue:       206.35 million
+
+64-bit, MinGW GCC 4.9.2, on AMD C-50 @ 1GHz
+-------------------------------------------
+                  |-----------  Min ------------|------------ Max ------------|------------ Avg ------------|
+Benchmark         |   RWQ   |  SPSC   |  Folly  |   RWQ   |  SPSC   |  Folly  |   RWQ   |  SPSC   |  Folly  | xSPSC | xFolly
+------------------+---------+---------+---------+---------+---------+---------+---------+---------+---------+-------+-------
+Raw add           | 0.0010s | 0.0023s | 0.0012s | 0.0010s | 0.0023s | 0.0016s | 0.0010s | 0.0023s | 0.0014s | 2.38x | 1.45x
+Raw remove        | 0.0010s | 0.0020s | 0.0012s | 0.0011s | 0.0021s | 0.0012s | 0.0011s | 0.0021s | 0.0012s | 1.94x | 1.18x
+Raw empty remove  | 0.0205s | 0.0121s | 0.0085s | 0.0222s | 0.0122s | 0.0086s | 0.0213s | 0.0121s | 0.0085s | 0.57x | 0.40x
+Single-threaded   | 0.0292s | 0.0285s | 0.0283s | 0.0293s | 0.0286s | 0.0284s | 0.0293s | 0.0286s | 0.0284s | 0.98x | 0.97x
+Mostly add        | 0.0172s | 0.0309s | 0.0233s | 0.0174s | 0.0312s | 0.0234s | 0.0173s | 0.0310s | 0.0233s | 1.79x | 1.35x
+Mostly remove     | 0.0236s | 0.0182s | 0.0172s | 0.0237s | 0.0182s | 0.0174s | 0.0236s | 0.0182s | 0.0173s | 0.77x | 0.73x
+Heavy concurrent  | 0.0147s | 0.0290s | 0.0199s | 0.0159s | 0.0291s | 0.0258s | 0.0155s | 0.0291s | 0.0220s | 1.87x | 1.42x
+Random concurrent | 0.0982s | 0.0989s | 0.1015s | 0.0986s | 0.0998s | 0.1021s | 0.0984s | 0.0995s | 0.1019s | 1.01x | 1.04x
+
+Average ops/s:
+    ReaderWriterQueue: 64.38 million
+    SPSC queue:        53.05 million
+    Folly queue:       67.30 million</code></pre>
+<p></p>
+</div>
+
+<h3>The future of lock-free programming</h3>
+<p>I think that as multi-threaded code becomes more prevalent, more and more libraries will become available
+that leverage lock-free programming for speed (while abstracting the gory, error-prone guts from the application
+developer). I wonder, though, how far this multi-core-with-shared-memory architecture will go -- the cache coherence
+protocols and memory barrier instructions don't seem to scale very well (performance-wise) to highly parallel CPUs.
+Immutable shared memory with thread-local writes may be the future. Sounds like a job for functional programming!</p></div>
+
+
+<iframe style="position: static; visibility: visible; width: 80px; height: 20px;" data-twttr-rendered="true" title="Twitter Tweet Button" class="twitter-share-button twitter-tweet-button twitter-share-button twitter-count-horizontal" src="A%20Fast%20Lock-Free%20Queue%20for%20C++_files/tweet_button.html" allowtransparency="true" scrolling="no" id="twitter-widget-0" frameborder="0"></iframe><script type="text/javascript" src="A%20Fast%20Lock-Free%20Queue%20for%20C++_files/widgets.js"></script>
+
+<a href="http://www.reddit.com/submit" onclick="window.location = 'http://www.reddit.com/submit?url=' + encodeURIComponent(window.location); return false"> <img src="A%20Fast%20Lock-Free%20Queue%20for%20C++_files/spreddit7.gif" alt="submit to reddit" border="0"> </a>
+
+
+<div id="disqus_thread"><iframe verticalscrolling="no" horizontalscrolling="no" src="A%20Fast%20Lock-Free%20Queue%20for%20C++_files/a.html" style="width: 100% ! important; border: medium none ! important; overflow: hidden ! important; height: 10935px ! important;" title="Disqus" tabindex="0" scrolling="no" allowtransparency="true" data-disqus-uid="2" id="dsq-2" frameborder="0" width="100%"></iframe></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'moodycamel'; // required: replace example with your forum shortname
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script> <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+			</div>
+		</div>
+		
+		<div id="footer">
+			<div id="footerContents">
+				<div id="footerLeft">
+					©2011-2015 Cameron Desrochers
+				</div>
+
+				<div id="footerRight">
+				</div>
+			</div>
+		</div>
+	
+ </body></html>
