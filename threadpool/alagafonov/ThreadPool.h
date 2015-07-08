@@ -1,4 +1,5 @@
 #pragma once
+// http://alexagafonov.com/programming/thread-pool-implementation-in-c-11/
 
 #include <vector>
 #include <queue>

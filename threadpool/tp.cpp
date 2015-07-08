@@ -112,13 +112,7 @@ namespace concurrent {
 void print(int num, char c)
 {
     for (int i = 0; i < num; i++) {
-
-	// std::cerr << c << ' ';
-        // char array[] = {c, ' ', '\0'};
-	// std::cerr << array;
-
 	std::cerr << c;
-
 	std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
 }
