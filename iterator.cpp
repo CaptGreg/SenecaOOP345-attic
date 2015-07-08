@@ -81,7 +81,7 @@ int main(int argc, char**argv)
         std::cout << *rit << "  ";
     std::cout << "\n";
 
-    for(auto rit = v.rbegin(); rit != v.rend(); rit++)
+    for(auto rit = rbegin(v); rit != rend(v); rit++)
         std::cout << *rit << "  ";
     std::cout << "\n";
 
