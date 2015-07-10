@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title>Ads by LinkedIn Members</title>
+<style type="text/css">
+  /* All Formats */
+  body { background: #fff; font: 10px/1 Arial, Helvetica, "Nimbus Sans L", sans-serif; margin:0; padding: 0; }
+  a,
+  a img { border: none; text-decoration: none; }
+  h4 { color: #666; font-size: 11px; font-weight: bold; line-height: 1; margin: 0px 0px 0px 10px; padding: 3px 0 6px; text-align: center;}
+  h4 a { color: #666; background: no-repeat left 4px; display: block; padding: 7px 28px 0px 0; }
+  h5 { color: #039; font-size: 13px; font-weight: bold; line-height: 1.0; margin: 5px 0px 10px 0px; padding: 0; }
+  h5 a { color: #039; display: block; text-decoration: none; }
+  p { color: #333; font-size: 12px; line-height: 1.3; margin: 3px 0 10px;}
+  p a { color: #333; }
+  p a:visited { color: #333; }
+  p span.display-url,
+  p a:visited span.display-url { color: #039; font-size: 10px; display: block; }
+  p.posted-by { color: #666; font-size: 11px; }
+  p.posted-by a { color: #039; display: inline; }
+
+  .section { background: #fff; border: 1px solid #e6e6e6; height: 246px; max-height: 246px; width: 296px; }
+
+  .dad,
+  .job { margin: 7px 7px 0px 7px; padding: 5px 0px 0px 0px; float: left; border-top: 1px dotted #999999; clear: both;}
+
+  .first {margin-top: 5px; border-top: none;}
+
+  .dad a.logo { float: none; margin: 0px 10px 10px 0; *margin-right: 5px; }
+  .dad img { background: #fff; border: 1px solid #ccc; padding: 3px; max-width: 50px; max-height: 50px; }
+
+  .what { color: #666; display: block; padding-top: 10px; text-decoration: none; text-align: right; }
+  .what:visited { color: #666; text-decoration: none; }
+
+  .adchoices { position: absolute; top: 1px; right: 1px; margin-right: 0; z-index: 100;}
+  .adchoices-i { display: block; }
+  .adchoices-ac { display: none; }
+  .adchoices:hover .adchoices-i { display: none; }
+  .adchoices:hover .adchoices-ac { display: block; }
+
+  /* test 2-11 */
+  .format-ext-2-11 .section { background-image: none; border: none; position: relative; width: 296px; }
+  .format-ext-2-11 .section .dad { border: 1px solid #ccc; height: 66px; margin: 0 0 7px 0; padding: 0 0 0 6px; -moz-border-radius: 6px; -webkit-border-radius: 6px; border-radius: 6px; -moz-box-shadow: 0px 5px 4px -4px #ccc; -webkit-box-shadow: 0px 5px 4px -4px #ccc; box-shadow: 0px 5px 4px -4px #ccc; width: 292px;}
+  .format-ext-2-11 .section .dad:hover { background-color: #eee;}
+  .format-ext-2-11 .section h5 { color: #fff; font-size: 12px; font-weight: bold; margin: 0; }
+  .format-ext-2-11 .section h5 a {  color: #069; padding: 4px 0 0 0; text-decoration: none; }
+  .format-ext-2-11 .section p.ad-text { font-size: 11px; line-height: 1.2; margin-right: 5px; float: left; width: 199px;}
+  .format-ext-2-11 .section .wologo p.ad-text { width: 262px;}
+  .format-ext-2-11 .section .dad a.logo { margin: 4px 6px 0 0; float: left;}
+  .format-ext-2-11 .section .dad a.logo img { vertical-align: middle; }
+  .format-ext-2-11 .section p.more { clear: none; color: #069; font-size: 28px; font-weight: normal; line-height: 0.5; margin-bottom: 1px;}
+  .format-ext-2-11 .section p.more a { color: #069;}
+  .format-ext-2-11 .section .footer { float: left; width: 100%; }
+  .format-ext-2-11 .section .footer h4 { color: #aaa; margin-left: 1px; padding-left: 4px;}
+  .format-ext-2-11 .section .footer h4 a { color: #aaa; font-weight: normal; padding: 0; text-align: right; }
+
+  /* test 2-12 */
+  .format-ext-2-12 .section { background-image: none; border-color: #ccc; border-style: solid; border-width: 1px 0 0; position: relative; width: 298px; }
+  .format-ext-2-12 .section .dad { border-top: 1px solid #eee; height: 72px; margin: 0; padding: 0 0 0 6px; width: 292px;}
+  .format-ext-2-12 .section .dad.first { border-top: none;}
+  .format-ext-2-12 .section .dad:hover { background-color: #eee;}
+  .format-ext-2-12 .section h5 { color: #fff; font-size: 12px; font-weight: bold; margin: 0; }
+  .format-ext-2-12 .section h5 a {  color: #069; padding: 9px 0 0 0; text-decoration: none; }
+  .format-ext-2-12 .section p.ad-text { font-size: 11px; line-height: 1.2; margin-right: 5px; float: left; width: 199px;}
+  .format-ext-2-12 .section .wologo p.ad-text { width: 262px;}
+  .format-ext-2-12 .section .dad a.logo { margin: 9px 6px 18px 0; float: left;}
+  .format-ext-2-12 .section .dad a.logo img { vertical-align: middle; }
+  .format-ext-2-12 .section p.more { clear: none; color: #069; font-size: 28px; font-weight: normal; line-height: 0.5; margin-bottom: 1px;}
+  .format-ext-2-12 .section p.more a { color: #069;}
+  .format-ext-2-12 .section .footer { border-top: 1px solid #ccc; float: left; width: 100%; }
+  .format-ext-2-12 .section .footer h4 { color: #aaa; margin-left: 1px; padding-left: 4px;}
+  .format-ext-2-12 .section .footer h4 a { color: #aaa; font-weight: normal; padding: 0; text-align: right; }
+
+  /* test 2-13 */
+  .format-ext-2-13 .section { background-image: none; border-color: #ccc; border-style: solid; border-width: 1px 0 0; position: relative; width: 296px; }
+  .format-ext-2-13 .section .dad { border-top: none; clear: none; height: 196px; margin: 14px 0; padding: 0 10px; position: relative; width: 126px; *width: 122px;}
+  .format-ext-2-13 .section .dad.first { border-right: 1px solid #eee; float: left;}
+  .format-ext-2-13 .section .dad:hover { background-color: #fff;}
+  .format-ext-2-13 .section h5 { color: #fff; font-size: 14px; font-weight: bold; line-height: 1.2; margin: 0 0 8px 0; }
+  .format-ext-2-13 .section h5 a {  color: #069; padding: 4px 0 0 0; text-decoration: none; }
+  .format-ext-2-13 .section .dad a.logo { display: block; height: 50px; margin: 0 0 8px 0; }
+  .format-ext-2-13 .section p.ad-text { font-size: 12px; line-height: 1.2; margin-right: 5px; width: 132px; *width:128px;}
+  .format-ext-2-13 .section .dad a.logo img { margin: 0; }
+  .format-ext-2-13 .section p.more { color: #069; font-size: 11px; font-weight: normal; margin-bottom: 1px; position: absolute; bottom: 2px; right: 12px;}
+  .format-ext-2-13 .section p.more a { color: #069;}
+  .format-ext-2-13 .section .footer { border-top: 1px solid #ccc; float: left; width: 100%; }
+  .format-ext-2-13 .section .footer h4 { color: #aaa; margin-left: 1px; padding-left: 4px;}
+  .format-ext-2-13 .section .footer h4 a { color: #aaa; font-weight: normal; padding: 0; text-align: right; }
+
+  /* test 2-14 */
+  .format-ext-2-14 .section { background-image: none; border-color: #ccc; border-style: solid; border-width: 1px 0 0; position: relative; width: 296px; }
+  .format-ext-2-14 .section .dad { border-top: none; height: 72px; margin: 0; padding: 0 0 0 6px; width: 292px;}
+  .format-ext-2-14 .section .dad.first { border-top: none;}
+  .format-ext-2-14 .section .dad:hover { background-color: #eee;}
+  .format-ext-2-14 .section h5 { color: #fff; font-size: 12px; font-weight: bold; margin: 0; }
+  .format-ext-2-14 .section h5 a {  color: #666; padding: 9px 0 0 0; text-decoration: none; }
+  .format-ext-2-14 .section p.ad-text { font-size: 11px; line-height: 1.2; margin-right: 5px; float: left; width: 199px;}
+  .format-ext-2-14 .section .wologo p.ad-text { width: 262px;}
+  .format-ext-2-14 .section .dad a.logo { margin: 9px 6px 18px 0; float: left;}
+  .format-ext-2-14 .section .dad a.logo img { vertical-align: middle; }
+  .format-ext-2-14 .section p.more { clear: none; color: #E3844A; font-size: 28px; font-weight: normal; line-height: 0.5; margin-bottom: 1px; }
+  .format-ext-2-14 .section p.more a { color: #E3844A;}
+  .format-ext-2-14 .section .footer { border-top: 1px solid #ccc; float: left; width: 100%; }
+  .format-ext-2-14 .section .footer h4 { color: #aaa; margin-left: 1px; padding-left: 4px;}
+  .format-ext-2-14 .section .footer h4 a { color: #aaa; font-weight: normal; padding: 0; text-align: right; }
+
+  /* test 2-15 */
+  .format-ext-2-15 .section { background-color: #E9F6DC; border: none; position: relative; width: 296px; }
+  .format-ext-2-15 .section .dad { border-top: none; height: 75px; margin: 0; padding: 0; width: 296px;}
+  .format-ext-2-15 .section .dad.first { border-top: none;}
+  .format-ext-2-15 .section .dad .ad-info { float: left; margin-left: 6px; width: 203px;}
+  .format-ext-2-15 .section .dad .ad-info.wologo { width: 262px;}
+  .format-ext-2-15 .section h5 { color: #fff; font-size: 12px; font-weight: bold; margin: 0; }
+  .format-ext-2-15 .section h5 a {  color: #000; padding: 9px 0 0 0; text-decoration: none; }
+  .format-ext-2-15 .section p.ad-text { font-size: 12px; line-height: 1.2; margin-right: 5px; float: left; width: 198px;}
+  .format-ext-2-15 .section .dad .ad-info.wologo p.ad-text { width: 262px;}
+  .format-ext-2-15 .section p.more { background-color: #066A0A; float: left; font-size: 18px; font-weight: normal; line-height: 0; margin-top: 7px; }
+  .format-ext-2-15 .section p.more a { color: #fff; margin-right: 4px; padding-bottom:12px;}
+  .format-ext-2-15 .section p.more:hover { background-color: #A0AA96; }
+  .format-ext-2-15 .section p.more.wologo { height: 42px; line-height: 1; width:17px;}
+  .format-ext-2-15 .section p.more.wologo a {color: #fff; display: inline-block; margin: 8px 3px;}
+  .format-ext-2-15 .section .dad a.logo { margin: 0; font-size: 12px;  }
+  .format-ext-2-15 .section .dad a.logo img { margin: 0; padding: 3px; vertical-align: middle; }
+  .format-ext-2-15 .section .footer { float: left; width: 100%; }
+  .format-ext-2-15 .section .footer h4 { color: #aaa; margin-left: 1px; padding-right: 4px;}
+  .format-ext-2-15 .section .footer h4 a { color: #aaa; font-weight: normal; padding: 0; text-align: right; }
+
+  /* test 2-16 */
+  .format-ext-2-16 .section { background-color: #FCF7E4; border: none; position: relative; width: 296px; }
+  .format-ext-2-16 .section .dad { border-top: none; height: 75px; margin: 0; padding: 0; width: 296px;}
+  .format-ext-2-16 .section .dad.first { border-top: none;}
+  .format-ext-2-16 .section .dad .ad-info { float: left; margin-left: 6px; width: 203px;}
+  .format-ext-2-16 .section .dad .ad-info.wologo { width: 262px;}
+  .format-ext-2-16 .section h5 { color: #fff; font-size: 12px; font-weight: bold; margin: 0; }
+  .format-ext-2-16 .section h5 a {  color: #000; padding: 9px 0 0 0; text-decoration: none; }
+  .format-ext-2-16 .section p.ad-text { font-size: 12px; line-height: 1.2; margin-right: 5px; float: left; width: 198px;}
+  .format-ext-2-16 .section .dad .ad-info.wologo p.ad-text { width: 262px;}
+  .format-ext-2-16 .section p.more { background-color: #999; float: left; font-size: 18px; font-weight: normal; line-height: 0; margin-top: 7px; }
+  .format-ext-2-16 .section p.more a { color: #fff; margin-right: 4px; padding-bottom:12px; }
+  .format-ext-2-16 .section p.more.wologo { height: 42px; line-height: 1; width:17px;}
+  .format-ext-2-16 .section p.more.wologo a {color: #fff; display: inline-block; margin: 8px 3px;}
+  .format-ext-2-16 .section .dad a.logo { margin: 0; font-size: 12px; }
+  .format-ext-2-16 .section .dad a.logo img { margin: 0; padding: 3px; vertical-align: middle; }
+  .format-ext-2-16 .section .footer { float: left; width: 100%; }
+  .format-ext-2-16 .section .footer h4 { color: #aaa; margin-left: 1px; padding-right: 4px;}
+  .format-ext-2-16 .section .footer h4 a { color: #aaa; font-weight: normal; padding: 0; text-align: right; }
+
+  /* Add image borders */
+  .dad span.vert-align { border: 1px solid #ccc; padding: 3px; }
+  .dad span.vert-align img { border: none; padding: 0; }
+</style>
+<style type="text/css">
+  span.vert-align { text-align: center; display: inline-block !important; vertical-align: middle !important; padding: 0 !important; margin: 0 !important; background-color: #fff; }
+  span.vert-align img { width: auto !important; height: auto !important; vertical-align: middle !important; display: inline-block !important; }
+  span.vert-align._25_25 { height: 25px !important; width: 25px !important; line-height: 25px !important; }
+  span.vert-align._25_25 img._25_25 { max-width: 25px; max-height: 25px; }
+  span.vert-align._30_30 { height: 30px !important; width: 30px !important; line-height: 30px !important; }
+  span.vert-align._30_30 img._30_30 { max-width: 30px; max-height: 30px; }
+  span.vert-align._40_40 { height: 40px !important; width: 40px !important; line-height: 40px !important; }
+  span.vert-align._40_40 img._40_40 { max-width: 40px; max-height: 40px; }
+  span.vert-align._50_50 { height: 50px !important; width: 50px !important; line-height: 50px !important; }
+  span.vert-align._50_50 img._50_50 { max-width: 50px; max-height: 50px; }
+  span.vert-align._60_60 { height: 60px !important; width: 60px !important; line-height: 60px !important; }
+  span.vert-align._60_60 img._60_60 { max-width: 60px; max-height: 60px; }
+  span.vert-align._65_65 { height: 65px !important; width: 65px !important; line-height: 65px !important; }
+  span.vert-align._65_65 img._65_65 { max-width: 65px; max-height: 65px; }
+  span.vert-align._80_80 { height: 80px !important; width: 80px !important; line-height: 80px !important; }
+  span.vert-align._80_80 img._80_80 { max-width: 80px; max-height: 80px; }
+</style>
+</head>
+<body>
+<div class="formats format-ext-2-12">
+<div id="member-ads">
+<div class="section ads ">
+<div class="content">
+<div class="adchoices">
+<div class="adchoices-i">
+<a href="http://www.linkedin.com/static?key=linkedin_ads_info" target="_blank"><img src="ads_data/icon_adchoices_i_19x15.png" alt=""></a>
+</div>
+<div class="adchoices-ac">
+<a href="http://www.linkedin.com/static?key=linkedin_ads_info" target="_blank"><img src="ads_data/icon_adchoices_ac_77x15.png" alt=""></a>
+</div>
+</div>
+<div class="dad first">
+<a href="https://adclick.g.doubleclick.net/aclk?sa=L&amp;ai=BgZxQVHydVci9BKPCwQHvw4PoBpbM7ucGAAAAEAEgADgAWKbOgNhUYP2Il4HoA4IBF2NhLXB1Yi02Mzg1NDgyMDI3NDI4MzQ3sgESd3d3LnNsaWRlc2hhcmUubmV0ugEJZ2ZwX2ltYWdlyAEJ2gE4aHR0cDovL3d3dy5zbGlkZXNoYXJlLm5ldC9BbnRvaW5lU2F2aW5lL211bHRpdGhyZWFkaW5nLWPAAgLgAgDqAho0MTIyL2xpbmtlZGluLnNzL3NsaWRldmlld_gCgdIekAPgA5gD4AOoAwHQBJBO4AQBkAYBoAYg2AcA&amp;num=0&amp;cid=5GjvOdkkrkvMCEJT4ktFnELL&amp;sig=AOD64_3h8vyr6akiZbGG11jMkaBGKRU4Bg&amp;client=ca-pub-6385482027428347&amp;adurl=https://www.linkedin.com/csp/crd?v=1&amp;cs=0_2bAZ9St_zMfW2W9vapt2qyG3xzUhZFoluUm_wSWsxybAofOCkpCiiI9fKBwj1WZkk9n-Sx2Gmf0QEalnlUU-OfE4sDnNEdLTfbCzGMP3pBCmdnM79rHEhgWjYBoCC65c6rqyrWF84iwc8nA31Nng1rWjChK3K3XbZB2xTrTPHc3XaYv-AALedr0O4zbOI0cmCwGkB2GYU0VnAxKznMd3BbyiR7EPZDyNLfL8hYbdrZSmOP-KnatS56febcHaC8cyAcxkqn7iofADPEdLlOj5rllOFDsd4aqMRRPvIYmto_OZ4I7UzFrvUNTywnRZ3CHatOxlGsuLHIkhgrfY1zbHRMmMt33Wym5C2aGfW7zQfIiTtSCQVclCppoHOLKyJrQI-Yeu0ofl7r_YVmRrMUGt35PXDoCqLbZ9MJBya5sxBgIrP2Pubgs9UT500-9GUufx3NdgHxhZNB7yrwpsQH-h8_c6WFwEM5gcqsZpUQ1BzoV_oxfLcfaxpQs3eMi6TmqiH_mycA79j1I3zOmcE48mTaUj6IFxPzU9seSxaGKbO1Dms-AKbDMo8KRjIVAEFZ5HH9gzkNzYa1Vz8vguoa5OaUbdb6jvTSTN6RrPkTomzoAbVsLU_e4RTeMDWden9yrFRLgZRkVkiXXKpioQ3ZGs9r5kHHTzIzjaqIY84aAZo_Q9tNX3G2O1nBOFmvVy0_o-3q7qn_poxWbjXnrZnxnKjVefoAkRr__SKDO_xosOrS19UdS8nAhMAyar4VivG5TpDr8mjkeoOJKgC8rxxajnpza2vO9Tp6bm1zDkJrl3zyCtT-pmay4QdQbcLo3s_GGi_4DVbxa2LofQzuTx3jShEC" target="_blank" class="logo">
+<img src="ads_data/AAEAAQAAAAAAAABCAAAAJDA3OGZiNmEwLTIzMWUtNDUwZi05M2EyLTU4ZDI1.png" alt="">
+</a>
+<div class="ad-info wilogo">
+<h5><a href="https://adclick.g.doubleclick.net/aclk?sa=L&amp;ai=BgZxQVHydVci9BKPCwQHvw4PoBpbM7ucGAAAAEAEgADgAWKbOgNhUYP2Il4HoA4IBF2NhLXB1Yi02Mzg1NDgyMDI3NDI4MzQ3sgESd3d3LnNsaWRlc2hhcmUubmV0ugEJZ2ZwX2ltYWdlyAEJ2gE4aHR0cDovL3d3dy5zbGlkZXNoYXJlLm5ldC9BbnRvaW5lU2F2aW5lL211bHRpdGhyZWFkaW5nLWPAAgLgAgDqAho0MTIyL2xpbmtlZGluLnNzL3NsaWRldmlld_gCgdIekAPgA5gD4AOoAwHQBJBO4AQBkAYBoAYg2AcA&amp;num=0&amp;cid=5GjvOdkkrkvMCEJT4ktFnELL&amp;sig=AOD64_3h8vyr6akiZbGG11jMkaBGKRU4Bg&amp;client=ca-pub-6385482027428347&amp;adurl=https://www.linkedin.com/csp/crd?v=1&amp;cs=0_2bAZ9St_zMfW2W9vapt2qyG3xzUhZFoluUm_wSWsxybAofOCkpCiiI9fKBwj1WZkk9n-Sx2Gmf0QEalnlUU-OfE4sDnNEdLTfbCzGMP3pBCmdnM79rHEhgWjYBoCC65c6rqyrWF84iwc8nA31Nng1rWjChK3K3XbZB2xTrTPHc3XaYv-AALedr0O4zbOI0cmCwGkB2GYU0VnAxKznMd3BbyiR7EPZDyNLfL8hYbdrZSmOP-KnatS56febcHaC8cyAcxkqn7iofADPEdLlOj5rllOFDsd4aqMRRPvIYmto_OZ4I7UzFrvUNTywnRZ3CHatOxlGsuLHIkhgrfY1zbHRMmMt33Wym5C2aGfW7zQfIiTtSCQVclCppoHOLKyJrQI-Yeu0ofl7r_YVmRrMUGt35PXDoCqLbZ9MJBya5sxBgIrP2Pubgs9UT500-9GUufx3NdgHxhZNB7yrwpsQH-h8_c6WFwEM5gcqsZpUQ1BzoV_oxfLcfaxpQs3eMi6TmqiH_mycA79j1I3zOmcE48mTaUj6IFxPzU9seSxaGKbO1Dms-AKbDMo8KRjIVAEFZ5HH9gzkNzYa1Vz8vguoa5OaUbdb6jvTSTN6RrPkTomzoAbVsLU_e4RTeMDWden9yrFRLgZRkVkiXXKpioQ3ZGs9r5kHHTzIzjaqIY84aAZo_Q9tNX3G2O1nBOFmvVy0_o-3q7qn_poxWbjXnrZnxnKjVefoAkRr__SKDO_xosOrS19UdS8nAhMAyar4VivG5TpDr8mjkeoOJKgC8rxxajnpza2vO9Tp6bm1zDkJrl3zyCtT-pmay4QdQbcLo3s_GGi_4DVbxa2LofQzuTx3jShEC" target="_blank">Avg Offer for Devs: 115k</a></h5>
+<p class="ad-text">
+<a href="https://adclick.g.doubleclick.net/aclk?sa=L&amp;ai=BgZxQVHydVci9BKPCwQHvw4PoBpbM7ucGAAAAEAEgADgAWKbOgNhUYP2Il4HoA4IBF2NhLXB1Yi02Mzg1NDgyMDI3NDI4MzQ3sgESd3d3LnNsaWRlc2hhcmUubmV0ugEJZ2ZwX2ltYWdlyAEJ2gE4aHR0cDovL3d3dy5zbGlkZXNoYXJlLm5ldC9BbnRvaW5lU2F2aW5lL211bHRpdGhyZWFkaW5nLWPAAgLgAgDqAho0MTIyL2xpbmtlZGluLnNzL3NsaWRldmlld_gCgdIekAPgA5gD4AOoAwHQBJBO4AQBkAYBoAYg2AcA&amp;num=0&amp;cid=5GjvOdkkrkvMCEJT4ktFnELL&amp;sig=AOD64_3h8vyr6akiZbGG11jMkaBGKRU4Bg&amp;client=ca-pub-6385482027428347&amp;adurl=https://www.linkedin.com/csp/crd?v=1&amp;cs=0_2bAZ9St_zMfW2W9vapt2qyG3xzUhZFoluUm_wSWsxybAofOCkpCiiI9fKBwj1WZkk9n-Sx2Gmf0QEalnlUU-OfE4sDnNEdLTfbCzGMP3pBCmdnM79rHEhgWjYBoCC65c6rqyrWF84iwc8nA31Nng1rWjChK3K3XbZB2xTrTPHc3XaYv-AALedr0O4zbOI0cmCwGkB2GYU0VnAxKznMd3BbyiR7EPZDyNLfL8hYbdrZSmOP-KnatS56febcHaC8cyAcxkqn7iofADPEdLlOj5rllOFDsd4aqMRRPvIYmto_OZ4I7UzFrvUNTywnRZ3CHatOxlGsuLHIkhgrfY1zbHRMmMt33Wym5C2aGfW7zQfIiTtSCQVclCppoHOLKyJrQI-Yeu0ofl7r_YVmRrMUGt35PXDoCqLbZ9MJBya5sxBgIrP2Pubgs9UT500-9GUufx3NdgHxhZNB7yrwpsQH-h8_c6WFwEM5gcqsZpUQ1BzoV_oxfLcfaxpQs3eMi6TmqiH_mycA79j1I3zOmcE48mTaUj6IFxPzU9seSxaGKbO1Dms-AKbDMo8KRjIVAEFZ5HH9gzkNzYa1Vz8vguoa5OaUbdb6jvTSTN6RrPkTomzoAbVsLU_e4RTeMDWden9yrFRLgZRkVkiXXKpioQ3ZGs9r5kHHTzIzjaqIY84aAZo_Q9tNX3G2O1nBOFmvVy0_o-3q7qn_poxWbjXnrZnxnKjVefoAkRr__SKDO_xosOrS19UdS8nAhMAyar4VivG5TpDr8mjkeoOJKgC8rxxajnpza2vO9Tp6bm1zDkJrl3zyCtT-pmay4QdQbcLo3s_GGi_4DVbxa2LofQzuTx3jShEC" target="_blank">Want to move out of your industry? Work with a new stack? Try Hired today!</a>
+</p>
+<p class="more"><a href="https://adclick.g.doubleclick.net/aclk?sa=L&amp;ai=BgZxQVHydVci9BKPCwQHvw4PoBpbM7ucGAAAAEAEgADgAWKbOgNhUYP2Il4HoA4IBF2NhLXB1Yi02Mzg1NDgyMDI3NDI4MzQ3sgESd3d3LnNsaWRlc2hhcmUubmV0ugEJZ2ZwX2ltYWdlyAEJ2gE4aHR0cDovL3d3dy5zbGlkZXNoYXJlLm5ldC9BbnRvaW5lU2F2aW5lL211bHRpdGhyZWFkaW5nLWPAAgLgAgDqAho0MTIyL2xpbmtlZGluLnNzL3NsaWRldmlld_gCgdIekAPgA5gD4AOoAwHQBJBO4AQBkAYBoAYg2AcA&amp;num=0&amp;cid=5GjvOdkkrkvMCEJT4ktFnELL&amp;sig=AOD64_3h8vyr6akiZbGG11jMkaBGKRU4Bg&amp;client=ca-pub-6385482027428347&amp;adurl=https://www.linkedin.com/csp/crd?v=1&amp;cs=0_2bAZ9St_zMfW2W9vapt2qyG3xzUhZFoluUm_wSWsxybAofOCkpCiiI9fKBwj1WZkk9n-Sx2Gmf0QEalnlUU-OfE4sDnNEdLTfbCzGMP3pBCmdnM79rHEhgWjYBoCC65c6rqyrWF84iwc8nA31Nng1rWjChK3K3XbZB2xTrTPHc3XaYv-AALedr0O4zbOI0cmCwGkB2GYU0VnAxKznMd3BbyiR7EPZDyNLfL8hYbdrZSmOP-KnatS56febcHaC8cyAcxkqn7iofADPEdLlOj5rllOFDsd4aqMRRPvIYmto_OZ4I7UzFrvUNTywnRZ3CHatOxlGsuLHIkhgrfY1zbHRMmMt33Wym5C2aGfW7zQfIiTtSCQVclCppoHOLKyJrQI-Yeu0ofl7r_YVmRrMUGt35PXDoCqLbZ9MJBya5sxBgIrP2Pubgs9UT500-9GUufx3NdgHxhZNB7yrwpsQH-h8_c6WFwEM5gcqsZpUQ1BzoV_oxfLcfaxpQs3eMi6TmqiH_mycA79j1I3zOmcE48mTaUj6IFxPzU9seSxaGKbO1Dms-AKbDMo8KRjIVAEFZ5HH9gzkNzYa1Vz8vguoa5OaUbdb6jvTSTN6RrPkTomzoAbVsLU_e4RTeMDWden9yrFRLgZRkVkiXXKpioQ3ZGs9r5kHHTzIzjaqIY84aAZo_Q9tNX3G2O1nBOFmvVy0_o-3q7qn_poxWbjXnrZnxnKjVefoAkRr__SKDO_xosOrS19UdS8nAhMAyar4VivG5TpDr8mjkeoOJKgC8rxxajnpza2vO9Tp6bm1zDkJrl3zyCtT-pmay4QdQbcLo3s_GGi_4DVbxa2LofQzuTx3jShEC" target="_blank">»</a></p>
+</div>
+</div>
+<div class="dad">
+<a href="https://adclick.g.doubleclick.net/aclk?sa=L&amp;ai=BgZxQVHydVci9BKPCwQHvw4PoBpbM7ucGAAAAEAEgADgAWKbOgNhUYP2Il4HoA4IBF2NhLXB1Yi02Mzg1NDgyMDI3NDI4MzQ3sgESd3d3LnNsaWRlc2hhcmUubmV0ugEJZ2ZwX2ltYWdlyAEJ2gE4aHR0cDovL3d3dy5zbGlkZXNoYXJlLm5ldC9BbnRvaW5lU2F2aW5lL211bHRpdGhyZWFkaW5nLWPAAgLgAgDqAho0MTIyL2xpbmtlZGluLnNzL3NsaWRldmlld_gCgdIekAPgA5gD4AOoAwHQBJBO4AQBkAYBoAYg2AcA&amp;num=0&amp;cid=5GjvOdkkrkvMCEJT4ktFnELL&amp;sig=AOD64_3h8vyr6akiZbGG11jMkaBGKRU4Bg&amp;client=ca-pub-6385482027428347&amp;adurl=https://www.linkedin.com/csp/crd?v=1&amp;cs=0_5zOiGzdriAFyIcDS8y9_Wy0PDGMY1RpJqBtQmvGjLIi1Z44DICuRwlLxWa42Ym5NB7vinyulkfSjxWClFca0rcT5HLHL6wOBRT7_pAb1gColH6gAL-zYwrgX8ElMHQ1p23Xd7yGRnFkoOR9F6Rm5eA5s6en6gYdgkHcvLVztYh4sZHmT2-O_len0ghypZNJkBOYuQYl_Gxd06bL6hI9sf0lvkAdXm8Lfrut1usWOc9sRz7NzMBcvqCeeOImnj8MNu216ghX6APxU-Qirruaof7gty-xXQPILwUtmzkqp7vvthaW02q9213aJ3UrYiOjLNEbMKytYqC9Ucr5fFA4TgcHJ24U8UqDBd34saNd6AMLzNlN5pzUdpfQMSGW051CI6vyK0j966BRORLt3McKiFcC5AN_COjdlZKVN9qrH_jdJ3ETvze3G72i2FrT5-b7g7k7EOV8RFeeI_3KSAN7uUhmNtUP2DcogFRgkm7gHGODIlamlsT-f_tw56TJX7IwTgIGloUVersJSCNOk06xlz7AxgNnLvobWKL7sJej_DGB9OF2ink5iEkBVFBPTrVjnW8ah6NuoUeWiA6CxB-oP0lwhklh3dgcD_r-8l6r4Bapn3w1JjjFdA2yek44SrOSDsaj6-XvzEx-rhZzdDGtvnrx5I9zUjn-GzAb6vAAG3XppxI81tT4xoKMCjbRDRcz-A6yfUHr7SomXtHYRIY-lmXbXk-lLgex66nA4MUOkMpzhkKDb2IPgxHQBJXLArVw-3rsNSz6nay-ZafCToXeb9P4DVbxa2LofQzuTx3jShEC" target="_blank" class="logo">
+<img src="ads_data/33730db.png" alt="">
+</a>
+<div class="ad-info wilogo">
+<h5><a href="https://adclick.g.doubleclick.net/aclk?sa=L&amp;ai=BgZxQVHydVci9BKPCwQHvw4PoBpbM7ucGAAAAEAEgADgAWKbOgNhUYP2Il4HoA4IBF2NhLXB1Yi02Mzg1NDgyMDI3NDI4MzQ3sgESd3d3LnNsaWRlc2hhcmUubmV0ugEJZ2ZwX2ltYWdlyAEJ2gE4aHR0cDovL3d3dy5zbGlkZXNoYXJlLm5ldC9BbnRvaW5lU2F2aW5lL211bHRpdGhyZWFkaW5nLWPAAgLgAgDqAho0MTIyL2xpbmtlZGluLnNzL3NsaWRldmlld_gCgdIekAPgA5gD4AOoAwHQBJBO4AQBkAYBoAYg2AcA&amp;num=0&amp;cid=5GjvOdkkrkvMCEJT4ktFnELL&amp;sig=AOD64_3h8vyr6akiZbGG11jMkaBGKRU4Bg&amp;client=ca-pub-6385482027428347&amp;adurl=https://www.linkedin.com/csp/crd?v=1&amp;cs=0_5zOiGzdriAFyIcDS8y9_Wy0PDGMY1RpJqBtQmvGjLIi1Z44DICuRwlLxWa42Ym5NB7vinyulkfSjxWClFca0rcT5HLHL6wOBRT7_pAb1gColH6gAL-zYwrgX8ElMHQ1p23Xd7yGRnFkoOR9F6Rm5eA5s6en6gYdgkHcvLVztYh4sZHmT2-O_len0ghypZNJkBOYuQYl_Gxd06bL6hI9sf0lvkAdXm8Lfrut1usWOc9sRz7NzMBcvqCeeOImnj8MNu216ghX6APxU-Qirruaof7gty-xXQPILwUtmzkqp7vvthaW02q9213aJ3UrYiOjLNEbMKytYqC9Ucr5fFA4TgcHJ24U8UqDBd34saNd6AMLzNlN5pzUdpfQMSGW051CI6vyK0j966BRORLt3McKiFcC5AN_COjdlZKVN9qrH_jdJ3ETvze3G72i2FrT5-b7g7k7EOV8RFeeI_3KSAN7uUhmNtUP2DcogFRgkm7gHGODIlamlsT-f_tw56TJX7IwTgIGloUVersJSCNOk06xlz7AxgNnLvobWKL7sJej_DGB9OF2ink5iEkBVFBPTrVjnW8ah6NuoUeWiA6CxB-oP0lwhklh3dgcD_r-8l6r4Bapn3w1JjjFdA2yek44SrOSDsaj6-XvzEx-rhZzdDGtvnrx5I9zUjn-GzAb6vAAG3XppxI81tT4xoKMCjbRDRcz-A6yfUHr7SomXtHYRIY-lmXbXk-lLgex66nA4MUOkMpzhkKDb2IPgxHQBJXLArVw-3rsNSz6nay-ZafCToXeb9P4DVbxa2LofQzuTx3jShEC" target="_blank">12 Month Canada MBA</a></h5>
+<p class="ad-text">
+<a href="https://adclick.g.doubleclick.net/aclk?sa=L&amp;ai=BgZxQVHydVci9BKPCwQHvw4PoBpbM7ucGAAAAEAEgADgAWKbOgNhUYP2Il4HoA4IBF2NhLXB1Yi02Mzg1NDgyMDI3NDI4MzQ3sgESd3d3LnNsaWRlc2hhcmUubmV0ugEJZ2ZwX2ltYWdlyAEJ2gE4aHR0cDovL3d3dy5zbGlkZXNoYXJlLm5ldC9BbnRvaW5lU2F2aW5lL211bHRpdGhyZWFkaW5nLWPAAgLgAgDqAho0MTIyL2xpbmtlZGluLnNzL3NsaWRldmlld_gCgdIekAPgA5gD4AOoAwHQBJBO4AQBkAYBoAYg2AcA&amp;num=0&amp;cid=5GjvOdkkrkvMCEJT4ktFnELL&amp;sig=AOD64_3h8vyr6akiZbGG11jMkaBGKRU4Bg&amp;client=ca-pub-6385482027428347&amp;adurl=https://www.linkedin.com/csp/crd?v=1&amp;cs=0_5zOiGzdriAFyIcDS8y9_Wy0PDGMY1RpJqBtQmvGjLIi1Z44DICuRwlLxWa42Ym5NB7vinyulkfSjxWClFca0rcT5HLHL6wOBRT7_pAb1gColH6gAL-zYwrgX8ElMHQ1p23Xd7yGRnFkoOR9F6Rm5eA5s6en6gYdgkHcvLVztYh4sZHmT2-O_len0ghypZNJkBOYuQYl_Gxd06bL6hI9sf0lvkAdXm8Lfrut1usWOc9sRz7NzMBcvqCeeOImnj8MNu216ghX6APxU-Qirruaof7gty-xXQPILwUtmzkqp7vvthaW02q9213aJ3UrYiOjLNEbMKytYqC9Ucr5fFA4TgcHJ24U8UqDBd34saNd6AMLzNlN5pzUdpfQMSGW051CI6vyK0j966BRORLt3McKiFcC5AN_COjdlZKVN9qrH_jdJ3ETvze3G72i2FrT5-b7g7k7EOV8RFeeI_3KSAN7uUhmNtUP2DcogFRgkm7gHGODIlamlsT-f_tw56TJX7IwTgIGloUVersJSCNOk06xlz7AxgNnLvobWKL7sJej_DGB9OF2ink5iEkBVFBPTrVjnW8ah6NuoUeWiA6CxB-oP0lwhklh3dgcD_r-8l6r4Bapn3w1JjjFdA2yek44SrOSDsaj6-XvzEx-rhZzdDGtvnrx5I9zUjn-GzAb6vAAG3XppxI81tT4xoKMCjbRDRcz-A6yfUHr7SomXtHYRIY-lmXbXk-lLgex66nA4MUOkMpzhkKDb2IPgxHQBJXLArVw-3rsNSz6nay-ZafCToXeb9P4DVbxa2LofQzuTx3jShEC" target="_blank">Flexible, Affordable, Practical Study In Canada While You Work.</a>
+</p>
+<p class="more"><a href="https://adclick.g.doubleclick.net/aclk?sa=L&amp;ai=BgZxQVHydVci9BKPCwQHvw4PoBpbM7ucGAAAAEAEgADgAWKbOgNhUYP2Il4HoA4IBF2NhLXB1Yi02Mzg1NDgyMDI3NDI4MzQ3sgESd3d3LnNsaWRlc2hhcmUubmV0ugEJZ2ZwX2ltYWdlyAEJ2gE4aHR0cDovL3d3dy5zbGlkZXNoYXJlLm5ldC9BbnRvaW5lU2F2aW5lL211bHRpdGhyZWFkaW5nLWPAAgLgAgDqAho0MTIyL2xpbmtlZGluLnNzL3NsaWRldmlld_gCgdIekAPgA5gD4AOoAwHQBJBO4AQBkAYBoAYg2AcA&amp;num=0&amp;cid=5GjvOdkkrkvMCEJT4ktFnELL&amp;sig=AOD64_3h8vyr6akiZbGG11jMkaBGKRU4Bg&amp;client=ca-pub-6385482027428347&amp;adurl=https://www.linkedin.com/csp/crd?v=1&amp;cs=0_5zOiGzdriAFyIcDS8y9_Wy0PDGMY1RpJqBtQmvGjLIi1Z44DICuRwlLxWa42Ym5NB7vinyulkfSjxWClFca0rcT5HLHL6wOBRT7_pAb1gColH6gAL-zYwrgX8ElMHQ1p23Xd7yGRnFkoOR9F6Rm5eA5s6en6gYdgkHcvLVztYh4sZHmT2-O_len0ghypZNJkBOYuQYl_Gxd06bL6hI9sf0lvkAdXm8Lfrut1usWOc9sRz7NzMBcvqCeeOImnj8MNu216ghX6APxU-Qirruaof7gty-xXQPILwUtmzkqp7vvthaW02q9213aJ3UrYiOjLNEbMKytYqC9Ucr5fFA4TgcHJ24U8UqDBd34saNd6AMLzNlN5pzUdpfQMSGW051CI6vyK0j966BRORLt3McKiFcC5AN_COjdlZKVN9qrH_jdJ3ETvze3G72i2FrT5-b7g7k7EOV8RFeeI_3KSAN7uUhmNtUP2DcogFRgkm7gHGODIlamlsT-f_tw56TJX7IwTgIGloUVersJSCNOk06xlz7AxgNnLvobWKL7sJej_DGB9OF2ink5iEkBVFBPTrVjnW8ah6NuoUeWiA6CxB-oP0lwhklh3dgcD_r-8l6r4Bapn3w1JjjFdA2yek44SrOSDsaj6-XvzEx-rhZzdDGtvnrx5I9zUjn-GzAb6vAAG3XppxI81tT4xoKMCjbRDRcz-A6yfUHr7SomXtHYRIY-lmXbXk-lLgex66nA4MUOkMpzhkKDb2IPgxHQBJXLArVw-3rsNSz6nay-ZafCToXeb9P4DVbxa2LofQzuTx3jShEC" target="_blank">»</a></p>
+</div>
+</div>
+<div class="dad">
+<a href="https://adclick.g.doubleclick.net/aclk?sa=L&amp;ai=BgZxQVHydVci9BKPCwQHvw4PoBpbM7ucGAAAAEAEgADgAWKbOgNhUYP2Il4HoA4IBF2NhLXB1Yi02Mzg1NDgyMDI3NDI4MzQ3sgESd3d3LnNsaWRlc2hhcmUubmV0ugEJZ2ZwX2ltYWdlyAEJ2gE4aHR0cDovL3d3dy5zbGlkZXNoYXJlLm5ldC9BbnRvaW5lU2F2aW5lL211bHRpdGhyZWFkaW5nLWPAAgLgAgDqAho0MTIyL2xpbmtlZGluLnNzL3NsaWRldmlld_gCgdIekAPgA5gD4AOoAwHQBJBO4AQBkAYBoAYg2AcA&amp;num=0&amp;cid=5GjvOdkkrkvMCEJT4ktFnELL&amp;sig=AOD64_3h8vyr6akiZbGG11jMkaBGKRU4Bg&amp;client=ca-pub-6385482027428347&amp;adurl=https://www.linkedin.com/csp/crd?v=1&amp;cs=0_0fJV2VyWoa48kLCa5PCNtGTZdk8UF4L_B4cJg_QW-4SwkMtpLEEX_UVhvyxAY6b9USf8fNmrUP9KdnUEIab4RgPG5r4xagdZXP398WSlhvSg3ekThd-YnWpeIlPyZdIrBEU289WQfs3zqD6qmlDr3mfvMGyN0gklVbArtD6Dn6rxbUnHdfxnM7jtre1mpmFsMOCvpQdlsfiN_Mc4NnMAY346O6Me8HbQTxlzVWTmKsIEy0FgCGq9fbkzEWBGZOCPBVEGATq_mltPJS-chnZMxhBLJjdzGDpG-mN96cQTNvU4i8OfkWP29bpbNNq6hCCt00WxgQpbBJobe7pRyWGeoQoaqE2CI91bSAhkJmRc0zxa63x0aaXkEl2jnkWygwsYIenkZZocEkrhR0I8w62lKKpe2LTTOoa0a3UZEQAbEJIj_IEE1aspjBN1hV9o1XhZ3AxgNnLvobWKL7sJej_DGBdN-Tfc4MTKzeRfIsZYUGFa8ah6NuoUeWiA6CxB-oP0k-ueTIzF4AvhBe2PN51US5JynjTURkayTir-vk7Zp9qo2Pyp8HkeYcPE0XZmJViuLx5I9zUjn-GzAb6vAAG3XppxI81tT4xoKMCjbRDRcz-yLurUrP1m-EUitxe6mq22_fv1kuLexTo9tTLHkyEVSI8AnTaSh7vqVqQkJT40bQiy79EntDR7JS4oXU4kjhsy74DVbxa2LofQzuTx3jShEC" target="_blank" class="logo">
+<img src="ads_data/AAEAAQAAAAAAAAIQAAAAJGEwMTFhMzY5LWE0MGMtNDBiNS1iOWMwLTdkZmNk.png" alt="">
+</a>
+<div class="ad-info wilogo">
+<h5><a href="https://adclick.g.doubleclick.net/aclk?sa=L&amp;ai=BgZxQVHydVci9BKPCwQHvw4PoBpbM7ucGAAAAEAEgADgAWKbOgNhUYP2Il4HoA4IBF2NhLXB1Yi02Mzg1NDgyMDI3NDI4MzQ3sgESd3d3LnNsaWRlc2hhcmUubmV0ugEJZ2ZwX2ltYWdlyAEJ2gE4aHR0cDovL3d3dy5zbGlkZXNoYXJlLm5ldC9BbnRvaW5lU2F2aW5lL211bHRpdGhyZWFkaW5nLWPAAgLgAgDqAho0MTIyL2xpbmtlZGluLnNzL3NsaWRldmlld_gCgdIekAPgA5gD4AOoAwHQBJBO4AQBkAYBoAYg2AcA&amp;num=0&amp;cid=5GjvOdkkrkvMCEJT4ktFnELL&amp;sig=AOD64_3h8vyr6akiZbGG11jMkaBGKRU4Bg&amp;client=ca-pub-6385482027428347&amp;adurl=https://www.linkedin.com/csp/crd?v=1&amp;cs=0_0fJV2VyWoa48kLCa5PCNtGTZdk8UF4L_B4cJg_QW-4SwkMtpLEEX_UVhvyxAY6b9USf8fNmrUP9KdnUEIab4RgPG5r4xagdZXP398WSlhvSg3ekThd-YnWpeIlPyZdIrBEU289WQfs3zqD6qmlDr3mfvMGyN0gklVbArtD6Dn6rxbUnHdfxnM7jtre1mpmFsMOCvpQdlsfiN_Mc4NnMAY346O6Me8HbQTxlzVWTmKsIEy0FgCGq9fbkzEWBGZOCPBVEGATq_mltPJS-chnZMxhBLJjdzGDpG-mN96cQTNvU4i8OfkWP29bpbNNq6hCCt00WxgQpbBJobe7pRyWGeoQoaqE2CI91bSAhkJmRc0zxa63x0aaXkEl2jnkWygwsYIenkZZocEkrhR0I8w62lKKpe2LTTOoa0a3UZEQAbEJIj_IEE1aspjBN1hV9o1XhZ3AxgNnLvobWKL7sJej_DGBdN-Tfc4MTKzeRfIsZYUGFa8ah6NuoUeWiA6CxB-oP0k-ueTIzF4AvhBe2PN51US5JynjTURkayTir-vk7Zp9qo2Pyp8HkeYcPE0XZmJViuLx5I9zUjn-GzAb6vAAG3XppxI81tT4xoKMCjbRDRcz-yLurUrP1m-EUitxe6mq22_fv1kuLexTo9tTLHkyEVSI8AnTaSh7vqVqQkJT40bQiy79EntDR7JS4oXU4kjhsy74DVbxa2LofQzuTx3jShEC" target="_blank">Are you a 2D artist?</a></h5>
+<p class="ad-text">
+<a href="https://adclick.g.doubleclick.net/aclk?sa=L&amp;ai=BgZxQVHydVci9BKPCwQHvw4PoBpbM7ucGAAAAEAEgADgAWKbOgNhUYP2Il4HoA4IBF2NhLXB1Yi02Mzg1NDgyMDI3NDI4MzQ3sgESd3d3LnNsaWRlc2hhcmUubmV0ugEJZ2ZwX2ltYWdlyAEJ2gE4aHR0cDovL3d3dy5zbGlkZXNoYXJlLm5ldC9BbnRvaW5lU2F2aW5lL211bHRpdGhyZWFkaW5nLWPAAgLgAgDqAho0MTIyL2xpbmtlZGluLnNzL3NsaWRldmlld_gCgdIekAPgA5gD4AOoAwHQBJBO4AQBkAYBoAYg2AcA&amp;num=0&amp;cid=5GjvOdkkrkvMCEJT4ktFnELL&amp;sig=AOD64_3h8vyr6akiZbGG11jMkaBGKRU4Bg&amp;client=ca-pub-6385482027428347&amp;adurl=https://www.linkedin.com/csp/crd?v=1&amp;cs=0_0fJV2VyWoa48kLCa5PCNtGTZdk8UF4L_B4cJg_QW-4SwkMtpLEEX_UVhvyxAY6b9USf8fNmrUP9KdnUEIab4RgPG5r4xagdZXP398WSlhvSg3ekThd-YnWpeIlPyZdIrBEU289WQfs3zqD6qmlDr3mfvMGyN0gklVbArtD6Dn6rxbUnHdfxnM7jtre1mpmFsMOCvpQdlsfiN_Mc4NnMAY346O6Me8HbQTxlzVWTmKsIEy0FgCGq9fbkzEWBGZOCPBVEGATq_mltPJS-chnZMxhBLJjdzGDpG-mN96cQTNvU4i8OfkWP29bpbNNq6hCCt00WxgQpbBJobe7pRyWGeoQoaqE2CI91bSAhkJmRc0zxa63x0aaXkEl2jnkWygwsYIenkZZocEkrhR0I8w62lKKpe2LTTOoa0a3UZEQAbEJIj_IEE1aspjBN1hV9o1XhZ3AxgNnLvobWKL7sJej_DGBdN-Tfc4MTKzeRfIsZYUGFa8ah6NuoUeWiA6CxB-oP0k-ueTIzF4AvhBe2PN51US5JynjTURkayTir-vk7Zp9qo2Pyp8HkeYcPE0XZmJViuLx5I9zUjn-GzAb6vAAG3XppxI81tT4xoKMCjbRDRcz-yLurUrP1m-EUitxe6mq22_fv1kuLexTo9tTLHkyEVSI8AnTaSh7vqVqQkJT40bQiy79EntDR7JS4oXU4kjhsy74DVbxa2LofQzuTx3jShEC" target="_blank">Create your own unique look with artist-driven tools - Harmony free trial</a>
+</p>
+<p class="more"><a href="https://adclick.g.doubleclick.net/aclk?sa=L&amp;ai=BgZxQVHydVci9BKPCwQHvw4PoBpbM7ucGAAAAEAEgADgAWKbOgNhUYP2Il4HoA4IBF2NhLXB1Yi02Mzg1NDgyMDI3NDI4MzQ3sgESd3d3LnNsaWRlc2hhcmUubmV0ugEJZ2ZwX2ltYWdlyAEJ2gE4aHR0cDovL3d3dy5zbGlkZXNoYXJlLm5ldC9BbnRvaW5lU2F2aW5lL211bHRpdGhyZWFkaW5nLWPAAgLgAgDqAho0MTIyL2xpbmtlZGluLnNzL3NsaWRldmlld_gCgdIekAPgA5gD4AOoAwHQBJBO4AQBkAYBoAYg2AcA&amp;num=0&amp;cid=5GjvOdkkrkvMCEJT4ktFnELL&amp;sig=AOD64_3h8vyr6akiZbGG11jMkaBGKRU4Bg&amp;client=ca-pub-6385482027428347&amp;adurl=https://www.linkedin.com/csp/crd?v=1&amp;cs=0_0fJV2VyWoa48kLCa5PCNtGTZdk8UF4L_B4cJg_QW-4SwkMtpLEEX_UVhvyxAY6b9USf8fNmrUP9KdnUEIab4RgPG5r4xagdZXP398WSlhvSg3ekThd-YnWpeIlPyZdIrBEU289WQfs3zqD6qmlDr3mfvMGyN0gklVbArtD6Dn6rxbUnHdfxnM7jtre1mpmFsMOCvpQdlsfiN_Mc4NnMAY346O6Me8HbQTxlzVWTmKsIEy0FgCGq9fbkzEWBGZOCPBVEGATq_mltPJS-chnZMxhBLJjdzGDpG-mN96cQTNvU4i8OfkWP29bpbNNq6hCCt00WxgQpbBJobe7pRyWGeoQoaqE2CI91bSAhkJmRc0zxa63x0aaXkEl2jnkWygwsYIenkZZocEkrhR0I8w62lKKpe2LTTOoa0a3UZEQAbEJIj_IEE1aspjBN1hV9o1XhZ3AxgNnLvobWKL7sJej_DGBdN-Tfc4MTKzeRfIsZYUGFa8ah6NuoUeWiA6CxB-oP0k-ueTIzF4AvhBe2PN51US5JynjTURkayTir-vk7Zp9qo2Pyp8HkeYcPE0XZmJViuLx5I9zUjn-GzAb6vAAG3XppxI81tT4xoKMCjbRDRcz-yLurUrP1m-EUitxe6mq22_fv1kuLexTo9tTLHkyEVSI8AnTaSh7vqVqQkJT40bQiy79EntDR7JS4oXU4kjhsy74DVbxa2LofQzuTx3jShEC" target="_blank">»</a></p>
+</div>
+</div>
+<div class="footer">
+<h4><a href="http://www.linkedin.com/static?key=linkedin_ads_info" target="_blank">Ads by LinkedIn</a></h4>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script type="text/javascript">function findHeight(){try{var cspAd=parent.document.getElementById('csp-ad');if(cspAd){h=document.getElementById('member-ads').offsetHeight;if(h>250){h=250;}
+h=h+3;cspAd.height=h;}}
+catch(e){return;}}
+window.onload=findHeight;</script>
+
+
+</body></html>
