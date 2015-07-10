@@ -1,0 +1,1 @@
+window.liAds = { sponsoredContents: { 'sponsored-content-1': { hasSponsoredContent: false, displaySingle: function() { console.info('No matching sponsored content found for div(id=sponsored-content-1)'); return 0; }} }, display: function() { if (!this.sponsoredContents) { return; } for (var div in this.sponsoredContents) { this.sponsoredContents[div].displaySingle(); }}};
