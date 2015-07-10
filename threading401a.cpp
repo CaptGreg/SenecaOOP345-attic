@@ -9,7 +9,7 @@ int main(int argc,char**argv)
 {
   // Grade 9 linear line equation: y = mx + b
 
-  // pass an address to a structure with paramerters and return value
+  // pass an address to a structure with parameters and return value
   struct parms_s{
     double m;
     double x;
