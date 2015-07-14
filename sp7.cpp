@@ -1,3 +1,5 @@
+// DIY unique_ptr
+
 #include <iostream>
 using namespace std;
 
@@ -7,13 +9,10 @@ class DIY_unique_ptr
 private:
     T*    pData;
 public:
-    DIY_unique_ptr(T* pValue) : pData(pValue) { }
-
-    ~DIY_unique_ptr() { delete pData; }
-
-    T& operator* () { return *pData; }
-
-    T* operator-> () { return pData; }
+    DIY_unique_ptr(T* pValue) : pData(pValue) { }    // constructor
+    ~DIY_unique_ptr() { delete  pData; }             // destructor
+    T& operator*   () { return *pData; }             // operator*  overload
+    T* operator->  () { return  pData; }             // operator-> overload
 };
 
 class X {
