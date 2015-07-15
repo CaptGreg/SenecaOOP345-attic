@@ -3,7 +3,10 @@
 using namespace std;
 
 // AoS : Array of Structures
+// struct { uint8_t r, g, b; } AoS[N];
+
 // SoA : Structure of Arrays
+// struct { uint8_t r[N]; uint8_t g[N]; uint8_t b[N]; } SoA;
 
 // AoS vs SoA are hot topics.  GPUs prefer AoS.
 
