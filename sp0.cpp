@@ -3,7 +3,8 @@
 using namespace std;
 
 class X {
-string name;
+  string name;
+  uint8_t memBlock[1024*1024];  // 1 MByte
 public:
   X(const std::string& n) { name = n; cout << "X ctor " << name << "\n"; }
   ~X() { cout << "X dtor " << name << "\n"; }

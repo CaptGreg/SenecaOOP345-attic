@@ -3,8 +3,8 @@
 // http://www.codeproject.com/Articles/15351/Implementing-a-simple-smart-pointer-in-c
 // a 2006 implentation, long before C++11
 // GB - a few bugs
-// GB   - no RC ctor
-// GB   - RC::count was never initialized
+// GB   - no RefCount ctor
+// GB   - RefCount::count was never initialized
 
 // GB add C++11 std::shared_ptr use_count() and data() member functions to DIY_shared_ptr
 
@@ -26,11 +26,12 @@ public:
 template < typename T > 
 class DIY_shared_ptr
 {
-    class RC // GB: make class local to DIY_shared_ptr
+    class RefCount // RefCount = reference count
+    // GB: make class local to DIY_shared_ptr
     {
         int count; // Reference count
     public:
-        RC() : count(0) {} // GB: no ctor and count was never intialized
+        RefCount() : count(0) {} // GB: no ctor and count was never intialized
     
         void AddRef() // Increment the reference count
             { count++; }
@@ -42,13 +43,13 @@ class DIY_shared_ptr
     };
 
     T*    pData;       // pointer
-    RC*   reference;   // Reference count
+    RefCount*   reference;   // Reference count
 
 public:
     DIY_shared_ptr() : pData(nullptr), reference(nullptr) // default constructor
     {
         // Create a new reference 
-        reference = new RC();
+        reference = new RefCount();
         // Increment the reference count
         reference->AddRef();
     }
@@ -56,7 +57,7 @@ public:
     DIY_shared_ptr(T* pValue) : pData(pValue), reference(0)  // constructor
     {
         // Create a new reference 
-        reference = new RC();
+        reference = new RefCount();
         // Increment the reference count
         reference->AddRef();
     }

@@ -6,6 +6,7 @@ using namespace std;
 
 class X {
   string name;
+  uint8_t memBlock[1024*1024];  // 1 MByte
 public:
   X(const std::string& n) { name = n; cout << "X ctor " << name << " this=" << this << "\n"; }
   ~X() { cout << "X dtor " << name << " this=" << this << "\n"; }
