@@ -1,3 +1,1 @@
-This used pthreads
-
-GB: Started to port to C++11 threads
+|ฬ*มื\บy}Vชiÿ็hฑ5พ๓๏๐@ำD(โVopR"สา/)I]gIฎฒ@zp7
