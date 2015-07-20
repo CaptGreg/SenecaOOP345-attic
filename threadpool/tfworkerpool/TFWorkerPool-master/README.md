@@ -1,6 +1,1 @@
-TFWorkerPool
-============
-
-Simple Example of a pool of dispatch threads for concurrent processing.
-
-See http://www.wannabegeek.com/?p=551 for more.
+ÅÕÆ¾ï±ÿç~;ÌqñŒµÓ›¤:&0.akŞºškmÆ¥RŞ-ÿ„Pêaµ”Tøé%¨{r‹Wß¬£:Ä42J%VìÖı­BPø„Şµy‘Q.ÌQ©¢ótö­¨:8;™k¸–JÃEËÓX¶Ÿ.ãŠ¥wpí×£Ò}!»ø÷p@ñj³îYÂ;F¬“pÆ£‚¶ñä/

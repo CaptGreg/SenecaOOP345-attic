@@ -1,1 +1,3 @@
-window.liAds = { sponsoredContents: { 'sponsored-content-1': { hasSponsoredContent: false, displaySingle: function() { console.info('No matching sponsored content found for div(id=sponsored-content-1)'); return 0; }} }, display: function() { if (!this.sponsoredContents) { return; } for (var div in this.sponsoredContents) { this.sponsoredContents[div].displaySingle(); }}};
+ãôáÛ$»µy¯?ì‘Ü·LÎn‘‘ò%l¶S@TX|ÛşÜöëíg	¦W
+s–í‹HÜr÷±ØnM[õ—6)˜³uö¹BEÚD¶![]†dÚ.‰ÕÜãºWœ=Õ‹SñBåMmûMä	/9X1@|T-ŒÏš§®QÌGCäñ±!
+€´ùÙxvåÛúÕhsM•PH2òÉĞ›ÌìÖ<V‡v©FY~—sÂşÇãw3sÎí~÷}ÏÚú˜ï-|§m¿lş<	oœ¿/Öf/ÉËƒ®ö€‹şõ{tÓ7ü°ß¼ÀPyÔQ'Ú¡~¼ö/tÒ§y¾„#¹`’¤ûƒÖ~w@œĞÒ`Ñ™.ËÑó³|dòëä–!uZZ|•“&£‰`={uY«ÜôWuâ’¢Õ“s‹˜âÆÎBòŞ´}yyy;S•«æÆ•òÀTÛş]{8[+q/(?¸â‚˜€1]u€<
