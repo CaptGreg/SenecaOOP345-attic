@@ -1001,9 +1001,22 @@ void QuadraticComplexity()
            throw std::string("What? X+Y sizes are different!");
 
        int    n   =  Y.size();
-       double SX  =  std::accumulate(X.begin(), X.end(), double(0));
-       double SY  =  std::accumulate(Y.begin(), Y.end(), double(0));
-       double SXX =  std::inner_product(X.begin(), X.end(), X.begin(), double(0));
+       double SX  =  std::accumulate(X.begin(), X.end(), double(0)); // easy to understand
+
+              // or alternatively, using accumulate with a function that happens to be a lambda
+              SX =   std::accumulate(X.begin(), X.end(), double(0),  // HARDER TO UNDERSTAND!
+                        [] (double sum, double element) { return sum + element; }
+                 );
+
+       double SY  =  std::accumulate(Y.begin(), Y.end(), double(0)); // easy to understand
+
+       double SXX =  std::inner_product(X.begin(), X.end(), X.begin(), double(0)); // easy to understand
+
+              // or alternatively, using accumulate with a function that happens to be a lambda
+              SXX =  std::accumulate(X.begin(), X.end(), double(0),   // HARDER TO UNDERSTAND!
+                        [] (double sum, double element) 
+                        { return sum + element * element; }
+                  );
        double SXY =  std::inner_product(X.begin(), X.end(), Y.begin(), double(0));
 
        Slope      =  (n * SXY - SX * SY) / (n * SXX - SX * SX);
