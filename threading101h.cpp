@@ -130,7 +130,7 @@ int main()
   for (auto& th:  t) th = thread(f, arg++);
   for (auto& th:  t) th.join();
 
-  cout << "\nthreads using mutex lock function object (functor):\n\n";
+  cout << "\nthreads using mutex smart lock function object (functor):\n\n";
   my_function_object mfo;
   arg = 800; // arg to thread 
   for (auto& th:  t) th = thread(mfo, arg++);
