@@ -9,7 +9,7 @@ int main(int argc,char**argv)
 {
   // Grade 9 linear line equation: y = mx + b
 
-  // pass an address to a structure with paramerters and return value
+  // pass an address to a structure with parameters and return value
   struct parms_s{
     double m;
     double x;
@@ -25,4 +25,7 @@ int main(int argc,char**argv)
 
   std::cout << "threadParms returned " << parms.y << ", y=mx+b, "<<parms.m<<"*"<<parms.x<<"+"<<parms.b<<" = "<<parms.y<<"\n";
 
+  parms.x=1.01;
+  std::thread( threadParms, &parms).join();
+  std::cout << "threadParms returned " << parms.y << ", y=mx+b, "<<parms.m<<"*"<<parms.x<<"+"<<parms.b<<" = "<<parms.y<<"\n";
 }
