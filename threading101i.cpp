@@ -1,5 +1,6 @@
-// 1. how do you start up a thread with a class member function?
-// 2. sometimes threading makes things worse
+// 1. how to thread a for loop
+// 2. how do you start up a thread with a class member function?
+// 3. sometimes threading makes things worse
 
 // threading includes
 #include <thread>
@@ -26,12 +27,21 @@ public:
     uint64_t tWait = duration_get.count();
     return tWait;
   }
+  uint64_t nsecs() {
+    typedef std::chrono::duration<int,std::nano> nanosecs_t ;
+    nanosecs_t duration_get( std::chrono::duration_cast<nanosecs_t>(stop-start) ) ;
+    uint64_t tWait = duration_get.count();
+    return tWait;
+  }
 };
 
 class Application {
   std::vector<uint64_t> v;
-  std::mutex vLock; // compiles if global or static private, syntax errors if non-static private date member
+  std::mutex vLock;
 public:
+  void Reset() { v.clear(); }
+  uint64_t Size() { return v.size(); }
+  uint64_t Capacity() { return v.capacity(); }
   void calcItem(size_t item, bool needLock)
   {
     uint64_t itemValue;
@@ -56,8 +66,10 @@ public:
   {
     size_t start = 0;
     size_t end   = 50LL * 1000LL * 1000LL;
+    bool needLock = false;
+    v.reserve(end);
 
-    doWork(start, end, false);
+    doWork(start, end, needLock);
   }
   void runProcessWithThreads()
   {
@@ -68,21 +80,29 @@ public:
 
     size_t start = 0;
     size_t end   = 50LL * 1000LL * 1000LL;
+    v.reserve(end);
 
-    size_t chunk = (end - start + 1) / NUM_THREADS;
+    size_t chunk = (end - start) / NUM_THREADS;
+
+    bool needLock = true;
 
     for(int i = 0; i < NUM_THREADS; i++) {
-      size_t s = i * chunk;
+      size_t s = start + i * chunk;
       size_t e = s + chunk;
       if(i == NUM_THREADS - 1) e = end;
 
-    #if 0 // call thread directly
+    #if 1 // call thread directly
+
       // Note how to start a thread with a class member function.
-      t[i] = std::thread (&Application::doWork, this, s, e);
+      t[i] = std::thread (&Application::doWork, this, s, e, needLock);
+
     #else // call thread with a functional pointer
-      std::function<void(void)> b = std::bind( &Application::doWork, this, s, e, true);
-      // auto b = std::bind( &Application::doWork, this, s, e, true); // also works...
+
+      std::function<void(void)> b = std::bind( &Application::doWork, this, s, e, needLock);
+      // auto b = std::bind( &Application::doWork, this, s, e, needLock); // also works...
+
       t[i] = std::thread ( b );
+
     #endif
     }
     for( auto& e : t ) e.join();
@@ -107,13 +127,20 @@ int main()
     app.runProcess();
     t.Stop();
     uint64_t tNoThreads = t.usecs();
-    std::cout << "no threading " << tNoThreads << " usecs\n";
+    std::cout << "no threading " << tNoThreads << " usecs"
+              << ", " << tNoThreads * 1e-6 << " secs\n";
+    std::cout << "vector v size/capacity=" << app.Size() << "/" << app.Capacity() << "\n";
+    
+
+    app.Reset();  // reset vector v
 
     t.Start();
     app.runProcessWithThreads();
     t.Stop();
     uint64_t tThreads = t.usecs();
-    std::cout << "threading " << tThreads << " usecs\n";
+    std::cout << "threading " << tThreads << " usecs"
+              << ", " << tThreads * 1e-6 << " secs\n";
+    std::cout << "vector v size/capacity=" << app.Size() << "/" << app.Capacity() << "\n";
 
     double speedup = double(tNoThreads) / double(tThreads);
     if(speedup >= 1.)
