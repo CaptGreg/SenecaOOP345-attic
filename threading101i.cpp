@@ -82,7 +82,7 @@ public:
     size_t end   = 50LL * 1000LL * 1000LL;
     v.reserve(end);
 
-    size_t chunk = (end - start) / NUM_THREADS;
+    size_t chunk = (end - start + (NUM_THREADS-1)) / NUM_THREADS;
 
     bool needLock = true;
 
