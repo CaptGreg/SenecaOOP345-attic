@@ -64,8 +64,8 @@ public:
   }
   void runProcess() // executes on one thread
   {
-    size_t start = 0;
-    size_t end   = 50LL * 1000LL * 1000LL;
+    size_t start  = 0;
+    size_t end    = 50LL * 1000LL * 1000LL;
     bool needLock = false;
     v.reserve(end);
 
@@ -94,11 +94,15 @@ public:
     #if 1 // call thread directly
 
       // Note how to start a thread with a class member function.
+      // if any doWork parameters are call-by-ref, say parm 'foo', then need  'ref(foo)'
       t[i] = std::thread (&Application::doWork, this, s, e, needLock);
 
-    #else // call thread with a functional pointer
+    #else // call thread with a function pointer
 
+      // if any doWork parameters are call-by-ref, say parm 'foo', then need  'ref(foo)'
       std::function<void(void)> b = std::bind( &Application::doWork, this, s, e, needLock);
+
+      // if any doWork parameters are call-by-ref, say parm 'foo', then need  'ref(foo)'
       // auto b = std::bind( &Application::doWork, this, s, e, needLock); // also works...
 
       t[i] = std::thread ( b );
@@ -132,7 +136,7 @@ int main()
     std::cout << "vector v size/capacity=" << app.Size() << "/" << app.Capacity() << "\n";
     
 
-    app.Reset();  // reset vector v
+    app.Reset();  // run adds things to vector v with push_back, reset vector v for the threaded run
 
     t.Start();
     app.runProcessWithThreads();
