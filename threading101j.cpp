@@ -1,6 +1,7 @@
 // Running a class member function as a thread
 // case 1: - run a member function as a thread for a given instance of the class
-// case 2: - run a member function as a thread from another member function of the same class.
+// case 2: - same as case 1 but use bind
+// case 3: - run a member function as a thread from another member function of the same class.
 
 #include <thread>
 #include <iostream>
@@ -30,7 +31,7 @@ int main()
     }
 
     void threadAll() { // run the member functions as threads
-      cout << "\ntheading case 2: - run a member function as a thread from another member function of the same class.\n";
+      cout << "\ntheading case 3: - run a member function as a thread from another member function of the same class.\n";
       cout << "member function threadAll start\n";
       int i=789; 
       // Need to specify function pointer and in the case of a class, a pointer to the instance.
@@ -53,11 +54,20 @@ int main()
   // Need to specify function pointer and in the case of a class, a pointer to the instance.
   // The instance pointer is '&x'.
   cout<< "  "; thread(&X::voidvoid,&x         ).join();
-
   cout<< "  "; thread(&X::voidint,&x,i        ).join();
-
   cout<< "  "; thread(&X::voidrefint,&x,ref(i)).join(); // must inform compiler parm 'i' is call-by-ref
-  cout << "main threading all stop\n";
+  cout << "main case 1 stop\n";
 
+  cout << "\ntheading case 2: - same thing again but use bind\n";
+  cout << "main threading all start\n";
+  // Need to specify function pointer and in the case of a class, a pointer to the instance.
+  // The instance pointer is '&x'.
+  auto b1= bind( &X::voidvoid,&x );
+  cout<< "  "; thread( b1 ).join();
+  auto b2 = bind( &X::voidint,&x,i );
+  cout<< "  "; thread( b2 ).join();
+  auto b3 = bind( &X::voidrefint,&x,ref(i) );
+  cout<< "  "; thread( b3 ).join();
+  cout << "main case 2 stop\n";
   x.threadAll();
 }
