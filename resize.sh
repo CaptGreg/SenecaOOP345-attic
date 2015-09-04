@@ -2,7 +2,7 @@
 # pipe script into bash 
 
 SRC_DIR="what-dir?"
-SRC_DIR="frames-raw"
+SRC_DIR="frames"
 if test $# -ge 1; then
   SRC_DIR=$1
 fi

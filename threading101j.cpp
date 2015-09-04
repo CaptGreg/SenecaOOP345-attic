@@ -62,12 +62,10 @@ int main()
   cout << "main threading all start\n";
   // Need to specify function pointer and in the case of a class, a pointer to the instance.
   // The instance pointer is '&x'.
-  auto b1= bind( &X::voidvoid,&x );
-  cout<< "  "; thread( b1 ).join();
-  auto b2 = bind( &X::voidint,&x,i );
-  cout<< "  "; thread( b2 ).join();
-  auto b3 = bind( &X::voidrefint,&x,ref(i) );
-  cout<< "  "; thread( b3 ).join();
+  auto b1 = bind( &X::voidvoid,   &x         ); cout<<  "  "; thread( b1 ).join();
+  auto b2 = bind( &X::voidint,    &x,     i  ); cout<<  "  "; thread( b2 ).join();
+  auto b3 = bind( &X::voidrefint, &x, ref(i) ); cout<<  "  "; thread( b3 ).join();
   cout << "main case 2 stop\n";
+
   x.threadAll();
 }
