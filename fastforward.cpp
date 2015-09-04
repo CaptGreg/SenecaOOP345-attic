@@ -840,20 +840,24 @@ void Threading()
 
   auto cores = std::thread::hardware_concurrency();  // Make the compiler figure out the variable type
   std::cout << "\nThis computer has " << cores << " cores.\n";
+  std::cout << "------------------------ thread/join threading\n";
 
-  auto function = [] ()
-    { 
-      std::cout << "hello from thread " << std::this_thread::get_id() << "\n"; 
+  auto function = [] () { 
+      // std::cout << std::string("hello from thread ") + std::to_string(std::this_thread::get_id()) + "\n"; 
+      // Compiler won't coerce get_id() data type to something to_string can format
+      std::thread::id tid = std::this_thread::get_id();
+      uint64_t u64 = 0LL;
+      memcpy(&u64, &tid, sizeof(tid));
+      std::cout << std::string("function: hello from thread get_id() = ") + std::to_string(u64) + "\n"; 
     };
 
   std::thread t(function); 
   t.join();
 
-  auto threadFunction = [] (int arg, int sleep) 
-    { 
-      std::this_thread::sleep_for (std::chrono::milliseconds(sleep));
-      std::cout << "thread, arg=" << arg << ", slept for " << sleep << " msec\n";
-    };
+  auto threadFunction = [] (int arg, int sleep) { 
+    std::this_thread::sleep_for (std::chrono::milliseconds(sleep));
+    std::cout << std::string("threadFunction: thread, arg=") + std::to_string(arg) + ", slept for " + std::to_string(sleep) + " msec\n";
+  };
 
   const int NUM_THREADS = 10;
   std::thread threads[NUM_THREADS];
@@ -866,20 +870,24 @@ void Threading()
     threads[i].join();
 
   // how to get return value from a thread?  Futures!
-  auto returnValueFunction = [] () -> int 
-  { 
-    return rand() % 100;
+  auto returnValueThreadFunction = [] (int arg) -> int { 
+    int sleepMSec =  rand() % 1000;
+    std::this_thread::sleep_for (std::chrono::milliseconds(sleepMSec));
+    std::cout << std::string("returnValueThreadFunction: arg ") + std::to_string(arg) + " slept for " + std::to_string(sleepMSec) + " msecs\n";
+    return sleepMSec;
   };
 
-  std::future<int> fut = std::async(std::launch::deferred, returnValueFunction);
+  std::cout << "------------------------ future/get threading\n";
+  arg = 200;
+  std::future<int> fut = std::async(std::launch::async, returnValueThreadFunction, arg++);
   int returnedValue = fut.get(); // wait for thread to finish and get result.
   std::cout << "Thread returned " << returnedValue << "\n";
 
   std::future<int> futs[NUM_THREADS];
   for (int i = 0; i < NUM_THREADS; ++i)
-    futs[i] = std::async(std::launch::deferred, returnValueFunction);
+    futs[i] = std::async(std::launch::async, returnValueThreadFunction, arg++);
   for (int i = 0; i < NUM_THREADS; ++i)
-    std::cout << "Thread #" << i << " returned " << futs[i].get() << "\n";
+    std::cout << "future Thread #" << i << " returned " << futs[i].get() << "\n";
 
 } // Threading
 
@@ -901,19 +909,23 @@ void QuadraticComplexity()
     Timer() {}
     void Start() { start = std::chrono::high_resolution_clock::now(); }
     void Stop () { stop  = std::chrono::high_resolution_clock::now(); }
+    // basic form to calculate time differences, illustrate with microseconds
     uint64_t usecs() {
       typedef std::chrono::duration<int,std::micro> microsecs_t ;
       microsecs_t duration_get( std::chrono::duration_cast<microsecs_t>(stop-start) ) ;
       uint64_t us = duration_get.count();
       return us;
     }
-
-    uint64_t PrintMicroSeconds(std::string msg) {
-      Stop();
-      uint64_t elapsedMicroseconds = usecs();
-      std::cout << msg << elapsedMicroseconds << " usecs\n";
-      return elapsedMicroseconds;
+    // Now use a macro to return milli, micro, and nano seconds 
+    #define RET(UNITS) uint64_t UNITS##secs() { \
+      typedef std::chrono::duration<int,std::UNITS> UNITS##secs_t ; \
+      UNITS##secs_t duration_get( std::chrono::duration_cast<UNITS##secs_t>(stop-start) ) ; \
+      uint64_t us = duration_get.count(); \
+      return us; \
     }
+    RET(milli)
+    RET(micro)
+    RET(nano)
   };
 
   uint64_t N;
@@ -922,58 +934,24 @@ void QuadraticComplexity()
   std::vector<double> X;
   std::vector<double> Y;
 
-  t.Start();
-  N = 10;
-  X.push_back(double(N));
-  z = 0;
-  for(uint64_t  x = 0; x < N; x++)
-    for(uint64_t y = 0; y < N; y++)
-      z += x + y*y;
-  Y.push_back(double( t.PrintMicroSeconds("N=10 ") ) );
-  std::cout << "N=" << N << ", z=" << z << "\n";
+  auto PrintMicroSeconds = [&t] (std::string msg) -> uint64_t {
+      t.Stop();
+      uint64_t elapsedMicroseconds = t.microsecs();
+      std::cout << msg << elapsedMicroseconds << " usecs\n";
+      return elapsedMicroseconds;
+  };
 
-
-  t.Start();
-  N *= 10;
-  X.push_back(double(N));
-  z = 0;
-  for(uint64_t x = 0; x < N; x++)
-    for(uint64_t y = 0; y < N; y++)
-      z += x + y*y;
-  Y.push_back(double( t.PrintMicroSeconds("N=100 ") ) );
-  std::cout << "N=" << N << ", z=" << z << "\n";
-
-
-  t.Start();
-  N *= 10;
-  X.push_back(double(N));
-  z = 0;
-  for(uint64_t x = 0; x < N; x++)
-    for(uint64_t y = 0; y < N; y++)
-      z += x + y*y;
-  Y.push_back(double( t.PrintMicroSeconds("N=1000 ") ) );
-  std::cout << "N=" << N << ", z=" << z << "\n";
-
-
-  t.Start();
-  N *= 10;
-  X.push_back(double(N));
-  z = 0;
-  for(uint64_t x = 0; x < N; x++)
-    for(uint64_t y = 0; y < N; y++)
-      z += x + y*y;
-  Y.push_back(double( t.PrintMicroSeconds("N=10000 ") ) );
-  std::cout << "N=" << N << ", z=" << z << "\n";
-
-  t.Start();
-  N *= 10;
-  X.push_back(double(N));
-  z = 0;
-  for(uint64_t x = 0; x < N; x++)
-    for(uint64_t y = 0; y < N; y++)
-      z += x + y*y;
-  Y.push_back(double( t.PrintMicroSeconds("N=100000 ") ) );
-  std::cout << "N=" << N << ", z=" << z << "\n";
+  N = 500;
+  for(int scale = 0; scale < 13 ; scale++) {
+    t.Start();
+    X.push_back(double(N));
+    z = 0;
+    for(uint64_t  x = 0; x < N; x++)
+      for(uint64_t y = 0; y < N; y++)
+        z += x + y*y;
+    Y.push_back(double( PrintMicroSeconds("Scale=" + std::to_string(scale) + " N=" + std::to_string(N) + " ") ) );
+    N *= 1.5;
+  }
 
   // If time (Y) varies as a power 'p' of size (X)
   // Take the log of both sides.
@@ -991,46 +969,70 @@ void QuadraticComplexity()
     Y[i] = log10( Y[i] );
   }
 
-  // statistics 101: fit a line Y = Slope*X+Intercept
-  auto regression = [X,Y] (double& Slope, double& Intercept) -> void
+  // statistics 101: fit a line Y = Slope*X+Intercept 
+  // think algebra 101 straight line equation: y = m*x+b
+  // m = slope dy/dx = delta y / delta x = rise over run
+  // b = y-axis intercept
+  auto regression = [X,Y] (double& Slope, double& Intercept, double& R2) -> void
     {
        if(X.size() == 0) // Do not divide by zero.
            throw std::string("Need 1 or more data points to fit a linear regression line.");
 
        if(X.size() != Y.size())
            throw std::string("What? X+Y sizes are different!");
+       // symbols:
+       // SX  = sum of X elements: X[i]
+       // SY  = sum of Y elements: Y[i]
+       // SXX = sum of X squared: X[i] * X[i]
+       // SXY = sum of X * Y crossproducts: X[i] * Y[i]
+       double SX = 0.,  SY = 0.,  SXX = 0., SYY = 0.,  SXY = 0.;
+       // brute force calculation
+       for (int i = 0; i < X.size(); i++) {
+          SX  += X[i];
+          SY  += Y[i];
+          SXX += X[i] * X[i];
+          SYY += Y[i] * Y[i];
+          SXY += X[i] * Y[i];
+       }
 
+       // calculate using std::algorithms functions.  
+       // These may be optimized compared to brute force calculation
+       // not a big deal for small counts.  May make a difference for huge counts.
        int    n   =  Y.size();
-       double SX  =  std::accumulate(X.begin(), X.end(), double(0)); // easy to understand
+       SX  =  std::accumulate(X.begin(), X.end(), double(0.)); // easy to understand
 
               // or alternatively, using accumulate with a function that happens to be a lambda
               SX =   std::accumulate(X.begin(), X.end(), double(0),  // HARDER TO UNDERSTAND!
                         [] (double sum, double element) { return sum + element; }
                  );
 
-       double SY  =  std::accumulate(Y.begin(), Y.end(), double(0)); // easy to understand
+       SY  =  std::accumulate(Y.begin(), Y.end(), double(0.)); // easy to understand
 
-       double SXX =  std::inner_product(X.begin(), X.end(), X.begin(), double(0)); // easy to understand
+       SXX =  std::inner_product(X.begin(), X.end(), X.begin(), double(0.)); // easy to understand
 
               // or alternatively, using accumulate with a function that happens to be a lambda
-              SXX =  std::accumulate(X.begin(), X.end(), double(0),   // HARDER TO UNDERSTAND!
+              SXX =  std::accumulate(X.begin(), X.end(), double(0.),   // HARDER TO UNDERSTAND!
                         [] (double sum, double element) 
-                        { return sum + element * element; }
+                        { return sum + element * element; } // calculate sum of X squared using function
                   );
-       double SXY =  std::inner_product(X.begin(), X.end(), Y.begin(), double(0));
+       SYY =  std::inner_product(Y.begin(), Y.end(), Y.begin(), double(0.)); // easy to understand
+       SXY =  std::inner_product(X.begin(), X.end(), Y.begin(), double(0.));
 
+       // statistics 101: straight line equation
        Slope      =  (n * SXY - SX * SY) / (n * SXX - SX * SX);
        Intercept  =  (SY - Slope * SX) / n;
+       R2         = (n*SXY - SX*SY)  / (sqrt(n*SXX-SX*SX) * sqrt(n*SYY-SY*SY));
     };
 
   std::cout << "Data:\n";
   for (size_t i = 0; i < X.size(); i++ )
     std::cout << i << ": " << X[i] << "," << Y[i] << "\n";
 
-  double Slope, Intercept;
-  regression(Slope, Intercept);
-  std::cout << "slope = " << Slope << " <-- if this is quadratic, the slope will be about 2\n";
-  std::cout << "intercept = " << Intercept << " <-- not relevant.  Calculated it, so print it\n";
+  double Slope, Intercept, R2;
+  regression(Slope, Intercept, R2);
+  std::cout << "slope=" << Slope << " <-- if this is quadratic, the slope will be about 2\n";
+  std::cout << "intercept="  << Intercept << " <-- not relevant.  Calculated it, so print it\n";
+  std::cout << "correlation coefficient, R squared=" << R2 << " <-- values near 1 imply regression is a good fit!\n";
 
 } // QuadraticComplexity
 
@@ -1147,10 +1149,10 @@ void run(std::string label, void(*f)())
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 int main(int argc, char**argv)
 {
-#ifdef __MSVC__   // one of the many Microsoft visual studio c compilers
+#ifdef __MSVC__   // one of the many, many, many Microsoft visual studio c compilers
   std::cout << R"msc(
-  Everytime I go near Windows, Windows bites me.
-
+  Everytime I go near Windows, Windows bites me. 
+  
   Windows programs execute with a tiny stack.
 
   This code generates some classes with data elements that are a million bytes plus.
@@ -1161,10 +1163,9 @@ int main(int argc, char**argv)
   One can specify the stack size for a thread under windows.  See 
   http://msdn.microsoft.com/en-us/library/windows/desktop/ms686774%28v=vs.85%29.aspx
 
-  I seem to remember there is way to request Windows to run a program 
-  with a realistic stack size.  I forget how to do it.
+  One can request Windows to run a program with a realistic stack size.
  
-  2015-01-28: 
+  Here's how:
     1. if using the MSC compiler try the /F <size> compiler option
            to set the stack to 10 MB:
            CL fastforward.cpp /F 10000000
@@ -1186,20 +1187,27 @@ int main(int argc, char**argv)
     Windows (to modify the executable file):
     =======================================
     There are two programs included in Microsoft Visual Studio, "dumpbin.exe"
-     and "editbin.exe".  Run "dumpbin /headers executable_file", and you can see 
-    the "size of stack reserve" information in "optional header values".  Run 
-    "editbin /STACK:size" to change the default stack size.
+    and "editbin.exe".  
+    
+    Run "dumpbin /headers executable_file", to see the "size of stack reserve" information 
+    in the "optional header values".  
+    
+    Run "editbin /STACK:size" to change the default stack size.
+
+    I like windows.  One can charge a lot of money to make things work in a windows environment.
 
     Hope this helps.  Greg
   
   )msc";
+  std::cout << "press any key to continue\n";
+  char c; std::cin.get(c); std::cout << "\n";
 #endif
 
 #ifdef __GNUC__  // either g++ or clang++
   std::cout << "\nFILE '" << __FILE__ << "' compiled " 
             << __DATE__ << " at " << __TIME__ << " by\n";
-  #ifdef __clang__
-    std::cout << "clang++ compiler " << __VERSION__ << "\n";
+#ifdef __clang__
+  std::cout << "clang++ compiler " << __VERSION__ << "\n";
   #else
     std::cout << "g++ compiler " << __VERSION__ << "\n";
   #endif
@@ -1207,25 +1215,27 @@ int main(int argc, char**argv)
 
   std::cout << R"gnu(
   /******************************************************************\
-  | This program was developed on a 64-bit Ubuntu 14.04 LTS system.  |
-  | It runs correctly in this environment.                           |
-  |                                                                  |
-  | Compile with either g++ or clang++                               | 
-  |   g++     -std=c++11 fastforward.cpp -o fastfoward -pthread      |
-  |   g++-5   -std=c++11 fastforward.cpp -o fastfoward -pthread      |
-  |   clang++ -std=c++11 fastforward.cpp -o fastfoward -pthread      |
-  |                                                                  |
-  | It also runs fine on Matrix, a 2011 32-bit SUSE linux system.    |
-  | Compile with either g++ 4.9.0 using the -std=c++11 flag          |
-  |   /usr/local/gcc/gcc-cilk/bin/g++ -std=c++11 fastforward.cpp ... |
-  | or compile with /usr/bin/g++ 4.6.2 using the -std=c++0x flag     |
-  |   g++ -std=c++0x fastforward.cpp -o fastfoward -pthread          |
-  |                                                                  |
-  | NOTE:                                                            |
-  | The Matrix clang++ will not compile fastforward.cpp.             |
-  | The Matrix clang++ (version 3.4) chrono header files are broken. |
-  | Just including <chrono.h> generates syntax errors.               |
-  |     (use g++ instead)                                            |
+  * This program was developed on a 64-bit Ubuntu 14.04 LTS system.  *
+  * It runs correctly in this environment.                           *
+  *                                                                  *
+  * Compile with either g++ or clang++                               * 
+  *   g++     -std=c++11 fastforward.cpp -o fastfoward -pthread      *
+  *   g++-5   -std=c++11 fastforward.cpp -o fastfoward -pthread      *
+  *   clang++ -std=c++11 fastforward.cpp -o fastfoward -pthread      *
+  *                                                                  *
+  *  It compiles and runs fine with the Ubuntu 15.04 compilers.      *                                                                 *
+  *                                                                  *
+  * It also runs fine on Matrix, a 2011 32-bit SUSE linux system.    *
+  * Compile with either g++ 4.9.0 using the -std=c++11 flag          *
+  *   /usr/local/gcc/gcc-cilk/bin/g++ -std=c++11 fastforward.cpp ... *
+  * or compile with /usr/bin/g++ 4.6.2 using the -std=c++0x flag     *
+  *   g++ -std=c++0x fastforward.cpp -o fastfoward -pthread          *
+  *                                                                  *
+  * NOTE:                                                            *
+  * The Matrix clang++ will not compile fastforward.cpp.             *
+  * The Matrix clang++ (version 3.4) chrono header files are broken. *
+  * Just including <chrono.h> generates syntax errors.               *
+  *     (use g++ instead)                                            *
   \******************************************************************/
 
   )gnu";
@@ -1261,8 +1271,7 @@ int main(int argc, char**argv)
 
   C++ is a better C.  It is easier to code things in C++ than C.
 
-  Similarily, C++11 is a better C++.  It is easier to code things 
-  in C++11 than C++.
+  Similarily, C++11 is a better C++.  It is easier to code things in C++11 than C++.
 
   C++11 makes things easier to do.  
 
@@ -1292,11 +1301,10 @@ int main(int argc, char**argv)
   Greg Blair, 
   john.blair@senecacollege.ca
 
-  2015 Summer Semester Office Hours TEL Building either T2105 or Open Lab: 
-    Tuesday,    after 345A (S2158) 8:00 to 09:45 class
-    Wednesday,  after 345B (S2174) 8:00 to 09:45 class
-    Thursday,   after 345A (T3074) 8:55 to 10:40 class
-    Friday,     after 345B (T3074) 9:50 to 11:35 class
+  2015 Fall Semester Office Hours TEL Building either T2105 or Open Lab: 
+    Monday,     after 345ABC (S1206) 9:50 to 11:35 class
+    Tuesday,    after 345B (T3074)  8:00 to 09:45 class
+    Tuesday,    after 345A (T3074) 13:30 to 15:15 class
   )bar";
   
   return 0;
