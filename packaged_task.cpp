@@ -1,7 +1,8 @@
-// http://naipc.uchicago.edu/2014/ref/cppreference/en/cpp/thread/packaged_task.html
+// http://en.cppreference.com/w/cpp/thread/packaged_task
 
-// GB changed pow to ipow.  'pow' generated syntax errors.
-// GB added direct and function object calls
+// GB modified to figure out when run as a thread
+// GB packaged_task's are not run as thread.  They can be 
+// GB passed to thread/join just like any other function.
 
 #include <iostream>
 #include <cmath>
@@ -9,76 +10,59 @@
 #include <future>
 #include <functional>
  
-int ipow(int a, int b) { return (int) pow(double(a), double(b)); }
+std::thread::id tidMain = std::this_thread::get_id();   // GB
 
-class function_object  // functor or function object class with overloaded operator()
-{
-public :
-  int operator () (int a, int b) const { return ipow(a,b); }
-};
-
-void task_direct()
-{
-    std::packaged_task<int(int,int)> task(ipow);
- 
-    task(2, 1);
-    std::cout << "task_direct:\t" << task.get_future().get() << '\n';
-
-    task.reset();
-    task(2, 2);
-    std::cout << "task_direct:\t" << task.get_future().get() << '\n';
+// unique function to avoid disambiguating the std::pow overload set
+int f(int x, int y) 
+{ 
+  if(tidMain == std::this_thread::get_id()) 
+  std::cout << "f: NOT threaded\n"; else std::cout << "f: Threaded\n";
+  return std::pow(x,y); 
 }
-
-void task_fo()
-{
-    function_object fo;
-
-    std::packaged_task<int(int,int)> task(fo);
  
-    task(2, 3);
-    std::cout << "task_fo:\t" << task.get_future().get() << '\n';
-
-    task.reset();
-    task(2, 4);
-    std::cout << "task_fo:\t" << task.get_future().get() << '\n';
-}
-
 void task_lambda()
 {
-    auto f = [](int a, int b) { return ipow(a, b); };
-    std::packaged_task<int(int,int)> task(f);
+    std::cout << "\ntask_lambda\n";
+    std::packaged_task<int(int,int)> task([](int a, int b) {
+        if(tidMain == std::this_thread::get_id()) 
+        std::cout << "lambda: NOT threaded\n"; else std::cout << "lambda: Threaded\n";
+        return std::pow(a, b); 
+    });
+    std::future<int> fut = task.get_future();
  
-    task(2, 5);
-    std::cout << "task_lambda:\t" << task.get_future().get() << '\n';
-
-    task.reset();
-    task(2, 6);
-    std::cout << "task_lambda:\t" << task.get_future().get() << '\n';
+    task(2, 9);
+ 
+    std::cout << "task_lambda:\t" << fut.get() << '\n';
 }
  
 void task_bind()
 {
-    std::packaged_task<int()> task(std::bind(ipow, 2, 7));
+    std::cout << "\ntask_bind\n";
+    std::packaged_task<int()> task(std::bind(f, 2, 11));
+    std::future<int> fut = task.get_future();
  
     task();
-    std::cout << "task_bind:\t" << task.get_future().get() << '\n';
+ 
+    std::cout << "task_bind:\t" << fut.get() << '\n';
 }
  
 void task_thread()
 {
-    std::packaged_task<int(int,int)> task(ipow);
+    std::cout << "\ntask_thread\n";
+    std::packaged_task<int(int,int)> task(f);
+    std::future<int> fut = task.get_future();
  
-    std::thread task_td(std::move(task), 2, 8);
+    std::thread task_td(std::move(task), 2, 10);
     task_td.join();
  
-    std::cout << "task_thread:\t" << task.get_future().get() << '\n';
+    std::cout << "task_thread:\t" << fut.get() << '\n';
 }
  
 int main()
 {
-    task_direct();
-    task_fo();
+    std::cout << "\nmain start\n";
     task_lambda();
     task_bind();
     task_thread();
+    std::cout << "\nmain stop\n";
 }

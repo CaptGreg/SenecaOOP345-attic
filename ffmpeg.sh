@@ -23,7 +23,7 @@ fi
 if test $# -ge 3; then
   echo arg 3: $3
   VBR=$3
-fi
+i
 
 if test $# -ge 4; then
   echo arg 4: $4
