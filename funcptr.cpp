@@ -7,7 +7,6 @@
 // 6. std::bind
 // 7. threads are functions. std::thread
 // 8. threads are functions. std::async
-// 9. threads are functions. std::packaged_task
 
 // Functions can have a variable number of arguments.  Think about printf.  How does it work?
 
@@ -182,11 +181,6 @@ int main(int argc, char**argv)
 
   async = std::async(std::launch::async, sin, 30*M_PI/180.);
   cout << "async(std::launch::async, sin, 30 degrees) =" << async.get() << "\n";
-
-  // 9. threads are functions. std::packaged_task - another way to launch a thread
-  auto pt = std::packaged_task <double(double)> (sin);
-  pt(30*M_PI/180.); // launch thread with argument if 30 degrees (converted to radians)
-  cout << "pt=packaged_task(sin), pt(30 degrees), pt.get  =" << pt.get_future().get() << "\n";
 
   void SimpleDIYPrintf(const char *fmt, ...);  // a variable argument function (variadic function)
   SimpleDIYPrintf("Hello from our DIY home-made printf function s: >%s<, c: >%c<, f: >%f<, d: >%d<\n", 
