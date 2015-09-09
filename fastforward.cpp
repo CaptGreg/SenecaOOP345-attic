@@ -98,11 +98,11 @@ void FundamentalTypes()
   char          broiled              = 'a';
   int           integer              = ~0;
   short         pants                = 27;
-  signed        doc                  = 19;
+  signed        contract             = 19;
   unsigned      cheque               = 1u;
   long          johns                = 67L;
-  long long     bigLongJohns         = 670LL;
-  float         alongTheRiver        = 19.2f;
+  long long     longLongJohns        = 670LL;
+  float         downTheRiver         = 19.2f;
   double        trouble              = 3.14159627;
   long double   bigDoubleTrouble     = 3.14159627;
 
@@ -183,7 +183,7 @@ void CompoundTypes()
     uint64_t bit1     : 1;
     uint64_t bit2and3 : 2;
     uint64_t filler   : 59;
-    uint64_t MSB      : 1; // most significate bit
+    uint64_t MSB      : 1; // most significate bit, or MSB
 
   } bits;
   std::cout << "unions - c-code OOP144\n";
@@ -874,7 +874,7 @@ void Threading()
     int sleepMSec =  rand() % 1000;
     std::this_thread::sleep_for (std::chrono::milliseconds(sleepMSec));
     std::cout << std::string("returnValueThreadFunction: arg ") + std::to_string(arg) + " slept for " + std::to_string(sleepMSec) + " msecs\n";
-    return sleepMSec;
+    return 1000000 * arg + sleepMSec;
   };
 
   std::cout << "------------------------ future/get threading\n";
@@ -886,8 +886,10 @@ void Threading()
   std::future<int> futs[NUM_THREADS];
   for (int i = 0; i < NUM_THREADS; ++i)
     futs[i] = std::async(std::launch::async, returnValueThreadFunction, arg++);
-  for (int i = 0; i < NUM_THREADS; ++i)
-    std::cout << "future Thread #" << i << " returned " << futs[i].get() << "\n";
+  for (int i = 0; i < NUM_THREADS; ++i) {
+    returnedValue  = futs[i].get();
+    std::cout << std::string("future Thread #") + std::to_string(i) + " returned " + std::to_string(returnedValue)+ "\n";
+  }
 
 } // Threading
 
@@ -1019,9 +1021,9 @@ void QuadraticComplexity()
        SXY =  std::inner_product(X.begin(), X.end(), Y.begin(), double(0.));
 
        // statistics 101: straight line equation
-       Slope      =  (n * SXY - SX * SY) / (n * SXX - SX * SX);
-       Intercept  =  (SY - Slope * SX) / n;
-       R2         = (n*SXY - SX*SY)  / (sqrt(n*SXX-SX*SX) * sqrt(n*SYY-SY*SY));
+       Slope      =  (n*SXY - SX*SY)    / (n*SXX - SX*SX);
+       Intercept  =  (SY    - Slope*SX) / n;
+       R2         =  (n*SXY - SX*SY)    / (sqrt(n*SXX-SX*SX) * sqrt(n*SYY-SY*SY));
     };
 
   std::cout << "Data:\n";
@@ -1302,9 +1304,9 @@ int main(int argc, char**argv)
   john.blair@senecacollege.ca
 
   2015 Fall Semester Office Hours TEL Building either T2105 or Open Lab: 
-    Monday,     after 345ABC (S1206) 9:50 to 11:35 class
-    Tuesday,    after 345B (T3074)  8:00 to 09:45 class
-    Tuesday,    after 345A (T3074) 13:30 to 15:15 class
+    Monday,     after 345ABC (S1206)  9:50 to 11:35 class
+    Tuesday,    after 345B   (T3074)  8:00 to 09:45 class
+    Tuesday,    after 345A   (T3074) 13:30 to 15:15 class
   )bar";
   
   return 0;
