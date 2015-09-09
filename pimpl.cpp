@@ -1,7 +1,9 @@
 // Pimpl - pointer to implementation
-// Uses C++14 features:
-// clang++ -Wall -std=c++14 pimpl.cpp -o pimpl -pthread
-// or  g++ -Wall -std=c++14 pimpl.cpp -o pimpl -pthread
+/////////////////////////////////////////////////
+// Uses C++14 features:                        //
+// clang++ -Wall -std=c++14 pimpl.cpp -o pimpl //
+// or  g++ -Wall -std=c++14 pimpl.cpp -o pimpl //
+/////////////////////////////////////////////////
 
 #include <iostream>
 #include <memory> // std::unique_ptr
@@ -104,7 +106,7 @@ void   MyClass::Public_Method()
 
 // ------------------------------------------------------------------
 // http://www.cppsamples.com/common-tasks/pimpl.html
-// GB where is class impl defined?
+// GB where is base class impl defined?
 // foo.h - header file
 #include <memory>
 class foo
@@ -124,13 +126,15 @@ class foo::impl
 {
   int internal_data = 0;
 public:
-  void do_internal_work() { std::cout<<"foo::do_internal_work()\n"; internal_data = 5; }
+  void do_internal_work() { 
+    internal_data = 5; 
+    std::cout<<"private (hidden) internal function foo::do_internal_work()\n"; 
+  }
 };
 
-foo::foo()
-  : pimpl{std::make_unique<impl>()} 
+foo::foo() : pimpl{std::make_unique<impl>()} 
         // Note: std::make_unique was introduced in C++14. For C++11, you can roll your own implementation.
-   { std::cout<<"foo\n"; pimpl->do_internal_work(); }
+   { std::cout<<"foo: calling do_internal_work()\n"; pimpl->do_internal_work(); }
 
 // foo::~foo() = default;
 foo::~foo() { std::cout<<"~foo\n"; }
@@ -160,7 +164,7 @@ class bar::impl
 public:
   void do_internal_work()
   {
-    std::cout<<"bar::do_internal_work()\n"; 
+    std::cout<<"private (hidden) internal function bar::do_internal_work()\n"; 
     internal_data = 5;
   }
 };
@@ -169,10 +173,9 @@ void bar::impl_deleter::operator()( impl * ptr ) const
   delete ptr;
 }
 
-bar::bar()
-  : pimpl{new impl}
+bar::bar() : pimpl{new impl}
 {
-  std::cout<<"bar\n";
+  std::cout<<"bar: calling do_internal_work()\n";
   pimpl->do_internal_work();
 }
 
@@ -194,6 +197,9 @@ public:
     car(const car &&c);             //move constructor      
     car &operator=(const car &&rhs);//move assignment operator
     /* Other public methods */
+    void start();      // GB
+    bool isRunning();    // GB
+    void stop();       // GB
  
 private:
     class under_the_hood; //Not defined here
@@ -204,10 +210,14 @@ private:
 class car::under_the_hood {
 public:
     /* Implement car stuff here */
+    bool  bEngineOn;   // GB
 };
  
-car::car() : pImpl(std::make_shared<under_the_hood>()) { std::cout<<"car\n"; }
+car::car() : pImpl(std::make_shared<under_the_hood>()) { std::cout<<"car\n"; pImpl->bEngineOn = false; }
 car::~car() { std::cout<<"~car\n"; } // GB
+void car::start() { pImpl->bEngineOn = true; std::cout<<"CMD: start car\n"; } // GB
+void car::stop() { pImpl->bEngineOn = false; std::cout<<"CMD: stop car\n"; } // GB
+bool car::isRunning() { return pImpl->bEngineOn; } // GB
  
 car::car(const car &c) : pImpl(std::make_shared<under_the_hood>(*c.pImpl)) {}
  
@@ -228,17 +238,93 @@ car &car::operator=(const car &&rhs) {
 // Secondly, the client gets a compile-time performance increase by not having to parse the private declarations of your class; it is all safely hidden in the implementation file.
 
 // Another advantage of the Pimpl idiom is that it allows you to use third-party, header-only libraries in your implementation without requiring that the client has access to these same libraries. A great example is the use of Boost. If you want to use any of the Boost header-only libraries, like Boost.Signals2 or Boost.Geometry, then great! You should use Boost where it’s appropriate. But what if you don’t want your users to require Boost in order to use your library? Easy; use the Pimpl idiom and hide all of your private Signals or Polygons or what have you in the implementation file. Your user need never know. Well, actually they do need to know if you’re using open source libraries, but you get my point.
+
 // ------------------------------------------------------------------
+// https://msdn.microsoft.com/en-us/library/hh438477.aspx
+
+// Pimpl For Compile-Time Encapsulation (Modern C++)
+// Visual Studio 2015
+// Other Versions
+
+// The pimpl idiom is a modern C++ technique to hide implementation, to minimize coupling, and to separate interfaces. Pimpl is short for "pointer to implementation." You may already be familiar with the concept but know it by other names like Cheshire Cat or Compiler Firewall idiom.
+// Why use pimpl?
+
+// Here's how the pimpl idiom can improve the software development lifecycle:
+// 
+//     Minimization of compilation dependencies.
+// 
+//     Separation of interface and implementation.
+// 
+//     Portability.
+// 
+// Pimpl header
+// C++
+
+// my_class.h
+class my_class {
+public:
+   my_class();   // GB added this ctor specification to fix the error down below
+   ~my_class();  // GB
+   //  ... all public and protected stuff goes here ...
+   void print();
+private:
+   class impl; std::unique_ptr<impl> pimpl; // opaque type here
+};
+
+// The pimpl idiom avoids rebuild cascades and brittle object layouts. It's well suited for (transitively) popular types.
+// Pimpl implementation
+
+// Define the impl class in the .cpp file.
+// C++
+
+// my_class.cpp
+class my_class::impl {  // defined privately here
+
+  // ... all private data and functions: all of these
+  //     can now change without recompiling callers ...
+public:        // GB
+  int count;   // GB
+};
+// GB above my_class::my_class(); ctor specification fixes this error
+// error: definition of implicitly declared default constructor
+// my_class::my_class(): pimpl( new impl )
+//           ^
+
+my_class::my_class(): pimpl( new impl )
+{
+  // ... set impl values ... 
+  pimpl->count = 1; // GB
+}
+void my_class::print() { std::cout << "count=" << pimpl->count << "\n"; }
+my_class::~my_class() { std::cout << "~my_class\n"; }
+
+// ------------------------------------------------------------------
+
 
 int main()
 {
+  std::cout << "\nMyClass mc\n";
   MyClass mc;
   mc.Public_Method();
 
+  std::cout << "\nfoo fighter\n";
   foo fighter;
-  // fighter.do_internal_work();
+  // fighter.do_internal_work();   // <-- hidden function, cannot call from instance of foo
 
+  std::cout << "\nbar stool mc\n";
   bar stool;
 
+  std::cout << "\ncar wreck\n";
   car wreck;
+  std::cout << "car is running: " << wreck.isRunning() << "\n";
+  wreck.start();
+  std::cout << "car is running: " << wreck.isRunning() << "\n";
+  wreck.stop();
+  std::cout << "car is running: " << wreck.isRunning() << "\n";
+
+  std::cout << "\nmy_class room\n";
+  my_class room;
+  room.print();
+
+  std::cout << "\nend-of-main\n\n";
 }
