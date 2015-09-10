@@ -14,21 +14,35 @@
 class widget {
 public:
     widget();
-    ~widget(); // GB
+    ~widget();              // GB
     // ... (see GotW #100) ...
+    void Public_Method();   // GB
 private:
     class impl;
     std::unique_ptr<impl> pimpl;
 };
  
 // implementation file
-class widget::impl { /*...*/ };
+class widget::impl { 
+public:
+  int privateData;
+};
  
-widget::widget() : pimpl{ new impl{ /*...*/ } } { std::cout<<"widget\n"; }
-widget::~widget() { std::cout<<"~widget\n"; } // GB
-// ...
-auto pws = std::make_shared<widget>();  // C++11
-auto pwu = std::make_unique<widget>();  // C++14
+widget::widget() : pimpl{ new impl{ /*...*/ } } { 
+  pimpl->privateData=42; 
+  std::cout<<"widget::widget(), privateData=" << pimpl->privateData << "\n"; 
+  pimpl->privateData++;
+}
+void widget::Public_Method() { 
+  std::cout<<"widget::Public_Method(), privateData=" << pimpl->privateData << "\n"; 
+  pimpl->privateData++;
+} // GB
+widget::~widget() { 
+  std::cout<<"widget::~widget(), privateData=" << pimpl->privateData << "\n"; 
+} // GB
+
+auto pwscpp11 = std::make_shared<widget>();  // C++11
+auto pwucpp14 = std::make_unique<widget>();  // C++14
 
 #if 0
 // ------------------------------------------------------------------
@@ -63,6 +77,7 @@ void Interface::publicMethod() { pimpl->PrivateMember(); }
 
 // ------------------------------------------------------------------
 // http://www.gamedev.net/page/resources/_/technical/general-programming/the-c-pimpl-r1794
+// YES, note the /_/ in the URL 
 // MyClass.h
 
 class MyClassImp;                    // forward declaration of Pimpl
@@ -75,8 +90,8 @@ public:
    MyClass& operator=( MyClass );
    void  Public_Method();
 private:
-   // MyClassImp *pimpl_;              // the Pimpl
-   std::unique_ptr<MyClassImp> pimpl_; // GB prefer to use unique_ptr
+   // MyClassImp *pimpl;              // the Pimpl, GB compiles fine
+   std::unique_ptr<MyClassImp> pimpl; // GB prefer to use unique_ptr
 };
 
 // MyClass.cpp
@@ -87,21 +102,21 @@ public:
    MyClassImp();
    ~MyClassImp();
    void   Private_Method()  {}   // dummy private function
-   int    private_var_;          // a private variable
+   int    private_var;           // a private variable
 };
  
 MyClassImp::MyClassImp()  { std::cout<<"MyClassImp\n"; }
 MyClassImp::~MyClassImp()  { std::cout<<"~MyClassImp\n"; }
 
-MyClass::MyClass()  :  pimpl_( new MyClassImp() ) { std::cout<<"MyClass\n"; }
+MyClass::MyClass()  :  pimpl( new MyClassImp() ) { std::cout<<"MyClass\n"; }
  
-MyClass::~MyClass() { std::cout<<"~MyClass\n"; /* delete  pimpl_; */ } // GB not needed with unique_ptr
+MyClass::~MyClass() { std::cout<<"~MyClass\n"; /* delete  pimpl; */ } // GB not needed with unique_ptr
  
 void   MyClass::Public_Method()
 {
    std::cout<<"MyClass::Public_Method()\n";
-   pimpl_->Private_Method();      // do some private work
-   pimpl_->private_var_  = 3;
+   pimpl->Private_Method();      // do some private work
+   pimpl->private_var  = 3;
 }
 
 // ------------------------------------------------------------------
@@ -133,7 +148,7 @@ public:
 };
 
 foo::foo() : pimpl{std::make_unique<impl>()} 
-        // Note: std::make_unique was introduced in C++14. For C++11, you can roll your own implementation.
+        // Note: std::make_unique was introduced in C++14. For C++11, you can roll your own or use make_shared
    { std::cout<<"foo: calling do_internal_work()\n"; pimpl->do_internal_work(); }
 
 // foo::~foo() = default;
@@ -303,6 +318,18 @@ my_class::~my_class() { std::cout << "~my_class\n"; }
 
 int main()
 {
+  std::cout << "\nwidget pwscpp11\n";
+  pwscpp11->Public_Method();
+  pwscpp11->Public_Method();
+  std::cout << "\nwidget pwscpp14\n";
+  pwucpp14->Public_Method();
+  pwucpp14->Public_Method();
+  pwucpp14->Public_Method();
+
+  std::cout << "\nwidget w\n";
+  widget w;
+  w.Public_Method();
+
   std::cout << "\nMyClass mc\n";
   MyClass mc;
   mc.Public_Method();
