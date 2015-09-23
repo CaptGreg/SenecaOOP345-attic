@@ -1,59 +1,150 @@
 /*
 g++ -std=c++11 -ggdb 2d-array.cpp -o 2d-array && ./2d-array
-array2D ++++++++++++++ width x height: 16384,2160 array access 533526
-array2D ++++++++++++++ width x height: 16384,2160 array access 416049
-array2D ++++++++++++++ width x height: 16384,2160 array access 415838
-array2D ++++++++++++++ width x height: 16384,2160 array access 415904
-array2D ++++++++++++++ width x height: 16384,2160 array access 415191
 
-vector2D ++++++++++++++ width x height: 16384,2160 vector setup 162629
-vector2D ++++++++++++++ width x height: 16384,2160 vector access 190605
-vector2D ++++++++++++++ width x height: 16384,2160 vector access 190981
-vector2D ++++++++++++++ width x height: 16384,2160 vector access 192398
-vector2D ++++++++++++++ width x height: 16384,2160 vector access 189058
-vector2D ++++++++++++++ width x height: 16384,2160 vector access 191022
+FILE '2d-array.cpp' compiled Sep 22 2015 at 22:07:22 by: g++ compiler 4.9.2 generating 64-bit code
+array2D ++++++++++++++ width x height: 16384,2160 array access 453001
+array2D ++++++++++++++ width x height: 16384,2160 array access 427582
+array2D ++++++++++++++ width x height: 16384,2160 array access 426664
+array2D ++++++++++++++ width x height: 16384,2160 array access 427655
+array2D ++++++++++++++ width x height: 16384,2160 array access 427558
 
-valarray2D ++++++++++++++ width x height: 16384,2160 valarray access 203303
-valarray2D ++++++++++++++ width x height: 16384,2160 valarray access 203838
-valarray2D ++++++++++++++ width x height: 16384,2160 valarray access 203093
-valarray2D ++++++++++++++ width x height: 16384,2160 valarray access 202712
-valarray2D ++++++++++++++ width x height: 16384,2160 valarray access 203540
+vector2D ++++++++++++++ width x height: 16384,2160 vector setup 166595
+vector2D ++++++++++++++ width x height: 16384,2160 vector access 330530
+vector2D ++++++++++++++ width x height: 16384,2160 vector access 330174
+vector2D ++++++++++++++ width x height: 16384,2160 vector access 329944
+vector2D ++++++++++++++ width x height: 16384,2160 vector access 330467
+vector2D ++++++++++++++ width x height: 16384,2160 vector access 330307
 
-valarray2D ++++++++++++++ width x height: 16384,2160 valarray matrix setup 122277
-valarray2D ++++++++++++++ width x height: 16384,2160 valarray matrix slice access 352723
-valarray2D ++++++++++++++ width x height: 16384,2160 valarray matrix slice access 353484
-valarray2D ++++++++++++++ width x height: 16384,2160 valarray matrix slice access 353854
-valarray2D ++++++++++++++ width x height: 16384,2160 valarray matrix slice access 353543
-valarray2D ++++++++++++++ width x height: 16384,2160 valarray matrix slice access 353792
+valarray2D ++++++++++++++ width x height: 16384,2160 valarray access 193431
+valarray2D ++++++++++++++ width x height: 16384,2160 valarray access 193701
+valarray2D ++++++++++++++ width x height: 16384,2160 valarray access 193066
+valarray2D ++++++++++++++ width x height: 16384,2160 valarray access 193625
+valarray2D ++++++++++++++ width x height: 16384,2160 valarray access 193290
+
+valarray2D matrix ++++++++++++++ width x height: 16384,2160 valarray matrix setup 49279
+valarray2D matrix ++++++++++++++ width x height: 16384,2160 valarray matrix slice access 343332
+valarray2D matrix ++++++++++++++ width x height: 16384,2160 valarray matrix slice access 343352
+valarray2D matrix ++++++++++++++ width x height: 16384,2160 valarray matrix slice access 342973
+valarray2D matrix ++++++++++++++ width x height: 16384,2160 valarray matrix slice access 343619
+valarray2D matrix ++++++++++++++ width x height: 16384,2160 valarray matrix slice access 342933
+
+1 2 3 
+4 5 6 
+
 
 g++ -std=c++11 -Ofast 2d-array.cpp -o 2d-array && ./2d-array
-array2D ++++++++++++++ width x height: 16384,2160 array access 131134
-array2D ++++++++++++++ width x height: 16384,2160 array access 36898
-array2D ++++++++++++++ width x height: 16384,2160 array access 36831
-array2D ++++++++++++++ width x height: 16384,2160 array access 33876
-array2D ++++++++++++++ width x height: 16384,2160 array access 37630
 
-vector2D ++++++++++++++ width x height: 16384,2160 vector setup 73420
-vector2D ++++++++++++++ width x height: 16384,2160 vector access 34971
-vector2D ++++++++++++++ width x height: 16384,2160 vector access 38926
-vector2D ++++++++++++++ width x height: 16384,2160 vector access 37297
-vector2D ++++++++++++++ width x height: 16384,2160 vector access 35519
-vector2D ++++++++++++++ width x height: 16384,2160 vector access 34243
+FILE '2d-array.cpp' compiled Sep 22 2015 at 22:07:52 by: g++ compiler 4.9.2 generating 64-bit code
+array2D ++++++++++++++ width x height: 16384,2160 array access 52389
+array2D ++++++++++++++ width x height: 16384,2160 array access 31420
+array2D ++++++++++++++ width x height: 16384,2160 array access 29584
+array2D ++++++++++++++ width x height: 16384,2160 array access 29487
+array2D ++++++++++++++ width x height: 16384,2160 array access 29708
 
-valarray2D ++++++++++++++ width x height: 16384,2160 valarray access 37509
-valarray2D ++++++++++++++ width x height: 16384,2160 valarray access 38734
-valarray2D ++++++++++++++ width x height: 16384,2160 valarray access 35077
-valarray2D ++++++++++++++ width x height: 16384,2160 valarray access 37236
-valarray2D ++++++++++++++ width x height: 16384,2160 valarray access 37755
+vector2D ++++++++++++++ width x height: 16384,2160 vector setup 65709
+vector2D ++++++++++++++ width x height: 16384,2160 vector access 30324
+vector2D ++++++++++++++ width x height: 16384,2160 vector access 32114
+vector2D ++++++++++++++ width x height: 16384,2160 vector access 31364
+vector2D ++++++++++++++ width x height: 16384,2160 vector access 32062
+vector2D ++++++++++++++ width x height: 16384,2160 vector access 30409
 
-valarray2D ++++++++++++++ width x height: 16384,2160 valarray matrix setup 123846
-valarray2D ++++++++++++++ width x height: 16384,2160 valarray matrix slice access 23028
-valarray2D ++++++++++++++ width x height: 16384,2160 valarray matrix slice access 22574
-valarray2D ++++++++++++++ width x height: 16384,2160 valarray matrix slice access 23029
-valarray2D ++++++++++++++ width x height: 16384,2160 valarray matrix slice access 23179
-valarray2D ++++++++++++++ width x height: 16384,2160 valarray matrix slice access 22687
+valarray2D ++++++++++++++ width x height: 16384,2160 valarray access 29377
+valarray2D ++++++++++++++ width x height: 16384,2160 valarray access 31299
+valarray2D ++++++++++++++ width x height: 16384,2160 valarray access 28803
+valarray2D ++++++++++++++ width x height: 16384,2160 valarray access 28446
+valarray2D ++++++++++++++ width x height: 16384,2160 valarray access 28827
+
+valarray2D matrix ++++++++++++++ width x height: 16384,2160 valarray matrix setup 48596
+valarray2D matrix ++++++++++++++ width x height: 16384,2160 valarray matrix slice access 21655
+valarray2D matrix ++++++++++++++ width x height: 16384,2160 valarray matrix slice access 21575
+valarray2D matrix ++++++++++++++ width x height: 16384,2160 valarray matrix slice access 21461
+valarray2D matrix ++++++++++++++ width x height: 16384,2160 valarray matrix slice access 21256
+valarray2D matrix ++++++++++++++ width x height: 16384,2160 valarray matrix slice access 22077
+
+1 2 3 
+4 5 6 
+
+clang++ -Wall -std=c++11  -ggdb -fopenmp 2d-array.cpp -o 2d-array -lrt -pthread && ./2d-array
+2d-array.cpp:241:57: warning: field 'm_height' will be initialized after field 'm_storage' [-Wreorder]
+  matrix(size_t width, size_t height): m_stride(width), m_height(height), m_storage(width*height) {  }
+                                                        ^
+2d-array.cpp:255:17: note: in instantiation of member function 'matrix<float>::matrix' requested here
+  matrix<float> vam(WIDTH,HEIGHT);
+                ^
+1 warning generated.
+
+FILE '2d-array.cpp' compiled Sep 22 2015 at 22:10:10 by: clang++ compiler 4.2.1 Compatible Clang 3.3 (tags/RELEASE_33/final) generating 64-bit code
+array2D ++++++++++++++ width x height: 16384,2160 array access 471517
+array2D ++++++++++++++ width x height: 16384,2160 array access 449310
+array2D ++++++++++++++ width x height: 16384,2160 array access 449394
+array2D ++++++++++++++ width x height: 16384,2160 array access 448968
+array2D ++++++++++++++ width x height: 16384,2160 array access 449666
+
+vector2D ++++++++++++++ width x height: 16384,2160 vector setup 172810
+vector2D ++++++++++++++ width x height: 16384,2160 vector access 359400
+vector2D ++++++++++++++ width x height: 16384,2160 vector access 356228
+vector2D ++++++++++++++ width x height: 16384,2160 vector access 356079
+vector2D ++++++++++++++ width x height: 16384,2160 vector access 355977
+vector2D ++++++++++++++ width x height: 16384,2160 vector access 356433
+
+valarray2D ++++++++++++++ width x height: 16384,2160 valarray access 285596
+valarray2D ++++++++++++++ width x height: 16384,2160 valarray access 284831
+valarray2D ++++++++++++++ width x height: 16384,2160 valarray access 285210
+valarray2D ++++++++++++++ width x height: 16384,2160 valarray access 284552
+valarray2D ++++++++++++++ width x height: 16384,2160 valarray access 284412
+
+valarray2D matrix ++++++++++++++ width x height: 16384,2160 valarray matrix setup 49434
+valarray2D matrix ++++++++++++++ width x height: 16384,2160 valarray matrix slice access 406483
+valarray2D matrix ++++++++++++++ width x height: 16384,2160 valarray matrix slice access 405797
+valarray2D matrix ++++++++++++++ width x height: 16384,2160 valarray matrix slice access 406064
+valarray2D matrix ++++++++++++++ width x height: 16384,2160 valarray matrix slice access 406266
+valarray2D matrix ++++++++++++++ width x height: 16384,2160 valarray matrix slice access 406310
+
+1 2 3 
+4 5 6 
+
+
+clang++ -Wall -std=c++11  -Ofast -fopenmp 2d-array.cpp -o 2d-array -lrt -pthread && ./2d-array
+2d-array.cpp:241:57: warning: field 'm_height' will be initialized after field 'm_storage' [-Wreorder]
+  matrix(size_t width, size_t height): m_stride(width), m_height(height), m_storage(width*height) {  }
+                                                        ^
+2d-array.cpp:255:17: note: in instantiation of member function 'matrix<float>::matrix' requested here
+  matrix<float> vam(WIDTH,HEIGHT);
+                ^
+1 warning generated.
+
+FILE '2d-array.cpp' compiled Sep 22 2015 at 22:09:30 by: clang++ compiler 4.2.1 Compatible Clang 3.3 (tags/RELEASE_33/final) generating 64-bit code
+array2D ++++++++++++++ width x height: 16384,2160 array access 132040
+array2D ++++++++++++++ width x height: 16384,2160 array access 104371
+array2D ++++++++++++++ width x height: 16384,2160 array access 104315
+array2D ++++++++++++++ width x height: 16384,2160 array access 104184
+array2D ++++++++++++++ width x height: 16384,2160 array access 104199
+
+vector2D ++++++++++++++ width x height: 16384,2160 vector setup 64812
+vector2D ++++++++++++++ width x height: 16384,2160 vector access 76989
+vector2D ++++++++++++++ width x height: 16384,2160 vector access 76920
+vector2D ++++++++++++++ width x height: 16384,2160 vector access 76641
+vector2D ++++++++++++++ width x height: 16384,2160 vector access 76815
+vector2D ++++++++++++++ width x height: 16384,2160 vector access 76629
+
+valarray2D ++++++++++++++ width x height: 16384,2160 valarray access 55165
+valarray2D ++++++++++++++ width x height: 16384,2160 valarray access 55042
+valarray2D ++++++++++++++ width x height: 16384,2160 valarray access 55604
+valarray2D ++++++++++++++ width x height: 16384,2160 valarray access 54628
+valarray2D ++++++++++++++ width x height: 16384,2160 valarray access 55519
+
+valarray2D matrix ++++++++++++++ width x height: 16384,2160 valarray matrix setup 0
+valarray2D matrix ++++++++++++++ width x height: 16384,2160 valarray matrix slice access 0
+valarray2D matrix ++++++++++++++ width x height: 16384,2160 valarray matrix slice access 0
+valarray2D matrix ++++++++++++++ width x height: 16384,2160 valarray matrix slice access 0
+valarray2D matrix ++++++++++++++ width x height: 16384,2160 valarray matrix slice access 0
+valarray2D matrix ++++++++++++++ width x height: 16384,2160 valarray matrix slice access 0
+
+1 2 3 
+4 5 6 
 
 */
+
 #include <array>
 #include <valarray>
 #include <vector>
@@ -61,11 +152,11 @@ valarray2D ++++++++++++++ width x height: 16384,2160 valarray matrix slice acces
 #include <chrono>
 using namespace std;
 
+const int TIMES = 5;   // number of repeats for timing run
+
 // const int WIDTH  = 4000;
 // const int HEIGHT = 2000;
 const int WIDTH  = 16*1024;
-const int TIMES = 5;
-
 const int HEIGHT = 2160;
 
 array     <array <float,WIDTH>, HEIGHT>    array2D;
@@ -204,23 +295,37 @@ Output:
 99 10 2 99 4 50 99 7 8
 
 */
+
   void valarrayMatrixTest();
   valarrayMatrixTest();
+
+  typedef valarray<valarray<int> > va2d;
+
+  int data[][3] = { {1, 2, 3}, {4, 5, 6} };
+  va2d mat(valarray<int>(3), 2);
+  for (int i = 0; i < 2; ++i) {
+    for (int j = 0; j < 3; ++j) { mat[ i ][ j ] = data[ i ][ j ]; }
+  }
+  for (int i = 0; i < 2; ++i) {
+    for (int j = 0; j < 3; ++j) { cout << mat[ i ][ j ] << " "; }
+    cout << "\n";
+  }
 }
 
 template <class T> class matrix
 { // http://stackoverflow.com/questions/2187648/how-can-i-use-a-stdvalarray-to-store-manipulate-a-contiguous-2d-array
-    std::valarray<T> m_storage;
-    size_t m_stride;
-    size_t m_height;
+  std::valarray<T> m_storage;
+  size_t m_stride;
+  size_t m_height;
 public:
-    matrix(size_t width, size_t height): m_stride(width), m_height(height), m_storage(width*height) {  }
-    T &operator() (size_t row, size_t column) {
-     // return m_storage[std::slice(column, m_height, m_stride)][row];    // column major
-     // return m_storage[std::slice(row,    m_stride, m_height)][column]; // row major
-     // return m_storage[row    * m_stride + column];    // row major   (on exit:double free or corruption)
-        return m_storage[column * m_height + row];       // column major (works!)
-    }
+  matrix(size_t width, size_t height): m_stride(width), m_height(height), m_storage(width*height) {  }
+  T &operator() (size_t row, size_t column) {
+            // A valarray slice is defined by a starting index, a size, and a stride.
+  // return m_storage[std::slice(column, m_height, m_stride)][row];    // column major : syntax error
+  // return m_storage[std::slice(row,    m_stride, m_height)][column]; // row major    : syntax error
+  // return m_storage[row    * m_stride + column];    // row major   (on exit:double free or corruption)
+  return m_storage[column * m_height + row];       // column major (works!)
+  }
 };
 
 void valarrayMatrixTest()
@@ -229,7 +334,7 @@ void valarrayMatrixTest()
   t.Start();
   matrix<float> vam(WIDTH,HEIGHT);
   t.Stop();
-  cout << "valarray2D ++++++++++++++ width x height: " << WIDTH << "," << HEIGHT << " valarray matrix setup " << t.microsecs() << "\n";
+  cout << "valarray2D matrix ++++++++++++++ width x height: " << WIDTH << "," << HEIGHT << " valarray matrix setup " << t.microsecs() << "\n";
   for(int test = 0; test<TIMES; test++) {
     t.Start();
     for(int y = 0; y < HEIGHT; y++) {
@@ -239,7 +344,7 @@ void valarrayMatrixTest()
       }
     }
     t.Stop();
-    cout << "valarray2D ++++++++++++++ width x height: " << WIDTH << "," << HEIGHT << " valarray matrix slice access " << t.microsecs() << "\n";
+    cout << "valarray2D matrix ++++++++++++++ width x height: " << WIDTH << "," << HEIGHT << " valarray matrix slice access " << t.microsecs() << "\n";
   }
   cout << endl;
 
