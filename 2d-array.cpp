@@ -150,6 +150,7 @@ valarray2D matrix ++++++++++++++ width x height: 16384,2160 valarray matrix slic
 #include <vector>
 #include <iostream>
 #include <chrono>
+#include <thread>
 using namespace std;
 
 const int TIMES = 5;   // number of repeats for timing run
@@ -189,18 +190,21 @@ public:
   RET(nano)
 };
 
-int main()
+int main(int argc, char*argv[])
 {
 #ifdef __GNUC__  // either g++ or clang++
   std::cout << "\nFILE '" << __FILE__ << "' compiled " 
             << __DATE__ << " at " << __TIME__ << " by: "
-#ifdef __clang__
-    << "clang++ compiler " << __VERSION__ 
+  #ifdef __clang__
+    << "clang++ compiler "
   #else
-    << "g++ compiler " << __VERSION__
+    << "g++ compiler "
   #endif
-  << " generating " << 8*sizeof(void*) << "-bit code\n";
+   << __VERSION__;
 #endif
+
+  cout << " generating " << 8*sizeof(void*) << "-bit code\n";
+  cout << argv[0] << " running on a " << std::thread::hardware_concurrency() << " core machine\n";
 
   Timer t;
   for(int test = 0; test<TIMES; test++) {
@@ -299,6 +303,7 @@ Output:
   void valarrayMatrixTest();
   valarrayMatrixTest();
 
+  // http://stackoverflow.com/questions/2187648/how-can-i-use-a-stdvalarray-to-store-manipulate-a-contiguous-2d-array
   typedef valarray<valarray<int> > va2d;
 
   int data[][3] = { {1, 2, 3}, {4, 5, 6} };
