@@ -26,6 +26,8 @@ sp?.cpp     - smart pointer resources
 
 mi-*.cpp    - multiple inheritance resources, clone+diamond problem
 
+template-simple.cpp - simple example of class and tfuntion templet
+
 theading?01?.cpp - threading101?.cpp - basic threading, mutexes
                  - threading201?.cpp - futures and promises
                  - threading301?.cpp - async, packaged_task
@@ -41,7 +43,7 @@ moveSimple.cpp   - move semantics
 
 stl-calc-*.cpp   - postfix calculator using stl stack, list, vector, deque containers
 
-vectorchar*.cpp  - how to make a string class mased on std::vector<char>
+vectorchar*.cpp  - how to make a string class based on std::vector<char>
 
 dp-composite*.cpp  - composite (tree) design pattern code
 

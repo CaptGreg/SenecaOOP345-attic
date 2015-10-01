@@ -11,6 +11,11 @@ int main(int argc,char**)
     std::vector<int> v = { 1, 2, 3, 4 };
     for(auto e : v) cout << e; cout << "\n";
 
+    i = 0; 
+    i = i++;
+    cout << "after 'i = 0; i = i++;'\n";
+    cout << "'i = " << i << "\n";
+
     i = 0; v[i++] = i++;
     cout << "after 'i = 0; v[i++] = i++;'\n";
     for(auto e : v) cout << e; cout << ", i=" << i << "\n";
