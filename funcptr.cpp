@@ -7,6 +7,7 @@
 // 6. std::bind
 // 7. threads are functions. std::thread
 // 8. threads are functions. std::async
+// 9. how to code functions that are called with a variable number of arguments
 
 // Functions can have a variable number of arguments.  Think about printf.  How does it work?
 
@@ -35,11 +36,12 @@ int main(int argc, char**argv)
   f = sqrt;
   arg = 250000;
   std::cout <<  "sqrt(" << arg << ") = " << f(arg) << "\n"; 
-  #define C_POINTER(FUN,ARG) f=FUN; std::cout <<  "C pointer: " #FUN "(" #ARG ")=" << f(ARG) << "\n"; 
-  C_POINTER(sqrt, 81.)
-  C_POINTER(fabs, -123.)
-  C_POINTER(tan, 45*M_PI/180.)
-  #undef C_POINTER
+
+  #define P(FUN,ARG) f=FUN; std::cout <<  "C pointer: " #FUN "(" #ARG ")=" << f(ARG) << "\n"; 
+    P(sqrt, 81.)
+    P(fabs, -123.)
+    P(tan, 45*M_PI/180.)
+  #undef P
 
 
   // 3. C++ pointer to a function
@@ -49,11 +51,11 @@ int main(int argc, char**argv)
   arg = 1000;
   std::cout <<  "log10(" << arg << ") = " << g(arg) << "\n"; 
 
-  #define CPP_POINTER(FUN,ARG) extern double FUN(double arg); g=FUN; std::cout << "CPP pointer "  #FUN "(" #ARG ")=" << g(ARG) << "\n"; 
-  CPP_POINTER(sqrt, 81.)
-  CPP_POINTER(fabs, -123.)
-  CPP_POINTER(tan, 45*M_PI/180.)
-  #undef CPP_POINTER
+  #define P(FUN,ARG) extern double FUN(double arg); g=FUN; std::cout << "CPP pointer "  #FUN "(" #ARG ")=" << g(ARG) << "\n"; 
+    P(sqrt, 81.)
+    P(fabs, -123.)
+    P(tan, 45*M_PI/180.)
+  #undef P
 
 
   // 4. function objects or functors  (overload operator() for a class)
@@ -91,6 +93,14 @@ int main(int argc, char**argv)
 
 
   // 5. lambda functions
+  auto lambdaTest1   = [] () { };  // a test lambda function, no capture, no args, no return type specified, empty function body
+
+  lambdaTest1();
+
+  auto lambdaTest2   = [] { };  // a test lambda function, no capture, no args, no return type specified, empty function body
+
+  lambdaTest2();
+
   auto lambdaSimple = [] () { cout << "hello from a simple lambda function, no capture, no args, no return type specified\n"; };
 
   lambdaSimple();
@@ -101,7 +111,7 @@ int main(int argc, char**argv)
 
   f  = fabs;
   arg = -123;
-  auto lambda1 = [f] (double arg) -> double { return f(arg); };  // capture [], arg (), and return type ->
+  auto lambda1 = [f] (double a) -> double { return f(a); };  // capture [], arg (), and return type ->
 
   cout << "lambda1 capturing f, f=fabs (" << arg << ")=" << lambda1(arg) << "\n";
 
@@ -114,14 +124,26 @@ int main(int argc, char**argv)
   auto foo = std::bind(sin, 30*M_PI/180.);   // works with our DIY prototype for 'sin', <cmath> should of taken care of this
   cout << "foo=bind of sin of 30 degrees: foo() =" << foo() << "\n";
 
-  // bind is like a define macro
+  // bind act like a define macro, sort of
   #define FOO sin(30*M_PI/180.)
   cout << "'#define FOO sin(30*M_PI/180.)' : FOO =" << FOO << "\n";
   // Why have bind, if a #define macro can do the same thing?
   // Bind objects can be passed as arguments to other functions.
   // #define macros objects cannot be passed as arguments to other functions.
-  // The compiler will call the function and pass the function's return value to the other function.
+  // The compiler will evaluate the macro code and pass the value as the argument to the other function.
 
+   auto printArg = [] (double arg) { cout << "printArg: arg=" << arg << "\n"; };
+   printArg(FOO);
+
+   auto callArg = [] (std::function<double()> arg) { cout << "callArg: function returned=" << arg() << "\n"; };
+   callArg(foo);
+
+   // assign 'foo' to another variable
+   std::function<double()> fooFuncPtr = foo;
+   // use it:
+   callArg(fooFuncPtr);
+
+   // (Cannot do that with a macro)
 
   // 7. threads are functions. std::thread
   // They might be running on another core, if there is another core.
@@ -131,6 +153,10 @@ int main(int argc, char**argv)
   std::thread t ( threadFunction, 1500); // run function in a separate thread. sleep for 1.5 sec (1500 milliseconds)
   t.join(); // wait for thread to finish
   cout << "thread complete\n";
+
+  cout << " ---- one liner: ";
+  std::thread( threadFunction, 1500 ).join();
+  cout << "\n";
 
   cout << "do it again, launch thread but time it ... \n";
   std::chrono::time_point<std::chrono::high_resolution_clock> start;
@@ -146,45 +172,68 @@ int main(int argc, char**argv)
   // calculate and print elapsed time
   typedef std::chrono::duration<int,std::micro> microsecs_t ;
   microsecs_t duration_get( std::chrono::duration_cast<microsecs_t>(stop-start) ) ;
-  long tWait = duration_get.count();
+  uint64_t tWait = duration_get.count();
   std::cout << "thread completed after " << tWait << " microsecs or about " 
             << setprecision(2) << tWait * 1e-6 << " seconds\n";
 
+  // create a job table of function pointers, use bind to initialize the table, launch each job as a thread, time everything
+    const int NUMTHREADS = 10;
+    std::function<void()> jobTable[NUMTHREADS];
+    std::thread tidTable[NUMTHREADS];
+
+    for(int i = 0; i < NUMTHREADS; i++)
+      jobTable[i] = std::bind (threadFunction, 150*(i+1));
+
+    start = std::chrono::high_resolution_clock::now(); 
+    for(int i = 0; i < NUMTHREADS; i++) {
+      // std::function<void()> job = jobTable[i];
+      // tidTable[i] = std::thread( job );
+      tidTable[i] = std::thread( jobTable[i] );
+    }
+
+    for(int i = 0; i < NUMTHREADS; i++)
+      tidTable[i].join();
+      
+    stop = std::chrono::high_resolution_clock::now(); 
+    tWait = duration_get.count();
+    std::cout << NUMTHREADS << " threads completed after " << tWait << " microsecs or about " 
+              << setprecision(2) << tWait * 1e-6 << " seconds\n";
+
   // thread return values
-  int result;
-  auto threadRandom = [] (int* argPtr) { *argPtr = random() % 1000; };
-  t = std::thread( threadRandom, &result);
-  t.join(); // wait for thread to finish
-  cout << "threadRandom returned " << result << "\n";
+    int result;
+    auto threadRandom = [] (int* argPtr) { *argPtr = random() % 1000; };
+    t = std::thread( threadRandom, &result);
+    t.join(); // wait for thread to finish
+    cout << "threadRandom returned " << result << "\n";
 
-  // pass an address to a structure with parameters and return value
-  struct parms_s{
-    int m;
-    int x;
-    int b;
-    int y;
-  } parms ={ 1,2,3 };
+    // More than one arg? use a pass an address to a structure with the parameters and return value
+    struct parms_s{
+      int m;
+      int x;
+      int b;
+      int y;
+    } parms ={ 1,2,3 };
 
-  auto threadParms = [] (parms_s* p) -> void { p->y = p->m * p->x + p->b; };
-  t = std::thread( threadParms, &parms);  // run the thread
-  t.join(); // wait for thread to finish
-  cout << "threadParms returned " << parms.y << ", y=mx+b, 1*2+3=5\n";
+    auto threadParms = [] (parms_s* p) -> void { p->y = p->m * p->x + p->b; };
+    t = std::thread( threadParms, &parms);  // run the thread
+    t.join(); // wait for thread to finish
+    cout << "threadParms returned " << parms.y << ", y=mx+b, 1*2+3=5\n";
 
-  // std::thread( threadParms, &parms ).join();
 
   // 8. threads are functions. std::async - threads - use async to launch, wait for completion, and get value returned from a thread
-  auto async = std::async(sin, 30*M_PI/180.);
-  cout << "async(sin, 30 degrees) =" << async.get() << "\n";
+    auto async = std::async(sin, 30*M_PI/180.);
+    cout << "async(sin, 30 degrees) =" << async.get() << "\n";
 
-  async = std::async(std::launch::deferred, sin, 30*M_PI/180.);
-  cout << "async(std::launch::deferred, sin, 30 degrees) =" << async.get() << "\n";
+    async = std::async(std::launch::deferred, sin, 30*M_PI/180.);
+    cout << "async(std::launch::deferred, sin, 30 degrees) =" << async.get() << "\n";
 
-  async = std::async(std::launch::async, sin, 30*M_PI/180.);
-  cout << "async(std::launch::async, sin, 30 degrees) =" << async.get() << "\n";
+    async = std::async(std::launch::async, sin, 30*M_PI/180.);
+    cout << "async(std::launch::async, sin, 30 degrees) =" << async.get() << "\n";
 
-  void SimpleDIYPrintf(const char *fmt, ...);  // a variable argument function (variadic function)
-  SimpleDIYPrintf("Hello from our DIY home-made printf function s: >%s<, c: >%c<, f: >%f<, d: >%d<\n", 
-                  "QWERTY", '@', 1.23e10, 42);
+  // 9. how to code functions that are called with a variable number of arguments
+    void SimpleDIYPrintf(const char *fmt, ...);  // a variable argument function (variadic function)
+    SimpleDIYPrintf("Hello from our DIY home-made printf function s: >%s<, c: >%c<, f: >%f<, d: >%d<\n", 
+                    "QWERTY", '@', 1.23e10, 42);
 }
 
 void SimpleDIYPrintf(const char *fmt, ...)  // a variable argument function (variadic function)
