@@ -74,7 +74,7 @@ int main(int argc, char**argv)
   cout << R"abc(
 +++++++++++++++++++++++++++++++++++++
   Robots and aliens commonly pass lambdas as one-liners to other function that 
-  can only be understood by other robota and other aliens.
+  can only be understood by other robots and other aliens.
 
   Can you easily understand this one-liner?
   
