@@ -22,7 +22,7 @@ int main(int argc, char**argv)
   TYPEID(funcB);
   TYPEID(funcC);
 
-  string& (*func) (const string& arg);
+  string& (*func) (const string& arg);   // 1977 c-code
   TYPEID(func);
 
   func = funcC;
@@ -34,8 +34,7 @@ int main(int argc, char**argv)
   func = funcA;
   cout << func("calling function pointer 'func' in line " + to_string(__LINE__) );
 
-
-  function < string& (const string&) >  funcpp;
+  function < string& (const string&) >  funcpp;  // 1984? or later C++
   TYPEID(funcpp);
 
   funcpp = funcA;
@@ -47,7 +46,6 @@ int main(int argc, char**argv)
   funcpp = funcC;
   cout << funcpp("calling C++ function pointer 'funcpp' in line " + to_string(__LINE__) );
 
-
   class MFO { // My Function Object - 'Functor'
   public:
     string& operator() (const string& arg) { return *new string( "instance of class MFO:" + arg + "\n"); }
@@ -58,6 +56,7 @@ int main(int argc, char**argv)
   TYPEID(mfo);
 
   cout << mfo("calling C++ function pointer 'instance mfo of class MFO' in line " + to_string(__LINE__) );
+
 
   // lambda
   // string& funcLambda = [] (const string& arg) { return * new string( "funcC:" + arg + "\n"); };
@@ -94,9 +93,16 @@ int main(int argc, char**argv)
 
   cout << funcLambda2("calling C++ lambda function (auto ... ->string& ...) in line " + to_string(__LINE__) );
           ^^^^^^^^^^^
+
+  OR even better:
+
+  string s =  "calling C++ inlined lambda function (auto ... ->string& ...) in line " + to_string(__LINE__);
+  cout << funcLambda2(s);
 +++++++++++++++++++++++++++++++++++++
   )abc";
 
   cout << [] (const string& arg) -> string& { return * new string( "inlined lambda:" + arg + "\n"); }("calling C++ inlined lambda function (auto ... ->string& ...) in line " + to_string(__LINE__) );
-}
 
+  string s =  "calling C++ inlined lambda function (auto ... ->string& ...) in line " + to_string(__LINE__);
+  cout << funcLambda2(s);
+}
