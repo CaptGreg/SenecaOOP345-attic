@@ -50,7 +50,7 @@ int main(int argc, char**argv)
 
   class MFO { // My Function Object - 'Functor'
   public:
-    string& operator() (const string& arg) { return * new string( "instance of class MFO:" + arg + "\n"); }
+    string& operator() (const string& arg) { return *new string( "instance of class MFO:" + arg + "\n"); }
   };
   TYPEID(MFO);
 
@@ -63,7 +63,7 @@ int main(int argc, char**argv)
   // string& funcLambda = [] (const string& arg) { return * new string( "funcC:" + arg + "\n"); };
   // compiler does not approve of our return type.
   // OK, let compiler figure it out, use 'auto'
-  auto funcLambda = [] (const string& arg) { return * new string("funcLambda:" + arg + string("\n")); };
+  auto funcLambda = [] (const string& arg) { return * new string("funcLambda:" + arg + "\n"); };
   TYPEID(funcLambda);
   cout << funcLambda("calling C++ lambda function in line " + to_string(__LINE__) );
 
@@ -78,7 +78,7 @@ int main(int argc, char**argv)
 
   Can you easily understand this one-liner?
   
-  cout << [] (const string& arg) -> string& { return * new string( "inlined lanbda:" + arg + "\n"); }("calling C++ inlined lambda function (auto ... ->string& ...) in line " + to_string(__LINE__) );
+  cout << [] (const string& arg) -> string& { return * new string( "inlined lambda:" + arg + "\n"); }("calling C++ inlined lambda function (auto ... ->string& ...) in line " + to_string(__LINE__) );
           ^---------------------------------------- lambda definition ------------------------------^^------------------------------- calling argument ---------------------------------------------^
 
   or do you prefer this one line definition:
@@ -97,6 +97,6 @@ int main(int argc, char**argv)
 +++++++++++++++++++++++++++++++++++++
   )abc";
 
-  cout << [] (const string& arg) -> string& { return * new string( "inlined lanbda:" + arg + "\n"); }("calling C++ inlined lambda function (auto ... ->string& ...) in line " + to_string(__LINE__) );
+  cout << [] (const string& arg) -> string& { return * new string( "inlined lambda:" + arg + "\n"); }("calling C++ inlined lambda function (auto ... ->string& ...) in line " + to_string(__LINE__) );
 }
 
