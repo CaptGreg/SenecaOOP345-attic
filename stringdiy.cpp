@@ -62,25 +62,23 @@ public:
       cout << s << "\n";
     else
       cout << "nullptr - no \"brain\", a zombie\n";
+
   }
-  diyString& operator+= (const char* string)
+
+  diyString& operator+= (const diyString& rhs)  // append operator
   {
-    if(s && string) {
-      char *p = new char[ strlen(s) + strlen(string) + 1];
-      strcpy(p, s);
-      strcat(p, string);
-      delete [] s;
-      s = p;
-    } else
-    if(s && !string) {
-      ; // nothing to do
-    } else
-    if(!s && string) {
-      s = new char[ strlen(string) + 1];
-      strcpy(s, string);
-    } else { // !s && !string
-      ; // both nullptr, nothing to do
+    if(rhs.s) {
+      if(s) {
+         char* p = new char[strlen(s) + strlen(rhs.s) + 1];
+         strcat(strcpy(p,s), rhs.s);
+         delete [] s;
+         s = p;
+      } else { // s is nullptr, rhs.s is not
+         s = new char[strlen(rhs.s) + 1];
+         strcpy(s,rhs.s);
+      }
     }
+    return *this;
   }
 };
 
@@ -114,13 +112,8 @@ int main(int argc, char**argv, char**env)
   s5.print("s5=");
   s4.print("s4=");
 
-#if 0
-  // TODO: fix this - it segfaults`
-  s4 += " added something";
-  s4.print("+=");
-  s4 += " added something else";
-  s4.print("+=");
-#endif
-
+  s4 += "[added something]";
+  s4.print("s4+= add to zombie -->");
+  s4 += "{added something else}";
+  s4.print("s4+= add to non-zombie -->");
 }
-
