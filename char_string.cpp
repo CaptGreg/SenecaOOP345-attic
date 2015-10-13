@@ -3,5 +3,5 @@ using namespace std;
 
 int main(int argc, char **argv)
 {
-  out << "          " "abc" "def"  << endl;
+  cout << "          " "abc" "def"  << endl;
 }

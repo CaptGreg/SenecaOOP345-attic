@@ -57,6 +57,16 @@ int main(int argc, char**argv)
 
   cout << mfo("calling C++ function pointer 'instance mfo of class MFO' in line " + to_string(__LINE__) );
 
+class MFO2 { // My Function Object - 'Functor'
+    int n;
+  public:
+    MFO2(int num) : n(num) {}
+    int operator() (const int arg) { return arg * n; }
+  };
+
+  MFO2 mfo2(argc);
+  cout << "mfo2(__LINE__) returns argc*__LINE__:" << mfo2(__LINE__) << "\n";
+  
 
   // lambda
   // string& funcLambda = [] (const string& arg) { return * new string( "funcC:" + arg + "\n"); };
@@ -65,6 +75,10 @@ int main(int argc, char**argv)
   auto funcLambda = [] (const string& arg) { return * new string("funcLambda:" + arg + "\n"); };
   TYPEID(funcLambda);
   cout << funcLambda("calling C++ lambda function in line " + to_string(__LINE__) );
+
+  auto funcLambda3 = [argc] (const int arg) -> int { return argc * arg; };
+  cout << "funclambda3 capturing [argc] " << funcLambda3(99) << "\n"
+;
 
   auto funcLambda2 = [] (const string& arg) -> string& { return * new string( "funcLambda2:" + arg + "\n"); };
   // cout << funcLambda2("calling C++ lambda function (auto ... ->string& ...) in line " + to_string(__LINE__) );
