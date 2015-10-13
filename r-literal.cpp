@@ -16,14 +16,14 @@ int main(int argc, char**argv)
  
   p = "Dogs ears,"
 " cat tails, "
-" \"cats tails are a plant as well as the danly thing on the back end of a cat \""
+" \"cats tails are a plant as well as the dangly thing on the back end of a cat \""
 "and moose tails\n";
   cout << p;
 
 // R literal R"symbol( ... )symbol"
   p = R"rliteral(Dogs ears,
  cat tails, 
-"cats tails are a plant as well as the danly thing on the back end of a cat"
+"cats tails are a plant as well as the dangly thing on the back end of a cat"
 and moose tails
 )rliteral";
 
