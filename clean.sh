@@ -15,3 +15,9 @@ do
   fi
 done
 
+for f in hexdump.dat
+do
+  if ( test -f $f ) ; then 
+    rm $f
+  fi
+done

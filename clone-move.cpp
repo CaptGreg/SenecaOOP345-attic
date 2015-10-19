@@ -40,23 +40,32 @@ public:
 };
 
 
-int main()
+void App()
 {
-   Apple rottenApple("rottenApple");
+   Apple* rottenApple = new Apple("rottenApple");
 
-   Grape sourGrapes("sourGrapes");
+   Grape* sourGrapes  = new Grape("sourGrapes");
 
    Fruit* fruit;
 
-   fruit = rottenApple.clone();
+   fruit = rottenApple->clone();
    fruit->print();
    delete fruit;
 
-   fruit = sourGrapes.move_clone();
+   fruit = sourGrapes->move_clone();
    fruit->print();
    delete fruit;
 
-   fruit = sourGrapes.clone();
+   fruit = sourGrapes->clone();
    fruit->print();
    delete fruit;
+
+   delete rottenApple;
+   delete sourGrapes;
+}
+
+int main()
+{
+   App();
+   return 0;
 }
