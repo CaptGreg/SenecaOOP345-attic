@@ -155,6 +155,12 @@ void FundamentalTypes()
   #undef M
 } // FundamentalTypes
 
+// function templates to print l-value or r-value
+template<typename T>
+void print(std::string s, const T&  x) { std::cout << s << ", value=" << x << " is a l-value\n"; }
+template<typename T>
+void print(std::string s, const T&& x) { std::cout << s << ", value=" << x << " is a r-value\n"; }
+
 void CompoundTypes()
 {
   std::cout << "Compound types:\n";
@@ -199,18 +205,33 @@ void CompoundTypes()
   std::cout << "Move-constructor, Move-Assignment Operator - C++11 code OOP345!\n";
   class LRValue {
   public:
-    void print(std::string s, const int&  x) { std::cout << s << ", value=" << x << " is a l-value\n"; }
-    void print(std::string s, const int&& x) { std::cout << s << ", value=" << x << " is a r-value\n"; }
-    void operator()(std::string s, const int&  x) { std::cout << s << ", value=" << x << " is a l-value\n"; }
-    void operator()(std::string s, const int&& x) { std::cout << s << ", value=" << x << " is a r-value\n"; }
+    void print(std::string s, const char*&  x)         { std::cout << s << ", value=" << x << " is a l-value\n"; }
+    void print(std::string s, const char*&&  x)        { std::cout << s << ", value=" << x << " is a r-value\n"; }
+    void print(std::string s, const int&  x)           { std::cout << s << ", value=" << x << " is a l-value\n"; }
+    void print(std::string s, const int&& x)           { std::cout << s << ", value=" << x << " is a r-value\n"; }
+    void operator()(std::string s, const int&  x)      { std::cout << s << ", value=" << x << " is a l-value\n"; }
+    void operator()(std::string s, const int&& x)      { std::cout << s << ", value=" << x << " is a r-value\n"; }
   };
   LRValue lrv;
   int x = 99;
   
   // print out l or r value with the class print method
-  lrv.print("x", x);
+  lrv.print("x: int x = 99;", x);
   lrv.print("9", 9);
   lrv.print("9+6", 9+6);
+
+  {
+    const int constInt = 99;
+    lrv.print("constInt", constInt);
+    lrv.print("\"xyz\"", "xyz" );
+  }
+
+  // now use function template print
+  {
+    const int constInt = 99;
+    print("function template: const int constInt = 99;", constInt);
+    print("function template: \"xyz\"", "xyz" );
+  }
 
   // do the same thing with a macro
   #define P(param) lrv.print(#param, param);
