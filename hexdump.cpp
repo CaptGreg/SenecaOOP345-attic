@@ -74,7 +74,7 @@ int main(int argc, char**argv)
   fstream fs;
 
   // write file
-  fs.open(file, ios::out | ios::trunc);
+  fs.open(file, ios::out);
   if(fs.is_open()) {
     for(auto e : sTable)
       fs.write(e.c_str(), e.size());
