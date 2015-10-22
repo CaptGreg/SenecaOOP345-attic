@@ -3,6 +3,7 @@
 //   2. choose FIFO, first in first out real-time schedule policy
 //   3. boost priority to max
 // NOTE SCHED_DEADLINE support appears to coming...
+// /usr/include/linux/sched.h:#define SCHED_DEADLINE		6
 
 #include <errno.h>         //  errno
 #include <unistd.h>        //  sleep
@@ -10,9 +11,9 @@
 #include <sys/types.h>     //  getuid, geteuid
 #include <time.h>          //  time
 #include <memory.h>        //  memset
-#include <sched.h>         //  sched_setscheduler, sched_getscheduler
+#include <linux/sched.h>         //  sched_setscheduler, sched_getscheduler, define SCHED_DEADLINE
 #include <sys/mman.h>      //  mlock
-#include <sched.h>         //  sched_setattr, sched_getattr 
+// #include <sched.h>         //  sched_setattr, sched_getattr 
 
 
 // <sched> header for sched_getattr, sched_setattr broken
@@ -21,6 +22,7 @@
 #include <unistd.h>
 #include <sys/syscall.h>   /* For SYS_xxx definitions */
 #include <iostream>
+#include <iomanip>
 using namespace std;
 
 
@@ -41,10 +43,10 @@ int main(int argc, char ** argv)
   cout << "\n";
   #define P(T,X) cout << X << " (" #X ") priority max = " << sched_get_priority_max(X) << " (" << #T << ")\n";
     P(normal,SCHED_OTHER)
-    P(normal,SCHED_BATCH)
-    P(normal,SCHED_IDLE)
     P(real-time,SCHED_FIFO)
     P(real-time,SCHED_RR)
+    P(normal,SCHED_BATCH)
+    P(normal,SCHED_IDLE)
     #ifdef SCHED_DEADLINE
       P(real-time,SCHED_DEADLINE)
     #endif
@@ -58,10 +60,10 @@ int main(int argc, char ** argv)
   cout << "STARTUP DEFAULT scheduler in use = " << s << "  (";
   switch(s) {
     case SCHED_OTHER:     cout<<"SCHED_OTHER";       break;
-    case SCHED_BATCH:     cout<<"SCHED_BATCH";       break;
-    case SCHED_IDLE:      cout<<"SCHED_IDLE";        break;
     case SCHED_FIFO:      cout<<"SCHED_FIFO";        break;
     case SCHED_RR:        cout<<"SCHED_RR";          break;
+    case SCHED_BATCH:     cout<<"SCHED_BATCH";       break;
+    case SCHED_IDLE:      cout<<"SCHED_IDLE";        break;
     #ifdef SCHED_DEADLINE
     case SCHED_DEADLINE:  cout<<"SCHED_DEADLINE";    break;
     #endif
@@ -80,11 +82,14 @@ int main(int argc, char ** argv)
   s = sched_getscheduler(pid);
   cout << "scheduler NOW in use = " << s << "  (";
   switch(s) {
-    case SCHED_OTHER:  cout<<"SCHED_OTHER"; break;
-    case SCHED_BATCH:  cout<<"SCHED_BATCH"; break;
-    case SCHED_IDLE:   cout<<"SCHED_IDLE";  break;
-    case SCHED_FIFO:   cout<<"SCHED_FIFO";  break;
-    case SCHED_RR:     cout<<"SCHED_RR";    break;
+    case SCHED_OTHER:    cout<<"SCHED_OTHER";     break;
+    case SCHED_FIFO:     cout<<"SCHED_FIFO";      break;
+    case SCHED_RR:       cout<<"SCHED_RR";        break;
+    case SCHED_BATCH:    cout<<"SCHED_BATCH";     break;
+    case SCHED_IDLE:     cout<<"SCHED_IDLE";      break;
+    #ifdef SCHED_DEADLINE
+    case SCHED_DEADLINE: cout<<"SCHED_DEADLINE";  break;
+    #endif
   }
   cout << ")  priority min,max = " << sched_get_priority_min(pid) <<","<< sched_get_priority_max(pid) << "\n";
 
