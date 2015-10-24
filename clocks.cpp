@@ -18,7 +18,6 @@ using namespace std;
 
 /**
  * CPUID assembler instruction
- * http://wiki.osdev.org/CPUID
  */
 static inline void cpuid(uint32_t op, uint32_t *eax, uint32_t *ebx,
   uint32_t *ecx, uint32_t *edx)
