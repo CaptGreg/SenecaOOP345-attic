@@ -5,16 +5,13 @@
 using namespace std;
 
 class X {
-  string name;
-  uint8_t memBlock[1024*1024];  // 1 MByte
+ string name;
+ uint8_t memBlock[1024*1024];  // 1 MByte
 public:
   X(const std::string& n) { name = n; cout << "X ctor " << name << "\n"; }
   ~X() { cout << "X dtor " << name << "\n"; }
   void hello() { cout << "hello from " << name << "\n\n"; }
 };
-
-std::unique_ptr<X> global_usp(new X("GLOBAL unique smart pointer"));
-X* global_p = new X("GLOBAL pointer");
 
 
 int main(int argc, char**argv)
@@ -33,18 +30,6 @@ int main(int argc, char**argv)
 
     std::shared_ptr<X> ssp(new X("shared smart pointer"));
     ssp->hello();
-    cout << "ssp.use_count()=" << ssp.use_count() << endl;
-
-    std::shared_ptr<X> ssp2( ssp );    // copy ctor
-    ssp2->hello();
-    cout << "ssp.use_count ()=" << ssp.use_count()  << endl;
-    cout << "ssp2.use_count()=" << ssp2.use_count() << endl;
-
-    std::shared_ptr<X> ssp3 =  ssp2;   // assignment operator
-    ssp3->hello();
-    cout << "ssp.use_count ()=" << ssp.use_count()  << endl;
-    cout << "ssp2.use_count()=" << ssp2.use_count() << endl;
-    cout << "ssp3.use_count()=" << ssp3.use_count() << endl;
 
     if(argc > 2)  {
        cout << "argc > 2, return\n";

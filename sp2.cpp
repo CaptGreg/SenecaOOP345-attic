@@ -1,6 +1,5 @@
 #include <iostream>
 #include <string>
-#include <memory>     // smart pointers
 #include <exception> 
 using namespace std;
 
@@ -43,4 +42,5 @@ int main(int argc, char**argv)
   }
 
   cout << "main terminating...\n";
+  return 0;
 }
