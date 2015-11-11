@@ -8,11 +8,14 @@ class X {
   string name;
   uint8_t memBlock[1024*1024];  // 1 MByte
 public:
-  X(const std::string& n) { name = n; cout << "X ctor " << name << " this=" << this << "\n"; }
-  ~X() { cout << "X dtor " << name << " this=" << this << "\n"; }
+  X(const std::string& n) { name = n; cout << "X ctor " << name << "\n"; }
+  ~X() { cout << "X dtor " << name << "\n"; }
+  void hello() { cout << "hello from " << name << "\n\n"; }
 };
 
-X xbeforeMain("X before main");
+std::unique_ptr<X> global_usp(new X("GLOBAL unique smart pointer"));
+X* global_p = new X("GLOBAL pointer");
+
 
 int main(int argc, char**argv)
 {
@@ -20,33 +23,28 @@ int main(int argc, char**argv)
 
   try {
     X x("x");
+    x.hello();
 
-    X* rp = new X("raw ptr");
+    X* p = new X("p");
+    p->hello();
 
     std::unique_ptr<X> usp(new X("unique smart pointer"));
-    cout << "usp.get()=" << usp.get() << "\n";
-    cout << "\n";
+    usp->hello();
 
     std::shared_ptr<X> ssp(new X("shared smart pointer"));
-    cout << "ssp.use_count()=" << ssp.use_count() << "\n";
-    cout << "ssp.get()=" << ssp.get() << "\n";
-    cout << "\n";
+    ssp->hello();
+    cout << "ssp.use_count()=" << ssp.use_count() << endl;
 
     std::shared_ptr<X> ssp2( ssp );    // copy ctor
-    cout << "ssp.use_count()=" << ssp.use_count()  << "\n";
-    cout << "ssp.get()==" << ssp.get()  << "\n";
-    cout << "ssp2.use_count()=" << ssp2.use_count() << "\n";
-    cout << "ssp2.get()=" << ssp2.get() << "\n";
-    cout << "\n";
+    ssp2->hello();
+    cout << "ssp.use_count ()=" << ssp.use_count()  << endl;
+    cout << "ssp2.use_count()=" << ssp2.use_count() << endl;
 
     std::shared_ptr<X> ssp3 =  ssp2;   // assignment operator
-    cout << "ssp.use_count()=" << ssp.use_count()  << "\n";
-    cout << "ssp.get()=" << ssp.get()  << "\n";
-    cout << "ssp2.use_count()=" << ssp2.use_count() << "\n";
-    cout << "ssp2.get()=" << ssp2.get() << "\n";
-    cout << "ssp3.use_count()=" << ssp3.use_count() << "\n";
-    cout << "ssp3.get()=" << ssp3.get() << "\n";
-    cout << "\n";
+    ssp3->hello();
+    cout << "ssp.use_count ()=" << ssp.use_count()  << endl;
+    cout << "ssp2.use_count()=" << ssp2.use_count() << endl;
+    cout << "ssp3.use_count()=" << ssp3.use_count() << endl;
 
     if(argc > 2)  {
        cout << "argc > 2, return\n";
@@ -56,12 +54,13 @@ int main(int argc, char**argv)
        cout << "argc > 1, we are throwing\n";
        throw string("we are throwing");
     }
-    delete rp;
+
+    delete p;
+  } catch (const std::exception& e){
+    cout << "It threw a std::exception: " << e.what() << "\n";
   } catch (const string& e){
     cout << "It threw a string: " << e << "\n";
   }
 
   cout << "main terminating...\n";
 }
-
-X xafterMain("X after main");

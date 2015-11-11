@@ -14,7 +14,6 @@ X xgbefore("global xgbefore before main");
 
 int main(int argc, char**argv)
 {
-  atexit( [] () { cout << "atexit function\n"; } );
 }
 
 X xgafter("global xgafter after main");

@@ -1,8 +1,19 @@
+//  PtrManager
+
 #include <iostream>
-#include <string>
-#include <memory>     // smart pointers
-#include <exception> 
 using namespace std;
+
+template <typename T>
+class PtrManager
+{
+private:
+    T*    pData;
+public:
+    PtrManager(T* pValue) : pData(pValue) { }        // constructor
+    ~PtrManager()     { delete  pData; }             // destructor
+    T& operator*   () { return *pData; }             // operator*  overload
+    T* operator->  () { return  pData; }             // operator-> overload
+};
 
 class X {
   string name;
@@ -22,11 +33,11 @@ int main(int argc, char**argv)
     X x("x");
     x.hello();
 
-    X* p = new X("p pointer");
+    X* p = new X("p");
     p->hello();
 
-    std::unique_ptr<X> usp(new X("unique smart pointer"));
-    usp->hello();
+    PtrManager<X> p2(new X("p2 destructor-delete managed pointer"));
+    p2->hello();
 
     if(argc > 2)  {
        cout << "argc > 2, return\n";
