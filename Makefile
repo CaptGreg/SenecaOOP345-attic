@@ -16,6 +16,11 @@ ifeq ($(HOSTNAME),raspberrypi)
   CXX  = g++
 endif
 
+ifeq ($(HOSTNAME),raspberrypi)
+  CC   = gcc
+  CXX  = g++
+endif
+
 ifeq ($(HOSTNAME),amd1100t)
   CC   = gcc-5
   CXX  = g++
