@@ -16,8 +16,9 @@ X xgbefore("global xgbefore before main");
 int main(int argc, char**argv)
 {
   cout << "main starting...\n";
-  // atexit( [] () { cout << "atexit function\n"; } );
+
   X x(std::string("main x"));
+
   X xx("main xx");
 
   cout << "main terminating...\n";
