@@ -6,10 +6,15 @@ CXXDFLAGS = -ggdb
 C11FLAG  = -std=c++11 
 CXX      = g++-5
 CXX5     = g++-5
-# May 15, 2015, clang++ has missing/corrupt header files: won't compile fastforward, inlcudes fail
+# May 15, 2015, clang++ has missing/corrupt header files: won't compile fastforward, includes fail
 # use g++ for fastforward
-CXX      = g++
 CXX      = clang++
+CXX      = g++
+
+ifeq ($(HOSTNAME),raspberrypi)
+  CC   = gcc
+  CXX  = g++
+endif
 
 ifeq ($(HOSTNAME),amd1100t)
   CC   = gcc-5
@@ -106,7 +111,6 @@ jsoncpp : jsoncpp.cpp Makefile
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags jsoncpp`   $< `pkg-config --libs jsoncpp` -o $@
 	#$(CXX) $(CXXFLAGS) $< -o $@ -ljsoncpp
 
-
 vectorization : vectorization.cpp Makefile
 	@echo compiler $(CXX)
 	# compiles fine on AMD1100t with Ubuntu 14.04 and g++ 4.9/5.0
@@ -125,3 +129,35 @@ vectorization : vectorization.cpp Makefile
 # clang -cc1 -fdump-record-layouts myfile.i
 # (article uses clang -E [your -I flags] myfile.cpp > myfile_pp.cpp 
 #  This will never work since the shell truncates myfile.cpp before invoking the compiler)
+
+mandelbrot-345a : mandelbrot-345a.cpp
+	g++ -std=c++11 -Ofast mandelbrot-345a.cpp -o mandelbrot-345a -ljpeg -ltiff -lpng -pthread
+
+mandelbrot-345b : mandelbrot-345b.cpp
+	g++ -std=c++11 -Ofast mandelbrot-345b.cpp tp.cpp -o mandelbrot-345b -ljpeg -ltiff -lpng -pthread
+
+mandelbrot-345aphase2 : mandelbrot-345aphase2.cpp
+	g++ -std=c++11 -Ofast mandelbrot-345aphase2.cpp -o mandelbrot-345aphase2 -ljpeg -ltiff -lpng -pthread
+
+mandelbrot-345bphase2 : mandelbrot-345bphase2.cpp
+	g++ -std=c++11 -Ofast mandelbrot-345bphase2.cpp -o mandelbrot-345bphase2 -ljpeg -ltiff -lpng -pthread
+
+mandelbrot-345aphase3 : mandelbrot-345aphase3.cpp tp345a.cpp tp345a.h
+	g++ -std=c++11 -Ofast mandelbrot-345aphase3.cpp tp345a.cpp -o mandelbrot-345aphase3 -lSDL -ljpeg -ltiff -lpng -pthread
+
+mandelbrot-345bphase3 : mandelbrot-345bphase3.cpp tp345b.cpp tp345b.h
+	g++ -std=c++11 -Ofast mandelbrot-345bphase3.cpp tp345b.cpp -o mandelbrot-345bphase3 -lSDL -ljpeg -ltiff -lpng -pthread
+
+mandelbrot-candidate: mandelbrot-candidate.cpp tp.cpp tp.h
+	g++ -std=c++11 -Ofast mandelbrot-candidate.cpp tp.cpp -o mandelbrot-candidate -ljpeg -ltiff -lpng -pthread
+
+mandelbrot-candidate-sdl: mandelbrot-candidate-sdl.cpp tp.cpp tp.h
+	g++ -std=c++11 -Ofast mandelbrot-candidate-sdl.cpp tp.cpp -o mandelbrot-candidate-sdl -lSDL -ljpeg -ltiff -lpng -pthread 
+
+tp345a: tp345a.cpp tp.h
+	g++ -DTEST -Wall -std=c++11 -Ofast tp345a.cpp -o tp345a -pthread 
+tp345b: tp345b.cpp tp.h
+	g++ -DTEST -Wall -std=c++11 -Ofast tp345b.cpp -o tp345b -pthread 
+tp: tp.cpp tp.h
+	g++ -DTEST -Wall -std=c++11 -Ofast tp.cpp -o tp -pthread 
+	# clang++ -DTEST -Wall -std=c++11 -Ofast tp.cpp -o tp -pthread 
