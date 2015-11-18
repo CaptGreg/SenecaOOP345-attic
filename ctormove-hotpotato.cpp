@@ -4,7 +4,7 @@
 using namespace std;
 
 class X {
-  const static size_t SIZE = 375000000; // 375 million doubles * sizeof(double) = 3 GByte
+  const static size_t SIZE = 375 * 1000 * 1000; // 375 million doubles * sizeof(double) = 3 GByte
   double *trouble;
 public:
  X()                      { trouble = new double[SIZE]; print("ctor"); }  // ctor
