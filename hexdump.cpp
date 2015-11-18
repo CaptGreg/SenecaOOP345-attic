@@ -8,13 +8,11 @@
 
 #include <iostream>
 #include <iomanip>
-#include <cctype>   // isprint or auto isprint=[] (char c) ->bool { return c<' '; /* or c<32 */ };
+#include <cctype>  // isprint
 
 // using namespace std;
 
 void hexdump(std::ostream& os, char *b, long count)
-// http://stackoverflow.com/questions/16804251/how-would-i-create-a-hex-dump-utility-in-c
-// GB hacked from above. It dumps a file.  We dump a memory block.
 {
     std::ios_base::fmtflags fmtfl =  os.flags(); // save <iomanip> state
 
