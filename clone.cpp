@@ -5,6 +5,7 @@
 #include <iostream>
 #include <vector> // works with vector, a contiguous memory table
 #include <list>   // works with linked lists, not a contiguous memory table
+#include <memory>
 
 using namespace std;
 
@@ -37,7 +38,8 @@ int main(int argc, char**argv)
   // X* xClone =  x.clone(); 
   // error: cannot initialize a variable of type 'X *' with an rvalue of type 'B *'
   // fix error with a cast
-  X* xClone = dynamic_cast<X*> ( x.clone() );  // clone calls new, must delete.
+  // X* xClone = dynamic_cast<X*> ( x.clone() );  // clone calls new, must delete.
+  unique_ptr<X> xClone(dynamic_cast<X*> ( x.clone() ) );
 
   cout << "xClone="; xClone->print();
 
@@ -51,5 +53,5 @@ int main(int argc, char**argv)
 
   // yes, x printed 123.
 
-  delete xClone;  // clone called new, must delete
+  // delete xClone;  // clone called new, must delete
 }
