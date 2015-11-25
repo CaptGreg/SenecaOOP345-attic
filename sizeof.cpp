@@ -24,7 +24,7 @@
 // #define __FMA__     // http://en.wikipedia.org/wiki/FMA_instruction_set
 // #define __F16C__    // http://en.wikipedia.org/wiki/Bit_Manipulation_Instruction_Sets
 // #define __RTM__     // 
-#include <immintrin.h>
+// #include <immintrin.h>
 
 using namespace std;
 
@@ -52,8 +52,8 @@ int main(int argc, char**argv)
   // M(int128_t)  // 2014 not yet, maybe later...
 
   
-  M( __m64 )      // MME
-  M( __m128 )     // SSE
-  M( __m256 )     // AVX
+  // M( __m64 )      // MME
+  // M( __m128 )     // SSE
+  // M( __m256 )     // AVX
   // M( __m512 )  // AVX-512
 }
