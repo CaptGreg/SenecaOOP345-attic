@@ -2,19 +2,60 @@
 #include <iostream>
 #include <fstream> 
 #include <iosfwd>   // wofstream
+#include <iomanip>
 #include <cstdlib>  // rand
 using namespace std;
 
 const wchar_t* chineseWCharDigits = L"零一二三四五六七八九"; // All 10 Chinese     digits 0 through 9
 const wchar_t* koreanWCharDigits  = L"공일이삼사오육칠팔구"; // All 10 Sino-Korean digits 0 through 9
-const wchar_t* arabicWCharDigits  = L"ثلاثاثنانواحدصفرستةخمسةأربعةتسعةثمانيةسبعة"; // All 10 Sino-Korean digits 0 through 9
+const wchar_t* arabicWCharDigits  = L"ثلاثاثنانواحدصفرستةخمسةأربعةتسعةثمانيةسبعة"; 
 // Chinese: google translate
 // Korean http://www.omniglot.com/language/numbers/korean.htm
 // Arabic: google translate
 
 const std::wstring chineseWString = chineseWCharDigits;
 const std::wstring koreanWString  = koreanWCharDigits;
-const std::wstring arabicWString  = arabicWCharDigits;
+const std::wstring arabicWStringArray[] = // Arabic: google translate
+  {L"ثلاث", L"اثن", L"انو", L"احدصف", L"رست", L"ةخمسة", L"أربعة", L"تسعةثم", L"اني", L"ةسبعة"}; 
+//   0       1       2       3         4       5         6         7          8       9
+
+const std::wstring arabicWStringArray2[] =
+{
+  /* 0 */     L"صفر",     /* Sifr       */
+  /* 1 */     L"واحد",    /* waa7id     */
+  /* 2 */     L"اثنان",   /* ithnaan    */
+  /* 3 */     L"ثلاثة",    /* thalaatha  */
+  /* 4 */     L"أربعة",   /* arba3a     */
+  /* 5 */     L"خمسة",    /* khamsa     */
+  /* 6 */     L"ستة",     /* sitta      */
+  /* 7 */     L"سبعة",    /* sab3a      */
+  /* 8 */     L"ثمانية",  /* thamaaneya */
+  /* 9 */     L"تسعة"     /* tis3a      */
+};
+
+// http://blogs.transparent.com/arabic/arabic-numbers-1-20/
+// 0 صفر Sifr 
+// 1 واحد waa7id 
+// 2 اثنان ithnaan 
+// 3 ثلاثة thalaatha 
+// 4 أربعة arba3a 
+// 5 خمسة khamsa 
+// 6 ستة sitta 
+// 7 سبعة sab3a 
+// 8 ثمانية thamaaneya 
+// 9 تسعة tis3a 
+// 10 عشرة 3ashara 
+// 11 أحد عشر a7ada 3ashar
+// 12 اثنا عشر ithna 3ashar 
+// 13 ثلاثة عشر thalaathata 3ashar 
+// 14 أربعة عشر arba3ata 3ashar 
+// 15 خمسة عشر khamsata 3ashar 
+// 16 ستة عشر sittata 3ashar 
+// 17 سبعة عشر sab3ata 3ashar 
+// 18 ثمانية عشر thamaneyata 3ashar 
+// 19 تسعة عشر tis3ata 3ashar 
+// 20 عشرون 3ishroon
+ 
 
 void WideCharSetup()
 {
@@ -44,9 +85,11 @@ void WideCharSetup()
 
   for(int i = 0; i <= 9; i++) 
     wcout << "Ascii digit " << i 
-          << " is Chinese character"   << chineseWCharDigits[i] 
-          << ", Sino-Korean character" << koreanWCharDigits[i] 
-          // << ", Arabic character"      << arabicWCharDigits[i] 
+          << " is Chinese "   << chineseWCharDigits  [i] 
+          << ", Sino-Korean " << koreanWCharDigits   [i] 
+          << ", Arabic "      << setw(7) << arabicWStringArray  [i] 
+          << ", Arabic2 "     << setw(7) << arabicWStringArray2 [i] 
+          << ", w=" << wcslen(arabicWStringArray2 [i].c_str())
           << "\n";
 
   // works!
