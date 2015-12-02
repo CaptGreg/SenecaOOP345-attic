@@ -23,7 +23,7 @@ int main()
   std::cout << x << "\n"; // everyone agrees on this
 
 #ifdef LAMBDA_EXPERIMENT
-  // What?  Adding the following lambda code alters what happen above
+  // What?  Adding the following lambda code alters what happens above
   auto pre  = [](int& arg) { return ++arg; };
   auto post = [](int& arg) { return arg++; };
 
