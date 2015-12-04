@@ -15,7 +15,7 @@ int main()
     }
   }
   loopDone:
-  cout << i << "," << j << "," << k << "\n";
+  cout << i << "," << j << "," << k << " goto\n";
 
 
   // nested loop break method 2: c-code flag with side effects
@@ -28,10 +28,25 @@ int main()
       }
     }
   }
-  cout << i << "," << j << "," << k << " <--- NOTE i,j,k values are NOT 3,3,3! (side effects, side effects)\n";
+  cout << i << "," << j << "," << k << " flag with i,j,k side effects\n";
+
+ // nested loop break method 3: c-code flag with side effect compensation
+  bContinue = true;
+  for(i = 0; bContinue && i < N; i++) {
+    for(j = 0; bContinue && j < N; j++) {
+      for(k = 0; bContinue && k < N; k++) {
+         if(i == j && j == k && k == 3) {
+           bContinue = false;
+           i--, j--, k--; // compensate for bottom of loop i,j,k ++ side effect
+         }
+      }
+    }
+  }
+  cout << i << "," << j << "," << k << " flag with side effect compensation\n";
 
 
-  // nested loop break method 3: flag without side effects
+
+  // nested loop break method 4: flag without side effects
   bool bKeepGoing = true;
   for(i = 0; i < N; i++) {
     for(j = 0; j < N; j++) {
@@ -45,9 +60,9 @@ int main()
     }
     if(!bKeepGoing) break;     // need break to prevent i++ side effect
   }
-  cout << i << "," << j << "," << k << " <--- side effects fixed!\n";
+  cout << i << "," << j << "," << k << " flag+break\n";
 
-  // nested loop break method 4: c++ throw
+  // nested loop break method 5: c++ throw
   try {
     for(i = 0; i < N; i++) {
       for(j = 0; j < N; j++) {
@@ -58,10 +73,10 @@ int main()
       }
     }
   } catch(...) {}
-  cout << i << "," << j << "," << k << "\n";
+  cout << i << "," << j << "," << k << " try-throw-catch\n";
 
 
-  // nested loop break method 5: c++11 lambda return
+  // nested loop break method 6: c++11 anonymous function return
   [&] {
    for(i = 0; i < N; i++) {
       for(j = 0; j < N; j++) {
@@ -72,6 +87,6 @@ int main()
       }
     }
   } ();
-  cout << i << "," << j << "," << k << "\n";
+  cout << i << "," << j << "," << k << " C++11 anonymous function return\n";
 
 }
