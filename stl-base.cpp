@@ -1,4 +1,4 @@
-#include <vector>
+#include <vector>  // any of VECTOR, DEQUE, LIST, ... also work
 #include <string>
 #include <iostream>
 using namespace std;
@@ -18,7 +18,7 @@ int main ()
   X(X&& rhs)       { cout << "MOVE ctor " << n << " rhs=" << rhs.n << "\n"; n = move( rhs.n); rhs.n.clear();}
 
   X&  operator= (const X& rhs)  { cout << "copy = op rhs=" << rhs.n << "\n"; if(this!=&rhs) n=rhs.n; return *this; }
-  X&& operator= (const X&& rhs) { cout << "MOVE = op rhs=" << rhs.n << "\n"; if(this!=&rhs) n=rhs.n; return move(*this); }
+  X&& operator= (X&& rhs) { cout << "MOVE = op rhs=" << rhs.n << "\n"; if(this!=&rhs) {n=rhs.n; rhs.n.clear();} return move(*this); }
   };
 
   class Y {
