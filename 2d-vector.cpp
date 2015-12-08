@@ -1,6 +1,6 @@
 #include <vector>
 #include <iostream>
-#include <memory>   // unique_ptr, ref
+#include <memory>   // unique_ptr
 using namespace std;
 
 const int WIDTH  = 2*1920;    // XHD (4K) 3840x2160 Video resolution, true 4K is 4096x2160
@@ -48,11 +48,11 @@ int main(int argc, char*argv[])
       *(table.get() + y * WIDTH + x) = 1e6 * y + x;
   } // smart pointer out of scope (automatically deleted)
 
-  { // map linear C++11 smart point array to 2d array 
-  std::unique_ptr< float[] > table( new float[WIDTH*HEIGHT] ); // [] setup for C++11 unique_ptr::operator[]
+  { // map linear [] smart point array to 2d array 
+  std::unique_ptr< float[] > table( new float[WIDTH*HEIGHT] ); // setup for unique_ptr::operator[]
   for(int y = 0; y < HEIGHT ; y++ )
     for(int x = 0; x < WIDTH; x++)
-      table[y * WIDTH + x] = 1e6 * y + x;
+      table[y * WIDTH + x] = 1e6 * y + x;  // operator[] same as get()[i]
   } // smart pointer out of scope (automatically deleted)
 
   { // 2d-array row table: (HEIGHT+1) alloc/dealloc calls
