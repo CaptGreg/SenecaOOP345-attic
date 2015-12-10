@@ -103,7 +103,7 @@ gl3ctx : gl3ctx.cpp
 	./gl3ctx
 
 glVAO_VBO : glVAO_VBO.cpp
-	$(CXX) $< -o $@ -lGL -lglut -lGLEW 
+	$(CXX) $(CXXFLAGS)  $< -o $@ -lGL -lglut -lGLEW 
 	./$@
 
 pthread : pthread.c
