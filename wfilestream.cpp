@@ -1,5 +1,6 @@
 #include <locale>
 #include <iostream>
+#include <iomanip>
 #include <fstream> 
 #include <iosfwd>   // wofstream
 #include <cstdlib>  // rand
@@ -7,16 +8,36 @@ using namespace std;
 
 const wchar_t* chineseWCharDigits = L"零一二三四五六七八九"; // All 10 Chinese     digits 0 through 9
 const wchar_t* koreanWCharDigits  = L"공일이삼사오육칠팔구"; // All 10 Sino-Korean digits 0 through 9
-const wchar_t* arabicWCharDigits  = L"ثلاثاثنانواحدصفرستةخمسةأربعةتسعةثمانيةسبعة"; // All 10 Sino-Korean digits 0 through 9
+// const wchar_t* arabicWCharDigits  = L"ثلاثاثنانواحدصفرستةخمسةأربعةتسعةثمانيةسبعة"; // All 10 Arabic digits 0 through 9
 // Chinese: google translate
 // Korean http://www.omniglot.com/language/numbers/korean.htm
 // Arabic: google translate
+
 // Correct Arabic numbers: [from right to left from 0 to 10 comma separated] 
 // صفر، واحد، إثنان، ثلاثة، اربعة، خمسة، ستة، سبعة، ثمانية، تسعة، عشرة 
+const wchar_t *arabicWCharDigits[] = { 
+  L"صفر",  L"واحد", L"إثنان", L"ثلاثة",   L"اربعة", 
+  L"خمسة", L"ستة",  L"سبعة",  L"ثمانية", L"تسعة", 
+  L"عشرة"
+};
+
 
 const std::wstring chineseWString = chineseWCharDigits;
 const std::wstring koreanWString  = koreanWCharDigits;
-const std::wstring arabicWString  = arabicWCharDigits;
+const std::wstring arabicWString[11] // 0-10 = 11 numbers
+ = { 
+  std::wstring(L"صفر"),    /*  0 */
+  std::wstring(L"واحد"),   /*  1 */
+  std::wstring(L"إثنان"),  /*  2 */
+  std::wstring(L"ثلاثة"),   /*  3 */
+  std::wstring(L"اربعة"),  /*  4 */
+  std::wstring(L"خمسة"),   /*  5 */
+  std::wstring(L"ستة"),    /*  6 */
+  std::wstring(L"سبعة"),   /*  7 */
+  std::wstring(L"ثمانية"), /*  8 */
+  std::wstring(L"تسعة"),   /*  9 */
+  std::wstring(L"عشرة")    /* 10 */
+};
 
 void WideCharSetup()
 {
@@ -33,7 +54,7 @@ void WideCharSetup()
   #define P(L,D) wcout << #L " wchar_t characters for 0 to 9: " << D << " ==> " << wcslen(D) << " wchar_t\n";
   P(Chinese, chineseWCharDigits)
   P(Korean, koreanWCharDigits)
-  P(Arabic, arabicWCharDigits)
+//P(Arabic, arabicWCharDigits)
 
   // wcout << "Chinese wchar_t characters for 0 to 9: " << chineseWCharDigits << endl;
   // wcout << "Korean  wchar_t characters for 0 to 9: " << koreanWCharDigits << endl;
@@ -44,11 +65,12 @@ void WideCharSetup()
   wcout << "Korean  std::wstring characters for 0 to 9: " << koreanWString << endl;
   wcout << "\n";
 
+
   for(int i = 0; i <= 9; i++) 
     wcout << "Ascii digit " << i 
-          << " is Chinese character"   << chineseWCharDigits[i] 
-          << ", Sino-Korean character" << koreanWCharDigits[i] 
-          // << ", Arabic character"      << arabicWCharDigits[i] 
+          << " is Chinese "   << chineseWCharDigits[i] 
+          << ", Sino-Korean " << koreanWCharDigits[i] 
+          << ", Arabic " << std::setw(8) << arabicWCharDigits[i] 
           << "\n";
 
   // works!
