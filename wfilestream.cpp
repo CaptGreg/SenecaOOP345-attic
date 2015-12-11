@@ -11,6 +11,8 @@ const wchar_t* arabicWCharDigits  = L"ثلاثاثنانواحدصفرستةخم
 // Chinese: google translate
 // Korean http://www.omniglot.com/language/numbers/korean.htm
 // Arabic: google translate
+// Correct Arabic numbers: [from right to left from 0 to 10 comma separated] 
+// صفر، واحد، إثنان، ثلاثة، اربعة، خمسة، ستة، سبعة، ثمانية، تسعة، عشرة 
 
 const std::wstring chineseWString = chineseWCharDigits;
 const std::wstring koreanWString  = koreanWCharDigits;
