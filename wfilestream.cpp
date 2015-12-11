@@ -8,13 +8,12 @@ using namespace std;
 
 const wchar_t* chineseWCharDigits = L"零一二三四五六七八九"; // All 10 Chinese     digits 0 through 9
 const wchar_t* koreanWCharDigits  = L"공일이삼사오육칠팔구"; // All 10 Sino-Korean digits 0 through 9
-// const wchar_t* arabicWCharDigits  = L"ثلاثاثنانواحدصفرستةخمسةأربعةتسعةثمانيةسبعة"; // All 10 Arabic digits 0 through 9
-// Chinese: google translate
-// Korean http://www.omniglot.com/language/numbers/korean.htm
-// Arabic: google translate
-
 // Correct Arabic numbers: [from right to left from 0 to 10 comma separated] 
 // صفر، واحد، إثنان، ثلاثة، اربعة، خمسة، ستة، سبعة، ثمانية، تسعة، عشرة 
+// Chinese: google translate
+// Korean http://www.omniglot.com/language/numbers/korean.htm
+// Sarout fixed the Arabic number
+
 const wchar_t *arabicWCharDigits[] = { 
   L"صفر",  L"واحد", L"إثنان", L"ثلاثة",   L"اربعة", 
   L"خمسة", L"ستة",  L"سبعة",  L"ثمانية", L"تسعة", 
