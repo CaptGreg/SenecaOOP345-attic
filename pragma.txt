@@ -1,0 +1,2 @@
+#pragma message "GB SYNTAX ERROR fixed " __FILE__ "..."
+

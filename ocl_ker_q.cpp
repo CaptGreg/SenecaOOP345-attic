@@ -111,9 +111,10 @@ int main(int argc, char* argv[])
 
     // print the first 10 entries
     std::cout<<vecC[0]; for(int i = 1 ; i < 10 ; i++ ) std::cout<<", "<<vecC[i]; std::cout<<"\n";
-    cl::clReleaseMemObject(a);
-    cl::clReleaseMemObject(b);
-    cl::clReleaseMemObject(c);
+    // cl::clReleaseMemObject :- deprecated in 1.2 ??
+    // cl::clReleaseMemObject(a);
+    // cl::clReleaseMemObject(b);
+    // cl::clReleaseMemObject(c);
   } catch (const cl::Error& e) {
       std::cerr << "threw cl::Error: " << e.what() << "(" << e.err() << ")\n";
   }

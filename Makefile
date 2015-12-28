@@ -1,6 +1,10 @@
 # usage: make filename
 
-CFLAGS = -std=c++11 -Wall -mmmx -msse
+# -fmax-errors=N give up after N errors. Present in GCC 4.6 and later.
+# -Wfatal-errors give up after one error. Present in GCC 4.0 and later.
+
+CFLAGS = -Wall -mmmx -msse -fmax-errors=1 -Wfatal-errors
+CXXFLAGS = -std=c++11 -Wall -mmmx -msse -fmax-errors=1 -Wfatal-errors
 CXXDFLAGS = -ggdb
 
 C11FLAG  = -std=c++11 
@@ -44,16 +48,18 @@ ifeq ($(HOSTNAME),matrix)
   C11FLAG = -std=c++11 
 endif
 
-OPTCFLAGS = -fopenmp
+OPTCFLAGS = -fopenmp -fmax-errors=1 -Wfatal-errors 
 CXXFLAGS = -Wall $(C11FLAG) $(CXXDFLAGS) $(OPTCFLAGS)
 
 # NOTE AMDAPP Beta link paths are different from standard AMDAPP
 AMDAPP      = AMDAPPSDK-3.0-0-Beta
+AMDAPP      = AMDAPP
 CXXFLAGSOCL = -I/opt/$(AMDAPP)/include
 LFLAGSOCL   = -L/opt/$(AMDAPP)/lib/x86_64 -lamdocl64
 
 # NOTE April 19, 2015 These OpenCL flags compile
 CXXFLAGSOCL = 
+CXXFLAGSOCL = -I/opt/$(AMDAPP)/include
 LFLAGSOCL   = -lOpenCL
 
 # AMDAPP v 2.x at least linked and ran
@@ -91,10 +97,16 @@ moments : moments.cpp Makefile
 ocl_c++11: ocl_c++11.cpp Makefile
 	$(CXX) $(CXXFLAGS)  $(CXXFLAGSOCL) $< $(LFLAGSOCL) -o $@
 
-ocldemo: ocldemo.cpp Makefile
+ocl_header: ocl_header.cpp Makefile
+	$(CXX) $(CXXFLAGS)  $(CXXFLAGSOCL) $< $(LFLAGSOCL) -o $@
+
+ocl_ker_q: ocl_ker_q.cpp Makefile
 	$(CXX) $(CXXFLAGS)  $(CXXFLAGSOCL) $< $(LFLAGSOCL) -o $@
 
 ocldemo2: ocldemo2.cpp Makefile
+	$(CXX) $(CXXFLAGS)  $(CXXFLAGSOCL) $< $(LFLAGSOCL) -o $@
+
+oclvecadd: oclvecadd.cpp Makefile
 	$(CXX) $(CXXFLAGS)  $(CXXFLAGSOCL) $< $(LFLAGSOCL) -o $@
 
 
@@ -105,6 +117,23 @@ gl3ctx : gl3ctx.cpp
 glVAO_VBO : glVAO_VBO.cpp
 	$(CXX) $(CXXFLAGS)  $< -o $@ -lGL -lglut -lGLEW 
 	./$@
+
+# http://learnopengl.com/code_viewer.php?code=getting-started/shaders-interpolated
+glfwShaderInterp : glfwShaderInterp.cpp
+	$(CXX) $(CXXFLAGS)  $< -o $@ -lGL -lGLEW -lglfw
+	./$@
+
+#  http://learnopengl.com/#!Getting-started/Shaders
+glfwShaderUniform : glfwShaderUniform.cpp
+	$(CXX) $(CXXFLAGS)  $< -o $@ -lGL -lGLEW -lglfw
+	./$@
+
+#### http://learnopengl.com/code_viewer.php?code=advanced/geometry_shader_explode_shaders
+### more complicated: needs "Shader.h" "Camera.h" "Model.h" files, plus the model
+### TODO: make code standalone
+## glfwShaderGeometry : glfwShaderGeometry.cpp
+##	$(CXX) $(CXXFLAGS)  $< -o $@ -lGL -lGLEW -lglfw
+##	./$@
 
 pthread : pthread.c
 	clang -Wall -pthread pthread.c -o pthread
