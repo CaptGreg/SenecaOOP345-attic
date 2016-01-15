@@ -1,5 +1,7 @@
+#include <setjmp.h>
 #include <iostream>
 using namespace std;
+
 
 int main()
 {
@@ -62,7 +64,21 @@ int main()
   }
   cout << i << "," << j << "," << k << " flag+break\n";
 
-  // nested loop break method 5: c++ throw
+  // nested loop break method 5: setjmp-longjmp
+  jmp_buf jb;
+  if(setjmp(jb) == 0) {
+    for(i = 0; i < N; i++) {
+      for(j = 0; j < N; j++) {
+        for(k = 0; k < N; k++) {
+           if(i == j && j == k && k == 3)
+             longjmp(jb, 1);
+        }
+      }
+    }
+  }
+  cout << i << "," << j << "," << k << " setjmp-longjmp\n";
+
+  // nested loop break method 6: c++ throw
   try {
     for(i = 0; i < N; i++) {
       for(j = 0; j < N; j++) {
@@ -76,7 +92,7 @@ int main()
   cout << i << "," << j << "," << k << " try-throw-catch\n";
 
 
-  // nested loop break method 6: c++11 anonymous function return
+  // nested loop break method 7: c++11 anonymous function return
   [&] {
    for(i = 0; i < N; i++) {
       for(j = 0; j < N; j++) {
