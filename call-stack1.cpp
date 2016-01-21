@@ -1,3 +1,5 @@
+// g++ -Wall -std=c++11  -ggdb -fopenmp call-stack1.cpp -o call-stack1
+
 // For windows callstack code, try http://www.codeproject.com/Articles/11132/Walking-the-callstack
 
 // http://stackoverflow.com/questions/77005/how-to-generate-a-stacktrace-when-my-gcc-c-app-crashes
@@ -40,6 +42,7 @@ RSS 2.0 Weblog Feed
 #define __USE_GNU
 #endif
 
+#include <cxxabi.h>  // cxx name demangling code
 #include <iostream>
 #include <execinfo.h>
 #include <signal.h>
@@ -145,8 +148,7 @@ public:
     void crash() { char * p = NULL; *p = 0; }
 };
 
-#ifdef SHOW_ERRORS
-void crit_err_hdlr2(int sig_num, siginfo_t * info, void * ucontext)
+void crit_err_hdlr2(int sig_num, siginfo_t * info, void * ucontext) // GB works
 {
     sig_ucontext_t * uc = (sig_ucontext_t *)ucontext;
 
@@ -219,13 +221,13 @@ void crit_err_hdlr2(int sig_num, siginfo_t * info, void * ucontext)
 
     exit(EXIT_FAILURE);
 }
-#endif
 
 int main(int argc, char ** argv)
 {
  struct sigaction sigact;
 
- sigact.sa_sigaction = crit_err_hdlr1;
+ sigact.sa_sigaction = crit_err_hdlr1;  // GB works
+ sigact.sa_sigaction = crit_err_hdlr2;  // GB works
  sigact.sa_flags = SA_RESTART | SA_SIGINFO;
 
  if (sigaction(SIGSEGV, &sigact, (struct sigaction *)NULL) != 0)
