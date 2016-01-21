@@ -1,3 +1,5 @@
+// g++ -Wall -std=c++11  -ggdb -fopenmp call-stack3.cpp -o call-stack3
+
 // For windows callstack code, try http://www.codeproject.com/Articles/11132/Walking-the-callstack
 
 // https://panthema.net/2008/0901-stacktrace-demangled/backtrace.3.html
