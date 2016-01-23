@@ -49,7 +49,7 @@ void wrapper(T&& arg)
     foo(std::forward<T>(arg)); // Forward a single argument.
 }
 
-int main()
+int main1()
 {   
     double trouble;
     // TYPEID(trouble); // not working ???
@@ -100,3 +100,46 @@ int main()
 
 }
 
+
+// http://www.cplusplus.com/reference/utility/forward/
+// forward example
+#include <utility>      // std::forward
+#include <iostream>     // std::cout
+
+// function with lvalue and rvalue reference overloads:
+void overloaded (const int& x) {std::cout << "[lvalue]";}
+void overloaded (int&& x) {std::cout << "[rvalue]";}
+
+// function template taking rvalue reference to deduced type:
+template <class T> void fn (T&& x) {
+  overloaded (x);                   // always an lvalue
+  overloaded (std::forward<T>(x));  // rvalue if argument is rvalue
+}
+
+int main2 () 
+{
+  int a;
+
+  std::cout << "calling fn with lvalue: ";
+  fn (a);
+  std::cout << '\n';
+
+  std::cout << "calling fn with rvalue: ";
+  fn (0);
+  std::cout << '\n';
+
+  std::cout << "calling fn with std::move(lvalue): ";
+  fn (std::move(a));
+  std::cout << '\n';
+
+  return 0;
+}
+
+int main () 
+{
+  
+  std::cout << "+++++++++++++++++ main1\n";
+  main1 ();
+  std::cout << "+++++++++++++++++ main2\n";
+  main2 ();
+}
