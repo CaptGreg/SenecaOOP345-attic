@@ -7,8 +7,8 @@
 
 #include  <iostream>
 using namespace std;
-#include  <signal.h>
-#include  <setjmp.h>
+#include  <csignal>
+#include  <csetjmp>
 #include  <unistd.h>   // sleep, exit
 
 jmp_buf  JumpBuffer;                    // a jump buffer            //
