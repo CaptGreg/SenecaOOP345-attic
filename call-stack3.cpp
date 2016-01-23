@@ -53,8 +53,8 @@ EXAMPLE
 The program below demonstrates the use of backtrace() and backtrace_symbols(). The following shell session shows what we might see when running the program:
 */
 
-#include <stdio.h>
-#include <stdlib.h>
+#include <cstdio>
+#include <cstdlib>
 #include <unistd.h>
 
 void
