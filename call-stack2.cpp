@@ -57,8 +57,8 @@ RSS 2.0 Weblog Feed
 #ifndef _STACKTRACE_H_
 #define _STACKTRACE_H_
 
-#include <stdio.h>
-#include <stdlib.h>
+#include <cstdio>
+#include <cstdlib>
 #include <execinfo.h>
 #include <cxxabi.h>
 

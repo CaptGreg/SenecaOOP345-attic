@@ -45,10 +45,10 @@ RSS 2.0 Weblog Feed
 #include <cxxabi.h>  // cxx name demangling code
 #include <iostream>
 #include <execinfo.h>
-#include <signal.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <csignal>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 #include <ucontext.h>
 #include <unistd.h>
 
