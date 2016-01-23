@@ -1,4 +1,4 @@
-// Lists - Doubly linked list, page 132 of text
+// Lists - Doubly linked list, page 132 of OOP344 text (C++ course prior to C++11 course)
 // GB - syntactical sugar changes
 // GB - added count
 // GB - added goPrevious
