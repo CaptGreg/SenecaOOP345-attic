@@ -24,7 +24,7 @@ int main()
     cout << "Your items:\n";
     for (iter = inventory.begin(); iter != inventory.end(); ++iter)
     {
-        cout << *iter << endl;
+        cout << *iter << "\n";
     }
 
     cout << "\nYou trade your sword for a battle axe.";
@@ -33,7 +33,7 @@ int main()
     cout << "\nYour items:\n";
     for (iter = inventory.begin(); iter != inventory.end(); ++iter)
     {
-        cout << *iter << endl;
+        cout << *iter << "\n";
     }
 
     cout << "\nThe item name '" << *myIterator << "' has ";
@@ -48,7 +48,7 @@ int main()
     cout << "\nYour items:\n";
     for (iter = inventory.begin(); iter != inventory.end(); ++iter)
     {
-        cout << *iter << endl;
+        cout << *iter << "\n";
     }
 
     cout << "\nYour armor is destroyed in a fierce battle.";
@@ -56,22 +56,22 @@ int main()
     cout << "\nYour items:\n";
     for (iter = inventory.begin(); iter != inventory.end(); ++iter)
     {
-        cout << *iter << endl;
+        cout << *iter << "\n";
     }
     cout << "for (vector<string>::iterator it = inventory.begin(); it != inventory.end(); ++it)\n";
     for (vector<string>::iterator it = inventory.begin(); it != inventory.end(); ++it)
     {
-        cout << *it << endl;
+        cout << *it << "\n";
     }
     cout << "for (auto it = inventory.begin(); it != inventory.end(); ++it)\n";
     for (auto it = inventory.begin(); it != inventory.end(); ++it)
     {
-        cout << *it << endl;
+        cout << *it << "\n";
     }
     cout << "for (auto element : inventory)\n";
     for (auto element : inventory)
     {
-        cout << element << endl;
+        cout << element << "\n";
     }
 
     return 0;

@@ -24,15 +24,15 @@ int main(int argc, char ** argv, char ** env)
         target >>= bit;
         cout <<"right shift unsigned 0x80 " << bit << " bits right =" ;
 	printBits(target); 
-	cout << " target=" << (unsigned int)(target & 0xff) <<  endl;
+	cout << " target=" << (unsigned int)(target & 0xff) <<  "\n";
     }
-    cout << endl;
+    cout << "\n";
 
     for(int bit = 0; bit < 8; bit++ ) {
         char  target  = 0x80;
         target >>= bit;
         cout <<"right shift signed 0x80 " << bit << " bits right =" ;
 	printBits(target); 
-	cout << " target=" << (int)(target) <<  endl;
+	cout << " target=" << (int)(target) <<  "\n";
     }
 }

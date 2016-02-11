@@ -14,7 +14,7 @@ using namespace std;
 typedef double type;
 
 void f( type arg ) {
-  std::cout << arg << std::endl;
+  std::cout << arg << "\n";
 }
 
 type g() {

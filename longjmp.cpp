@@ -14,7 +14,7 @@ int main(int argc, char**argv)
 
   val=setjmp(env);
 
-  cout << "val is " << val << endl;
+  cout << "val is " << val << "\n";
 
   if (!val) longjmp(env, -100);
 

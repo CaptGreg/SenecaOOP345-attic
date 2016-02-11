@@ -1,6 +1,12 @@
 // GB https://stdcxx.apache.org/doc/stdlibug/11-3.html
 // GB code from https://github.com/pathscale/stdcxx
 
+#include <vector>
+#include <queue>
+#include <iostream>
+#include <algorithm>       // random_shuffle used by irand
+#include <cstdlib>         // rand
+
 /**************************************************************************
  *
  * icecream.cpp - Priority queue example program.
@@ -28,11 +34,6 @@
  * Copyright 1994-2006 Rogue Wave Software.
  * 
  **************************************************************************/
-
-#include <algorithm>   // for random_shuffle()
-#include <iostream>    // for cout
-#include <queue>       // for queue
-#include <vector>      // for vector
 
 // #include <examples.h> // GB - not needed.  work-arounds for questionable compilers
 

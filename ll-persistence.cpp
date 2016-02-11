@@ -84,7 +84,7 @@ public:
 
         obj.seekg(0, ios::end);
         streampos n = obj.tellg();
-        // cout << "push: = " << n << endl;
+        // cout << "push: = " << n << "\n";
 
         obj.write((char*)&head, sizeof(head));
 
@@ -103,15 +103,15 @@ public:
         readHead(head);
         streampos n = head;
         while(n) {
-            // cout << "n: " << n << endl;
+            // cout << "n: " << n << "\n";
             obj.seekg(n, ios::beg);
             streampos link;
             obj.read((char*)&link, sizeof(link));
-            // cout << "print: read link = " << link << endl;
+            // cout << "print: read link = " << link << "\n";
 
             size_t length;
             obj.read((char*)&length, sizeof(length));
-            // cout << "print: read length = " << length << endl;
+            // cout << "print: read length = " << length << "\n";
 
             // allocate space
             char *data = new char[length];
@@ -120,13 +120,13 @@ public:
             // print it
                 cout << "print: " << length << " bytes [";
                 cout.write(data,length);
-                cout << "]" << endl;
+                cout << "]" << "\n";
             // free space
             delete [] data;
 
             // n = n->link
             n = link;
-            // cout << endl;
+            // cout << "\n";
         }
 
     }

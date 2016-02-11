@@ -52,7 +52,7 @@ void threadFunction (std::future<int>& inFuture, std::promise<int>& outPromise)
 
   outPromise.set_value(futureValue * 2);
 
-  ss << "threadFunction: set promise to " << futureValue * 2 << endl;
+  ss << "threadFunction: set promise to " << futureValue * 2 << "\n";
   cout << ss.str(); ss.str("");
 }
 
@@ -81,7 +81,7 @@ int main (int argc,char**argv) // promise + future
   int promise_GetFuture_Get = promise.get_future().get();
   timer.Print( "main: read promise from thread wait time " );
 
-  ss << "main: thread return value retrieved via promise.get_future().get() = " << promise_GetFuture_Get << endl;
+  ss << "main: thread return value retrieved via promise.get_future().get() = " << promise_GetFuture_Get << "\n";
   cout << ss.str(); ss.str("");
 
   t.join();

@@ -27,7 +27,7 @@ int main(int argc, char**argv)
                  << setw(2)  << setfill('0') << iSecond  << ":" 
                  << setw(2)  << setfill('0') << iFrame;
 
-    cout << textTimeCode.str() << endl;
+    cout << textTimeCode.str() << "\n";
 	}
 }
 

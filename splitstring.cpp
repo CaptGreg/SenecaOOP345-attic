@@ -24,7 +24,7 @@ int main()
 {
 	string str{"the quick brown fox jumps over the lazy dog"};
 	vector<string> v{explode(str, ' ')};
-	for(auto n:v) cout << n << endl;
+	for(auto n:v) cout << n << "\n";
 	
 	return 0;
 }

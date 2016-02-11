@@ -100,7 +100,7 @@ using namespace std;
 
  int main (int argc, char**argv)
 {
-     cout << endl << argv[0] << endl << endl;
+     cout << "\n" << argv[0] << "\n" << "\n";
      cout << "\nmain creating 'x' - calling Better x(\"012345678901234567890\");\n";
      Better x( (char*) "012345678901234567890");
      cout << "main calling x.show();\n";

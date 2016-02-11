@@ -203,7 +203,7 @@ int main1 ()
     
     while (1)
     {
-        cout << cCreature << endl;
+        cout << cCreature << "\n";
         cout << "Enter new X location for creature (-1 to quit): ";
         int nX=0;
         cin >> nX;

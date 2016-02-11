@@ -60,5 +60,5 @@ tableEntry_t commandTable[] ={
 };
 
   for (size_t i = 0; i < sizeof(commandTable)/sizeof(tableEntry_t); i++)
-    cout << i << ": " << commandTable[i].command << endl;
+    cout << i << ": " << commandTable[i].command << "\n";
 }

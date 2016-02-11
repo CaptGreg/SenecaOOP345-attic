@@ -42,7 +42,7 @@ public:
 	{
 		if(head) {
 			for( Node *p = head; p; p=p->link)
-				cout << p->data << endl;
+				cout << p->data << "\n";
 		} else {
 			cout << "List is empty\n";
 		}
@@ -60,15 +60,15 @@ int main(int argc, char **argv)
 	l.push(444);
 	l.print();
 	
-	cout << "popped: " << l.pop() << endl;
+	cout << "popped: " << l.pop() << "\n";
 	l.print();
 	
-	cout << "popped: " << l.pop() << endl;
+	cout << "popped: " << l.pop() << "\n";
 	
-	cout << "popped: " << l.pop() << endl;
+	cout << "popped: " << l.pop() << "\n";
 	l.print();
 
-	cout << "popped: " << l.pop() << endl;
+	cout << "popped: " << l.pop() << "\n";
 	l.print();
 }
 

@@ -114,5 +114,5 @@
          cout << r.get().out() << ' ';
          r.goNext();
      }
-     cout << endl;
+     cout << "\n";
  }

@@ -46,7 +46,7 @@ void printBits(const T var,ostream& s = cout)
       // s << (char) ( '0' + getBit(bit, var) );
       s << "01"[ getBit(bit, var) ];
     }
-    s << endl;
+    s << "\n";
   }
 
 template <typename T>
@@ -70,10 +70,10 @@ int main(int argc, char ** argv)
 
     uint16_t u16 = ~0;
     printBits(u16);
-    cout << "bits on=" << onBits(u16) << endl;
+    cout << "bits on=" << onBits(u16) << "\n";
     u16 = flipBit(7,u16);
     printBits(u16);
-    cout << "bits on=" << onBits(u16) << endl;
+    cout << "bits on=" << onBits(u16) << "\n";
     u16 = flipBit(7,u16);
     printBits(u16);
     u16 = storeBit(8*sizeof(u16)-1 ,u16, 0);
@@ -83,7 +83,7 @@ int main(int argc, char ** argv)
     printBits(u32);
     u32 = setBit(15,u32);
     printBits(u32);
-    cout << "bits on=" << onBits(u32) << endl;
+    cout << "bits on=" << onBits(u32) << "\n";
     u32 = clearBit(15,u32);
     printBits(u32);
 

@@ -10,7 +10,7 @@ class A
       }
       void display(const char *msg)
       {
-          cout<<"Base class A display: " << msg << endl;
+          cout<<"Base class A display: " << msg << "\n";
       }
       int  Protect() const { return protect; }
       void Protect(int p)  { protect = p; }
@@ -40,7 +40,7 @@ class C : public B
 
 int main (int argc, char**argv)
 {
-    cout << endl << argv[0] << endl << endl;
+    cout << "\n" << argv[0] << "\n" << "\n";
     C c;
 
     c.A::Protect(1);
@@ -51,9 +51,9 @@ int main (int argc, char**argv)
 
     c.display("called from an instance of C");
 
-    cout << "c.A::protect = " << c.A::Protect() << endl;
-    cout << "c.B::protect = " << c.B::Protect() << endl;
-    cout << "c.C::protect = " << c.Protect() << endl;
+    cout << "c.A::protect = " << c.A::Protect() << "\n";
+    cout << "c.B::protect = " << c.B::Protect() << "\n";
+    cout << "c.C::protect = " << c.Protect() << "\n";
 
     return 0;
 }

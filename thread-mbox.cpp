@@ -10,6 +10,7 @@
 #include <chrono>
 
 #include <thread>
+#include <mutex>
 #include <condition_variable>
 #include <queue>
 
@@ -98,7 +99,13 @@ class Mailbox {
 
             // Wait for a message to come in
             while(messages.empty()) {
-                msg_available_cv.wait(queue_mutex);
+                msg_available_cv.wait(lock);
+                // GB was
+                // msg_available_cv.wait(queue_mutex);
+                // error: no matching function for call to ‘std::condition_variable::wait(std::mutex&)’
+                // msg_available_cv.wait(queue_mutex);
+                //                                  ^
+
             }
 
             // Peek at most recent message

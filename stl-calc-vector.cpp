@@ -21,10 +21,10 @@ private:
       else if(opCode == "/")  result = b / a;
       else if(opCode == "%")  result = fmod(b, a);
       else {
-        cout << "unknown operator " << opCode << endl;
+        cout << "unknown operator " << opCode << "\n";
         return;
       }
-      cout << result << endl;
+      cout << result << "\n";
       s.push_back(result);
     } else
       cout << "need two numbers\n";
@@ -53,20 +53,20 @@ public:
 
       cout << "\nstack:\n";
       print();
-      cout << endl;
+      cout << "\n";
     }
   }
   
   void print()
   {
     // for(vector<double>::iterator it = s.begin(); it != s.end(); ++it) // C++ 98
-      // cout << *it << endl;
+      // cout << *it << "\n";
 
     // for(auto it = s.begin(); it != s.end(); ++it) // auto is C++ 11
-      // cout << *it << endl;
+      // cout << *it << "\n";
 
     for(auto d : s)  // range-based for is C++ 11
-      cout << d << endl;
+      cout << d << "\n";
   }
 };
 
@@ -76,8 +76,8 @@ int main(int argc, char **argv)
     Calc c;
     c.calc();
   } catch(const string& err) {
-    cout << "caught a string err=" << err << endl;
+    cout << "caught a string err=" << err << "\n";
   } catch(const char* err) {
-    cout << "caught a char* err=" << err << endl;
+    cout << "caught a char* err=" << err << "\n";
   }
 }

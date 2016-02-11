@@ -59,7 +59,7 @@ void Queue::display()
            for(Node *var=tail; var!=nullptr; var=var->link) {
                 cout << "\t" << var->Data;
            }
-           cout << endl;
+           cout << "\n";
      } else
            cout << "\nQueue is Empty";
 }
@@ -88,7 +88,7 @@ int main()
                 case 2:
                 {
                      int d = q.pop();
-                     cout << "popped " << d << endl;
+                     cout << "popped " << d << "\n";
                      q.display();
                      break;
                 }

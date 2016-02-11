@@ -5,6 +5,6 @@ int main(int argc, char**argv)
 {
     const char *s = "asdfghjkl";
 
-    std::cout << s << " size is " << strlen(s) << std::endl;
+    std::cout << s << " size is " << strlen(s) << "\n";
 }
 

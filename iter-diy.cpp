@@ -141,7 +141,7 @@ int main(void)
     for (List<int>::iterator iter = list.begin();
       iter != list.end(); ++iter)
     {
-        std::cout << (*iter) << std::endl;
+        std::cout << (*iter) << "\n";
     }
 
     std::cout << "Delete second element\n";
@@ -152,7 +152,7 @@ int main(void)
     for (List<int>::iterator iter = list.begin();
       iter != list.end(); ++iter)
     {
-        std::cout << (*iter) << std::endl;
+        std::cout << (*iter) << "\n";
     }
 
     std::cout << "delete first node\n";
@@ -163,7 +163,7 @@ int main(void)
     for (List<int>::iterator iter = list.begin();
       iter != list.end(); ++iter)
     {
-        std::cout << (*iter) << std::endl;
+        std::cout << (*iter) << "\n";
     }
 
     // std::cin.ignore();

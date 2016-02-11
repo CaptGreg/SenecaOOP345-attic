@@ -8,7 +8,7 @@ template <class T>
 void printContainer(T& container)
 {
    for(typename T::iterator i = container.begin(); i != container.end(); i++) {
-      cout << "container value of i = " << *i << endl;
+      cout << "container value of i = " << *i << "\n";
    }
 }
  
@@ -16,12 +16,12 @@ template <class T>
 void printContainer11(T& container)  // C++11 function template range based for compile error
 {
    for(auto it = container.begin(); it != container.end(); it++) { // auto is C++ 11
-      cout << "c++11 auto iterator container value of it = " << *it << endl;
+      cout << "c++11 auto iterator container value of it = " << *it << "\n";
    }
 
    for(auto e : container)   // error
    {
-      cout << "c++11 range-based for container value of e = " << e << endl;
+      cout << "c++11 range-based for container value of e = " << e << "\n";
    }
 }
 
@@ -34,7 +34,7 @@ int main()
    double i;
 
    // display the original size of vec
-   cout << "vector size = " << vec.size() << endl;
+   cout << "vector size = " << vec.size() << "\n";
 
    // push 5 values into the vector
    for(i = 0; i < 5; i++){
@@ -42,27 +42,27 @@ int main()
    }
 
    // display extended size of vec
-   cout << "extended vector size = " << vec.size() << endl;
+   cout << "extended vector size = " << vec.size() << "\n";
 
    // access 5 values from the vector
    for(i = 0; i < 5; i++){
-      cout << "value of vec [" << i << "] = " << vec[i] << endl;
+      cout << "value of vec [" << i << "] = " << vec[i] << "\n";
    }
    for(double d : vec) {
-      cout << "c++11 range-based for loop value of vec " << d << endl;
+      cout << "c++11 range-based for loop value of vec " << d << "\n";
    }
    for(auto e : vec) {
-      cout << "c++11 range-based for loop with auto value of vec " << e << endl;
+      cout << "c++11 range-based for loop with auto value of vec " << e << "\n";
    }
 
    // use iterator to access the values
    it = vec.begin();
    while( it != vec.end()) {
-      cout << "while loop: value of it = " << *it << endl;
+      cout << "while loop: value of it = " << *it << "\n";
       it++;
    }
    for(it = vec.begin(); it != vec.end() ;  it++) {
-      cout << "for loop: value of it = " << *it << endl;
+      cout << "for loop: value of it = " << *it << "\n";
    }
    printContainer(vec);
    printContainer11(vec);
@@ -75,10 +75,10 @@ int main()
    l.push_back( string("four") );
    l.push_back( string("five") );
 
-   cout << "list size = " << l.size() << endl;
+   cout << "list size = " << l.size() << "\n";
 
    for(il = l.begin(); il != l.end(); il++) {
-      cout << "value of il = " << *il << endl;
+      cout << "value of il = " << *il << "\n";
    }
    printContainer(l);
    printContainer11(l);

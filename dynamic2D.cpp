@@ -34,12 +34,12 @@
      // for (int j = 0; j < nc; j++)
      for (int j = 0; j < c; j++)     // GB change nc to c
          std::cout << std::setw(4) << j + 1;
-     std::cout << std::endl;
+     std::cout << "\n";
      for (int i = 0; i < r; i++) {
          std::cout << std::setw(4) << i + 1;
          for (int j = 0; j < c; j++)
              std::cout << std::setw(4) << std::fixed << std::setprecision(1) << a[i][j];
-         std::cout << std::endl;
+         std::cout << "\n";
      }
 
      // for (int i = 0; i < nr; i++)

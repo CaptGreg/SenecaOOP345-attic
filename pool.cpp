@@ -45,7 +45,7 @@ int main()
         {
             sleep_for(milliseconds(500));                    // Executing some long operation
             lock_guard<mutex> lock(m_mutex);                 // Enter critical section
-            cout << "producer " << i << endl;
+            cout << "producer " << i << "\n";
             m_queue.push(i);                                 // Add data chunk to the queue
             m_isNotified = true;                             // Consumer can be woken up and it is not a fluke (see spurious wakeups)
             m_alarm.notify_one();                            // Notify consumer
@@ -69,7 +69,7 @@ int main()
 
             while (!m_queue.empty())                          // Process data and remove it from the queue
             {
-                cout << "consumer " << m_queue.front() << endl;
+                cout << "consumer " << m_queue.front() << "\n";
                 m_queue.pop();
             }
 

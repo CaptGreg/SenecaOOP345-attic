@@ -9,7 +9,7 @@ public:
 
   X() { 
     d = new double [ALLOC_SIZE]; 
-    cout << "X this=" << (void*)d << endl;
+    cout << "X this=" << (void*)d << "\n";
   }
   ~X() { 
     cout << "X destructor " << (void*) this << "\n";
@@ -18,14 +18,14 @@ public:
   }
   X(X& that) // copy constructor
   {
-    cout << "copy constructor this=" << (void*)this << endl;
+    cout << "copy constructor this=" << (void*)this << "\n";
     d = new double [ALLOC_SIZE]; 
     cout << "copy constructor: calling memcpy\n";
     memcpy (d, that.d, sizeof(double) * ALLOC_SIZE);
   }
   X(X&& that) // move constructor
   { 
-    cout << "move constructor this,that.d=" << (void*)this <<"," <<(void*)d << endl;
+    cout << "move constructor this,that.d=" << (void*)this <<"," <<(void*)d << "\n";
     cout << "moving pointer\n";
     // d = std::move(that.d);
     // or
@@ -34,7 +34,7 @@ public:
   }
   X& operator=(X& that)   // assignment operator
   {
-    cout << "assignment op: this,that=" << (void*) this << "," << (void*) &that << endl;
+    cout << "assignment op: this,that=" << (void*) this << "," << (void*) &that << "\n";
     if(this != &that) {
       cout << "assignment op: calling memcpy\n";
       memcpy (d, that.d, sizeof(double) * ALLOC_SIZE);
@@ -45,7 +45,7 @@ public:
   }
   X& operator=(X&& that)   // move assignment operator
   {
-    cout << "move assignment op: this,that=" << (void*) this << "," << (void*) &that << endl;
+    cout << "move assignment op: this,that=" << (void*) this << "," << (void*) &that << "\n";
     if(this != &that) {
       cout << "moving pointer\n";
       if(d) delete [] d;
@@ -57,7 +57,7 @@ public:
     return *this;
   }
   void print(const char *label) {
-    cout << label << ": " << (void*) this << " d=" << (void*) d << endl;
+    cout << label << ": " << (void*) this << " d=" << (void*) d << "\n";
   }
 };
 

@@ -210,7 +210,7 @@ int main(int argc, char*argv[])
   for(int test = 0; test<TIMES; test++) {
     t.Start();
     for(int y = 0; y < HEIGHT; y++) {
-      // cout << endl << "++++++ " << y << endl;
+      // cout << "\n" << "++++++ " << y << "\n";
       for(int x = 0; x < WIDTH; x++) {
 	// cout << " " << x;
 	array2D  [y][x] = 1e6*y + x;
@@ -219,7 +219,7 @@ int main(int argc, char*argv[])
     t.Stop();
     cout << "array2D ++++++++++++++ width x height: " << WIDTH << "," << HEIGHT << " array access " << t.microsecs() << "\n";
   }
-  cout << endl;
+  cout << "\n";
 
   // Set up sizes. (HEIGHT x WIDTH)
   t.Start();
@@ -238,7 +238,7 @@ int main(int argc, char*argv[])
     t.Stop();
     cout << "vector2D ++++++++++++++ width x height: " << WIDTH << "," << HEIGHT << " vector access " << t.microsecs() << "\n";
   }
-  cout << endl;
+  cout << "\n";
 
   for(int test = 0; test<TIMES; test++) {
     t.Start();
@@ -251,7 +251,7 @@ int main(int argc, char*argv[])
     t.Stop();
     cout << "valarray2D ++++++++++++++ width x height: " << WIDTH << "," << HEIGHT << " valarray access " << t.microsecs() << "\n";
   }
-  cout << endl;
+  cout << "\n";
 
 
 /*
@@ -351,6 +351,6 @@ void valarrayMatrixTest()
     t.Stop();
     cout << "valarray2D matrix ++++++++++++++ width x height: " << WIDTH << "," << HEIGHT << " valarray matrix slice access " << t.microsecs() << "\n";
   }
-  cout << endl;
+  cout << "\n";
 
 }

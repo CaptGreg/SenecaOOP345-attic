@@ -1,5 +1,8 @@
 // http://en.cppreference.com/w/cpp/thread/future
 
+// GB doesn;t compile:
+// error: ‘class std::promise<int>’ has no member named ‘make_ready_at_thread_exit’
+
 #include <iostream>
 #include <future>
 #include <thread>
@@ -22,6 +25,7 @@ int main(int argc, char**argv)
          // function:
          // [](std::promise<int> promise){ promise.set_value_at_thread_exit(9); }, // error no member
          [](std::promise<int> promise){ promise.make_ready_at_thread_exit(9); }, // error no member
+         // error: ‘class std::promise<int>’ has no member named ‘make_ready_at_thread_exit’
 
          // arg:
          std::move(promise) 

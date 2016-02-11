@@ -6,7 +6,7 @@
  
 int main()
 {
-    std::cout << "Hello waiter" << std::endl;
+    std::cout << "Hello waiter" << "\n";
     std::chrono::milliseconds dura( 2000 );
     std::this_thread::sleep_for( dura );
     std::cout << "Waited 2000 ms\n";

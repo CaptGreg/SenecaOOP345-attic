@@ -113,16 +113,16 @@ void LL::clear()
 // Prints the contents of linkedlist
 void LL::Print(const char*msg)
 {
-  cout <<this <<" ++++++ " <<msg << endl;
+  cout <<this <<" ++++++ " <<msg << "\n";
   if (head() == nullptr) {
-    cout<< "EMPTY" << endl;
+    cout<< "EMPTY" << "\n";
     return;
   }
 
   //Traverse
   for(Node* n = head(); n != nullptr;  n = n->next())
-    cout<<n <<" " <<n->val()<<endl;
-  cout<<endl;
+    cout<<n <<" " <<n->val()<<"\n";
+  cout<<"\n";
 }
 
 // Adds a new node at the end of the linkedlist
@@ -197,7 +197,7 @@ void LL::AddAfter(int position, int val)
 
     //if end of linked list is encountered
     if(n == nullptr) {
-      cout<<endl<< "There are less than "<<position<<" elements" ;
+      cout<<"\n"<< "There are less than "<<position<<" elements" ;
       return;
     }
   }

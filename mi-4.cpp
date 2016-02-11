@@ -6,22 +6,18 @@ using namespace std;
 class Base {
 public:
   const char* name;
-  void display() {
-    cout << name << endl;
-  }
+  void display() { cout << name << "\n"; }
 };
 
 class Derived: public Base {
 public:
   const char* name;
-  void display() {
-    cout << name << ", " << Base::name << endl;
-   }
+  void display() { cout << name << ", " << Base::name << "\n"; }
 };
 
 int main (int argc, char**argv)
 {
-  cout << endl << argv[0] << endl << endl;
+  cout << "\n" << argv[0] << "\n" << "\n";
   Derived d;
   d.name = "Derived Class";
   d.Base::name = "Base Class";

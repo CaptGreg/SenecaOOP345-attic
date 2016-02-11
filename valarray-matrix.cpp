@@ -386,7 +386,7 @@ void matrix2dio<T>::printValarray(std::ostream & os,
 const std::valarray<int> & va) {
 
   copy(&va[0], &va[va.size() - 1], std::ostream_iterator<T > (os, " "));
-  os << va[va.size() - 1] << std::endl;
+  os << va[va.size() - 1] << "\n";
 }
 
 /*------------------------------------------------------------------------------

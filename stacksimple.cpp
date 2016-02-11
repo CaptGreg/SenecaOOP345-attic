@@ -13,5 +13,5 @@ int main(int argc, char**argv)
   s.push("stack third push: C++");
 
   // s.print(); // or walk with a print function
-  s.walk( [] (string d) { cout << d << endl; } );
+  s.walk( [] (string d) { cout << d << "\n"; } );
 }

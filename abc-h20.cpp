@@ -53,15 +53,15 @@
      Quote q;
 
      q = "early bird gets the worm.";
-     cout << q << endl;
+     cout << q << "\n";
 
      for (int i = 1; i < argc; i++) {
          Quote quote(argv[i]);
-         cout << quote << endl;
+         cout << quote << "\n";
      }
 
      q = "an apple a day keeps the doctor away.";
-     cout << q << endl;
+     cout << q << "\n";
 
      return 0;
  }

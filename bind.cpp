@@ -18,28 +18,28 @@ int main1 ();
 
  int main() {
      auto p = std::bind(multiply, 10, 3);
-     std::cout << "Product = " << p() << std::endl;
+     std::cout << "Product = " << p() << "\n";
 
      // GB code follows:-
      double x, y;
      x=1, y = 2;
      auto q = std::bind(multiply, x, y);
-     std::cout << "bind multiply("<<x<<","<<y<<") q=" << q() << std::endl;
+     std::cout << "bind multiply("<<x<<","<<y<<") q=" << q() << "\n";
      x=3, y=4;
      std::cout << "change x,y to ("<<x<<","<<y<<")\n";
-     std::cout << "bind multiply("<<x<<","<<y<<") q=" << q() << std::endl;
+     std::cout << "bind multiply("<<x<<","<<y<<") q=" << q() << "\n";
      // GB OK -	bind captures the arguments at the time of the bind call
 
      // what happens with lambdas?
      x=5, y=6;
      auto l  = [ x, y] () { return multiply(x,y); };
      auto l2 = [&x,&y] () { return multiply(x,y); };
-     std::cout << "l  [ x, y] lambda Product = " << l() << std::endl;
-     std::cout << "l2 [&x,&y] lambda Product = " << l2() << std::endl;
+     std::cout << "l  [ x, y] lambda Product = " << l() << "\n";
+     std::cout << "l2 [&x,&y] lambda Product = " << l2() << "\n";
      x=7, y=8;
      std::cout << "change x,y to ("<<x<<","<<y<<")\n";
-     std::cout << "l  [ x, y] lambda Product = " << l() << std::endl;
-     std::cout << "l2 [&x,&y] lambda Product = " << l2() << std::endl;
+     std::cout << "l  [ x, y] lambda Product = " << l() << "\n";
+     std::cout << "l2 [&x,&y] lambda Product = " << l2() << "\n";
      // NOTE lambda [&x,&y] captures values at time of the lambda call
 
      // clearly no surprise with a function object:-
@@ -51,7 +51,7 @@ int main1 ();
      };
      MyFunctionObject mfo;
      mfo.set(x,y);
-     std::cout << "MyFUnctionObject mfo Product = " << mfo() << std::endl;
+     std::cout << "MyFUnctionObject mfo Product = " << mfo() << "\n";
 
     main1();
     return 0;

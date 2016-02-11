@@ -11,11 +11,11 @@ using namespace std;
 // NO!
 template<typename T>
 // void print(T& i) { cout << typedef(i).name() << "\n"; }
-void print(T& i)  { cout << i << " is an l-value, typeid(t).name() returns: " << typeid(i).name() << "\n"; }
+void print(T& i)  { cout << i << " is an l-value, typeid(t).name() = " << typeid(i).name() << "\n"; }
 
 template<typename T>
 // void print(T&& i) { cout << typedef(i).name() << "\n"; }
-void print(T&& i) { cout << i << " is an r-value, typeid(t).name() returns: " << typeid(i).name() << "\n"; }
+void print(T&& i) { cout << i << " is an r-value, typeid(t).name() = " << typeid(i).name() << "\n"; }
 
 int main(int argc, char**argv)
 {
@@ -34,6 +34,22 @@ typedef class XXX { };
   cout << x << "\n";
   
   print(x);
-
   print(move(x));
+
+  int y = 99;
+  print(y);
+  print(move(y));
+
+
+  int* pi = & y;
+  print(pi);
+  print(move(pi));
+
+  short s = 99;
+  print(s);
+  print(move(s));
+
+  unsigned short us = 99;
+  print(us);
+  print(move(us));
 }

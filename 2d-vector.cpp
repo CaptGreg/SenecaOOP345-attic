@@ -99,4 +99,32 @@ int main(int argc, char*argv[])
         rowTable [y] [x] = 1e6 * y + x;
   } // unique_ptr 'table' deleted when out of scope
 
+  { // 3d pointer
+    int WIDTH  = 3;
+    int HEIGHT = 3;
+    int DEPTH  = 3;
+
+    float (*data)[DEPTH][HEIGHT][WIDTH] = (float(*)[DEPTH][HEIGHT][WIDTH]) new float[DEPTH*HEIGHT*WIDTH]; 
+
+    for(int z = 0; z < DEPTH ; z++ ) {
+      for(int y = 0; y < HEIGHT ; y++ ) {
+        for(int x = 0; x < WIDTH; x++) {
+          (* data ) [z] [y] [x] = 1e2 * z + y +  1e-2 * x;
+        }
+      }
+    }
+
+    for(int z = 0; z < DEPTH ; z++ ) {
+      for(int y = 0; y < HEIGHT ; y++ ) {
+        for(int x = 0; x < WIDTH; x++) {
+          cout << "[" << z << "][" << y << "][" << x << "]="
+             << (* data ) [z] [y] [x] 
+             << "\n";
+        }
+      }
+    }
+
+    delete [] data;
+  }
+
 } // end main

@@ -22,9 +22,9 @@ class Derived3 : public Derived1, public Derived2 {
 
 int main (int argc, char**argv)
 {
-    cout << endl << argv[0] << endl << endl;
+    cout << "\n" << argv[0] << "\n" << "\n";
     Derived3 obj;
-    cout << obj.GetData() << endl;
+    cout << obj.GetData() << "\n";
 }
 #endif
 
@@ -57,9 +57,9 @@ class Derived3 : public Derived1, public Derived2 {
 
 int main (int argc, char**argv)
 {
-    cout << endl << argv[0] << endl << endl;
+    cout << "\n" << argv[0] << "\n" << "\n";
 
     Derived3 obj;
-    cout << "base class iData value-" << obj.GetData() << endl;
+    cout << "base class iData value-" << obj.GetData() << "\n";
 }
 #endif

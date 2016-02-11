@@ -27,18 +27,18 @@ int main(int argc, char**argv) // futures + async
   /// ASYNC
 
   future<int> f = async([newThread]() -> int  { cout << "f "; newThread(); return 123; });
-  cout << "f.get=" << f.get() << endl;
+  cout << "f.get=" << f.get() << "\n";
 
   future<int> futures[] = {
     async([newThread]() { cout << "\nf1: "; newThread(); return 123; }),
     async([newThread]() { cout << "\nf2: "; newThread(); return 456; }),
     async([newThread]() { cout << "\nf3: "; newThread(); return 789; })
   };
-  // for(future<int> f: futures) cout << f.get() << " ";  cout << endl;
+  // for(future<int> f: futures) cout << f.get() << " ";  cout << "\n";
   cout << "\ncalling futures[0].get() " << futures[0].get() << " ";  
   cout << "\ncalling futures[1].get() " << futures[1].get() << " ";  
   cout << "\ncalling futures[2].get() " << futures[2].get() << " ";  
-  cout << endl;
+  cout << "\n";
 
   // runs on current thread when you “get” value (i.e. lazy execution):
   future<int> f1 = std::async( std::launch::deferred, []() -> int {return 321;} );
@@ -49,9 +49,9 @@ int main(int argc, char**argv) // futures + async
   // let system decide (e.g. maybe you created enough work to keep system busy?):
   future<int> f3 = std::async( []() -> int {return 987;} );
 
-  cout << "f1.get=" << f1.get() << endl;
-  cout << "f2.get=" << f2.get() << endl;
-  cout << "f3.get=" << f3.get() << endl;
+  cout << "f1.get=" << f1.get() << "\n";
+  cout << "f2.get=" << f2.get() << "\n";
+  cout << "f3.get=" << f3.get() << "\n";
 
 
   cout << "\nstd::async - std::launch::deferred\n"; 

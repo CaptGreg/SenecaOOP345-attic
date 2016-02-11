@@ -12,7 +12,7 @@ const wchar_t* koreanWCharDigits  = L"공일이삼사오육칠팔구"; // All 10
 // صفر، واحد، إثنان، ثلاثة، اربعة، خمسة، ستة، سبعة، ثمانية، تسعة، عشرة 
 // Chinese: google translate
 // Korean http://www.omniglot.com/language/numbers/korean.htm
-// Sarout fixed the Arabic number
+// Sarout fixed the Arabic numbers
 
 const wchar_t *arabicWCharDigits[] = { 
   L"صفر",  L"واحد", L"إثنان", L"ثلاثة",   L"اربعة", 
@@ -55,13 +55,13 @@ void WideCharSetup()
   P(Korean, koreanWCharDigits)
 //P(Arabic, arabicWCharDigits)
 
-  // wcout << "Chinese wchar_t characters for 0 to 9: " << chineseWCharDigits << endl;
-  // wcout << "Korean  wchar_t characters for 0 to 9: " << koreanWCharDigits << endl;
-  // wcout << "Arabic  wchar_t characters for 0 to 9: " << arabicWCharDigits << endl;
+  // wcout << "Chinese wchar_t characters for 0 to 9: " << chineseWCharDigits << "\n";
+  // wcout << "Korean  wchar_t characters for 0 to 9: " << koreanWCharDigits << "\n";
+  // wcout << "Arabic  wchar_t characters for 0 to 9: " << arabicWCharDigits << "\n";
   wcout << "\n";
 
-  wcout << "Chinese std::wstring characters for 0 to 9: " << chineseWString << endl;
-  wcout << "Korean  std::wstring characters for 0 to 9: " << koreanWString << endl;
+  wcout << "Chinese std::wstring characters for 0 to 9: " << chineseWString << "\n";
+  wcout << "Korean  std::wstring characters for 0 to 9: " << koreanWString << "\n";
   wcout << "\n";
 
 
@@ -79,7 +79,7 @@ template<typename T> // a function template
 void WriteTestFile(string& file, T& digits) // need T& so this works with 'const std::wstring'
 {
 
-  // write a test file with 1 million Chinese characters
+  // write a test file with 1 million wide characters
   size_t size = 1000000;
 
   std::wofstream wos(file, wios::out | wios::trunc);
@@ -149,5 +149,5 @@ int main(int argc, char* argv[], char* envp[])
     cerr << e << "\n";
   }
 
-    return 0;
+  return 0;
 }

@@ -48,12 +48,12 @@ public:
     vector<weak_ptr<Controller>> others;
     explicit Controller(int i) : Num(i) , Status(L"On")
     {
-        wcout << L"Creating Controller" << Num << endl;
+        wcout << L"Creating Controller" << Num << "\n";
     }
 
     ~Controller()
     {
-        wcout << L"Destroying Controller" << Num << endl;
+        wcout << L"Destroying Controller" << Num << "\n";
     }
 
     // Demonstrates how to test whether the  
@@ -65,12 +65,12 @@ public:
             try
             {
                 auto p = wp.lock();
-                wcout << L"Status of " << p->Num << " = " << p->Status << endl;
+                wcout << L"Status of " << p->Num << " = " << p->Status << "\n";
             }
 
             catch (bad_weak_ptr b)
             {
-                wcout << L"Null object" << endl;
+                wcout << L"Null object" << "\n";
             }                
         });
     }
@@ -95,14 +95,14 @@ void RunTest()
             if(p->Num != i)
             {
                 v[i]->others.push_back(weak_ptr<Controller>(p));
-                wcout << L"push_back to v[" << i << "]: " << p->Num << endl;
+                wcout << L"push_back to v[" << i << "]: " << p->Num << "\n";
             }
         });        
     }
 
     for_each(v.begin(), v.end(), [](shared_ptr<Controller>& p)
     {
-        wcout << L"use_count = " << p.use_count() << endl;
+        wcout << L"use_count = " << p.use_count() << "\n";
         p->CheckStatuses();
     });
 }
@@ -110,7 +110,7 @@ void RunTest()
 int main()
 {    
     RunTest(); 
-    wcout << L"Press any key" << endl;
+    wcout << L"Press any key" << "\n";
     char ch;
     cin.getline(&ch, 1);
 }

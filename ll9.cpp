@@ -73,10 +73,10 @@ int main(int argc, char **argv)
      while(1) {
        // two lines, for clarity
        std::function<double(void)> f = ll.pop();  // might throw
-       cout << f() << endl;
+       cout << f() << "\n";
        // cout << (ll.pop()) () << "\n"; // one line, not quite the same because of the "cout <<" THROW
      }
    } catch(string& msg) {
-      cout << msg << endl;
+      cout << msg << "\n";
    }
 }

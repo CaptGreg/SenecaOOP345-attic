@@ -34,12 +34,12 @@ public:
 
   void print()
   {
-    cout << "head:" << head << endl;
+    cout << "head:" << head << "\n";
     for(Node *p=head; p; p=p->next){
-      cout << "Node:" << p << endl;
-      cout << "next=" << p->next << endl;
-      cout << "data=" << p->data << endl;
-      cout << endl;
+      cout << "Node:" << p << "\n";
+      cout << "next=" << p->next << "\n";
+      cout << "data=" << p->data << "\n";
+      cout << "\n";
     }
   }
 };
@@ -48,7 +48,7 @@ public:
 
 int main(int argc, char ** argv)
 {
-  cout << "argc = " << argc << endl;
+  cout << "argc = " << argc << "\n";
   for(int i = 0; i < argc; i++)
     cout <<"[" << i << "]==>" << argv[i] << "<==\n";
 
@@ -61,12 +61,12 @@ int main(int argc, char ** argv)
     l.print();
 
     while(1) {
-      cout << "popped " <<  l.pop() << endl;
+      cout << "popped " <<  l.pop() << "\n";
       l.print();
     }
 
   } catch (string& err) {
-    cout << err << endl;
+    cout << err << "\n";
   }
 }
 

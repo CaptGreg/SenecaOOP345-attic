@@ -126,7 +126,7 @@ int main(int argc, char* argv[])
            <<  ", visual ID 0x" << hex << vi -> visualid
            <<  ": SAMPLE_BUFFERS = " << samp_buf
            <<  ", SAMPLES = " << samples 
-           << endl;
+           << "\n";
  
       if ( best_fbc < 0 || samp_buf && samples > best_num_samp )
         best_fbc = i, best_num_samp = samples;
@@ -143,7 +143,7 @@ int main(int argc, char* argv[])
  
   // Get a visual
   XVisualInfo *vi = glXGetVisualFromFBConfig( display, bestFbc );
-  cout <<  "Chosen visual ID = 0x" << hex << vi->visualid << endl;;
+  cout <<  "Chosen visual ID = 0x" << hex << vi->visualid << "\n";;
  
   cout <<  "Creating colormap\n" ;
   XSetWindowAttributes swa;

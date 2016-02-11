@@ -2,6 +2,7 @@
 // https://katyscode.wordpress.com/2013/08/22/c-polymorphic-cloning-and-the-crtp-curiously-recurring-template-pattern/
 
 #include <iostream>
+#include <typeinfo>   // typeid(...), typeid(...).name()
 using namespace std;
 
 int main()
@@ -18,22 +19,20 @@ int main()
     {
     public:
         virtual Car *clone()    const { return new Car(*this); } // Covariant Return Types
-        virtual void describe() const { cout << "I am a car" << "\n";
-        }
-    };
+        virtual void describe() const { cout << typeid(*this).name() << " -> I am a car\n"; }    };
  
     class Plane : public Vehicle
     {
     public:
         virtual Plane *clone()  const { return new Plane(*this); } // Covariant Return Types
-        virtual void describe() const { cout << "I am a plane" << "\n"; }
+        virtual void describe() const { cout << typeid(*this).name() << " -> I am a plane\n"; }
     };
  
     class PassengerPlane : public Plane
     {
     public:
         virtual PassengerPlane *clone() const { return new PassengerPlane(*this); } // Covariant Return Types
-        virtual void describe()         const { cout << "I am a passenger plane. I was derived from (my base class) -->";  Plane::describe(); }
+        virtual void describe() const { cout << typeid(*this).name() << " -> I am a PassengerPlane I was derived from (my base class) -->";  Plane::describe(); }
     };
 
     Vehicle *vehicleUnknown;

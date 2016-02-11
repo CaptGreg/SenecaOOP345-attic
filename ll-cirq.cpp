@@ -67,7 +67,7 @@ class CircularQ {
         node *n=head;
         int count=0;
         while(n) {
-            cout << count++ << ": " << n->data << endl;
+            cout << count++ << ": " << n->data << "\n";
             if(n==tail) break;
             n=n->next;
         }
@@ -81,25 +81,25 @@ int main()
     cout << "empty - new circular q\n";
     cirq.print();
 
-    cout << "pushing " << -99 << endl;
+    cout << "pushing " << -99 << "\n";
     cirq.push(-99);
-    if(cirq.peekHead(data)) { cout << "head=" << data << endl; }
-    if(cirq.peekTail(data)) { cout << "tail=" << data << endl; }
-    cout << endl;
+    if(cirq.peekHead(data)) { cout << "head=" << data << "\n"; }
+    if(cirq.peekTail(data)) { cout << "tail=" << data << "\n"; }
+    cout << "\n";
 
     for(int i=0; i < 3; i++ ) {
-        cout << "pushing " << i << endl;
+        cout << "pushing " << i << "\n";
         cirq.push(i);
-        if(cirq.peekHead(data)) { cout << "head=" << data << endl; }
-        if(cirq.peekTail(data)) { cout << "tail=" << data << endl; }
-        cout << endl;
+        if(cirq.peekHead(data)) { cout << "head=" << data << "\n"; }
+        if(cirq.peekTail(data)) { cout << "tail=" << data << "\n"; }
+        cout << "\n";
     }
 
     cout << "populated\n";
     cirq.print();
 
     while(cirq.pop(data)) {
-        cout << "popped " << data <<endl;
+        cout << "popped " << data <<"\n";
     }
 
     cout << "empty - popped everything\n";

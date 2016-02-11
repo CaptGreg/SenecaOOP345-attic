@@ -85,7 +85,7 @@ void Q::print()
 {
     for(Q *p = head; p; p = p->next)
     {
-        cout << p->value << endl;
+        cout << p->value << "\n";
     }
 }
 

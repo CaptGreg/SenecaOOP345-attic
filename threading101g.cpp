@@ -116,7 +116,7 @@ int main()
 
   cout << "\nthreads using mutex lock lambda:\n\n";
   arg = 700; // arg to thread 
-  auto f = [] (int arg) { coutLock.lock(); cout << "lambda arg="<<arg<<endl; coutLock.unlock(); };
+  auto f = [] (int arg) { coutLock.lock(); cout << "lambda arg="<<arg<<"\n"; coutLock.unlock(); };
   for (auto& th:  t) th = thread(f, arg++);
   for (auto& th:  t) th.join();
 

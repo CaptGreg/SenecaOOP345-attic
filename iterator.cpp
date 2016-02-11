@@ -25,28 +25,16 @@ private:
 public:
   reverse_range (T& xx): x (xx) {}
  
-  auto begin () const -> decltype (this->x.rbegin ())
-  {
-    return x.rbegin ();
-  }
+  auto begin () const -> decltype (this->x.rbegin ()) { return x.rbegin (); }
  
-  auto end () const -> decltype (this->x.rend ())
-  {
-    return x.rend ();
-  }
+  auto end () const -> decltype (this->x.rend ()) { return x.rend (); }
 };
  
 template <typename T>
-reverse_range<T> reverse_iterate (T& x)
-{
-  return reverse_range<T> (x);
-}
+reverse_range<T> reverse_iterate (T& x) { return reverse_range<T> (x); }
 
 template <typename T>
-reverse_range<T> reverse_iterate (const T& x) // GB
-{
-  return reverse_range<T> (x);
-}
+reverse_range<T> reverse_iterate (const T& x) { return reverse_range<T> (x); } // GB 
 
 
 int main(int argc, char**argv)
@@ -81,7 +69,7 @@ int main(int argc, char**argv)
         std::cout << *rit << "  ";
     std::cout << "\n";
 
-    for(auto rit = rbegin(v); rit != rend(v); rit++)
+    for(auto rit = v.rbegin(); rit != v.rend(); rit++)
         std::cout << *rit << "  ";
     std::cout << "\n";
 

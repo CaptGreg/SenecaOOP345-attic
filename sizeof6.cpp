@@ -36,16 +36,16 @@ int main(int argc, char ** argv)
 
 	// p3.clearBigBuf(); // private func, cannot call.
 
-	cout << "x,y,z = " << p4.getX() << "," << p4.getY() << "," << p4.getZ() << endl;
+	cout << "x,y,z = " << p4.getX() << "," << p4.getY() << "," << p4.getZ() << "\n";
 
 #if 0
-	cout << sizeof(big_buf) << endl;
+	cout << sizeof(big_buf) << "\n";
 
 	for(int i = 1; 1; i++) {
 		cout << i << ": allocating " << SIZE << " bytes\n";
 		big_buf = new Pt [SIZE];
 
-		cout << big_buf << endl;
+		cout << big_buf << "\n";
 		if(!big_buf) {
 			cout << "new failed!\n";
 			break;

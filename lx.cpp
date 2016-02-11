@@ -28,16 +28,16 @@ int main(int argc, char**argv)
 
     // this works
     l.walk( Count );
-    cout << "::count=" << ::count << endl;
+    cout << "::count=" << ::count << "\n";
 
     // these lambda's work (return type '-> void' not required)
     l.walk( [] (string& s) -> void { ::count++; } );
-    cout << "::count=" << ::count << endl;
+    cout << "::count=" << ::count << "\n";
     l.walk( [] (string& s) -> void { count++; } );
-    cout << "::count=" << ::count << endl;
-    l.walk( []  (string& s) -> void { cout << "List walk with a []  lambda expression: " << s << endl; } );
-    l.walk( [=] (string& s) -> void { cout << "List walk with a [=] lambda expression: " << s << endl; } );
-    l.walk( [&] (string& s) -> void { cout << "List walk with a [&] lambda expression: " << s << endl; } );
+    cout << "::count=" << ::count << "\n";
+    l.walk( []  (string& s) -> void { cout << "List walk with a []  lambda expression: " << s << "\n"; } );
+    l.walk( [=] (string& s) -> void { cout << "List walk with a [=] lambda expression: " << s << "\n"; } );
+    l.walk( [&] (string& s) -> void { cout << "List walk with a [&] lambda expression: " << s << "\n"; } );
 
     // using -sdt=c++11 flag with g++ (Ubuntu 4.8.2-19ubuntu1) 4.8.2
 
@@ -66,8 +66,8 @@ int main(int argc, char**argv)
 
     // auto g1 = [&count] (string& s) { count++; } 
     // l.walk( g1 ); // error: expected ‘,’ or ‘;’ before ‘l’
-    cout << "::count=" << ::count << endl;
-    cout << "count=" << count << endl;
+    cout << "::count=" << ::count << "\n";
+    cout << "count=" << count << "\n";
 
     return 0;
 }

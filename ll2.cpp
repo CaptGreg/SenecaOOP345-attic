@@ -60,14 +60,14 @@ LL::LL(const LL& src)            // copy ctor
   : _head(nullptr)
 {
     head(nullptr);
-    cout<< "copy ctor " <<this << endl;
+    cout<< "copy ctor " <<this << "\n";
     *this = src;
 }
 
 LL& LL::operator=(const LL& src) // assignment operator
 {
     // LL src = const_cast<LL&> (s);
-    cout<< "=op " <<this << endl;
+    cout<< "=op " <<this << "\n";
 
     if(this != &src) {
         clear();
@@ -94,14 +94,14 @@ LL& LL::operator=(const LL& src) // assignment operator
         }
         pDst->next( nullptr );
     } else {
-        cout << "someone called assignment operator with this==&src " <<this <<endl;
+        cout << "someone called assignment operator with this==&src " <<this <<"\n";
     }
     return *this;
 }
 
 void LL::clear()
 {
-  cout<< "clear " <<this <<endl;
+  cout<< "clear " <<this <<"\n";
   while(head() != nullptr) {
     Node *n = head()->next() ;
     delete head();
@@ -113,16 +113,16 @@ void LL::clear()
 // Prints the contents of linkedlist
 void LL::Print(const char*msg)
 {
-  cout <<this <<" ++++++ " <<msg << endl;
+  cout <<this <<" ++++++ " <<msg << "\n";
   if (head() == nullptr) {
-    cout<< "EMPTY" << endl;
+    cout<< "EMPTY" << "\n";
     return;
   }
 
   //Traverse
   for(Node* n = head(); n != nullptr;  n = n->next())
-    cout<<n <<" -> " <<n->next() <<" val=" <<n->val()<<endl;
-  cout<<endl;
+    cout<<n <<" -> " <<n->next() <<" val=" <<n->val()<<"\n";
+  cout<<"\n";
 }
 
 // Adds a new node at the end of the linkedlist
@@ -196,7 +196,7 @@ void LL::AddAfter(int position, int val)
 
     //if end of linked list is encountered
     if(n == nullptr) {
-      cout<<endl<< "There are less than "<<position<<" elements" ;
+      cout<<"\n"<< "There are less than "<<position<<" elements" ;
       return;
     }
   }
@@ -244,9 +244,9 @@ int main(int argc, char**argv)
 
   ll3 = ll3;
 
-  cout <<"ll=" << ll <<endl;
-  cout <<"ll2=" << &ll2 <<endl;
-  cout <<"ll3=" << &ll3 <<endl;
+  cout <<"ll=" << ll <<"\n";
+  cout <<"ll2=" << &ll2 <<"\n";
+  cout <<"ll3=" << &ll3 <<"\n";
 
   delete ll;
 }

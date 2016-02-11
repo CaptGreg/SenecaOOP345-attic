@@ -20,10 +20,10 @@ int main1()
 }
 
 
-// http://www.cplusplus.com/reference/ostream/endl/
-// ostream& endl (ostream& os);
+// http://www.cplusplus.com/reference/ostream/"\n"/
+// ostream& "\n" (ostream& os);
 
-// http://en.cppreference.com/w/cpp/io/manip/endl
+// http://en.cppreference.com/w/cpp/io/manip/"\n"
 // std::endl
 //  
 // C++
@@ -35,7 +35,7 @@ int main1()
 // Defined in header <ostream>
 // 		
 //   template< class CharT, class Traits >
-//   std::basic_ostream<charT,traits>& endl( std::basic_ostream<CharT, Traits>& os );
+//   std::basic_ostream<charT,traits>& "\n"( std::basic_ostream<CharT, Traits>& os );
 // 
 // Inserts a newline character into the output sequence os and flushes it as if by calling os.put(os.widen('\n')) followed by os.flush().
 // 
@@ -44,7 +44,7 @@ int main1()
 // 
 // This manipulator may be used to produce a line of output immediately, e.g. when displaying output from a long-running process, logging activity of multiple threads or logging activity of a program that may crash unexpectedly. An explicit flush of std::cout is also necessary before a call to std::system, if the spawned process performs any screen I/O (a common example is std::system("pause") on Windows). In most other usual interactive I/O scenarios, std::endl is redundant when used with std::cout because any input from std::cin, output to std::cerr, or program termination forces a call to std::cout.flush(). Use of std::endl in place of '\n', encouraged by some sources, may significantly degrade output performance.
 // 
-// In many implementations, standard output is line-buffered, and writing '\n' causes a flush anyway, unless std::cout.sync_with_stdio(false) was executed. In those situations, unnecessary endl only degrades the performance of file output, not standard output.
+// In many implementations, standard output is line-buffered, and writing '\n' causes a flush anyway, unless std::cout.sync_with_stdio(false) was executed. In those situations, unnecessary "\n" only degrades the performance of file output, not standard output.
 // 
 // The code samples on this wiki follow Bjarne Stroustrup in flushing the standard output only where necessary.
 // 

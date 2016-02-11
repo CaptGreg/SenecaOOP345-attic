@@ -46,7 +46,7 @@ namespace Signal {
             return; \
         } \
     } \
-    std::cout << "Signal was not connected " << i << std::endl;
+    std::cout << "Signal was not connected " << i << "\n";
 
     using ID = unsigned int;
 
@@ -212,34 +212,34 @@ int main()
    Exemple ex2;
    
    Signal::Object<Exemple, EXEMPLE_SIGNAL, int>::connect(&ex1, [] (int type, Exemple *, int value) {
-       std::cout << "1 - Received object int " << type << " " << value << std::endl;
+       std::cout << "1 - Received object int " << type << " " << value << "\n";
    });
    Signal::Object<Exemple, EXEMPLE_SIGNAL_2, float>::connect(&ex1, [] (int type, Exemple *, float value) {
-       std::cout << "2 - Received object float " << type << " " << value << std::endl;
+       std::cout << "2 - Received object float " << type << " " << value << "\n";
    });
    Signal::Object<Exemple, EXEMPLE_SIGNAL, int>::connect([] (int type, Exemple *, int value) {
-       std::cout << "3 - Received object float " << type << " " << value << std::endl;
+       std::cout << "3 - Received object float " << type << " " << value << "\n";
    });
    Signal::Type<EXEMPLE_SIGNAL>::connect([] (int type) {
-       std::cout << "4 - Received type " << type << std::endl;
+       std::cout << "4 - Received type " << type << "\n";
    });
    Signal::All::connect([] (int type) {
-       std::cout << "5 - Received all " << type << std::endl;
+       std::cout << "5 - Received all " << type << "\n";
    });
    
    // uncomment for error
 //   Signal::Object<Exemple, EXEMPLE_SIGNAL, float>::connect(&ex1, [] (int type, Exemple *, float value) {
-//       std::cout << "Never received " << type << " " << value << std::endl;
+//       std::cout << "Never received " << type << " " << value << "\n";
 //   });
    
    Signal::Type<NEVER_SENT_EXEMPLE>::connect([] (int type) {
-       std::cout << "Never received type " << type << std::endl;
+       std::cout << "Never received type " << type << "\n";
    });
    
    Signal::send<EXEMPLE_SIGNAL>(&ex1, 42); // received by all except 2
-   std::cout << std::endl;
+   std::cout << "\n";
    Signal::send<EXEMPLE_SIGNAL>(&ex2, 43); // received by 3, 4 and 5
-   std::cout << std::endl;
+   std::cout << "\n";
    Signal::send<EXEMPLE_SIGNAL_2>(&ex1, 44.4f); // received by 2 and 5
 //   Signal::send<EXEMPLE_SIGNAL_2>(&ex1, 44); // error
    

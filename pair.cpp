@@ -15,19 +15,16 @@ int main ()
   std::cout << "mylist contains:";
   for (auto& x: mylist)
     std::cout << " (" << x.first << "," << x.second << ")";
-  std::cout << std::endl;
+  std::cout << "\n";
 
-  mylist.push_back(40,'d');
-  mylist.push_back(50,'e');
-  mylist.push_back(60,'f');
   mylist.push_back(std::make_pair(40,'d'));
   mylist.push_back(std::make_pair(50,'e'));
   mylist.push_back(std::make_pair(60,'f'));
 
   std::cout << "mylist contains:";
-  for (auto& x: mylist)
+  for (auto x: mylist)
     std::cout << " (" << x.first << "," << x.second << ")";
-  std::cout << std::endl;
+  std::cout << "\n";
 
 
   return 0;

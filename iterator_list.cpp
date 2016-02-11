@@ -20,5 +20,5 @@
 
      for(auto i = prices.begin(); i != prices.end(); i++)
          std::cout << *i << "  ";
-     std::cout << std::endl;
+     std::cout << "\n";
  }

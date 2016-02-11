@@ -164,7 +164,7 @@ int main1()
 {
     Foo f;
     f.func(); // prints 3
-    cout << endl;
+    cout << "\n";
     return 0;
 } // main1
 
@@ -193,7 +193,7 @@ int main2()
     //...
     for ( auto itr = v1.begin(), end = v1.end(); itr != end; itr++ )
     {
-        cout << *itr << endl;
+        cout << *itr << "\n";
     }
 
     // with
@@ -201,7 +201,7 @@ int main2()
     v2.push_back( 30 );
     v2.push_back( 40 );
     //...
-    for_each( v2.begin(), v2.end(), [] (int val) { cout << val << endl; } );
+    for_each( v2.begin(), v2.end(), [] (int val) { cout << val << "\n"; } );
 
     return 0;
 } // main2

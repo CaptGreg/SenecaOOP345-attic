@@ -45,36 +45,36 @@ int descend(const void*p1, const void*p2) {
 int main(int argc, char**argv)
 {
   cout << "input data\n";
-  for(int arg=1; arg<argc; arg++) cout << argv[arg] << endl;
+  for(int arg=1; arg<argc; arg++) cout << argv[arg] << "\n";
 
   cout << "c-code function compare\n";
   qsort(argv+1, argc-1, sizeof(char*), cmpstringp); // c-code function
-  for(int arg=1; arg<argc; arg++) cout << argv[arg] << endl;
+  for(int arg=1; arg<argc; arg++) cout << argv[arg] << "\n";
 
   cout << "function ascend\n";
   qsort(argv+1, argc-1, sizeof(char*), ascend);     // function
-  for(int arg=1; arg<argc; arg++) cout << argv[arg] << endl;
+  for(int arg=1; arg<argc; arg++) cout << argv[arg] << "\n";
 
   cout << "function descend\n";
   qsort(argv+1, argc-1, sizeof(char*), descend);    // function
-  for(int arg=1; arg<argc; arg++) cout << argv[arg] << endl;
+  for(int arg=1; arg<argc; arg++) cout << argv[arg] << "\n";
 
   cout << "function object lambda ascend\n";
   qsort(argv+1, argc-1, sizeof(char*), [](const void*p1,const void*p2) {X x(ASCEND); return x(p1,p2); } ); // lambda function object
-  for(int arg=1; arg<argc; arg++) cout << argv[arg] << endl;
+  for(int arg=1; arg<argc; arg++) cout << argv[arg] << "\n";
 
   cout << "function object lambda descend\n";
   qsort(argv+1, argc-1, sizeof(char*), [](const void*p1,const void*p2) {X x(DESCEND); return x(p1,p2); } ); // lambda function object
-  for(int arg=1; arg<argc; arg++) cout << argv[arg] << endl;
+  for(int arg=1; arg<argc; arg++) cout << argv[arg] << "\n";
 
   // cout << "function object a (ascend)\n";
   // X a(ASCEND);
   // qsort(argv+1, argc-1, sizeof(char*),  a);          // function object
-  // for(int arg=1; arg<argc; arg++) cout << argv[arg] << endl;
+  // for(int arg=1; arg<argc; arg++) cout << argv[arg] << "\n";
 
   // cout << "function object d (descend)\n";
   // X d(DESCEND);
   // qsort(argv+1, argc-1, sizeof(char*), d);          // function object
-  // for(int arg=1; arg<argc; arg++) cout << argv[arg] << endl;
+  // for(int arg=1; arg<argc; arg++) cout << argv[arg] << "\n";
 
 }

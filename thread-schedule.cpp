@@ -169,7 +169,7 @@ namespace scheduling {
 void outp(const std::string& outp) {
     static std::mutex m;
     std::lock_guard<std::mutex> lk(m);
-    std::cout << std::this_thread::get_id() << ": " << outp << std::endl;
+    std::cout << std::this_thread::get_id() << ": " << outp << "\n";
 }
 
 int main(int argc, char* argv[]) {

@@ -17,12 +17,12 @@
      p.erase(p.begin()); // remove first
      for(auto i = p.begin(); i != p.end(); i++)
          std::cout << *i << "  ";
-     std::cout << std::endl;
+     std::cout << "\n";
      p.insert(++p.begin(), 15.64);
      p.insert(p.end(), 20.31);
      for(auto i = p.begin(); i != p.end(); i++)
-         std::cout << "iterator-based for " << *i << "  " << std::endl;
+         std::cout << "iterator-based for " << *i << "  \n";
      for(auto i : p )
-         std::cout << "range-based for " << i << "  " << std::endl;
-     std::cout << std::endl;
+         std::cout << "range-based for " << i << "  \n";
+     std::cout << "\n";
  }

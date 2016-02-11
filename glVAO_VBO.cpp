@@ -188,7 +188,7 @@ std::string loadFile(const char *fname)
 {
 	std::ifstream file(fname);
 	if(!file.is_open()) {
-		cerr << "Unable to open file " << fname << endl;
+		cerr << "Unable to open file " << fname << "\n";
 		exit(1);
 	}
 
@@ -214,7 +214,7 @@ void printShaderInfoLog(GLint shader)
 		infoLog = new GLchar[infoLogLen];
 		// error check for fail to allocate memory omitted
 		glGetShaderInfoLog(shader, infoLogLen, &charsWritten, infoLog);
-		cout << "InfoLog : " << endl << infoLog << endl;
+		cout << "InfoLog : " << "\n" << infoLog << "\n";
 		delete [] infoLog;
 	}
 }
@@ -283,7 +283,7 @@ int LoadShader( // GB
 	glCompileShader(vertexShader);
 	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &compiled);
 	if(compiled==false) {
-		cerr << "Vertex shader not compiled." << endl;
+		cerr << "Vertex shader not compiled." << "\n";
 		printShaderInfoLog(vertexShader);
 
 		glDeleteShader(vertexShader);
@@ -297,7 +297,7 @@ int LoadShader( // GB
 	glCompileShader(fragmentShader);
 	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &compiled);
 	if(compiled==false) {
-		cerr << "Fragment shader not compiled." << endl;
+		cerr << "Fragment shader not compiled." << "\n";
 		printShaderInfoLog(fragmentShader);
 
 		glDeleteShader(vertexShader);
@@ -329,14 +329,14 @@ int LoadShader( // GB
 	GLint IsLinked;
 	glGetProgramiv(shaderProgram, GL_LINK_STATUS, (GLint *)&IsLinked);
 	if(IsLinked==false) {
-		cerr << "Failed to link shader." << endl;
+		cerr << "Failed to link shader." << "\n";
 
 		GLint maxLength;
 		glGetProgramiv(shaderProgram, GL_INFO_LOG_LENGTH, &maxLength);
 		if(maxLength>0) {
 			char *pLinkInfoLog = new char[maxLength];
 			glGetProgramInfoLog(shaderProgram, maxLength, &maxLength, pLinkInfoLog);
-			cerr << pLinkInfoLog << endl;
+			cerr << pLinkInfoLog << "\n";
 			delete [] pLinkInfoLog;
 		}
 
@@ -556,7 +556,7 @@ void reshape(int w, int h)
 // void ExitFunction(int value) // __glutCreateWindowWithExit callback 
 void ExitFunction(void)         // atexit <cstdlib>           callback
 {
-	cout<<"Exit called."<<endl;
+	cout<<"Exit called."<<"\n";
 
 	glBindVertexArray(0);
 	glDisableVertexAttribArray(0);
@@ -611,7 +611,7 @@ int main (int argc, char* argv[])
 	GLenum err=glewInit();
 	if(err!=GLEW_OK) {
 		//Problem: glewInit failed, something is seriously wrong.
-		cerr<<"glewInit failed, aborting."<<endl;
+		cerr<<"glewInit failed, aborting."<<"\n";
 		exit(1);
 	}
 
@@ -622,24 +622,24 @@ int main (int argc, char* argv[])
 	//In this case, 2895 is a build number.
 	//Then the OS : WinXP
 	//Then CPU features such as SSE
-	cout<<"OpenGL version = "<<glGetString(GL_VERSION)<<endl;
+	cout<<"OpenGL version = "<<glGetString(GL_VERSION)<<"\n";
 
 	//This is the new way for getting the GL version.
 	//It returns integers. Much better than the old glGetString(GL_VERSION).
 	glGetIntegerv(GL_MAJOR_VERSION, &OpenGLVersion[0]);
 	glGetIntegerv(GL_MINOR_VERSION, &OpenGLVersion[1]);
-	cout<<"OpenGL major version = "<<OpenGLVersion[0]<<endl;
-	cout<<"OpenGL minor version = "<<OpenGLVersion[1]<<endl<<endl;
+	cout<<"OpenGL major version = "<<OpenGLVersion[0]<<"\n";
+	cout<<"OpenGL minor version = "<<OpenGLVersion[1]<<"\n"<<"\n";
 
 	//The old method to get the extension list is obsolete.
 	//You must use glGetIntegerv and glGetStringi
 	glGetIntegerv(GL_NUM_EXTENSIONS, &NumberOfExtensions);
-	cout << "GL_NUM_EXTENSIONS = " <<  NumberOfExtensions << endl;
+	cout << "GL_NUM_EXTENSIONS = " <<  NumberOfExtensions << "\n";
 
 	//We don't need any extensions. Useless code.
 	for(i=0; i<NumberOfExtensions; i++) {
 		const GLubyte *ccc=glGetStringi(GL_EXTENSIONS, i);
-		// cout << i << ": " <<  ccc << endl;
+		// cout << i << ": " <<  ccc << "\n";
 	}
 
 	InitGLStates();

@@ -14,7 +14,7 @@ int main(int argc, char**argv)
 {
     int r;
     if(r = setjmp(jb)) {
-	std::cout << "setjmp returned " << r << endl;
+	std::cout << "setjmp returned " << r << "\n";
 	return 1;
     }
     cppFun();

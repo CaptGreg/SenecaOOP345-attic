@@ -11,7 +11,7 @@ void help()
 {
  cout << "\nThis program demonstrates line finding with the Hough transform.\n"
          "Usage:\n"
-         "./houghlines <image_name>, Default is pic1.jpg\n" << endl;
+         "./houghlines <image_name>, Default is pic1.jpg\n" << "\n";
 }
 
 int main(int argc, char** argv)
@@ -68,6 +68,6 @@ int main(int argc, char** argv)
     
      return 0;
     } catch (const string& e) {
-    	cerr << "threw: " << e << endl;
+    	cerr << "threw: " << e << "\n";
     }
 }

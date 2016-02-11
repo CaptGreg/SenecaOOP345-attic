@@ -42,53 +42,53 @@ int main(int argc, char ** argv, char ** env)
     for(int bit = 0; bit < 8; bit++ ) {
         unsigned int target  = 0;
         target = intSetBit(target, bit);
-        cout <<"intSetBit: bit " << bit << " on, target = " << target << endl;
+        cout <<"intSetBit: bit " << bit << " on, target = " << target << "\n";
     }
 
     for(int bit = 0; bit < 8; bit++ ) {
         unsigned int target  = 0;
         target = setBit(target, bit);
-        cout <<"setBit (template function) bit " << bit << " on, target = " << target << endl;
+        cout <<"setBit (template function) bit " << bit << " on, target = " << target << "\n";
     }
 
     unsigned short target;
-    cout << "sizeof(target) = "<< sizeof(target) << " bytes, " << 8 * sizeof(target) << " (bits)" << endl;
+    cout << "sizeof(target) = "<< sizeof(target) << " bytes, " << 8 * sizeof(target) << " (bits)" << "\n";
     for(int bit = 0; bit < 8*sizeof(target); bit++ ) {
         target  = ~0;
         target = clearBit(target, bit);
-        // cout <<"clearBit (template function) bit " << bit << " on, target = " << target << endl;
+        // cout <<"clearBit (template function) bit " << bit << " on, target = " << target << "\n";
         printBits(target);
-        cout << endl;
+        cout << "\n";
     }
 
 
 	uint8_t A = 23;
 	uint8_t B = 32;
 
-	cout << "A = " << (int) A << endl;
-	cout << "B = " << (int) B << endl;
-	cout << "A="; printBits(A);  cout << endl;
-	cout << "B="; printBits(B);  cout << endl;
-	cout << endl;
+	cout << "A = " << (int) A << "\n";
+	cout << "B = " << (int) B << "\n";
+	cout << "A="; printBits(A);  cout << "\n";
+	cout << "B="; printBits(B);  cout << "\n";
+	cout << "\n";
 
 	A = A ^ B;
-	cout << "after A = A ^ B;" << endl;
-	cout << "A="; printBits(A);  cout << endl;
-	cout << "B="; printBits(B);  cout << endl;
-	cout << endl;
+	cout << "after A = A ^ B;" << "\n";
+	cout << "A="; printBits(A);  cout << "\n";
+	cout << "B="; printBits(B);  cout << "\n";
+	cout << "\n";
 
 	B = A ^ B;
-	cout << "after B = A ^ B;" << endl;
-	cout << "A="; printBits(A);  cout << endl;
-	cout << "B="; printBits(B);  cout << endl;
-	cout << endl;
+	cout << "after B = A ^ B;" << "\n";
+	cout << "A="; printBits(A);  cout << "\n";
+	cout << "B="; printBits(B);  cout << "\n";
+	cout << "\n";
 
 	A = A ^ B;
-	cout << "after A = A ^ B;" << endl;
-	cout << "A="; printBits(A);  cout << endl;
-	cout << "B="; printBits(B);  cout << endl;
-	cout << endl;
+	cout << "after A = A ^ B;" << "\n";
+	cout << "A="; printBits(A);  cout << "\n";
+	cout << "B="; printBits(B);  cout << "\n";
+	cout << "\n";
 
-	cout << "A = " << (int) A << endl;
-	cout << "B = " << (int) B << endl;
+	cout << "A = " << (int) A << "\n";
+	cout << "B = " << (int) B << "\n";
 }

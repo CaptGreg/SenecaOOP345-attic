@@ -15,7 +15,7 @@ public:
       , _data(new int[length])
    {
       std::cout << "In MemoryBlock(size_t). length = "
-                << _length << "." << std::endl;
+                << _length << "." << "\n";
    }
 
    // Destructor.
@@ -31,7 +31,7 @@ public:
          delete[] _data;
       }
 
-      std::cout << std::endl;
+      std::cout << "\n";
    }
 
    // Copy constructor.
@@ -40,7 +40,7 @@ public:
       , _data(new int[other._length])
    {
       std::cout << "In MemoryBlock(const MemoryBlock&). length = " 
-                << other._length << ". Copying resource." << std::endl;
+                << other._length << ". Copying resource.\n";
 
       std::copy(other._data, other._data + _length, _data);
    }
@@ -49,7 +49,7 @@ public:
    MemoryBlock& operator=(const MemoryBlock& other)
    {
       std::cout << "In operator=(const MemoryBlock&). length = " 
-                << other._length << ". Copying resource." << std::endl;
+                << other._length << ". Copying resource." << "\n";
 
       if (this != &other)
       {
@@ -67,7 +67,7 @@ public:
    MemoryBlock& operator=(MemoryBlock&& other)
    {
       std::cout << "In operator=(MemoryBlock&&). length = " 
-                << other._length << "." << std::endl;
+                << other._length << "." << "\n";
    
       if (this != &other)
       {
@@ -92,7 +92,7 @@ public:
       , _length(0)
    {
       std::cout << "In MemoryBlock(MemoryBlock&&). length = " 
-                << other._length << ". Moving resource." << std::endl;
+                << other._length << ". Moving resource." << "\n";
    
       // Copy the data pointer and its length from the 
       // source object.

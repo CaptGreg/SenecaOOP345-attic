@@ -33,18 +33,18 @@ int main(int argc, char**argv)
 
     std::shared_ptr<X> ssp(new X("shared smart pointer"));
     ssp->hello();
-    cout << "ssp.use_count()=" << ssp.use_count() << endl;
+    cout << "ssp.use_count()=" << ssp.use_count() << "\n";
 
     std::shared_ptr<X> ssp2( ssp );    // copy ctor
     ssp2->hello();
-    cout << "ssp.use_count ()=" << ssp.use_count()  << endl;
-    cout << "ssp2.use_count()=" << ssp2.use_count() << endl;
+    cout << "ssp.use_count ()=" << ssp.use_count()  << "\n";
+    cout << "ssp2.use_count()=" << ssp2.use_count() << "\n";
 
     std::shared_ptr<X> ssp3 =  ssp2;   // assignment operator
     ssp3->hello();
-    cout << "ssp.use_count ()=" << ssp.use_count()  << endl;
-    cout << "ssp2.use_count()=" << ssp2.use_count() << endl;
-    cout << "ssp3.use_count()=" << ssp3.use_count() << endl;
+    cout << "ssp.use_count ()=" << ssp.use_count()  << "\n";
+    cout << "ssp2.use_count()=" << ssp2.use_count() << "\n";
+    cout << "ssp3.use_count()=" << ssp3.use_count() << "\n";
 
     if(argc > 2)  {
        cout << "argc > 2, return\n";

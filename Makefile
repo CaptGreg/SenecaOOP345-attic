@@ -195,3 +195,11 @@ tp345b: tp345b.cpp tp.h
 tp: tp.cpp tp.h
 	g++ -DTEST -Wall -std=c++11 -Ofast tp.cpp -o tp -pthread 
 	# clang++ -DTEST -Wall -std=c++11 -Ofast tp.cpp -o tp -pthread 
+
+# pimpl.cpp is a C++14 program
+pimpl: pimpl.cpp
+	g++ -Wall -std=c++14 pimpl.cpp -o pimpl
+
+# getaddrinfo_a, gai_suspend, gai_error, gai_cancel - asynchronous network address and service translation
+getaddrinfo_a: getaddrinfo_a.cpp
+	g++ -Wall -std=c++11 getaddrinfo_a.cpp -o getaddrinfo_a -lanl

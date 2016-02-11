@@ -23,7 +23,7 @@ int process(int argc, char**argv)
   int    w   = cap.get(CV_CAP_PROP_FRAME_WIDTH);
   int    h   = cap.get(CV_CAP_PROP_FRAME_HEIGHT);
   double fps = cap.get(CV_CAP_PROP_FPS);
-  std::cout << "Frame size : " << w << " x " << h << std::endl;
+  std::cout << "Frame size : " << w << " x " << h << "\n";
 
   cv::VideoWriter writer;
   if(argc > 2) // NOTE: XVID is MPEG-4
@@ -46,7 +46,7 @@ int process(int argc, char**argv)
   int lineType          = 8; 
   bool bottomLeftOrigin = false;  // up-side-down text if true
 
-  std::cout << "Press Esc key to quit" << std::endl;
+  std::cout << "Press Esc key to quit\n";
   cv::Mat frame;
   for(int frameCount = 0; ; frameCount++) {
     cap >> frame;

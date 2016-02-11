@@ -44,7 +44,7 @@ public:
     ~Foo() 
       { scope = "out-of-scope"; std::cout <<  "Foo dtor: " << "name=" << name << " " << this << "\n"; }
 
-    std::function<void()> getName() { return [this]() { std::cout << scope << " name=" << name << " " << this << std::endl; }; }
+    std::function<void()> getName() { return [this]() { std::cout << scope << " name=" << name << " " << this << "\n"; }; }
 };
 
 class Bar {
@@ -56,7 +56,7 @@ public:
     ~Bar() 
       { std::cout <<  "Bar dtor: " << "name=" << name << " " << this << "\n"; }
 
-    std::function<void()> getName() { return [this]() { std::cout << "name=" << name << " " << this << std::endl; }; }
+    std::function<void()> getName() { return [this]() { std::cout << "name=" << name << " " << this << "\n"; }; }
 };
 
 int main() {

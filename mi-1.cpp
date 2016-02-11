@@ -16,7 +16,7 @@ class C : public B { };
 
 int main (int argc, char**argv)
 {
-    cout << endl << argv[0] << endl << endl;
+    cout << "\n" << argv[0] << "\n" << "\n";
     C c;
     c.display();
     return 0;
