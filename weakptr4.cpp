@@ -60,16 +60,11 @@ public:
     // pointed-to memory still exists or not. 
     void CheckStatuses() const
     {
-        for_each(others.begin(), others.end(), [] (weak_ptr<Controller> wp)
-        {
-            try
-            {
+        for_each(others.begin(), others.end(), [] (weak_ptr<Controller> wp) {
+            try {
                 auto p = wp.lock();
                 wcout << L"Status of " << p->Num << " = " << p->Status << "\n";
-            }
-
-            catch (bad_weak_ptr b)
-            {
+            } catch (bad_weak_ptr b) {
                 wcout << L"Null object" << "\n";
             }                
         });
@@ -88,23 +83,20 @@ void RunTest()
 
     // Each controller depends on all others not being deleted. 
     // Give each controller a pointer to all the others. 
-    for (int i = 0 ; i < v.size(); ++i)
-    {
-        for_each(v.begin(), v.end(), [v,i] (shared_ptr<Controller> p)
-        {
-            if(p->Num != i)
-            {
+    for (int i = 0 ; i < v.size(); ++i) {
+        for_each(v.begin(), v.end(), [v,i] (shared_ptr<Controller> p) {
+            if(p->Num != i) {
                 v[i]->others.push_back(weak_ptr<Controller>(p));
                 wcout << L"push_back to v[" << i << "]: " << p->Num << "\n";
             }
         });        
     }
 
-    for_each(v.begin(), v.end(), [](shared_ptr<Controller>& p)
-    {
+    for_each(v.begin(), v.end(), [](shared_ptr<Controller>& p) {
         wcout << L"use_count = " << p.use_count() << "\n";
         p->CheckStatuses();
-    });
+    }
+    );
 }
 
 int main()
