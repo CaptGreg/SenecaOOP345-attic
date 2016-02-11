@@ -10,7 +10,7 @@ void display (const L& input) {
   for (auto i = input.cbegin(); i != input.cend(); ++i){
     cout << *i << " ";
   }
-  cout << endl;
+  cout << "\n";
 }
 
 int main() {
@@ -22,15 +22,15 @@ int main() {
   cout << "Data at intNum2: ";
   display(intNum2);
 
-  cout << "Now we will enter intNum1 at the end of intNum2" << endl;; 
+  cout << "Now we will enter intNum1 at the end of intNum2" << "\n";; 
   intNum2.insert(intNum2.end(), intNum1.begin(), intNum1.end());
   display(intNum2);
-  cout << "======================================"<< endl;
+  cout << "======================================"<< "\n";
   list <int> intNum3 = {101, 122};
   cout << "Data at inNum2: ";
   display(intNum3);
 
-  cout << "Now we will enter intNum3 at the 3rd position of intNum2" << endl;
+  cout << "Now we will enter intNum3 at the 3rd position of intNum2" << "\n";
   // intNum2.insert(intNum2.begin()+3, intNum3.begin(), intNum3.end());
   intNum2.insert(intNum2.begin(), intNum3.begin(), intNum3.end());
   // TYPEID(intNum2.begin());

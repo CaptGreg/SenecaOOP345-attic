@@ -9,7 +9,7 @@
 class bar {
 public:
   void foo(int i) {
-    std::cout << "hello from member function, i=" << i << std::endl;
+    std::cout << "hello from member function, i=" << i << "\n";
   }
   void foofoo() {  // GB
     std::thread t(&bar::foo, bar(), 22);

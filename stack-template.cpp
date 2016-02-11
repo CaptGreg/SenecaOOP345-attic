@@ -56,7 +56,7 @@ int main()
         intStack.push(7);
         intStack.push(8);
         intStack.push(9);
-        cout << intStack.top() <<endl;
+        cout << intStack.top() <<"\n";
 
         // manipulate string stack
         Stack<string> stringStack;    // stack of strings
@@ -64,12 +64,12 @@ int main()
         stringStack.push("goodbye");
         stringStack.push("nihao");
         stringStack.push("zaijian");
-        cout << stringStack.top() << std::endl;
+        cout << stringStack.top() << "\n";
         stringStack.pop();
         stringStack.pop();
     }
     catch (exception const& ex) {
-        cerr << "Exception: " << ex.what() <<endl;
+        cerr << "Exception: " << ex.what() <<"\n";
         return -1;
     }
 }

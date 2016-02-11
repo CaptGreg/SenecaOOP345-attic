@@ -21,7 +21,7 @@ int main()
     while (in)
     {
         std::getline(in, line);
-        std::cout << line << std::endl;
+        std::cout << line << "\n";
     }
     return 0;
 }

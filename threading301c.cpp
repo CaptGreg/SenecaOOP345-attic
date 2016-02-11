@@ -25,7 +25,7 @@ thread::id main_thread_id = this_thread::get_id();  // in case we need to know m
 int main(int argc, char**argv) // package_task + async
 {
   Timer timer;
-  cout << "main thread ID=" << main_thread_id << endl;
+  cout << "main thread ID=" << main_thread_id << "\n";
   auto sleepS  = [] (int nap) { this_thread::sleep_for (std::chrono::seconds(nap)); };
   auto sleepMS = [] (int nap) { this_thread::sleep_for (std::chrono::milliseconds(nap)); };
   auto newThread = [=] () { cout << (this_thread::get_id() == main_thread_id? "*** MAIN THREAD\n": "*** NEW THREAD\n"); };
@@ -39,11 +39,11 @@ int main(int argc, char**argv) // package_task + async
   packaged_task<double(double)> double_packaged_task( dfun ); // double(double) => function returns double, double arg
   double_packaged_task(42.75);
   auto fut = double_packaged_task.get_future();
-  cout << "double_packaged_task...get=" << fut.get() << endl;
+  cout << "double_packaged_task...get=" << fut.get() << "\n";
 
   packaged_task<int(int)> int_packaged_task( ifun ); // int(int) => function returns int, int arg
   int_packaged_task(40);
-  cout << "int_packaged_task...get=" << int_packaged_task.get_future().get() << endl;
+  cout << "int_packaged_task...get=" << int_packaged_task.get_future().get() << "\n";
 
   auto funSleepMS = [sleepMS](double x) -> double { sleepMS(1500); return 2*x; };
 
@@ -59,7 +59,7 @@ int main(int argc, char**argv) // package_task + async
 
   cout << "accessing packaged task result\n";
   timer.Reset();
-  cout << "pt_sf.get_future().get() =" << pt_sf.get_future().get() << endl;
+  cout << "pt_sf.get_future().get() =" << pt_sf.get_future().get() << "\n";
   timer.Print("pt_sf.get_future().get() took ");
 
   std::cout << "********************* END OF MAIN\n";

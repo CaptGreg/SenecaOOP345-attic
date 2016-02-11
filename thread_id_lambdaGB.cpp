@@ -16,7 +16,7 @@
      for (int i = 0; i < NT; i++) {
          threads.push_back(std::thread([=]() {
              std::cout << i << " Thread id = " <<
-              std::this_thread::get_id() << std::endl; 
+              std::this_thread::get_id() << "\n"; 
          })); 
      }
 #else
@@ -25,7 +25,7 @@
              std::cout << i 
                        << " Thread id = " 
                        << std::this_thread::get_id() 
-                       << std::endl; 
+                       << "\n"; 
          };
 
          threads.push_back( std::thread(f) );

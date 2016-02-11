@@ -14,16 +14,16 @@ int main1()
     {
         shared_ptr<Child> child;
          
-        ~Parent() { cout << "Bye Parent" << endl; }
+        ~Parent() { cout << "Bye Parent" << "\n"; }
          
-        void hi() const { cout << "Hello" << endl; }
+        void hi() const { cout << "Hello" << "\n"; }
     };
      
     struct Child
     {
         shared_ptr<Parent> parent;
          
-        ~Child() { cout << "Bye Child" << endl; }
+        ~Child() { cout << "Bye Child" << "\n"; }
     };
      
     auto parent = make_shared<Parent>();
@@ -45,16 +45,16 @@ int main2()
     {
         shared_ptr<Child> child;
          
-        ~Parent() { cout << "Bye Parent" << endl; }
+        ~Parent() { cout << "Bye Parent" << "\n"; }
          
-        void hi() const { cout << "Hello" << endl; }
+        void hi() const { cout << "Hello" << "\n"; }
     };
      
     struct Child
     {
         weak_ptr<Parent> parent;
          
-        ~Child() { cout << "Bye Child" << endl; }
+        ~Child() { cout << "Bye Child" << "\n"; }
     };
      
     auto parent = make_shared<Parent>();
@@ -73,8 +73,8 @@ int main3()
     struct A
     {
         int x;  
-        A(int x)  : x(x) { cout << "HI" << endl; }
-        ~A() { cout << "Bye" << endl; }
+        A(int x)  : x(x) { cout << "HI" << "\n"; }
+        ~A() { cout << "Bye" << "\n"; }
     };
      
     // cannot define function 'm' local to function 'main'
@@ -83,19 +83,19 @@ int main3()
     auto m = [] () -> weak_ptr<A>
     {
         auto a = make_shared<A>(12);
-        cout << a->x << endl;
+        cout << a->x << "\n";
          
         return a;
     };
      
     auto a = m();
      
-    cout << "After m()" << endl;
+    cout << "After m()" << "\n";
      
     if (a.expired())
-        cout << "Expired" << endl;
+        cout << "Expired" << "\n";
     else
-        cout << a.lock()->x << endl;
+        cout << a.lock()->x << "\n";
 
     return 0;
 }

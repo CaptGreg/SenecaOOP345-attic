@@ -11,23 +11,23 @@
  int main() {
      int a = 10, b = 20;
 
-     std::cout << "std::ref" << std::endl;
+     std::cout << "std::ref" << "\n";
      incrementRef(std::ref(a), std::ref(b));
-     std::cout << "a = " << a << std::endl;
-     std::cout << "b = " << b << std::endl;
+     std::cout << "a = " << a << "\n";
+     std::cout << "b = " << b << "\n";
 
-     std::cout << "compiler generated reference call" << std::endl;
+     std::cout << "compiler generated reference call\n";
      incrementRef(a, b);
-     std::cout << "a = " << a << std::endl;
-     std::cout << "b = " << b << std::endl;
+     std::cout << "a = " << a << "\n";
+     std::cout << "b = " << b << "\n";
 
-     std::cout << "pointer call" << std::endl;
+     std::cout << "pointer call" << "\n";
      incrementPtr(&a, &b);
-     std::cout << "a = " << a << std::endl;
-     std::cout << "b = " << b << std::endl;
+     std::cout << "a = " << a << "\n";
+     std::cout << "b = " << b << "\n";
 
-     std::cout << "value call" << std::endl;
+     std::cout << "value call" << "\n";
      incrementValue(a, b);
-     std::cout << "a = " << a << std::endl;
-     std::cout << "b = " << b << std::endl;
+     std::cout << "a = " << a << "\n";
+     std::cout << "b = " << b << "\n";
  }

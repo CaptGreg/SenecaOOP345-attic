@@ -1,7 +1,7 @@
 #include <iostream>
 
 char *p1  = "qwerty";
-char p2[] = "QWERTY"
+char p2[] = "QWERTY";
 
 int main()
 {
@@ -15,4 +15,4 @@ int main()
   // p1 happes to initialized with a const char array.
   // The values in p2 can be modified.
   
-]
+}

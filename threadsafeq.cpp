@@ -63,9 +63,9 @@ int main()
           tries++;
         std::ostringstream ss;
         if(tries == 1)
-          ss << "thread " << i << " popped " << ii << std::endl;
+          ss << "thread " << i << " popped " << ii << "\n";
         else
-          ss << "thread " << i << " popped " << ii << " after " << tries << " tries" << std::endl;
+          ss << "thread " << i << " popped " << ii << " after " << tries << " tries" << "\n";
         std::cout << ss.str();
       }; 
  
@@ -80,11 +80,11 @@ int main()
     for(auto& e : t) e.join();
 
 
-    std::cout << std::endl;
+    std::cout << "\n";
 
   } catch(std::exception& e) {
-    std::cerr << "program threw: " << e.what() << std::endl;
+    std::cerr << "program threw: " << e.what() << "\n";
   } catch(...) {
-    std::cerr << "program threw unspecified error" << std::endl;
+    std::cerr << "program threw unspecified error" << "\n";
   }
 }

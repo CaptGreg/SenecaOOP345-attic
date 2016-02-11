@@ -13,11 +13,11 @@ int sub(int argc, char**argv)
 
   } catch(const string& e){
 
-    cout << "sub: threw a string: " << e << endl;
+    cout << "sub: threw a string: " << e << "\n";
 
   } catch(const char* e){
 
-    cout << "sub: threw a char*: " << e << endl;
+    cout << "sub: threw a char*: " << e << "\n";
 
   }
 }

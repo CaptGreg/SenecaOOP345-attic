@@ -532,7 +532,7 @@ int main(int argc, char* argv[])
       std::cout<<vecC[0]; for(int i = 1 ; i < 10 ; i++ ) std::cout<<", "<<vecC[i]; std::cout<<"\n";
     }
   } catch (const cl::Error& e) {
-      std::cerr << "threw cl::Error: " << e.what() << "(" << e.err() << ")" << std::endl;
+      std::cerr << "threw cl::Error: " << e.what() << "(" << e.err() << ")" << "\n";
   } catch (const std::exception& e) {
       std::cerr << "threw std::exception: " << e.what() << "\n";
   }

@@ -165,7 +165,7 @@ void crit_err_hdlr2(int sig_num, siginfo_t * info, void * ucontext) // GB works
     std::cerr << "signal " << sig_num 
               << " (" << strsignal(sig_num) << "), address is " 
               << info->si_addr << " from " << caller_address 
-              << std::endl << std::endl;
+              << "\n\n";
 
     void * array[50];
     int size = backtrace(array, 50);
@@ -203,19 +203,19 @@ void crit_err_hdlr2(int sig_num, siginfo_t * info, void * ucontext) // GB works
             if (status == 0) {    
                 std::cerr << "[bt]: (" << i << ") " << messages[i] << " : " 
                           << real_name << "+" << offset_begin << offset_end 
-                          << std::endl;
+                          << "\n";
 
             } else { // otherwise, output the mangled function name
                 std::cerr << "[bt]: (" << i << ") " << messages[i] << " : " 
                           << mangled_name << "+" << offset_begin << offset_end 
-                          << std::endl;
+                          << "\n";
             }
             free(real_name);
         } else { // otherwise, print the whole line
-            std::cerr << "[bt]: (" << i << ") " << messages[i] << std::endl;
+            std::cerr << "[bt]: (" << i << ") " << messages[i] << "\n";
         }
     }
-    std::cerr << std::endl;
+    std::cerr << "\n";
 
     free(messages);
 

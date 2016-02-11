@@ -23,6 +23,8 @@ using namespace std;
       // Construct sets time of event.
       event (unsigned int t) : time (t)
         { }
+      virtual ~event ()
+        { }
 
       // Execute event by invoking this method.
       virtual void processEvent () = 0;
@@ -85,6 +87,8 @@ using namespace std;
     public:
       storeSimulation () : simulation (), freeChairs (35), profit (0.0)
         { }
+      ~storeSimulation () 
+        { }
       bool canSeat (unsigned int numberOfPeople);
       void order   (unsigned int numberOfScoops);
       void leave   (unsigned int numberOfPeople);
@@ -144,6 +148,11 @@ using namespace std;
       if (theSimulation.canSeat (size))
         theSimulation.scheduleEvent
           (new orderEvent (time + 1 + irand (4), size));
+           // GB Feb 5, 2016 - thought this compiled?
+           // error: expected type-specifier before ‘orderEvent’
+           // (new orderEvent (time + 1 + irand (4), size));
+           //      ^
+
     }
 
 // An order event similarly spawns a leave event:

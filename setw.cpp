@@ -1,7 +1,7 @@
 // http://www.cplusplus.com/reference/iomanip/setw/
 
 // setw example
-#include <iostream>     // std::cout, std::endl
+#include <iostream>     // std::cout
 #include <iomanip>      // std::setw
 
 int main () {

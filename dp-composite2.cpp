@@ -33,7 +33,7 @@ public:
 
   void print() override
   {
-    cout << name << endl;
+    cout << name << "\n";
 		
     for (auto &e : elements)
       e->print();
@@ -49,7 +49,7 @@ public:
   
   void print() override
   {
-    cout << name << endl;
+    cout << name << "\n";
   }
 };
 

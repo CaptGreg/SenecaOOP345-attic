@@ -26,7 +26,7 @@ int main()
     cout << "\nYour items:\n";
     for (unsigned int i = 0; i < inventory.size(); ++i)
     {
-        cout << inventory[i] << endl;
+        cout << inventory[i] << "\n";
     }
 
     cout << "\nYou trade your sword for a battle axe.";
@@ -34,7 +34,7 @@ int main()
     cout << "\nYour items:\n";
     for (unsigned int i = 0; i < inventory.size(); ++i)
     {
-        cout << inventory[i] << endl;
+        cout << inventory[i] << "\n";
     }
 
     cout << "\nThe item name '" << inventory[0] << "' has ";
@@ -45,7 +45,7 @@ int main()
     cout << "\nYour items:\n";
     for (unsigned int i = 0; i < inventory.size(); ++i)
     {
-        cout << inventory[i] << endl;
+        cout << inventory[i] << "\n";
     }
 
     cout << "\nYou were robbed of all of your possessions by a thief.";

@@ -25,7 +25,7 @@ thread::id main_thread_id = this_thread::get_id();  // in case we need to know m
 int main(int argc, char**argv) // package_task + async
 {
   Timer timer;
-  cout << "main thread ID=" << main_thread_id << endl;
+  cout << "main thread ID=" << main_thread_id << "\n";
   auto sleepS  = [] (int nap) { this_thread::sleep_for (std::chrono::seconds(nap)); };
   auto sleepMS = [] (int nap) { this_thread::sleep_for (std::chrono::milliseconds(nap)); };
   auto newThread = [=] () { cout << (this_thread::get_id() == main_thread_id? "*** MAIN THREAD\n": "*** NEW THREAD\n"); };
@@ -47,7 +47,7 @@ int main(int argc, char**argv) // package_task + async
 
 
   timer.Reset();
-  std::cout << fTask.get() << std::endl;
+  std::cout << fTask.get() << "\n";
   timer.Print("fTask.get() time=");
 
   cout << "packaged_task<int()> task2(sleep);\n";
@@ -57,7 +57,7 @@ int main(int argc, char**argv) // package_task + async
   cout << "thread t( std::move(task2) );\n";
   thread t( std::move(task2) );
   cout << "wait for new thread to run task2 and return result-->";
-  cout << fTask2.get() << endl;
+  cout << fTask2.get() << "\n";
   t.join();
 
   /// ASYNC

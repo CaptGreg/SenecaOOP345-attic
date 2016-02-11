@@ -18,7 +18,7 @@ class CShow
 
 void CShow::show (int i) 
  {
-   cout << "The area of the square is::" << i << endl;
+   cout << "The area of the square is::" << i << "\n";
  }
 
 class Area: public Square, public CShow
@@ -30,7 +30,7 @@ class Area: public Square, public CShow
 
 int main (int argc, char**argv)
 {
-  cout << endl << argv[0] << endl << endl;
+  cout << "\n" << argv[0] << "\n" << "\n";
   Area r;
   r.set_values (5);
   r.show(r.area());

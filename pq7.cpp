@@ -20,22 +20,22 @@ int main()
     priority_queue<int> pq;
     vector<int> &tasks = Container(pq);
 
-    cout<<"Putting numbers into the queue"<<endl;
+    cout<<"Putting numbers into the queue"<<"\n";
     for(int i=0;i<20;i++){
         int temp=rand();
-        cout<<temp<<endl;
+        cout<<temp<<"\n";
         pq.push(temp);
     }
 
-    cout<<endl<<"Reading numbers in the queue"<<endl;
+    cout<<"\n"<<"Reading numbers in the queue"<<"\n";
     for(vector<int>::iterator i=tasks.begin();i!=tasks.end();i++)
-        cout<<*i<<endl;
+        cout<<*i<<"\n";
 
-    cout<<endl<<"Taking numbers out of the queue"<<endl;
+    cout<<"\n"<<"Taking numbers out of the queue"<<"\n";
     while(!pq.empty()){
         int temp=pq.top();
         pq.pop();
-        cout<<temp<<endl;
+        cout<<temp<<"\n";
     }
 
     return 0;

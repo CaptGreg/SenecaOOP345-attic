@@ -192,7 +192,7 @@ void deleteList( struct node *ptr )
 
 
 void displayNode( struct node *ptr ) {
-	cout << ptr->id << ": " << ptr->name << endl;
+	cout << ptr->id << ": " << ptr->name << "\n";
 }
 
 
@@ -231,7 +231,7 @@ int main()
 	name = "s2";
 	ptr = searchName(head, name );
 	if( ptr == nullptr ) {
-		cout << "\nName: " << name << " not found" << endl;
+		cout << "\nName: " << name << " not found" << "\n";
 	}
 	else {
 		cout << "\nDeleting a node ...  ";

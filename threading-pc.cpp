@@ -11,8 +11,8 @@ typedef int sample;
 sample job = 0;
 const int JOB_COUNT = 5;
 bool should_produce () { return job < JOB_COUNT; }
-const sample produce() { std::cout << "produce " << job << std::endl; return job++; }
-void process(sample s) { std::cout << "process " << s << std::endl; }
+const sample produce() { std::cout << "produce " << job << "\n"; return job++; }
+void process(sample s) { std::cout << "process " << s << "\n"; }
 bool is_last(sample s) { return job+1 >= JOB_COUNT; }
 
 std::mutex              fifo_mutex;

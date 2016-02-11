@@ -8,7 +8,7 @@
 #include <future>
 
 void test(std::future<int>& input) {
-  std::cout << input.get() << std::endl;
+  std::cout << input.get() << "\n";
 }
 
 inline int accumulate(std::vector<int> const &data)
@@ -39,13 +39,13 @@ int main()
 
   //called by function
   std::future<int> result = std::async(accumulate, std::cref(data));  
-  std::cout<<result.get()<<std::endl; //#1
+  std::cout<<result.get()<<"\n"; //#1
 
   //called by functor
   Accmulate acc;
   std::future<int> result2 = std::async(&Accmulate::operator(), 
                                               &acc, std::cref(data));
-  std::cout<<result2.get()<<std::endl; //#2
+  std::cout<<result2.get()<<"\n"; //#2
 
 
   std::cout << "//////////////////////////// std::promise\n";
@@ -76,7 +76,7 @@ int main()
     tasks[3](3, 2);
 
     for(auto &data : futures){
-        std::cout<<data.get()<<std::endl;
+        std::cout<<data.get()<<"\n";
     }
     t1.join();
     t2.join();

@@ -1,5 +1,7 @@
 // http://danieltarbotton.com/2012/11/21/a-stdpromise-means-nothing-until-its-delivered/
 
+// GB syntax error
+
 #include <thread>
 #include <future>
 

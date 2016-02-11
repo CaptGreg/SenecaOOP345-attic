@@ -8,7 +8,7 @@ using namespace std;
 template <typename T>                            // C++ function template
 void print(const T& t) {
     // std::cout << __PRETTY_FUNCTION__ << "\n";
-    cout << t << endl;
+    cout << t << "\n";
 }
 
 template <typename First, typename... Rest>      // C++11 variable argument (variadic) template

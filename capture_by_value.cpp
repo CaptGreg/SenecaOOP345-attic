@@ -16,16 +16,16 @@
 
  int main() {
      int k = 4;
-     std::cout << add(10, [=](int i){ return i + k; }) << std::endl; 
-     std::cout << sub(10, [=](int i){ return i - k; }) << std::endl;
+     std::cout << add(10, [=](int i){ return i + k; }) << "\n"; 
+     std::cout << sub(10, [=](int i){ return i - k; }) << "\n";
 
-     std::cout << ZZZ(10, [=](int i){ return i + k; }) << std::endl; 
-     std::cout << ZZZ(10, [=](int i){ return i - k; }) << std::endl;
+     std::cout << ZZZ(10, [=](int i){ return i + k; }) << "\n"; 
+     std::cout << ZZZ(10, [=](int i){ return i - k; }) << "\n";
 
-     std::cout << ZZZ(10, [=](int i){ return i + k; }) << std::endl; 
-     std::cout << ZZZ(10, [=](int i){ return i - k; }) << std::endl;
-     std::cout << ZZZ(10, [=](int i){ return i * k; }) << std::endl;
-     std::cout << ZZZ(10, [&](int i){ return i / k; }) << std::endl;
-     std::cout << ZZZ(10, [&](int i){ return i % k; }) << std::endl;
+     std::cout << ZZZ(10, [=](int i){ return i + k; }) << "\n"; 
+     std::cout << ZZZ(10, [=](int i){ return i - k; }) << "\n";
+     std::cout << ZZZ(10, [=](int i){ return i * k; }) << "\n";
+     std::cout << ZZZ(10, [&](int i){ return i / k; }) << "\n";
+     std::cout << ZZZ(10, [&](int i){ return i % k; }) << "\n";
  }
 

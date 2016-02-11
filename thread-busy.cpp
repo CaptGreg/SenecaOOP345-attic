@@ -49,10 +49,10 @@ int main1() {
     // Print status.
     // Use wait_for() with zero milliseconds to check thread status.
     while( future.wait_for(std::chrono::milliseconds(0))  == std::future_status::timeout) {
-        std::cout << "    main1 async-future: Thread active" << std::endl;
+        std::cout << "    main1 async-future: Thread active" << "\n";
         std::this_thread::sleep_for(std::chrono::seconds(1));
     }
-    std::cout << "main1 async-future: Thread finished" << std::endl;
+    std::cout << "main1 async-future: Thread finished" << "\n";
 
     auto result = future.get(); // Get result.
     return 0;
@@ -80,10 +80,10 @@ int main2() {
     // Print status.
     // Use wait_for() with zero milliseconds to check thread status.
     while( future.wait_for(std::chrono::milliseconds(0))  == std::future_status::timeout) {
-        std::cout << "    main2 thread-promise-future: Thread active" << std::endl;
+        std::cout << "    main2 thread-promise-future: Thread active" << "\n";
         std::this_thread::sleep_for(std::chrono::seconds(1));
     }
-    std::cout << "main2 thread-promise-future: Thread finished" << std::endl;
+    std::cout << "main2 thread-promise-future: Thread finished" << "\n";
 
     t.join(); // Join thread.
     return 0;
@@ -113,10 +113,10 @@ int main3() {
 
     // Print status.
     while (!done) {
-        std::cout << "   main3 (atomic flag): Thread active" << std::endl;
+        std::cout << "   main3 (atomic flag): Thread active" << "\n";
         std::this_thread::sleep_for(std::chrono::seconds(1));
     }
-    std::cout << "main3 (atomic flag): Thread finished" << std::endl;
+    std::cout << "main3 (atomic flag): Thread finished" << "\n";
 
     t.join(); // Join thread.
     return 0;
@@ -142,10 +142,10 @@ int main4() {
 
     // Use wait_for() with zero milliseconds to check thread status.
     while( future.wait_for(std::chrono::milliseconds(0))  == std::future_status::timeout) {
-        std::cout << "    main4 packaged_task-future: Thread active" << std::endl;
+        std::cout << "    main4 packaged_task-future: Thread active\n";
         std::this_thread::sleep_for(std::chrono::seconds(1));
     }
-    std::cout << "main4 packaged_task-future: Thread finished" << std::endl;
+    std::cout << "main4 packaged_task-future: Thread finished\n";
 
 
     t.join(); // Join thread.

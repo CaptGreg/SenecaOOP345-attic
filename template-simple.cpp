@@ -2,7 +2,8 @@
 using namespace std;
 
   template<typename T>
-  // template<class T>
+  // template<class T>  // also works most of the time.  If compiler complains, switch to typename
+ //  #define T int
   class Z{
     T z;
   public:

@@ -24,7 +24,7 @@ void printMatrix(const valarray<T>& a, size_t n) {
     cout << setw(5) << a[i];
     cout << ((i+1)%n ? ' ' : '\n');
   }
-  cout << endl;
+  cout << "\n";
 }
  
 // Multiplies compatible matrices in valarrays

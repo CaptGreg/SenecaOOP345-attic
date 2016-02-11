@@ -24,9 +24,9 @@ class X
   char name;
 public:
   X(char c) : name(c) { }
-  void doSomething() { cout << "doSomething with " << name << endl; }
-  void lock() { cout << "lock " << name << endl; }
-  void unlock() { cout << "unlock " << name << endl; }
+  void doSomething() { cout << "doSomething with " << name << "\n"; }
+  void lock() { cout << "lock " << name << "\n"; }
+  void unlock() { cout << "unlock " << name << "\n"; }
   dispatch operator->() { return *this; }
 };
 

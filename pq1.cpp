@@ -21,7 +21,7 @@ void functionA()
   cout<<"q contains " << q.size() << " elements.\n";
 
   while (!q.empty()) {
-    cout << q.front() << endl;    //print out the first element in the queue
+    cout << q.front() << "\n";    //print out the first element in the queue
     q.pop();                      //remove the first element of the queue
   }
 }
@@ -38,7 +38,7 @@ void functionB()
   cout<<"pq contains " << pq.size() << " elements.\n";
 
   while (!pq.empty()) {
-    cout << pq.top() << endl;   //print out the highest priority element
+    cout << pq.top() << "\n";   //print out the highest priority element
     pq.pop();                   //remove the highest priority element
   }
 }
@@ -58,7 +58,7 @@ void functionC()
   cout<<"pq contains " << pq.size() << " elements.\n";
 
   while (!pq.empty()) {
-    cout << pq.top() << endl;      //print out the highest priority element in the queue
+    cout << pq.top() << "\n";      //print out the highest priority element in the queue
     pq.pop();                      //remove the highest priority element
   }
 }
@@ -104,7 +104,7 @@ void functionD()
 
   while (!pq.empty()) {
     cout << pq.top().get_feet()                             //print out the feet and inches of the highest
-         << "' " << pq.top().get_inches() << "\"" << endl;  //priority Height object in the priority queue
+         << "' " << pq.top().get_inches() << "\"" << "\n";  //priority Height object in the priority queue
     pq.pop();                                               //remove the highest priority element
   }
 }

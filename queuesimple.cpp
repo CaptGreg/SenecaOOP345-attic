@@ -13,5 +13,5 @@ int main(int argc, char**argv)
   q.push("queue third push: C++");
 
   // q.print(); // or walk with a print function
-  q.walk( [] (string d) { cout << d << endl; } );
+  q.walk( [] (string d) { cout << d << "\n"; } );
 }

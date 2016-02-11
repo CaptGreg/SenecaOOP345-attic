@@ -42,8 +42,8 @@ int main1()
     //  The lowest priority string is "fox", and the highest priority string is "the quick"
 
     while (!pq.empty()) {
-       // cout << pq.front() << endl;  // Print highest priority string
-       cout << pq.top() << endl;  // Print highest priority string
+       // cout << pq.front() << "\n";  // Print highest priority string
+       cout << pq.top() << "\n";  // Print highest priority string
        pq.pop();                    // Remmove highest priority string
     }
 
@@ -124,7 +124,7 @@ int main2()
     while (! pq.empty()) {
        Time t2 = pq.top();
        cout << setw(3) << t2.h << " " << setw(3) << t2.m << " " <<
-       setw(3) << t2.s << endl;
+       setw(3) << t2.s << "\n";
        pq.pop();
     }
 

@@ -22,16 +22,16 @@ int main()
     cout << "Your items:\n";
     for (iter = inventory.begin(); iter != inventory.end(); ++iter)
     {
-        cout << *iter << endl;
+        cout << *iter << "\n";
     }
 
     cout << "\nYou trade your sword for a battle axe.";
-    myIterator = inventory.begin();
+    auto myIterator = inventory.begin();
     *myIterator = "battle axe";
     cout << "\nYour items:\n";
     for (iter = inventory.begin(); iter != inventory.end(); ++iter)
     {
-        cout << *iter << endl;
+        cout << *iter << "\n";
     }
 
     cout << "\nThe item name '" << *myIterator << "' has ";
@@ -44,7 +44,7 @@ int main()
     cout << "\nYour items:\n";
     for (iter = inventory.begin(); iter != inventory.end(); ++iter)
     {
-        cout << *iter << endl;
+        cout << *iter << "\n";
     }
 
     cout << "\nYour armor is destroyed in a fierce battle.";
@@ -52,7 +52,7 @@ int main()
     cout << "\nYour items:\n";
     for (iter = inventory.begin(); iter != inventory.end(); ++iter)
     {
-        cout << *iter << endl;
+        cout << *iter << "\n";
     }
 
     return 0;

@@ -46,7 +46,7 @@ void printBits(const T var,ostream& s = cout)
       // s << (char) ( '0' + getBit(bit, var) );
       s << "01"[ getBit(bit, var) ];
     }
-    s << endl;
+    s << "\n";
   }
 
 template <typename T>

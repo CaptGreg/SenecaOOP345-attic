@@ -130,7 +130,7 @@ void FundamentalTypes()
   #undef P
 
   std::cout << "Fundamental types - c-code OOP144\n";
-  #define M(var)  std::cout << std::setw(22) << std::left << "sizeof(" #var ") " << "= " << std::setw(2) << std::right << sizeof(var) << " bytes, " << std::setw(3) << 8*sizeof(var)<< "-bits\n";
+  #define M(var)  std::cout << std::setw(22) << std::left << "sizeof(" #var ") = " << std::setw(2) << std::right << sizeof(var) << " bytes, " << std::setw(3) << 8*sizeof(var)<< "-bits\n";
 
   M(void*)
   M(size_t)
@@ -541,7 +541,7 @@ void Aggregation()
   // "has-a" relationship
 
   // A motor can exist without a car.
-  // A car can exists with a motor
+  // A car can exist without a motor
   // A motor can only be in one car.
   class Motor{ };
   class Car{
@@ -555,7 +555,7 @@ void Aggregation()
   };
 
   // A duck can exist without a pond
-  // A pond can exist with a duck
+  // A pond can exist without a duck
   // A duck can only be in one pond.
   class Duck {};
   class Pond {
@@ -1234,7 +1234,7 @@ int main(int argc, char**argv)
   #else
     std::cout << "g++ compiler " << __VERSION__ << "\n";
   #endif
-  std::cout << "--> " << "generating " << 8*sizeof(void*) << "-bit code\n";
+  std::cout << "--> generating " << 8*sizeof(void*) << "-bit code\n";
 
   std::cout << R"gnu(
   /******************************************************************\

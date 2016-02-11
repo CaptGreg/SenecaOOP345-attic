@@ -188,7 +188,7 @@ void execute(const vector<function<void ()>>& fs) {
         f();
 }
  
-void plain_old_func() { cout << "I'm an old plain function" << endl; }
+void plain_old_func() { cout << "I'm an old plain function" << "\n"; }
  
 int main3()
 {
@@ -203,7 +203,7 @@ int main3()
     function_object function_object_instance;
     x.push_back(function_object_instance);
 
-    x.push_back( [] { cout << "HI, I'm a lambda expression" << endl; } );
+    x.push_back( [] { cout << "HI, I'm a lambda expression" << "\n"; } );
      
     execute(x);
     return 0;

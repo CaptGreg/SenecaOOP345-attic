@@ -36,17 +36,17 @@ public:
   void print()
   {
     for(Node<T> *n=head; n; n=n->link) {
-      cout << n->data << endl;
+      cout << n->data << "\n";
    }
   }
   void printAddresses()
   {
-    cout << "head=" << head << endl;
+    cout << "head=" << head << "\n";
 
     for(Node<T> *n=head; n; n=n->link) {
-      cout << "NODE:" << n << endl;
-      cout << "  link=" << &n->link << "H " << n->link << endl;
-      cout << "  data=" << &n->data << "H " << n->data << endl;
+      cout << "NODE:" << n << "\n";
+      cout << "  link=" << &n->link << "H " << n->link << "\n";
+      cout << "  data=" << &n->data << "H " << n->data << "\n";
    }
   }
 };
@@ -55,7 +55,7 @@ public:
 
 int main(int argc, char **argv)
 {
-   cout <<"argc=" << argc << endl;
+   cout <<"argc=" << argc << "\n";
    for(int i = 0; i < argc; i++)
       cout << "argv[" << i << "]==>" << argv[i] << "<==\n";
 
@@ -72,9 +72,9 @@ int main(int argc, char **argv)
      ll.print();
 
      while(1) {
-       cout << "popped: " << ll.pop() << endl;
+       cout << "popped: " << ll.pop() << "\n";
      }
    } catch(string& msg) {
-      cout << msg << endl;
+      cout << msg << "\n";
    }
 }

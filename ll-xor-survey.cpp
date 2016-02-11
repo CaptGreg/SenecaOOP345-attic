@@ -98,7 +98,7 @@ private:
 
        curr = prev = root;
        while ( curr ) {
-          cout <<"data = " <<curr->data <<endl;
+          cout <<"data = " <<curr->data <<"\n";
           if ( curr->npx == curr ) {
              break; // done
           }
@@ -252,7 +252,7 @@ class Algo2LL {
                  prev = save;
               }
            }
-           cout <<endl;
+           cout <<"\n";
         }
 
         // prints contents of doubly linked list in forward direction
@@ -276,7 +276,7 @@ class Algo2LL {
                 prev = curr;
                 curr = next;
             }
-            cout <<endl;
+            cout <<"\n";
         }
 };
 
@@ -368,17 +368,17 @@ public:
     void push(int data)
     {
         Node *newItem = new Node;
-        // cout <<"Algo3: inserting " <<data <<" @" <<newItem <<endl;
+        // cout <<"Algo3: inserting " <<data <<" @" <<newItem <<"\n";
         newItem->data = data;
         AddToTail(newItem);
-        // cout <<"Added item: " <<newItem->data <<endl;
+        // cout <<"Added item: " <<newItem->data <<"\n";
     }
     int pop()
     {
         int ret;
-        // cout <<"Algo3: retrieving " <<endl;
+        // cout <<"Algo3: retrieving " <<"\n";
         Node *retrievedItem = RemoveFromHead();
-        // cout <<"Retrieved item: " << retrievedItem->data <<" @" <<retrievedItem <<endl;
+        // cout <<"Retrieved item: " << retrievedItem->data <<" @" <<retrievedItem <<"\n";
         ret = retrievedItem->data;
         delete retrievedItem;
 
@@ -391,7 +391,7 @@ private:
 
         curr = prev = start;
         while ( curr ) {
-            cout <<"traverse = " <<curr->data <<endl;
+            cout <<"traverse = " <<curr->data <<"\n";
             if ( curr->npx == curr ) {
                 break; // done
             }
@@ -429,7 +429,7 @@ int main3( int argc, char *argv[] )
         int data = list->pop();
         cout << data <<" ";
     }
-    cout << endl;
+    cout << "\n";
 
     delete list;
 
@@ -450,8 +450,8 @@ private:
     Node *tail;
 
 public:
-    Algo4LL() : head(nullptr), tail(nullptr) { cout<<"Algo4 ctor "<<this<<endl; }
-    ~Algo4LL() { cout<<"Algo4 dtor "<<this<<endl; clear(); } // (GB)
+    Algo4LL() : head(nullptr), tail(nullptr) { cout<<"Algo4 ctor "<<this<<"\n"; }
+    ~Algo4LL() { cout<<"Algo4 dtor "<<this<<"\n"; clear(); } // (GB)
     void clear() { // (GB)
         Node *curr = head;
         Node *prev = nullptr, *next;
@@ -485,7 +485,7 @@ public:
     Algo4LL(const Algo4LL& src)   // (GB) copy ctor
     {
         head = tail = nullptr;
-        std::cout <<"Algo4LL:: copy ctor: this=" <<this <<" &src="  <<&src <<std::endl;
+        std::cout <<"Algo4LL:: copy ctor: this=" <<this <<" &src="  <<&src <<"\n";
         *this = src; // invoke assignment operator
     }
 
@@ -542,12 +542,12 @@ public:
     {
         Node *prev = nullptr, *next;
 
-        if ( verbose ) cout <<"tree " << this <<" head="<<head <<" tail=" <<tail <<endl;
+        if ( verbose ) cout <<"tree " << this <<" head="<<head <<" tail=" <<tail <<"\n";
         while (nullptr != curr) {
             if ( verbose ) {  // (GB)
                 cout << curr << ":";
                 cout << curr->npx << " ";
-                cout << curr->data << endl;
+                cout << curr->data << "\n";
             } else {
                 cout << curr->data << " ";
             }
@@ -618,14 +618,14 @@ private:
         current = root;
 
         while (current) {
-            std::cout << "Node found: " << current->data << std::endl;
+            std::cout << "Node found: " << current->data << "\n";
 
             next    = nextNode(current, prev);
             prev    = current;
             current = next;
         }
 
-        std::cout << std::endl;
+        std::cout << "\n";
     }
     void insertAfter(Node *newNode, int data) {
         Node *prev, *current, *next;
@@ -669,14 +669,14 @@ private:
     }
 
     void deleteList(void) {
-        std::cout << "Algo5: deleteList: node count " << count << std::endl;
+        std::cout << "Algo5: deleteList: node count " << count << "\n";
         Node *prev, *current;
 
         prev    = nullptr;
         current = head;
 
         while ( current ) {
-            std::cout << "Node removed: " << current->data << std::endl;
+            std::cout << "Node removed: " << current->data << "\n";
             current->npx = nextNode(current, prev);
 
             if ( prev ) {
@@ -698,7 +698,7 @@ private:
         }
         head=tail=nullptr;
 
-        std::cout << std::endl;
+        std::cout << "\n";
     }
 
     void traverseFWD() {
@@ -711,7 +711,7 @@ private:
         Node *newNode = new Node;
 
         if ( !newNode ) {
-            std::cerr << "[ERROR] Failed to insert new node." << std::endl;
+            std::cerr << "[ERROR] Failed to insert new node." << "\n";
             return;
         }
 
@@ -719,7 +719,7 @@ private:
         newNode->npx = nullptr;
         count++;    // GB debug lost memory
 
-        std::cout << "Node added: " << newNode->data << std::endl;
+        std::cout << "Node added: " << newNode->data << "\n";
 
         if ( !head )
             head = tail = newNode;
@@ -740,27 +740,27 @@ int main5(int argc, char *argv[]) {
     int nodeCount;
 
     if ( argc < 2 ) {
-        std::cerr << "Algo5 usage: " << argv[0] <<  " <nodes>" << std::endl;
+        std::cerr << "Algo5 usage: " << argv[0] <<  " <nodes>" << "\n";
         return 1;
     }
 
     nodeCount = atoi(argv[1]);
 
-    std::cout << "Algo 5 # Adding " << nodeCount << " nodes to list" << std::endl;
+    std::cout << "Algo 5 # Adding " << nodeCount << " nodes to list" << "\n";
 
     for ( int i = 0; i < nodeCount; i++ ) {
         list->insert(i);
     }
 
-    std::cout << std::endl;
+    std::cout << "\n";
 
-    std::cout << "Algo 5 # Forward traversal" << std::endl;
+    std::cout << "Algo 5 # Forward traversal" << "\n";
     list->traverseFWD();
 
-    std::cout << "Algo 5 # Backward traversal" << std::endl;
+    std::cout << "Algo 5 # Backward traversal" << "\n";
     list->traverseREV();
 
-    std::cout << "Algo 5 # Removing nodes from list" << std::endl;
+    std::cout << "Algo 5 # Removing nodes from list" << "\n";
     list->deleteList();
 
     delete list;

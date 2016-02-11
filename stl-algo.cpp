@@ -26,7 +26,7 @@ int main()
     cout << "\nHigh Scores:\n";
     for (iter = scores.begin(); iter != scores.end(); ++iter)
     {
-        cout << *iter << endl;
+        cout << *iter << "\n";
     }
 
     cout << "\nFinding a score.";
@@ -49,7 +49,7 @@ int main()
     cout << "\nHigh Scores:\n";
     for (iter = scores.begin(); iter != scores.end(); ++iter)
     {
-        cout << *iter << endl;
+        cout << *iter << "\n";
     }
 
     cout << "\nSorting scores.";
@@ -57,7 +57,7 @@ int main()
     cout << "\nHigh Scores:\n";
     for (iter = scores.begin(); iter != scores.end(); ++iter)
     {
-        cout << *iter << endl;
+        cout << *iter << "\n";
     }
 
     return 0;

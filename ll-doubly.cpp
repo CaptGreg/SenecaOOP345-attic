@@ -117,5 +117,5 @@ int main(int argc, char**argv)
         cout << r.get().out() << ' ';
         r.goNext();
     }
-    cout << endl;
+    cout << "\n";
 }

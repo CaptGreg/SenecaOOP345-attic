@@ -139,3 +139,7 @@ private:
     return *this;
   }
 };
+
+int main()
+{
+}

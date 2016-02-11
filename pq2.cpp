@@ -48,10 +48,10 @@ int main()
 
 	//Display container elements.
 	while ( !pqStudent1.empty() ) {
-		cout << pqStudent1.top().chName << endl;
+		cout << pqStudent1.top().chName << "\n";
 		pqStudent1.pop();
 	}
-	cout << endl;
+	cout << "\n";
 
 	// Add container elements.
 	pqStudent2.push( Student( "Mark", 38 ) );
@@ -62,10 +62,10 @@ int main()
     
 	//Display container elements.
 	while ( !pqStudent2.empty() ) {
-		cout << pqStudent2.top().chName << endl;
+		cout << pqStudent2.top().chName << "\n";
 		pqStudent2.pop();
 	}
-	cout << endl;
+	cout << "\n";
 	
 	return 0;
 }

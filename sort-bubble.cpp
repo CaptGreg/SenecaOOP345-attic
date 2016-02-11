@@ -91,7 +91,7 @@ void template_sort_bubble(vector<T>& array, int n, std::function<bool(T,T)> comp
   for (int c = 0 ; c < ( n - 1 ); c++) {
     for (int d = 0 ; d < n - c - 1; d++) {
       if ( comp(array[d], array[d+1]) ) {
-        T swap       = array[d];
+        T swap     = array[d];
         array[d]   = array[d+1];
         array[d+1] = swap;
       }
@@ -147,5 +147,15 @@ int main(int argc, char**argv)
   template_sort_bubble(v, NUM, comp);
   std::cout << "after template_sort_bubble lambda a<b\n";
   for(auto e : v) std::cout << e << " "; std::cout << "\n";
+
+
+  // try a lambda as an argument 
+  // template_sort_bubble(v, NUM, 
+    // [] (double a,double b) {return a < b; } );
+  // error: no matching function for call to ‘template_sort_bubble(std::vector<double>&, int&, main(int, char**)::<lambda(double, double)>)’
+  // [] (double a,double b) {return a < b; } );
+
+  // std::cout << "after template_sort_bubble lambda a<b\n";
+  // for(auto e : v) std::cout << e << " "; std::cout << "\n";
 
 }

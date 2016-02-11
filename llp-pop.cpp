@@ -22,7 +22,7 @@ int main(int argc, char**argv)
     if(length) {
         cout << "print: " << length << " bytes [";
         cout.write((char*) data,length);
-        cout << "]" << endl;
+        cout << "]" << "\n";
     } else {
         cout << "list is empty!\n";
     }

@@ -23,7 +23,7 @@ class derived : public base1, public base2
 
 int main (int argc, char**argv)
 {
-    cout << endl << argv[0] << endl << endl;
+    cout << "\n" << argv[0] << "\n" << "\n";
     derived obj;
     
 //  Error because compiler can't figure out which function to call either same_function( ) of base1 or base2 

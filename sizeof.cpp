@@ -30,7 +30,7 @@ using namespace std;
 
 int main(int argc, char**argv)
 {
-#define M(var)  cout << "sizeof(" #var ")\t= " << sizeof(var) << endl;
+#define M(var)  cout << "sizeof(" #var ")\t= " << sizeof(var) << "\n";
 
   M(void*)
   M(size_t)

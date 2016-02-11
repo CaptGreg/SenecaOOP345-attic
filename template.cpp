@@ -56,15 +56,25 @@ int main(int argc, char**argv)
 {
   X<int>  xint;
   xint.t(44);
-  cout << xint.t() << endl;
+  cout << xint.t() << "\n";
   X<char> xchar;
   xchar.t('a');
-  cout << xchar.t() << endl;
+  cout << xchar.t() << "\n";
 
   Y<double> ydouble;
   ydouble.t(42.7);
-  cout << ydouble.t() << endl;
+  cout << ydouble.t() << "\n";
   Y<char>   ychar;
   ychar.t('q');
-  cout << ychar.t() << endl;
+  cout << ychar.t() << "\n";
+
+
+  const size_t size = 3*1000; // *1000;   // Runs with 3000, fails with 3000000
+  Xarray<long,size> xa;
+
+  for(size_t i = 0; i < size; i++) {
+    // cout << "i=" << i << "\n";
+    xa.t((long) i*1000, i);  // BE CAREFUL!!  Index is second parameter
+  }
 }
+

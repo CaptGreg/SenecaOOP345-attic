@@ -39,7 +39,7 @@ using namespace std;
 
   void printAddress (const int& v) // const ref to allow binding to rvalues
   {
-    cout << reinterpret_cast<const void*>( & v ) << endl;
+    cout << reinterpret_cast<const void*>( & v ) << "\n";
   }
 
 int main(int argc, char**arv)

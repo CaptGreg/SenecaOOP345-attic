@@ -42,7 +42,7 @@ int main(){
 class myclass
 {
 public:
-	static void myfunc(int x) { std::cout << x << std::endl; }
+	static void myfunc(int x) { std::cout << x << "\n"; }
 };
 
 

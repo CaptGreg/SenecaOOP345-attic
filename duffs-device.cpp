@@ -16,8 +16,8 @@ void send( short *to, short  *from, int count ) // Tom Duff's device
 
 void *memcpy(void *dst, void *src, int count) // GB Tom Duff's device applied to memcpy
 {
-  char *d   = dst;
-  char *s   = src;
+  char *d   = (char*) dst;
+  char *s   = (char*) src;
   int n=(count+7)/8;
   switch(count%8){
   case 0:  do {  *d++ = *s++;
@@ -90,3 +90,7 @@ void *memcpy(void *dst, void *src, int count) // GB Tom Duff's device applied to
     DD_##d##T(n, d, r, expr)
 
 #endif
+
+int main()
+{
+}

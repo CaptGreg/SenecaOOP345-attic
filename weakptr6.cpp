@@ -1,5 +1,7 @@
 // https://visualstudiomagazine.com/articles/2012/10/19/circular-references/listing6.aspx
 
+// GB compile problems
+
 #include <string>
 #include <memory>
 #include <map>
@@ -258,11 +260,11 @@ void friendship::set_no_best_friend(shared_ptr<person> p) {
 
 person::person(const string name) : name_ {name} {
   if (name_=="") throw invalid_argument("A person must have a non-empty name");
-  cout << name_ << " instance created." << endl;
+  cout << name_ << " instance created." << "\n";
 }
 
 person::~person() {
-  cout << name_ << " instance to be disposed." << endl;
+  cout << name_ << " instance to be disposed." << "\n";
 }
 
 string person::get_name() const {
@@ -281,7 +283,7 @@ using namespace std;
 void print_friendship(const vector<shared_ptr<person>> &vp, const friendship& f) {
 for (auto p : vp) {
       auto q = f.get_best_friend(p);
-      cout << p->get_name() << "'s best friend is " << (q ? q->get_name() : "nobody") << endl;
+      cout << p->get_name() << "'s best friend is " << (q ? q->get_name() : "nobody") << "\n";
     }
 }
 
@@ -322,4 +324,3 @@ int main() {
 
   return 0;
 }
-

@@ -84,7 +84,7 @@ int main()
     {
         v.set( i , i );
     }
-    for ( int i : v ) { cout << i << endl; }
+    for ( int i : v ) { cout << i << "\n"; }
 
 
     vector<int> vec;
@@ -93,6 +93,6 @@ int main()
      
     for (int i : vec )
     {
-        cout << i <<endl;
+        cout << i <<"\n";
     }
 }

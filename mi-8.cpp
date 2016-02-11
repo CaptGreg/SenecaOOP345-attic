@@ -73,15 +73,15 @@ void item::get_data()
  /*************************************************************************///----------------------------  show_data( )  ---------------------------///*************************************************************************/
 void item::show_data()
     {
-       cout<<"\t Part name = "<<part_name<<endl;
-       cout<<"\t Part price = "<<part_price<<endl;
+       cout<<"\t Part name = "<<part_name<<"\n";
+       cout<<"\t Part price = "<<part_price<<"\n";
     }
 
 
  /*************************************************************************///----------------------------  get_data( )  ----------------------------///*************************************************************************/
 void sales::get_data()
     {
-       cout<<"\n Enter the Sales figures for three months : "<<endl;
+       cout<<"\n Enter the Sales figures for three months : "<<"\n";
 
        for(int count=0;count<3;count++)
       {
@@ -93,10 +93,10 @@ void sales::get_data()
  /*************************************************************************///----------------------------  show_data( )  ---------------------------///*************************************************************************/
 void sales::show_data()
     {
-       cout<<"\n Sales figures for three months : "<<endl;
+       cout<<"\n Sales figures for three months : "<<"\n";
 
        for(int count=0;count<3;count++)
-       cout<<"\t Sales for month  "<<count+1<<" = "<<sales_fig[count]<<endl;
+       cout<<"\t Sales for month  "<<count+1<<" = "<<sales_fig[count]<<"\n";
     }
 
 
@@ -121,8 +121,8 @@ void hardware_item::show_data()
     {
        item::show_data();
 
-       cout<<"\t Category = "<<category<<endl;
-       cout<<"\t Manufacturers = "<<manufacturers<<endl;
+       cout<<"\t Category = "<<category<<"\n";
+       cout<<"\t Manufacturers = "<<manufacturers<<"\n";
 
        sales::show_data();
     }
@@ -149,33 +149,33 @@ void software_item::show_data()
     {
        item::show_data();
 
-       cout<<"\t Category = "<<category<<endl;
-       cout<<"\t Operating system = "<<operating_system<<endl;
+       cout<<"\t Category = "<<category<<"\n";
+       cout<<"\t Operating system = "<<operating_system<<"\n";
 
        sales::show_data();
     }
 
 int main (int argc, char**argv)
     {
-       cout << endl << argv[0] << endl << endl;
+       cout << "\n" << argv[0] << "\n" << "\n";
        clrscr();
 
        hardware_item h;
        software_item s;
 
-       cout<<"\n ********* Hardware Item ********"<<endl;
+       cout<<"\n ********* Hardware Item ********"<<"\n";
        h.get_data();
 
-       cout<<"\n ********* Software Item ********"<<endl;
+       cout<<"\n ********* Software Item ********"<<"\n";
        s.get_data();
 
        // getch();
        // clrscr();
 
-       cout<<"\n ********* Hardware Item ********"<<endl;
+       cout<<"\n ********* Hardware Item ********"<<"\n";
        h.show_data();
 
-       cout<<"\n ********* Software Item ********"<<endl;
+       cout<<"\n ********* Software Item ********"<<"\n";
        s.show_data();
 
        // getch();

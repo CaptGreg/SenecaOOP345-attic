@@ -28,10 +28,10 @@ private:
          if(opCode == "pi") result = M_PI;
     else if(opCode == "e")  result = M_E;
     else {
-      cout << "unknown operator " << opCode << endl;
+      cout << "unknown operator " << opCode << "\n";
       return;
     }
-    cout << result << endl;
+    cout << result << "\n";
     s.push_front(result);
   }
 
@@ -39,12 +39,12 @@ private:
   {
     if(s.size() >= 1 && opCode == "save/a") { // save top of stack 
       A = s.front();
-      cout << A << endl;
+      cout << A << "\n";
     } else if(opCode == "load/a") {           // load A 
-      cout << A << endl;
+      cout << A << "\n";
       s.push_front(A);
     } else
-      cout << "unknown operator " << opCode << endl;
+      cout << "unknown operator " << opCode << "\n";
   }
 
   void singleOperand(string& opCode)
@@ -60,10 +60,10 @@ private:
       else if(opCode == "log")     result = log(a);
       else if(opCode == "exp")     result = exp(a);
       else {
-        cout << "unknown operator " << opCode << endl;
+        cout << "unknown operator " << opCode << "\n";
         return;
       }
-      cout << result << endl;
+      cout << result << "\n";
       s.push_front(result);
     } else
       cout << "need at least one number\n";
@@ -81,10 +81,10 @@ private:
       else if(opCode == "/")  result = a / b;
       else if(opCode == "**") result = exp(b*log(a));
       else {
-        cout << "unknown operator " << opCode << endl;
+        cout << "unknown operator " << opCode << "\n";
         return;
       }
-      cout << result << endl;
+      cout << result << "\n";
       s.push_front(result);
     } else
       cout << "need two numbers\n";
@@ -131,20 +131,20 @@ public:
 
       cout << "\nstack:\n";
       print();
-      cout << endl;
+      cout << "\n";
     }
   }
   
   void print()
   {
     // for(list<double>::iterator it = s.begin(); it != s.end(); ++it) // C++ 98
-      // cout << *it << endl;
+      // cout << *it << "\n";
 
     // for(auto it = s.begin(); it != s.end(); ++it) // C++ 98
-      // cout << *it << endl;
+      // cout << *it << "\n";
 
     for(auto d : s)  // C++ 11
-      cout << d << endl;
+      cout << d << "\n";
   }
 };
 
@@ -154,6 +154,6 @@ int main(int argc, char **argv)
     Calc c;
     c.calc();
   } catch(const char* err) {
-    cout << "caught a char* err=" << err << endl;
+    cout << "caught a char* err=" << err << "\n";
   }
 }

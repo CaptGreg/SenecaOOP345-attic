@@ -19,10 +19,10 @@ private:
       else if(opCode == "*") result = b * a;
       else if(opCode == "/") result = b / a;
       else {
-        cout << "unknown operator " << opCode << endl;
+        cout << "unknown operator " << opCode << "\n";
         return;
       }
-      cout << result << endl;
+      cout << result << "\n";
       s.push(result);
     } else
       cout << "need two numbers\n";
@@ -53,13 +53,13 @@ public:
     // no iterators with stack, need to use list or deque
 
     // for(stack<double>::iterator it = s.begin(); it ; it != s.end()) // c++ 98
-      // cout << *it << endl;
+      // cout << *it << "\n";
 
     // for(auto it = s.begin(); it ; it != s.end()) // c++ 98
-      // cout << *it << endl;
+      // cout << *it << "\n";
 
     // for(auto d : s) // c++ 11
-      // cout << d << endl;
+      // cout << d << "\n";
   }
 };
 
@@ -69,6 +69,6 @@ int main(int argc, char **argv)
     Calc c;
     c.calc();
   } catch(const char* err) {
-    cout << "caught a char* err=" << err << endl;
+    cout << "caught a char* err=" << err << "\n";
   }
 }

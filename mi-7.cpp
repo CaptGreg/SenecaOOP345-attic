@@ -33,48 +33,48 @@ using namespace std;
 class PoweredDevice { // base class for everything
 int x[10000];
 char y[10000];
-public: PoweredDevice () { cout << "PoweredDevice ctor size=" << sizeof(PoweredDevice) << endl; }
+public: PoweredDevice () { cout << "PoweredDevice ctor size=" << sizeof(PoweredDevice) << "\n"; }
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 
 class Scanner : public PoweredDevice {
-public: Scanner () { cout << "Scanner ctor size=" << sizeof(Scanner) << endl;}
+public: Scanner () { cout << "Scanner ctor size=" << sizeof(Scanner) << "\n";}
 };
 
 class Printer : public PoweredDevice {
-public: Printer () { cout << "Printer ctor size=" << sizeof(Printer) << endl;}
+public: Printer () { cout << "Printer ctor size=" << sizeof(Printer) << "\n";}
 };
 
 class PhotoCopier : public Scanner, public Printer {
-public: PhotoCopier () { cout << "PhotoCopier ctor size=" << sizeof(PhotoCopier) << endl;}
+public: PhotoCopier () { cout << "PhotoCopier ctor size=" << sizeof(PhotoCopier) << "\n";}
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 
 class ScannerVirtualBase : virtual public PoweredDevice {  // single shared instance of base class
-public: ScannerVirtualBase () { cout << "ScannerVirtualBase ctor size=" << sizeof(ScannerVirtualBase) << endl; }
+public: ScannerVirtualBase () { cout << "ScannerVirtualBase ctor size=" << sizeof(ScannerVirtualBase) << "\n"; }
 };
 
 class PrinterVirtualBase : virtual public PoweredDevice {  // single shared instance of base class
-public: PrinterVirtualBase () { cout << "PrinterVirtualBase ctor size=" << sizeof(PrinterVirtualBase) << endl; }
+public: PrinterVirtualBase () { cout << "PrinterVirtualBase ctor size=" << sizeof(PrinterVirtualBase) << "\n"; }
 };
 
 class PhotoCopierVirtualBase : public ScannerVirtualBase, public PrinterVirtualBase {
-public: PhotoCopierVirtualBase () { cout << "PhotoCopier ctor size=" << sizeof(PhotoCopierVirtualBase) << endl;  }
+public: PhotoCopierVirtualBase () { cout << "PhotoCopier ctor size=" << sizeof(PhotoCopierVirtualBase) << "\n";  }
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 
 int main (int argc, char**argv)
 {
-    cout << endl << argv[0] << endl << endl;
+    cout << "\n" << argv[0] << "\n" << "\n";
 
     cout << "PhotoCopier - creates a pair of instances of 'base class' PoweredDevice\n";
     cout << "Note: PoweredDevice ctor called twice:\n";
     PhotoCopier objPhotoCopier;
 
-    cout << endl;
+    cout << "\n";
 
     cout << "PhotoCopierVirtualBase - 'virtual PoweredDevice' creates a single instance of 'base class' PoweredDevice\n";
     cout << "Note: PoweredDevice ctor called once:\n";

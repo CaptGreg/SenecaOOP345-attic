@@ -1,5 +1,5 @@
 #if 0
-GETADDRINFO_A(3)           Linux Programmer's Manual           GETADDRINFO_A(3)
+// GETADDRINFO_A(3)           Linux Programmer's Manual           GETADDRINFO_A(3)
 
 
 
@@ -69,7 +69,7 @@ DESCRIPTION
        following values:
 
        SIGEV_NONE
-              Don't provide any notification.
+              // Don't provide any notification.
 
        SIGEV_SIGNAL
               When a look-up completes, generate the signal sigev_signo for the
@@ -211,7 +211,9 @@ EXAMPLE
            }
 
            for (i = 0; i < argc - 1; i++) {
-               reqs[i] = malloc(sizeof(*reqs[0]));
+               reqs[i] =
+           (struct gaicb *)  // GB add cast
+               malloc(sizeof(*reqs[0]));
                if (reqs[i] == NULL) {
                    perror("malloc");
                    return(EXIT_FAILURE);
@@ -309,9 +311,13 @@ EXAMPLE
 
            while ((host = strtok(NULL, " "))) {
                nreqs++;
-               reqs = realloc(reqs, nreqs * sizeof(reqs[0]));
+               reqs = 
+           (struct gaicb **)  // GB add cast
+               realloc(reqs, nreqs * sizeof(reqs[0]));
 
-               reqs[nreqs - 1] = calloc(1, sizeof(*reqs[0]));
+               reqs[nreqs - 1] = 
+           (struct gaicb *)  // GB add cast
+               calloc(1, sizeof(*reqs[0]));
                reqs[nreqs - 1]->ar_name = strdup(host);
            }
 
@@ -332,7 +338,9 @@ EXAMPLE
        {
            char *id;
            int i, ret, n;
-           struct gaicb const **wait_reqs = calloc(nreqs, sizeof(*wait_reqs));
+           struct gaicb const **wait_reqs = 
+           (const struct gaicb **)  // GB add cast
+           calloc(nreqs, sizeof(*wait_reqs));
                        /* NULL elements are ignored by gai_suspend(). */
 
            while ((id = strtok(NULL, " ")) != NULL) {
@@ -463,3 +471,10 @@ COLOPHON
 
 GNU                                2010-09-27                  GETADDRINFO_A(3)
 #endif
+
+int main(int argc, char**argv)
+{
+  main1(argc, argv);
+
+  main2(argc, argv);
+}

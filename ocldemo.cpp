@@ -59,7 +59,7 @@ __kernel void hello(void)
     }
     catch (cl::Error err) {
        std::cerr 
-          << "ERROR: " << err.what() << "(" << err.err() << ")" << std::endl;
+          << "ERROR: " << err.what() << "(" << err.err() << ")" << "\n";
     }
 
    return EXIT_SUCCESS;

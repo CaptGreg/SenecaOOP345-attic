@@ -16,5 +16,5 @@
      for (auto i : r)
         std::cout << i << " ";
 
-     std::cout << std::endl; 
+     std::cout << "\n"; 
  }

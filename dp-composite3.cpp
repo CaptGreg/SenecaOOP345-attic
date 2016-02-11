@@ -58,7 +58,7 @@ protected:
 class PhoneDiagnostics : public DiagnosticCompositeInterface {
 public:
     void runDiagnostics() {
-        cout << "running PhoneDiagnostics..." << endl;
+        cout << "running PhoneDiagnostics..." << "\n";
         DiagnosticCompositeInterface::runDiagnostics();
     }
     string getDiagnosticsResult() {
@@ -71,7 +71,7 @@ public:
 class ScreenSaverDiagnostics : public DiagnosticInterface {
 public:
     void runDiagnostics() {
-        cout << "running ScreenSaverDiagnostics..." << endl;
+        cout << "running ScreenSaverDiagnostics..." << "\n";
     }
     string getDiagnosticsResult() {
         return "ScreenSaverDiagnostics all tested Okay!";
@@ -81,7 +81,7 @@ public:
 class HardwareDiagnostics : public DiagnosticCompositeInterface {
 public:
     void runDiagnostics() {
-        cout << "running HardwareDiagnostics..." << endl;
+        cout << "running HardwareDiagnostics..." << "\n";
         DiagnosticCompositeInterface::runDiagnostics();
     }
     string getDiagnosticsResult() {
@@ -94,7 +94,7 @@ public:
 class NetworkDiagnostics : public DiagnosticCompositeInterface {
 public:
     void runDiagnostics() {
-        cout << "running NetworkDiagnostics..." << endl;
+        cout << "running NetworkDiagnostics..." << "\n";
         DiagnosticCompositeInterface::runDiagnostics();
     }
 
@@ -108,7 +108,7 @@ public:
 class TouchScreenDiagnostics : public DiagnosticInterface {
 public:
     void runDiagnostics() {
-        cout << "running TouchScreenDiagnostics..." << endl;
+        cout << "running TouchScreenDiagnostics..." << "\n";
     }
     string getDiagnosticsResult() {
         return "TouchScreenDiagnostics all tested Okay!";
@@ -118,7 +118,7 @@ public:
 class OnOffKeyDiagnostics : public DiagnosticInterface {
 public:
     void runDiagnostics() {
-        cout << "running OnOffKeyDiagnostics..." << endl;
+        cout << "running OnOffKeyDiagnostics..." << "\n";
     }
     string getDiagnosticsResult() {
         return "OnOffKeyDiagnostics all tested Okay!";
@@ -128,7 +128,7 @@ public:
 class WifiDiagnostics : public DiagnosticInterface {
 public:
     void runDiagnostics() {
-        cout << "running WifiDiagnostics..." << endl;
+        cout << "running WifiDiagnostics..." << "\n";
     }
     string getDiagnosticsResult() {
         return "WifiDiagnostics all tested Okay!";
@@ -138,7 +138,7 @@ public:
 class ThreeGDiagnostics : public DiagnosticInterface {
 public:
     void runDiagnostics() {
-        cout << "running ThreeGDiagnostics..." << endl;
+        cout << "running ThreeGDiagnostics..." << "\n";
     }
     string getDiagnosticsResult() {
         return "ThreeGDiagnostics all tested Okay!";
@@ -169,8 +169,8 @@ int main()
     phoneDiagnostics->addChild(hardwareDiagnostics);
     phoneDiagnostics->addChild(networkDiagnostics);
 
-    cout << "Run diagnostics on the phone!" << endl;
+    cout << "Run diagnostics on the phone!" << "\n";
     phoneDiagnostics->runDiagnostics();
-    cout << "****\nGet the diagnostics result\n" << phoneDiagnostics->getDiagnosticsResult() << endl;
+    cout << "****\nGet the diagnostics result\n" << phoneDiagnostics->getDiagnosticsResult() << "\n";
     return 0;
 }

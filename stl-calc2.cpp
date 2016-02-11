@@ -68,10 +68,10 @@ private:
       else if(opCode == "*") result = a * b;
       else if(opCode == "/") result = a / b;
       else {
-        cout << "unknown operator " << opCode << endl;
+        cout << "unknown operator " << opCode << "\n";
         return;
       }
-      cout << result << endl;
+      cout << result << "\n";
       s.push(result);
     } else
       cout << "need two numbers\n";
@@ -95,7 +95,7 @@ public:
         op(input);
       else cout << input << "<== not understood\n";
 
-      cout << endl;
+      cout << "\n";
       cout << "Stack:\n";
       print();
     }
@@ -104,7 +104,7 @@ public:
   void print()
   {
     for(size_t i = 0; i < s.size(); i++)
-      cout << s.peek(i) << endl;
+      cout << s.peek(i) << "\n";
   }
 };
 
@@ -114,6 +114,6 @@ int main(int argc, char **argv)
     Calc c;
     c.calc();
   } catch(const char* err) {
-    cout << "caught a char* err=" << err << endl;
+    cout << "caught a char* err=" << err << "\n";
   }
 }

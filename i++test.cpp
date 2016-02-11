@@ -3,7 +3,7 @@
 using namespace std;
 
 int calculateIndex(char msg[], int value) {
-   cout << msg << " : " << value << endl;
+   cout << msg << " : " << value << "\n";
 }
 
 int main(int argc, char ** argv)

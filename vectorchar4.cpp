@@ -24,16 +24,16 @@ vector<char>& operator+=(vector<char>& lhs, const vector<char>& rhs) // DIY +=
 
 int main(int argc, char**argv)
 {
-  cout << argv[0] << endl;
+  cout << argv[0] << "\n";
   cout << "\n+++++++++++++++++++++++++++++ string\n";
 
   string s1("'char* string 1'");
   string s2("'char* string 2'");
 
   string s3 = s1 + ' ' + s2;
-  cout<<"s1: "; cout << s1 << endl;
-  cout<<"s2: "; cout << s2 << endl;
-  cout<<"s3: "; cout << s3 << endl;
+  cout<<"s1: "; cout << s1 << "\n";
+  cout<<"s2: "; cout << s2 << "\n";
+  cout<<"s3: "; cout << s3 << "\n";
 
   cout << "\n+++++++++++++++++++++++++++++ vector\n";
 
@@ -46,20 +46,20 @@ int main(int argc, char**argv)
   // No vector 'operator+' so cannot do: vector<char> v3 = v1 + ' ' + v2;
   vector<char> v3 = v1; v3.push_back(' '); for(char c: v2) v3.push_back(c);
 
-  // No vector 'operator<<' so cannot do: cout << v1 << endl;
-  cout<<"v1: size=" << v1.size() << ": "; for(char c: v1) cout << c; cout << endl;
-  cout<<"v2: size=" << v2.size() << ": "; for(char c: v2) cout << c; cout << endl;
-  cout<<"v3: size=" << v3.size() << ": "; for(char c: v3) cout << c; cout << endl;
+  // No vector 'operator<<' so cannot do: cout << v1 << "\n";
+  cout<<"v1: size=" << v1.size() << ": "; for(char c: v1) cout << c; cout << "\n";
+  cout<<"v2: size=" << v2.size() << ": "; for(char c: v2) cout << c; cout << "\n";
+  cout<<"v3: size=" << v3.size() << ": "; for(char c: v3) cout << c; cout << "\n";
 
   cout << "\n+++++++++++++++++++++++++++++ vector plus DIY <<, +, and += operators\n";
 
   // But we can use own DIY <<, +, and += operators 
-  cout<<"v1 DIY operator<< " << v1 << endl;
-  cout<<"v2 DIY operator<< " << v2 << endl;
+  cout<<"v1 DIY operator<< " << v1 << "\n";
+  cout<<"v2 DIY operator<< " << v2 << "\n";
   v3=v1+v2;      // DIY +
-  cout<<"v3 DIY operator<< after DIY'+' v3=v1+v2; " << v3 << "<--NOTE: no space between v1 + v2" << endl;
+  cout<<"v3 DIY operator<< after DIY'+' v3=v1+v2; " << v3 << "<--NOTE: no space between v1 + v2" << "\n";
   v3=v1; v3+=v2; // DIY +=
-  cout<<"v3 DIY operator<< after v3=v1; DIY'+=' v3+=v2; " << v3 << "<--NOTE: no space between v1 + v2" << endl;
+  cout<<"v3 DIY operator<< after v3=v1; DIY'+=' v3+=v2; " << v3 << "<--NOTE: no space between v1 + v2" << "\n";
 
   cout << "\n+++++++++++++++++++++++++++++ string via std::vector operations\n";
 
@@ -69,9 +69,9 @@ int main(int argc, char**argv)
 
   string sv3 = sv1; sv3.push_back(' '); for(char c: sv2) sv3.push_back(c);
 
-  cout<<"sv1: size=" << sv1.size() << ": "; for(char c: sv1) cout << c; cout << endl;
-  cout<<"sv2: size=" << sv2.size() << ": "; for(char c: sv2) cout << c; cout << endl;
-  cout<<"sv3: size=" << sv3.size() << ": "; for(char c: sv3) cout << c; cout << endl;
+  cout<<"sv1: size=" << sv1.size() << ": "; for(char c: sv1) cout << c; cout << "\n";
+  cout<<"sv2: size=" << sv2.size() << ": "; for(char c: sv2) cout << c; cout << "\n";
+  cout<<"sv3: size=" << sv3.size() << ": "; for(char c: sv3) cout << c; cout << "\n";
 
   cout << "\n+++++++++++++++++++++++++++++\n";
 }

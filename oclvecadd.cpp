@@ -148,13 +148,13 @@ int main(int argc, char *argv[])
  
 	// Sum up vector c and print result divided by n, this should equal 1 within error
 	double sum = 0.0; for(int i=0; i<n; i++) sum += h_c[i];
-	std::cout<<"final result: "<<sum/n<<std::endl;
+	std::cout<<"final result: "<<sum/n<<"\n";
 
 	// all done with output buffer
 	// delete [] h_c.release();
         delete [] h_c;
     } catch (cl::Error& err) {
-         std::cerr << "ERROR: "<<err.what()<<"("<<err.err()<<")"<<std::endl;
+         std::cerr << "ERROR: "<<err.what()<<"("<<err.err()<<")"<<"\n";
          return -1;
     } catch(std::exception& e) {
          std::cerr << "std::exception: " << e.what() << "\n";

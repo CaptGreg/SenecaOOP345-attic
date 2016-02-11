@@ -121,10 +121,10 @@ private:
 
 public:
     LLXOR() : head(nullptr), tail(nullptr) { 
-        cout<<"ctor "<<this<<endl; 
+        cout<<"ctor "<<this<<"\n"; 
     }
     ~LLXOR() { 
-        cout<<"dtor "<<this<<endl;
+        cout<<"dtor "<<this<<"\n";
         clear();
     }
     void clear() { // 
@@ -161,7 +161,7 @@ public:
     LLXOR(const LLXOR& src)   //  copy ctor
     {
         head = tail = nullptr;
-        std::cout <<"LLXOR:: copy ctor: this=" <<this <<" &src="  <<&src <<std::endl;
+        std::cout <<"LLXOR:: copy ctor: this=" <<this <<" &src="  <<&src <<"\n";
         *this = src; // invoke assignment operator
     }
     void pushHead(T& data)
@@ -257,13 +257,13 @@ public:
             <<" head=" << head 
             <<" tail=" << tail 
             << " starting at curr=" << curr << source
-            <<endl;
+            <<"\n";
         }
         while (curr) {
             if ( verbose ) {  // 
                 cout << curr << ":";
                 cout << curr->nxp << " ";
-                cout << curr->data << endl;
+                cout << curr->data << "\n";
             } else {
                 cout << curr->data << " ";
             }

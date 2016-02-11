@@ -12,7 +12,7 @@ int main(int argc, char**argv)
   fg = [=] (int x) -> decltype(x) { return x+global; };  // global compiles
 
   global = 6;
-  cout << "lambda=" << fg(9) << endl;
+  cout << "lambda=" << fg(9) << "\n";
 
   // int local;
 
@@ -21,7 +21,7 @@ int main(int argc, char**argv)
   // fl = [local] (int x) -> decltype(x) { return x+local;  };  // wants to capture global local
 
   // local = 15;
-  // cout << "lambda=" << fl(25) << endl;
+  // cout << "lambda=" << fl(25) << "\n";
 
   struct lambda_like {
     int operator() (int x) { return x + y; }
@@ -29,5 +29,5 @@ int main(int argc, char**argv)
   } functor;
 
   functor.y = 90;
-  cout << "functor=" << functor(60) << endl;
+  cout << "functor=" << functor(60) << "\n";
 }

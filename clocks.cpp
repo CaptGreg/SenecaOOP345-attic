@@ -65,7 +65,7 @@ char *CPUName(void)
  */
 void myMachineInfo()
 {
-  cout << "Vender=" << CPUVendor() << " Model=" << CPUName() << endl;
+  cout << "Vender=" << CPUVendor() << " Model=" << CPUName() << "\n";
 
   char *cmd = (char*) "/usr/bin/lsb_release -d"; // -i ID, -d description, -r release, -c code name, or -a for all
   FILE *pipe = popen(cmd, "r");
@@ -81,12 +81,12 @@ void myMachineInfo()
        << uname_pointer.machine 
        << " kernel:" << uname_pointer.release
        << " (" << uname_pointer.version << ")"
-       << endl;
+       << "\n";
 
   cout << "application (file " << __FILE__ << ") "
        <<  "compiled: " << __DATE__<< " "
        << __TIME__
-       << endl;
+       << "\n";
 }
 
 
@@ -164,14 +164,14 @@ public:
 int main(int argc, char **argv) 
 {
     myMachineInfo();
-    cout << endl;
+    cout << "\n";
 
     timers t;
-    cout << "time resolution = " << t.u64getResNS() << " nanosec." << endl; // nsec
+    cout << "time resolution = " << t.u64getResNS() << " nanosec." << "\n"; // nsec
 
     cout << "'sleep(n)' guarantees to sleep for at least 'n' seconds\n";
     cout << "'usleep(n)' guarantees to sleep for at least 'n' micro-seconds\n";
-    cout << endl;
+    cout << "\n";
 
 
     uint64_t startRDTSC;
@@ -196,12 +196,12 @@ int main(int argc, char **argv)
     stopUS     = t.u64TimeUS();
     stopCPU_NS = t.u64CpuTimeNS();
 
-    cout << "time for sleep("<< SECSLEEP << ") = " << stopRDTSC  - startRDTSC  << " TSC"  << endl;
-    cout << "time for sleep("<< SECSLEEP << ") = " << stopNS     - startNS     << " nsec" << endl;
-    cout << "time for sleep("<< SECSLEEP << ") = " << stopCPU_NS - startCPU_NS << " nsec - CPU clock" << endl;
+    cout << "time for sleep("<< SECSLEEP << ") = " << stopRDTSC  - startRDTSC  << " TSC"  << "\n";
+    cout << "time for sleep("<< SECSLEEP << ") = " << stopNS     - startNS     << " nsec" << "\n";
+    cout << "time for sleep("<< SECSLEEP << ") = " << stopCPU_NS - startCPU_NS << " nsec - CPU clock" << "\n";
     cout << "time for sleep("<< SECSLEEP << ") = " << stopUS     - startUS     << " usec, " 
-         << stopUS - startUS - 1000000 * SECSLEEP  << " usec overhead" << endl;
-    cout << endl;
+         << stopUS - startUS - 1000000 * SECSLEEP  << " usec overhead" << "\n";
+    cout << "\n";
 
     for(int napTime = 5; napTime <= 1000000; napTime *=10) {
         startRDTSC  = t.u64RDTSC();
@@ -216,13 +216,13 @@ int main(int argc, char **argv)
         stopUS     = t.u64TimeUS();
         stopCPU_NS = t.u64CpuTimeNS();
 
-        cout << "time for usleep("<< napTime << ") = " << stopRDTSC - startRDTSC  << " TSC"  << endl;
-        cout << "time for usleep("<< napTime << ") = " << stopNS    - startNS     << " nsec" << endl;
-        cout << "time for usleep("<< napTime << ") = " << stopCPU_NS- startCPU_NS << " nsec - CPU clock" << endl;
+        cout << "time for usleep("<< napTime << ") = " << stopRDTSC - startRDTSC  << " TSC"  << "\n";
+        cout << "time for usleep("<< napTime << ") = " << stopNS    - startNS     << " nsec" << "\n";
+        cout << "time for usleep("<< napTime << ") = " << stopCPU_NS- startCPU_NS << " nsec - CPU clock" << "\n";
         cout << "time for usleep("<< napTime << ") = " << stopUS    - startUS     << " usec, "
-             << stopUS - startUS - napTime  << " usec overhead" << endl;
+             << stopUS - startUS - napTime  << " usec overhead" << "\n";
 
-        cout << endl;
+        cout << "\n";
     }
 }
 

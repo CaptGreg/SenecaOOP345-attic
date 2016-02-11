@@ -14,7 +14,7 @@ using namespace std;
 class X {
    public:
    void operator()(string str) { 
-      cout << "Calling functor X with parameter " << str<< endl;
+      cout << "Calling functor X with parameter " << str<< "\n";
    }  
 };
 
@@ -52,7 +52,7 @@ public:
    XX(int c) : count(c)  {}
    void operator()(string str) { 
       for(int i = 0; i < count; i++)
-         cout << "Calling functor X with parameter " << str << endl;
+         cout << "Calling functor X with parameter " << str << "\n";
    }
 };
 
@@ -64,17 +64,17 @@ int main2()
 }
 
 
-void add2(int i) { cout << i+2 << endl; }
+void add2(int i) { cout << i+2 << "\n"; }
 
 template<int val>
-void addVal(int i) { cout << val+i << endl; }
+void addVal(int i) { cout << val+i << "\n"; }
 
 class AddValue {
    int val;
 public:
    AddValue(int j) : val(j) { }
    void operator()(int i) {
-      cout << i+val << endl;
+      cout << i+val << "\n";
    }
 };
 
@@ -103,7 +103,7 @@ int main()
 
 template<int val>
 void addVal(int i) {
-   cout << val+i << endl;
+   cout << val+i << "\n";
 }
 //std::for_each(vec.begin(), vec.end(), addVal<3>); 
 
@@ -112,7 +112,7 @@ class AddValue {
    public:
    AddValue(int j) : val(j) { }
    void operator()(int i) {
-      cout << i+val << endl;
+      cout << i+val << "\n";
    }
 };
 //int x = 9;
@@ -130,7 +130,7 @@ class AddValue {
 int x = multiplies<int>()(3,4);  //  x = 3 * 4 
 
 if (not_equal_to<int>()(x, 10))   // if (x != 10)
-   cout << x << endl;
+   cout << x << "\n";
 
 /*
  * Parameter Binding
@@ -149,12 +149,12 @@ transform(myset.begin(), myset.end(),    // source
     // vec: {20, 30, 40, 50}
 
 
-void addVal(int i, int val) { cout << i+val << endl; }
+void addVal(int i, int val) { cout << i+val << "\n"; }
 for_each(vec.begin(), vec.end(), bind(addVal, placeholders::_1, 2));
 
 // C++ 03: bind1st, bind2nd
 
-void addVal(int i, int val) { cout << i+val << endl; }
+void addVal(int i, int val) { cout << i+val << "\n"; }
 for_each(vec.begin(), vec.end(), bind(addVal, placeholders::_1, 2));
 
 
