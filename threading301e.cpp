@@ -16,12 +16,6 @@
 #include <future>
 #include <functional>   // bind
  
-
-// GB factory code calls std::pow and compiler complains about std::pow
-// GB change std::pow to pow.
-// GB compiler still complains.  Add prototype statement.
-extern double pow(double,double);  // GB compiler stopped complaining.
-
 void task_lambda()
 {
     std::packaged_task<int(int,int)> task([](int a, int b) {
@@ -36,7 +30,7 @@ void task_lambda()
  
 void task_bind()
 {
-    std::packaged_task<int()> task(std::bind(pow, 2., 11.)); // GB add decimal points
+    std::packaged_task<int()> task(std::bind(pow, 2, 11));
     std::future<int> result = task.get_future();
  
     task();
