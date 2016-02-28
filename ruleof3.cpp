@@ -9,13 +9,13 @@ class X {
   T *data;
 public:
   X() : size(0), data(nullptr) 
-  { cout << "X ctor()\n"; }
+  { cout << "X constructor()\n"; }
 
   X(size_t s) : size(s), data(new T[size]) 
-  { cout << "X (" << s << ") ctor\n"; }
+  { cout << "X (" << s << ") constructor\n"; }
 
   ~X() { 
-    cout << "X dtor, size=" << size << "\n";
+    cout << "X destructor, size=" << size << "\n";
     if(data) // if(...) not needed but good practice. 'delete [] nullptr' handled correctly in C++.
       delete [] data;
   }
@@ -24,7 +24,7 @@ public:
   {
     cout << "assignment operator size,rhs.size=" << size << "," << rhs.size << "\n";
     if(this != &rhs) {
-      if(data)
+      if(data) // If(data) is needed.  The copy construconstructor may have a block of memory with garbage in the 'data' field.
         delete [] data;
 
       data = nullptr;  // we are a zombie
@@ -37,14 +37,14 @@ public:
         // data = memcpy( new T[size], rhs.data, size * sizeof(T) );  // 1 line
       }
     } else {
-      cout << "assignment operator  called on itself\n";
+      cout << "assignment operator called on itself\n";
     }
     return *this;
   }
 
   X(const X& rhs)
   {
-    cout << "copy ctor rhs.size=" << rhs.size << "\n";
+    cout << "copy constructor rhs.size=" << rhs.size << "\n";
     data = nullptr;
     *this = rhs;      // let assignment operator do the work.
   }

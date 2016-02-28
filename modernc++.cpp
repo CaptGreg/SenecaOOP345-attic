@@ -1,7 +1,7 @@
 // http://herbsutter.com/elements-of-modern-c-style/
 
 #include <vector>
-#include <memory>
+#include <memory> // unique_ptr,shared_ptr,weak_ptr
 #include <thread>
 #include <mutex>
 #include <utility> // complex
@@ -50,12 +50,12 @@ public:
 
 // C++11
 // rectangle       w   { origin(), extents() };
-// complex<double> c   { 2.71828, 3.14159 };  // what header file?
+// complex<double> c   { 2.71828, 3.14159 };  // <utility> header file
 int             a[] { 1, 2, 3, 4 };
 vector<int>     v   { 1, 2, 3, 4 };
 
-// Algorithm: template<typename T> void myLock( T& t, F f ) { lock_guard hold(t); f(); }  // GB does not work
-template<typename T,typename F> void myLock( T& t, F f ) { lock_guard<T> hold(t); f(); }  // GB fixed!
+// Algorithm: template<typename T> void myLock( T& t, F f ) { lock_guard hold(t); f(); }     // GB does not work
+template<typename T,typename F>    void myLock( T& t, F f ) { lock_guard<T> hold(t); f(); }  // GB fixed!
 int main(int argc, char**argv)
 {
    mutex mut_x;

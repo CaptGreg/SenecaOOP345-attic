@@ -14,7 +14,7 @@
 #include <cmath>      // M_PI, sin, cos, tan, sqrt, abs, ...
                       // NOTE M_PI is PI=3.1415962..., the M_ means 'machine precision' (best value of PI)
 #include <cstdarg>    // vararg
-#include <functional> // std::bind
+#include <functional> // std::bind + std::function
 #include <future>     // std::async returns future
 #include <iostream>
 #include <iomanip>    // setprecision for printing doubles
