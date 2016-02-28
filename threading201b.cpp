@@ -66,7 +66,7 @@ int main (int argc,char**argv) // promise + future
 
   std::promise<int> promise;
   thread t ( threadFunction, ref(future), ref(promise) );
-  // thread t ( threadFunction, future, promise );  // syntax errors is we omit 'ref'
+  // thread t ( threadFunction, future, promise );  // syntax errors if we omit 'ref'
 
   long nap = 1500;
   ss << "main: will wait " << nap << " msec before setting future value\n";

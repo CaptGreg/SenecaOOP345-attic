@@ -10,6 +10,12 @@ public:
   void operator+=(int i) { push_back(i); }
 };
 
+class myString : public vector<char> {
+public:
+  void operator+=(char c) { push_back(c); }
+  void operator+=(const char* p) { while(*p) push_back(*p++); }
+};
+
 int main(int argc,char**)
 {
   myVec v;
@@ -22,4 +28,13 @@ int main(int argc,char**)
 
   v[2] = 99;
   for(auto e : v) cout << e << " "; cout << "\n";
+
+
+  myString s;
+  s += 'a';
+  s += 'b';
+  s += "AB";
+  for(auto e : s) cout << e << " "; cout << "\n";
+  for(auto e : s) cout << e;        cout << "\n";
+  for(size_t i = 0; i < s.size(); i++)  cout << s[i];  cout << "\n";
 }

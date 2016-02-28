@@ -4,23 +4,23 @@
 #include <future>
 #include <iostream>
 
-std::promise<int> sex;
+std::promise<int> stuff;
 void foo()
   {
   // do stuff
-  sex.set_value(1); // After this call, future::get() will return this value. 
-  // sex.set_exception(std::make_exception_ptr(std::runtime_error("broken_condom"))); // After this call, future::get() will throw this exception
+  stuff.set_value(1); // After this call, future::get() will return this value. 
+  // stuff.set_exception(std::make_exception_ptr(std::runtime_error("broken_condom"))); // After this call, future::get() will throw this exception
   }
 
 int main()
   {
-  std::future<int> makesex = sex.get_future();
+  std::future<int> makestuff = stuff.get_future();
   std::thread t(foo);
   
   // do stuff
   try
     {
-    std::cout << "makesex returned " << makesex.get() << "\n";
+    std::cout << "makestuff returned " << makestuff.get() << "\n";
     std::cout << "hurray\n";
     }
   catch(...)

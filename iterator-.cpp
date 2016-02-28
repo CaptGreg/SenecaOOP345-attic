@@ -6,19 +6,19 @@
 
  int main() {
      std::vector<double> prices;  // initially empty
-     std::vector<double>::iterator i;
+     std::vector<double>::iterator iter;
 
-     prices.push_back(10.43); // add 10.43
-     prices.push_back(20.54); // add 20.54
-     prices.push_back(32.43); // add 32.43
+     prices.push_back(10.); // add 10.
+     prices.push_back(20.); // add 20.
+     prices.push_back(32.); // add 32.
 
      std::cout << "Forward: ";                            // GB
-     for(i = prices.begin(); i != prices.end(); i++)      // GB
-         std::cout << *i << "  ";                         // GB
+     for(iter = prices.begin(); iter != prices.end(); iter++)      // GB
+         std::cout << *iter << "  ";                         // GB
      std::cout << "\n";                                   // GB
 
-     std::cout << "Reverse but DO NOT PRINT FIRST ENTRY!:";// GB
-     for(i = prices.end() - 1; i != prices.begin(); i--)
-         std::cout << *i << "  ";
+     std::cout << "Reverse but DO NOT PRINT FIRST ENTRY!: ";// GB
+     for(iter = prices.end() - 1; iter != prices.begin(); iter--)
+         std::cout << *iter << "  ";
      std::cout << "\n";
  }
