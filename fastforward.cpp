@@ -946,9 +946,9 @@ void QuadraticComplexity()
       uint64_t us = duration_get.count(); \
       return us; \
     }
-    RET(milli)
-    RET(micro)
-    RET(nano)
+    RET(milli) // creates member function 'uint64_t millisecs()' - which returns 'stop-start' in millisecs
+    RET(micro) // creates member function 'uint64_t microsecs()' - which returns 'stop-start' in microsecs
+    RET(nano)  // creates member function 'uint64_t nanosecs()'  - which returns 'stop-start' in nanosecs
   };
 
   uint64_t N;
