@@ -37,7 +37,7 @@ int main()
   
   Windows programs execute with a tiny stack.
 
-  This code generates a class with data elements that is s million bytes.
+  This code generates a class with a data element that is a million bytes.
   For encapsulation, these classes are created local to a function, that is, on the stack.
 
   This causes a segfault if this code is run under windows. :-( :-( :-(
