@@ -23,7 +23,7 @@ class Mailbox {
         std::condition_variable  msg_available_cv;  // Message in the mailbox?
         std::mutex               queue_mutex;       // Mutex for queue control
 
-        queue<messageT>          messages;          // Messages
+        std::queue<messageT>     msgQ;              // Messages
 
     public:
         Mailbox(void)  { }
@@ -34,7 +34,7 @@ class Mailbox {
             std::unique_lock<std::mutex> lock(queue_mutex);
 
             // Push message into mailbox
-            messages.push(msg);
+            msgQ.push(msg);
 
             // Signal there is a message in the mailbox
             msg_available_cv.notify_one();
@@ -45,7 +45,7 @@ class Mailbox {
             if( queue_mutex.try_lock() ) {
 
                 // Push message into mailbox
-                messages.push(msg);
+                msgQ.push(msg);
 
                 // Signal there is a message in the mailbox
                 msg_available_cv.notify_one();
@@ -65,13 +65,13 @@ class Mailbox {
             std::unique_lock<std::mutex> lock(queue_mutex);
 
             // Wait for a message to come in
-            while(messages.empty()) {
+            while(msgQ.empty()) {
                 msg_available_cv.wait(lock);
             }
 
             // Pop off oldest message
-            msg = messages.front();
-            messages.pop();
+            msg = msgQ.front();
+            msgQ.pop();
         }
 
         bool try_get(messageT& msg) { //  Try to get single message from a mailbox
@@ -81,13 +81,13 @@ class Mailbox {
             std::unique_lock<std::mutex> lock(queue_mutex);
 
             // Indicate if mailbox is empty
-            if(messages.empty())
+            if(msgQ.empty())
                 mailbox_ready = false;
             // Otherwise, grab the message
             else {
                 // Pop off oldest message
-                msg = messages.front();
-                messages.pop();
+                msg = msgQ.front();
+                msgQ.pop();
             }
 
             return mailbox_ready;
@@ -98,7 +98,7 @@ class Mailbox {
             std::unique_lock<std::mutex> lock(queue_mutex);
 
             // Wait for a message to come in
-            while(messages.empty()) {
+            while(msgQ.empty()) {
                 msg_available_cv.wait(lock);
                 // GB was
                 // msg_available_cv.wait(queue_mutex);
@@ -109,7 +109,7 @@ class Mailbox {
             }
 
             // Peek at most recent message
-            msg = messages.front();
+            msg = msgQ.front();
         }
 
         bool try_peek(messageT& msg) { //  Try to peek at single message from a mailbox
@@ -118,10 +118,10 @@ class Mailbox {
 
             std::unique_lock<std::mutex> lock(queue_mutex);
 
-            if(messages.empty())    // Indicate if mailbox is empty
+            if(msgQ.empty())    // Indicate if mailbox is empty
                 mailbox_ready = false;
             else                    // Otherwise, grab the message
-                msg = messages.front();
+                msg = msgQ.front();
 
             return mailbox_ready;
         }
@@ -130,14 +130,14 @@ class Mailbox {
 
             std::unique_lock<std::mutex> lock(queue_mutex);
 
-            return messages.size() == 0;
+            return msgQ.empty();
         }
 
         int count() { //  message count
 
             std::unique_lock<std::mutex> lock(queue_mutex);
 
-            return messages.size();
+            return msgQ.size();
         }
 };
 
@@ -148,23 +148,23 @@ string  formatTid( ) { return formatTid( this_thread::get_id() ); }
 int main(int argc, char**argv)
 {
   std::mutex      cout_mutex;       // Mutex for 'cout'
-  Mailbox<string> mb;
+  Mailbox<string> mbox;
 
-  auto get     = [&mb,&cout_mutex] () -> void { 
+  auto get     = [&mbox,&cout_mutex] () -> void { 
        string Msg; 
        bool waited = false;
 
        // std::chrono::time_point<std::chrono::high_resolution_clock> start;
        auto start = std::chrono::high_resolution_clock::now();
 
-       if(mb.empty()) {
+       if(mbox.empty()) {
          waited = true;
          { std::unique_lock<std::mutex> lock(cout_mutex);
            // std::cout<< "get: mailbox empty - waiting for message: " << this_thread::get_id() << "\n"; 
            std::cout<< "get: mailbox empty - waiting for message: " << formatTid() << "\n"; 
          }
        }
-       mb.get(Msg); 
+       mbox.get(Msg); 
 
        // std::chrono::time_point<std::chrono::high_resolution_clock> stop;
        auto stop  = std::chrono::high_resolution_clock::now();
@@ -178,23 +178,23 @@ int main(int argc, char**argv)
        }
   };
 
-  auto try_get = [&mb,&cout_mutex] () -> void { 
+  auto try_get = [&mbox,&cout_mutex] () -> void { 
        string Msg; 
        std::unique_lock<std::mutex> lock(cout_mutex);
-       // std::cout<< "try_get: " << this_thread::get_id() << " " << (mb.try_get(Msg)? Msg: "mail box empty") << "\n"; 
-       std::cout<< "try_get: " << formatTid() << " " << (mb.try_get(Msg)? Msg: "mail box empty") << "\n"; 
+       // std::cout<< "try_get: " << this_thread::get_id() << " " << (mbox.try_get(Msg)? Msg: "mail box empty") << "\n"; 
+       std::cout<< "try_get: " << formatTid() << " " << (mbox.try_get(Msg)? Msg: "mail box empty") << "\n"; 
   };
 
-  mb.put(string("msg 1"));  // Put a single message into the mailbox
+  mbox.put(string("msg 1"));  // Put a single message into the mailbox
 
   string Msg;
-  // mb.get(Msg); std::cout << Msg << "\n";
+  // mbox.get(Msg); std::cout << Msg << "\n";
   try_get();
 
-  mb.put(string("msg 2"));  // Put a single message into the mailbox
-  mb.put(string("msg 3"));  // Put a single message into the mailbox
-  mb.put(string("msg 4"));  // Put a single message into the mailbox
-  mb.put(string("msg 5"));  // Put a single message into the mailbox
+  mbox.put(string("msg 2"));  // Put a single message into the mailbox
+  mbox.put(string("msg 3"));  // Put a single message into the mailbox
+  mbox.put(string("msg 4"));  // Put a single message into the mailbox
+  mbox.put(string("msg 5"));  // Put a single message into the mailbox
         // void put(messageT msg); // Put a single message into the mailbox
         // bool try_put(messageT msg); // Try to put a single message into the mailbox
         // void get(messageT& msg); //  Get single message from a mailbox
@@ -216,6 +216,6 @@ int main(int argc, char**argv)
 
   std::thread t4 (get);
   this_thread::sleep_for (std::chrono::milliseconds(750));
-  mb.put(string("msg 6"));  // Put a single message into the mailbox
+  mbox.put(string("msg 6"));  // Put a single message into the mailbox
   t4.join();
 }
