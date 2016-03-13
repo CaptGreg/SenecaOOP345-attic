@@ -41,55 +41,42 @@
 // Execution event in a discrete event driven simulation.
 class event {
 public:
-    // Construct sets time of event.
-    event (unsigned int t) : time (t)
-        { }
-
-    // Execute event by invoking this method.
-    virtual void processEvent () = 0;
-    // bool operator> ( const event* evt_ ) { // GB not used
-        // return time > evt_->time;
-    // }
-
     const unsigned int time;
+    event (unsigned int t) : time (t) { } // Constructor sets time of event.
+
+    virtual void processEvent () = 0; // Execute event by invoking this method.
+    // bool operator> ( const event* evt_ ) { return time > evt_->time; } // GB not used
 };
 
 struct eventComparator {
-    bool operator() (const event * left, const event * right) const {
-        return left->time > right->time;
-    }
+    bool operator() (const event * left, const event * right) const { return left->time > right->time; }
 };
-
 
 
 // Framework for discrete event-driven simulations.
 class simulation {
-public:
-    simulation () : time (0), eventQueue () 
-        {}
-    void run ();
-    void  scheduleEvent (event * newEvent) {
-        eventQueue.push (newEvent);
-    }
-    unsigned int time;
 protected:
     std::priority_queue<event*,
                         std::vector<event *, std::allocator<event*> >,
                         eventComparator > eventQueue;
-};
-
-
-void simulation::run () {
-
-    while (! eventQueue.empty ()) {
-
-        event * nextEvent = eventQueue.top ();
-        eventQueue.pop ();
-        time = nextEvent->time;
-        nextEvent->processEvent ();
-        delete nextEvent;
+public:
+    unsigned int time;
+    simulation () : time (0), eventQueue () 
+        {}
+    void  scheduleEvent (event * newEvent) {
+        eventQueue.push (newEvent);
     }
-}
+    void run () {
+      while (! eventQueue.empty ()) {
+
+          event * nextEvent = eventQueue.top ();
+          eventQueue.pop ();
+          time = nextEvent->time;
+          nextEvent->processEvent ();
+          delete nextEvent;
+      }
+    }
+};
 
 
 //  Ice cream store simulation.

@@ -50,6 +50,16 @@ std::string TRim(const std::string &s) // GB works!
 }
 
 
+std::string simpleTrim( std::string& s)
+{
+  while(!s.empty() && isspace(s[0]) ) // trim leading spaces
+    s.erase( 0, 1 );
+
+  while(!s.empty() && isspace(s[s.size()-1]) ) // trim trailing spaces
+    s.erase( s.size()-1, 1 );
+
+  return s;
+}
 
 #include <iostream> 
 #include <vector> 
@@ -64,11 +74,13 @@ int main() // GB wrote this test code for the above pair of trim routines.
      std::string ( "   \t C" ),
    };
 
-   std::cout << "DATA->"; for(auto e : tests) std::cout << ":" << e;  std::cout << ":\n";
+   std::cout << "\nDATA->"; for(auto e : tests) std::cout << ":" << e;  std::cout << ":\n";
 
-   std::cout << "TRim->"; for(auto e : tests) std::cout << ":" << TRim(e);  std::cout << ":\n";
+   std::cout << "\nTRim->"; for(auto e : tests) std::cout << ":" << TRim(e);  std::cout << ":\n";
 
-   std::cout << "trim->"; for(auto e : tests) std::cout << ":" << trim(e);  std::cout << ":\n";
+   std::cout << "\ntrim->"; for(auto e : tests) std::cout << ":" << trim(e);  std::cout << ":\n";
+
+   std::cout << "\nsimpleTrim->"; for(auto e : tests) std::cout << ":" << simpleTrim(e);  std::cout << ":\n";
     
    return 0;
 }

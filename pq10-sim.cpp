@@ -23,6 +23,8 @@
 using std::priority_queue;
 using std::vector;
 
+inline int rand_int(int min, int max) { return rand() % (max-min) + min; } // GB
+
 /**
    A single event for a discrete event driven simulation.
 */
@@ -49,11 +51,6 @@ class EventComparison
 public:
    bool operator()(const Event* left, const Event* right) const;
 };
-
-inline int rand_int(int a, int b)
-{
-   return a + rand() % (b - a + 1);
-}
 
 inline Event::Event(int t) : time(t) {}
 
@@ -96,8 +93,7 @@ inline void Simulation::schedule_event(Event* new_event)
 using namespace std;
 void Simulation::run()
 {
-  while(!event_queue.empty()) 
-  {
+  while(!event_queue.empty()) {
     Event* next_event = event_queue.top();
     event_queue.pop();
     next_event->do_event();
@@ -130,12 +126,10 @@ HotDogStand::HotDogStand(int s) : free_seats(s) {}
 
 bool HotDogStand::can_seat()
 {
-   if (free_seats > 0) 
-   {
+   if (free_seats > 0) {
       free_seats--;
       return true;
-   }
-   else
+   } else
       return false;
 }
 
@@ -172,8 +166,7 @@ ArriveEvent::ArriveEvent(int t) : Event(t) {}
 
 void ArriveEvent::do_event()
 {
-   if (freds.can_seat()) 
-   {
+   if (freds.can_seat()) {
       cout << "time " << time << " Customer is seated\n";
       freds.schedule_event(new LeaveEvent(time + rand_int(1, 5)));
    }

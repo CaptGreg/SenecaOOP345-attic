@@ -39,5 +39,12 @@ int main ()
   mypq_type fourth;                       // less-than comparison
   mypq_type fifth (mycomparison(true));   // greater-than comparison
 
+  // priority queues do not have iterators so are not canditaes for range-based for loops
+  // std::cout << "first :"; for(auto e : first) std::cout << e << " "; std::cout << "\n";
+  //  error: no matching function for call to ‘begin(std::priority_queue<int>&)’
+
+  //std::cout << "second:"; for(auto e : second) std::cout << e << " "; std::cout << "\n";
+  //std::cout << "third :"; for(auto e : third) std::cout << e << " "; std::cout << "\n";
+
   return 0;
 }

@@ -9,6 +9,8 @@
 #include <cmath>          // irand ?
 using namespace std;
 
+inline int irand(int max) { return rand() % max; } // GB
+
 // Apache C++ Standard Library User's Guide
 // 11.3 Example Program: Event-Driven Simulation
 
@@ -133,6 +135,9 @@ using namespace std;
 
 // As we noted already, each activity is matched by a subclass of event. Each subclass of event includes an integer data member, which represents the size of a group of customers. The arrival event occurs when a group enters. When executed, the arrival event creates and installs a new instance of the order event. The function randomInteger() is used to compute a random integer between 1 and the argument value (see Section 2.2.5).
 
+    class orderEvent : public event;
+    class arriveEvent : public event;
+
     class arriveEvent : public event {
     public:
       arriveEvent (unsigned int t, unsigned int groupSize)
@@ -145,13 +150,18 @@ using namespace std;
 
     void arriveEvent::processEvent () {
 
-      if (theSimulation.canSeat (size))
+      if (theSimulation.canSeat (size)) {
+        event *e = (event*) new orderEvent (time + 1 + irand (4), size);
+        theSimulation.scheduleEvent(e);
+
         theSimulation.scheduleEvent
           (new orderEvent (time + 1 + irand (4), size));
-           // GB Feb 5, 2016 - thought this compiled?
+           // GB Feb 5, 2016, and Mar 5, 2016 - thought this compiled?
+           // g++ (Ubuntu 5.2.1-22ubuntu2) 5.2.1 20151010
            // error: expected type-specifier before ‘orderEvent’
            // (new orderEvent (time + 1 + irand (4), size));
            //      ^
+      }
 
     }
 
@@ -176,6 +186,8 @@ using namespace std;
       // Then we schedule the leave event.
       theSimulation.scheduleEvent
         (new leaveEvent (time + 1 + irand (10), size));
+             //  error: expected type-specifier before ‘leaveEvent’
+
     }
 
 // Finally, leave events free up chairs, but do not spawn any new events:
