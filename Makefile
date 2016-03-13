@@ -52,8 +52,8 @@ OPTCFLAGS = -fopenmp -fmax-errors=1 -Wfatal-errors
 CXXFLAGS = -Wall $(C11FLAG) $(CXXDFLAGS) $(OPTCFLAGS)
 
 # NOTE AMDAPP Beta link paths are different from standard AMDAPP
-AMDAPP      = AMDAPPSDK-3.0-0-Beta
 AMDAPP      = AMDAPP
+AMDAPP      = AMDAPPSDK-3.0-0-Beta
 CXXFLAGSOCL = -I/opt/$(AMDAPP)/include
 LFLAGSOCL   = -L/opt/$(AMDAPP)/lib/x86_64 -lamdocl64
 
@@ -95,12 +95,17 @@ moments : moments.cpp Makefile
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags opencv`   $< `pkg-config --libs opencv` -o $@
 
 ocl_c++11: ocl_c++11.cpp Makefile
-	$(CXX) $(CXXFLAGS)  $(CXXFLAGSOCL) $< $(LFLAGSOCL) -o $@
+	$(CXX) $(CXXFLAGS)  $(CXXFLAGSOCL) $< $(LFLAGSOCL) -o $@ 
+	#AMD E1 HP laptop: CL_VERSION 2.0 threw cl::Error: clGetPlatformIDs(-1001)
+
 
 ocl_header: ocl_header.cpp Makefile
 	$(CXX) $(CXXFLAGS)  $(CXXFLAGSOCL) $< $(LFLAGSOCL) -o $@
 
 ocl_ker_q: ocl_ker_q.cpp Makefile
+	$(CXX) $(CXXFLAGS)  $(CXXFLAGSOCL) $< $(LFLAGSOCL) -o $@
+
+ocldemo: ocldemo.cpp Makefile
 	$(CXX) $(CXXFLAGS)  $(CXXFLAGSOCL) $< $(LFLAGSOCL) -o $@
 
 ocldemo2: ocldemo2.cpp Makefile
@@ -195,6 +200,12 @@ tp345b: tp345b.cpp tp.h
 tp: tp.cpp tp.h
 	g++ -DTEST -Wall -std=c++11 -Ofast tp.cpp -o tp -pthread 
 	# clang++ -DTEST -Wall -std=c++11 -Ofast tp.cpp -o tp -pthread 
+
+curses-progress: curses-progress.cpp
+	g++ -std=c++11 $< -o $@ -lcurses
+
+curses-box: curses-box.cpp
+	g++ -std=c++11 $< -o $@ -lcurses
 
 # pimpl.cpp is a C++14 program
 pimpl: pimpl.cpp

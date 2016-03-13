@@ -66,7 +66,11 @@ int main()
 #include <cstdio>
 #include <cstdlib>
 #include <iostream>
-#include <unistd.h>         // sleep
+// replace system dependent sleep(nap) with c++11 OS independent this_thread::sleep_for(std::chono::second(nap))
+// #include <unistd.h>         // sleep
+#include <thread>
+#include <chrono>
+void sleep(int nap) { std::this_thread::sleep_for(std::chrono::seconds(nap)); }
 #include <ucontext.h>
 
 /* The three contexts:
@@ -91,9 +95,7 @@ void loop(
     ucontext_t *other_context,
     int *i_from_iterator)
 {
-    int i;
-    
-    for (i=0; i < 10; ++i) {
+    for (int i=0; i < 10; ++i) {
         /* Write the loop counter into the iterator return location. */
         *i_from_iterator = i;
         
@@ -113,7 +115,6 @@ int main1(void)
 
     /* Flag indicating that the iterator has completed. */
     volatile int iterator_finished;
-   
 
     getcontext(&loop_context);
     /* Initialise the iterator context. uc_link points to main_context1, the
@@ -151,14 +152,14 @@ int main1(void)
     }
     
     auto c = [] {
-        int i =0;
-	ucontext_t context;
-	
-	getcontext(&context);
-	std::cout << "main1: Hello world " << ++i << " times through the loop\n";
+      int i = 0;
+      ucontext_t context;
 
-	sleep(1);
-	if(i < 5) setcontext(&context);
+      getcontext(&context);
+      std::cout << "main1: Hello world " << ++i << " times through the loop\n";
+
+      sleep(1); // or std::this_thread::sleep_for(std::chrono::seconds(1));
+      if(i < 5) setcontext(&context);
     };
     c();
 

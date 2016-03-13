@@ -1,6 +1,6 @@
 // https://visualstudiomagazine.com/articles/2012/10/19/circular-references/listing6.aspx
 
-// GB compile problems
+// GB compile problems, not surpising since it is Visual Studio code.
 
 #include <string>
 #include <memory>
@@ -21,6 +21,7 @@ private:
   map<string, shared_ptr<person>> container_;
 };
 
+
 class person {
 public:
   person()=delete;
@@ -31,7 +32,9 @@ public:
 private:
   string name_;
 };
-class person {
+
+
+class person { // GB compile problems, not surpising since it is Visual Studio code.
   friend circular_ptr<person> *get_circular_ptr(const shared_ptr<person>&);
 public:
   person()=delete;
