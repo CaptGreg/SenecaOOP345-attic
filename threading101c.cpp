@@ -9,8 +9,20 @@ using namespace std;
 const int NUM_THREADS = 10;
 
 void threadfunction_cout(int arg) 
-{
+{  
+  this_thread::yield();                   // give up the CPU
   cout << "cout: " << arg << "\n";
+
+  this_thread::yield();                   // give up the CPU
+  cout << "cout: ";
+
+  this_thread::yield();                   // give up the CPU
+  cout << arg;
+
+  this_thread::yield();                   // give up the CPU
+  cout << "\n";
+
+  this_thread::yield();                   // give up the CPU
 }
 
 void threadfunction_stringstream(int arg) 

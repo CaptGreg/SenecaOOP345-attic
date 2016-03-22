@@ -90,6 +90,7 @@ public:
       size_t s = start + i * chunk;
       size_t e = s + chunk;
       if(i == NUM_THREADS - 1) e = end;
+      std::cout << "Thread " << i << ": s,e=" << s << "," << e << "\n";
 
     #if 1 // call thread directly
 
