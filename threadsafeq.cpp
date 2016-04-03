@@ -4,12 +4,6 @@
 #include <mutex>
 #include <condition_variable> // GB  - needed for tsqueue Pop that waits if q empty
 
-// includes for test program
-#include <vector>
-#include <thread>
-#include <iostream>
-#include <sstream>
-
 // What is the difference between lock_guard and unique_lock?
 // The difference is that you can lock and unlock a std::unique_lock. 
 // Must use a std::unique_lock for condition variables.
@@ -78,6 +72,13 @@ public:
   }
 };
 
+// includes for test program
+#include <string>
+#include <vector>
+#include <thread>
+#include <iostream>
+#include <sstream>
+
 int main()
 {
 // runtime error: 
@@ -103,12 +104,12 @@ int main()
         int ii;
         while(q.tryPop(ii) == false)
           tries++;
-        std::ostringstream ss;
-        if(tries == 1)
-          ss << "thread " << i << " popped " << ii << "\n";
-        else
-          ss << "thread " << i << " popped " << ii << " after " << tries << " tries" << "\n";
-        std::cout << ss.str();
+        std::string s = "thread " + std::to_string(i) + " popped " + std::to_string(ii);
+        if(tries != 1) {
+          s += " after " + std::to_string(tries) + " tries";
+        }
+        s += "\n";
+        std::cout << s;
       }; 
  
     // test out the tryPop mechanism.
@@ -139,9 +140,7 @@ int main()
       {
         int i;
         q.Pop(i);
-        std::ostringstream ss;
-        ss << "thread " << t << " popped " << i << " (after possible wait) " << "\n";
-        std::cout << ss.str();
+        std::cout << "thread " +  std::to_string(t) + " popped " + std::to_string(i) + " (after possible wait)\n";
       }; 
 
     // Q N reads
@@ -160,4 +159,5 @@ int main()
   } catch(...) {
     std::cerr << "program threw unspecified error" << "\n";
   }
+  return 0;
 }

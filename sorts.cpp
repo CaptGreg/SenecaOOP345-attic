@@ -1,3 +1,9 @@
+// best reference:
+// https://en.wikibooks.org/wiki/Special:Search/Algorithm_Implementation/Sorting/
+
+// some sorts are also in see Numerical Recipes in C
+
+// GB original code hacked from
 // http://stackoverflow.com/questions/244252/a-good-reference-card-cheat-sheet-with-the-basic-sort-algorithms-in-c
 
 // GB ported C-code to C++ function templates, new/delete
@@ -5,6 +11,7 @@
 
 #include <cstring>     // memcpy
 #include <iostream>
+#include <algorithm>   // for std::make_heap, std::sort_heap
 
 using namespace std;
 
@@ -17,8 +24,70 @@ static void swap(T* a, T* b) {
     }
 }
 
+template <typename Iterator>
+void heap_sort(Iterator begin, Iterator end)
+{
+    std::make_heap(begin, end);
+    std::sort_heap(begin, end);
+}
+
 template <typename T>   // function template
-void bubblesort(T* a, int l) {
+void heapsortCPP(T* a, int l) 
+{
+  heap_sort(a, a+l);
+}
+
+template <typename T>   // function template
+void heapsortC(T arr[], unsigned int N) 
+{
+    // https://en.wikibooks.org/wiki/Algorithm_Implementation/Sorting/Heapsort#C
+    // This is a fast implementation of heapsort in C, adapted from Numerical Recipes in C 
+    // but designed to be slightly more readable and to index from 0.
+
+    if(N==0) // check if heap is empty
+      return;
+
+    T t; /* the temporary value */
+    unsigned int n = N, parent = N/2, index, child; /* heap indexes */
+    /* loop until array is sorted */
+    while (1) { 
+        if (parent > 0) { 
+            /* first stage - Sorting the heap */
+            t = arr[--parent];  /* save old value to t */
+        } else {
+            /* second stage - Extracting elements in-place */
+            n--;                /* make the heap smaller */
+            if (n == 0) {
+                return; /* When the heap is empty, we are done */
+            }
+            t = arr[n];         /* save lost heap entry to temporary */
+            arr[n] = arr[0];    /* save root entry beyond heap */
+        }
+        /* insert operation - pushing t down the heap to replace the parent */
+        index = parent; /* start at the parent index */
+        child = index * 2 + 1; /* get its left child index */
+        while (child < n) {
+            /* choose the largest child */
+            if (child + 1 < n  &&  arr[child + 1] > arr[child]) {
+                child++; /* right child exists and is bigger */
+            }
+            /* is the largest child larger than the entry? */
+            if (arr[child] > t) {
+                arr[index] = arr[child]; /* overwrite entry with child */
+                index = child; /* move index to the child */
+                child = index * 2 + 1; /* get the left child and go around again */
+            } else {
+                break; /* t's place is found */
+            }
+        }
+        /* store the temporary value at its new location */
+        arr[index] = t; 
+    }
+}
+
+template <typename T>   // function template
+void bubblesort(T* a, int l) 
+{
     int i, j;  // GB cannot be unsigned (or size_t)
 
     for (i = l - 2; i >= 0; i--)  // GB NOTE >=0 terminate condition
@@ -27,7 +96,8 @@ void bubblesort(T* a, int l) {
 }
 
 template <typename T>   // function template
-void selectionsort(T* a, size_t l) {
+void selectionsort(T* a, size_t l) 
+{
     size_t i, j, k;
     for (i = 0; i < l; i++) {
         for (j = (k = i) + 1; j < l; j++) {
@@ -39,7 +109,8 @@ void selectionsort(T* a, size_t l) {
 }
 
 template <typename T>   // function template
-static void hsort_helper(T* a, int i, int l) {
+static void hsort_helper(T* a, int i, int l) 
+{
     int j;
 
     for (j = 2 * i + 1; j < l; i = j, j = 2 * j + 1) {
@@ -58,7 +129,8 @@ static void hsort_helper(T* a, int i, int l) {
 }
 
 template <typename T>   // function template
-void heapsort(T* a, int l) {
+void heapsort(T* a, int l) 
+{ // see Numerical Recipes in C
     int i;
 
     for (i = (l - 2) / 2; i >= 0; i--)
@@ -71,7 +143,8 @@ void heapsort(T* a, int l) {
 }
 
 template <typename T>   // function template
-static void msort_helper(T* a, T* b, size_t l) {
+static void msort_helper(T* a, T* b, size_t l) 
+{
     size_t i, j, k, m;
 
     switch (l) {
@@ -89,7 +162,8 @@ static void msort_helper(T* a, T* b, size_t l) {
 }
 
 template <typename T>   // function template
-void mergesort(T* a, size_t l) {
+void mergesort(T* a, size_t l) 
+{
     T *b;
 
     if (l < 0)
@@ -104,7 +178,8 @@ void mergesort(T* a, size_t l) {
 }
 
 template <typename T>   // function template
-static int pivot(T* a, size_t l) {
+static int pivot(T* a, size_t l) 
+{
     size_t i, j;
 
     for (i = j = 1; i < l; i++)
@@ -117,7 +192,8 @@ static int pivot(T* a, size_t l) {
 }
 
 template <typename T>   // function template
-void quicksort(T* a, size_t l) {
+void quicksort(T* a, size_t l) 
+{
     if (l <= 1)
         return;
 
@@ -127,7 +203,8 @@ void quicksort(T* a, size_t l) {
 }
 
 template <typename T>   // function template
-void btreesort(T* a, size_t l) {
+void btreesort(T* a, size_t l) 
+{
     size_t i;
     struct node {
         T value;
@@ -187,6 +264,22 @@ void shellsort(T a[], const int size)// Nothing to do with shells.  Named after 
   }
 }
 
+template <typename T>   // function template
+void insertionsort(T a[], const int length)
+// https://en.wikibooks.org/wiki/Algorithm_Implementation/Sorting/Insertion_sort
+{
+    int i, j;
+    T value;
+
+    for(i = 1 ; i < length ; i++)
+    {
+        value = a[i];
+        for (j = i - 1; j >= 0 && a[j] > value; j--)
+            a[j + 1] = a[j];
+        a[j + 1] = value;
+    }
+}
+
 int main(int argc, char**argv)
 {
   int a[] = {42,19,2,66,1,33,8,5,19};
@@ -208,6 +301,14 @@ int main(int argc, char**argv)
   cout << "heapsort "; for(auto e: a) cout << e << " "; cout << "\n";
 
   memcpy(a,b,sizeof(a));
+  heapsortC(a, l);
+  cout << "heapsortC "; for(auto e: a) cout << e << " "; cout << "\n";
+
+  memcpy(a,b,sizeof(a));
+  heapsortCPP(a, l);
+  cout << "heapsortCPP "; for(auto e: a) cout << e << " "; cout << "\n";
+
+  memcpy(a,b,sizeof(a));
   mergesort(a, l);
   cout << "mergesort "; for(auto e: a) cout << e << " "; cout << "\n";
 
@@ -222,4 +323,8 @@ int main(int argc, char**argv)
   memcpy(a,b,sizeof(a));
   shellsort(a, l);
   cout << "shellsort "; for(auto e: a) cout << e << " "; cout << "\n";
+
+  memcpy(a,b,sizeof(a));
+  insertionsort(a, l);
+  cout << "insertionsort "; for(auto e: a) cout << e << " "; cout << "\n";
 }
