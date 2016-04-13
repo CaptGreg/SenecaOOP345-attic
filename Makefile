@@ -4,6 +4,7 @@
 # -Wfatal-errors give up after one error. Present in GCC 4.0 and later.
 
 CFLAGS = -Wall -mmmx -msse -fmax-errors=1 -Wfatal-errors
+CC       = gcc
 CXXFLAGS = -std=c++11 -Wall -mmmx -msse -fmax-errors=1 -Wfatal-errors
 CXXDFLAGS = -ggdb
 
@@ -58,7 +59,6 @@ CXXFLAGSOCL = -I/opt/$(AMDAPP)/include
 LFLAGSOCL   = -L/opt/$(AMDAPP)/lib/x86_64 -lamdocl64
 
 # NOTE April 19, 2015 These OpenCL flags compile
-CXXFLAGSOCL = 
 CXXFLAGSOCL = -I/opt/$(AMDAPP)/include
 LFLAGSOCL   = -lOpenCL
 
@@ -66,6 +66,11 @@ LFLAGSOCL   = -lOpenCL
 # AMDAPP      = AMDAPP
 # CXXFLAGSOCL = -I/opt/$(AMDAPP)/include
 # LFLAGSOCL   = -L/opt/$(AMDAPP)/lib/x86_64 -lamdocl64
+
+# NOTE April 13, 2016 These OpenCL flags compile
+# gcc -I/opt/AMDAPP/include listdev.c -o listdev -L/opt/AMDAPP/lib/x86_64  -lOpenCL
+CXXFLAGSOCL = -I/opt/$(AMDAPP)/include
+LFLAGSOCL   = -L/opt/$(AMDAPP)/lib/x86_64 -lOpenCL
 
 OPTLFLAGS   = -lrt -pthread
 LFLAGS      = $(OPTLFLAGS)
@@ -111,9 +116,16 @@ ocldemo: ocldemo.cpp Makefile
 ocldemo2: ocldemo2.cpp Makefile
 	$(CXX) $(CXXFLAGS)  $(CXXFLAGSOCL) $< $(LFLAGSOCL) -o $@
 
+ocllistdev: ocllistdev.c Makefile
+	$(CC) $(CXXFLAGS)  $(CXXFLAGSOCL) $< $(LFLAGSOCL) -o $@
+
 oclvecadd: oclvecadd.cpp Makefile
 	$(CXX) $(CXXFLAGS)  $(CXXFLAGSOCL) $< $(LFLAGSOCL) -o $@
 
+
+pathfind : pathfind.cpp
+	$(CXX) $(CXXFLAGS)  $< -o $@ -lGL -lglut -lGLEW 
+	./$@
 
 gl3ctx : gl3ctx.cpp
 	$(CXX) gl3ctx.cpp -o gl3ctx -lGL  -lX11 
