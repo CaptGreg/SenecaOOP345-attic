@@ -10,6 +10,7 @@
 // (Study and implement the Lamport’s Bakery Algorithm for Interprocess synchronization using C/C++ programming language)
 //
 
+#include <thread>
 #include <chrono>
 class Timer { // use C++11 std::chrono features to create a stop-watch timer class
   std::chrono::time_point<std::chrono::high_resolution_clock> start;
@@ -37,19 +38,42 @@ public:
   RET(nano)  // creates member function 'uint64_t nanosecs()'  - which returns 'stop-start' in nanosecs
 };
 
+int usleep(unsigned usec) // A DIY C++11 std::chrono platform independent usleep()
+{
+  // NAME
+  //      usleep - suspend execution for microsecond intervals
+  // SYNOPSIS
+  //      #include <unistd.h>
+  //      int usleep(useconds_t usec);
+  // RETURN VALUE
+  //      The usleep() function returns 0 on success.  On error, -1 is returned, with errno set to indicate the cause of the error.
+  // ERRORS
+  //      EINTR  Interrupted by a signal; see signal(7).
+  //      EINVAL usec is not smaller than 1000000.  (On systems where that is considered an error.)
+  // NOTES
+  //     The  type  useconds_t  is  an  unsigned  integer  type capable of holding 
+  //     integers in the range [0,1000000].  Programs will be more portable if 
+  //     they never mention this type explicitly.  Use
+  //        #include <unistd.h>
+  //        ...
+  //            unsigned int usecs;
+  //        ...
+  //            usleep(usecs);
 
-// #define NUMBER1
+  std::this_thread::sleep_for (std::chrono::microseconds(usec));  // void
+  return 0;
+}
+
+#define NUMBER1
 // #define NUMBER2
-#define NUMBER3
+// #define NUMBER3
 
 #ifdef NUMBER1
 #include <thread>      // GB C++11
 #include <mutex>       // GB C++11
-#include <pthread.h>
 #include <iostream>
 #include <cstdio>
 #include <cstdlib>
-#include <unistd.h>
 #include <cassert>
  
 // Compile with: g++ -Wall -O3 bakery.cpp -pthread -o bakery
@@ -58,9 +82,6 @@ static const int NTHREADS = 6;      // GB On the 6-core AMD1100T processor, does
 volatile bool    exitFlag = false;  // GB shutdown threads
  
 // Some features to play with
-// GB choose one of USE_PTHREAD or USE_CPP11THREAD
-// #define USE_PTHREAD           // GB
-#define USE_CPP11THREAD           // GB
 
 //#define NCHECK     // Disable crucial check
 //#define NSYNC      // Disable memory barrier
@@ -217,24 +238,6 @@ t.Stop();
 }
  
 
-#ifdef USE_PTHREAD
-int main()
-{
-  pthread_t t[NTHREADS];
-  int n[NTHREADS];
-  for (int i = 0; i < NTHREADS; i++) {
-    n[i] = i;
-    pthread_create(&t[i], NULL, threadfun, (void*)&n[i]);
-  }
-  usleep(60*1000*1000);
-  exitFlag= true;
-  for (int i = 0; i < NTHREADS; i++) {
-    pthread_join(t[i], NULL);
-  }
-}
-#endif
-
-#ifdef USE_CPP11THREAD
 int main()
 {
   std::thread t[NTHREADS];
@@ -265,7 +268,6 @@ int main()
   }
 
 }
-#endif
 
 #endif
 #ifdef NUMBER2
@@ -274,11 +276,10 @@ int main()
 #include<exception>   // GB
 #include<iostream>    // GB
 #include<thread>      // GB C++11 threads
-#include<pthread.h>   // GB for kill thread
-#include<signal.h>    // GB for kill thread  (SIGTERM)
-#include<stdio.h>
-#include<unistd.h>
-#include <assert.h>
+// #include<pthread.h>   // GB for kill thread  *** compiles without header
+#include<csignal>    // GB for kill thread  (SIGTERM)
+#include<cstdio>
+#include <cassert>
 volatile int NUM_THREADS = 10;
 volatile int Number[11] = {0};    // GB bump to 11, indexing is base 0? looks like it might be base 1 in places
 volatile int count_cs[11] = {0};
@@ -373,10 +374,8 @@ int main()
 #include <thread>
 #include <mutex>
 #include <iostream>
-#include <unistd.h>   // usleep
 #include <csignal>    // sigterm
 #include <cstring>    // strsignal
-#include <pthread.h>
 
 const int NUM_THREADS = 4;
 volatile bool choosing[NUM_THREADS];
