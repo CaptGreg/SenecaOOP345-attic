@@ -5,16 +5,67 @@
 #include <iostream>           // cout ...
 using namespace std;
 
-#include <cstdio>            // pipe
-#include <inttypes.h>        // uint8_t ...
-#include <time.h>            // clock_gettime
-#include <sys/time.h>        // gettimeofday
-#include <sys/utsname.h>     // uname
-#include <stdlib.h>          // exit
-#include <unistd.h>          // usleep
+#include <cstdio>           // pipe
+#include <ctime>            // clock_gettime
+#include <sys/time.h>       // gettimeofday
+#include <sys/utsname.h>    // uname
+#include <unistd.h>         // usleep, getpid
 // #include <rtl_time.h>        // hrtime_t gethrtime(void);
 
 // typedef long long          int64_t;  Not needed.  It is defined by <inttypes.h>
+
+#include <thread> // usleep needs thread
+#include <chrono>
+class Timer { // use C++11 std::chrono features to create a stop-watch timer class
+  std::chrono::time_point<std::chrono::high_resolution_clock> start;
+  std::chrono::time_point<std::chrono::high_resolution_clock> stop;
+public:
+  Timer() {}
+  void Start() { start = std::chrono::high_resolution_clock::now(); }
+  void Stop () { stop  = std::chrono::high_resolution_clock::now(); }
+  // basic form to calculate time differences, illustrate with microseconds
+  uint64_t usecs() {
+    typedef std::chrono::duration<int,std::micro> microsecs_t ;
+    microsecs_t duration_get( std::chrono::duration_cast<microsecs_t>(stop-start) ) ;
+    uint64_t us = duration_get.count();
+    return us;
+  }
+  // Now use a macro to return milli, micro, and nano seconds 
+  #define RET(UNITS) uint64_t UNITS##secs() { \
+    typedef std::chrono::duration<int,std::UNITS> UNITS##secs_t ; \
+    UNITS##secs_t duration_get( std::chrono::duration_cast<UNITS##secs_t>(stop-start) ) ; \
+    uint64_t us = duration_get.count(); \
+    return us; \
+  }
+  RET(milli) // creates member function 'uint64_t millisecs()' - which returns 'stop-start' in millisecs
+  RET(micro) // creates member function 'uint64_t microsecs()' - which returns 'stop-start' in microsecs
+  RET(nano)  // creates member function 'uint64_t nanosecs()'  - which returns 'stop-start' in nanosecs
+};
+
+int usleep(unsigned usec) // C++11 std::chrono platform independent usleep()
+{
+  // NAME
+  //      usleep - suspend execution for microsecond intervals
+  // SYNOPSIS
+  //      #include <unistd.h>
+  //      int usleep(useconds_t usec);
+  // RETURN VALUE
+  //      The usleep() function returns 0 on success.  On error, -1 is returned, with errno set to indicate the cause of the error.
+  // ERRORS
+  //      EINTR  Interrupted by a signal; see signal(7).
+  //      EINVAL usec is not smaller than 1000000.  (On systems where that is considered an error.)
+  // NOTES
+  //     The  type  useconds_t  is  an  unsigned  integer  type capable of holding 
+  //     integers in the range [0,1000000].  Programs will be more portable if 
+  //     they never mention this type explicitly.  Use
+  //        #include <unistd.h>
+  //        ...
+  //            unsigned int usecs;
+  //        ...
+  //            usleep(usecs);
+
+  std::this_thread::sleep_for (std::chrono::microseconds(usec));  // void
+}
 
 /**
  * CPUID assembler instruction
@@ -102,34 +153,25 @@ private:
     static const long BILLION = 1000000000L;
     static const long MILLION = 1000000L;
 public:
-    /**
-     * time in processor clock cycles since power up, NOTE value wraps
-     */
-    uint64_t u64RDTSC() { 
+    uint64_t u64RDTSC() { // time in processor clock cycles since power up, NOTE value wraps
        // RDTSC 'Read Time Stamp Counter' instruction - google it!
        unsigned a, d; 
        asm volatile("rdtsc" : "=a" (a), "=d" (d)); 
        return ((uint64_t)a) | (((uint64_t)d) << 32); 
     }
-    /**
-     * hr timer (gethrtime) nsec since power up
-     */
-    // uint64_t u64TimeHRNS() { 
-	// real-time Linux function:- can't locate get_high_resolution_time function 
-    	// return (uint64_t) gethrtime(); 
+
+    // uint64_t u64TimeHRNS() { // hr timer (gethrtime) nsec since power up
+	  // real-time Linux function:- can't locate get_high_resolution_time function 
+    //   return (uint64_t) gethrtime(); 
     // }
-    /**
-     * clock_gettime time in nsec
-     */
-    uint64_t u64TimeNS() {
+
+    uint64_t u64TimeNS() { // clock_gettime time in nsec
       struct timespec tp;
       clock_gettime(0, &tp); // nanosec's since power up
       return BILLION * tp.tv_sec + tp.tv_nsec; // nsec
     }
-    /**
-     * clock_getcpuclockid time in nsec
-     */
-    uint64_t u64CpuTimeNS() {
+
+    uint64_t u64CpuTimeNS() { // clock_getcpuclockid time in nsec
       struct timespec tp;
       clockid_t clockid;
 
@@ -142,19 +184,13 @@ public:
       return BILLION * tp.tv_sec + tp.tv_nsec; // nsec
     }
 
-    /**
-     * clock_getres timer resolution in nsec
-     */
-    uint64_t u64getResNS() {
+    uint64_t u64getResNS() { // clock_getres timer resolution in nsec
         struct timespec res;
         clock_getres(clk_id, &res);
         return BILLION * res.tv_sec + res.tv_nsec; // nsec
     }
     
-    /**
-     * gettimeofday time in usec
-     */
-    uint64_t u64TimeUS() {
+    uint64_t u64TimeUS() { // gettimeofday time in usec
       struct timeval tv;
       gettimeofday(&tv, 0);
       return MILLION * tv.tv_sec + tv.tv_usec; // nsec
