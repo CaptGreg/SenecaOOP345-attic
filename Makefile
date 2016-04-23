@@ -76,55 +76,55 @@ OPTLFLAGS   = -lrt -pthread
 LFLAGS      = $(OPTLFLAGS)
 
 % : %.cpp Makefile
-	$(CXX) $(CXXFLAGS) $< -o $@ $(LFLAGS)
+	$(CXX) $(CXXFLAGS) $^ -o $@ $(LFLAGS)
 
 # compile fastforward with g++.  Clang++ on matrix has header problems.
 # compiles fine on matrix with /usr/local/gcc/gcc-cilk/bin/g++
 # fastforward : fastforward.cpp Makefile
-	# $(CXX) -std=c++0x  $< -o $@ -pthread
+	# $(CXX) -std=c++0x  $^ -o $@ -pthread
 
 
 camera : camera.cpp Makefile
-	$(CXX) $(CXXFLAGS) `pkg-config --cflags opencv`   $< `pkg-config --libs opencv` -o $@
+	$(CXX) $(CXXFLAGS) `pkg-config --cflags opencv`   $^ `pkg-config --libs opencv` -o $@
 
 canny : canny.cpp Makefile
-	$(CXX) $(CXXFLAGS) `pkg-config --cflags opencv`   $< `pkg-config --libs opencv` -o $@
+	$(CXX) $(CXXFLAGS) `pkg-config --cflags opencv`   $^ `pkg-config --libs opencv` -o $@
 
 find_contours : find_contours.cpp Makefile
-	$(CXX) $(CXXFLAGS) `pkg-config --cflags opencv`   $< `pkg-config --libs opencv` -o $@
+	$(CXX) $(CXXFLAGS) `pkg-config --cflags opencv`   $^ `pkg-config --libs opencv` -o $@
 
 hough : hough.cpp Makefile
-	$(CXX) $(CXXFLAGS) `pkg-config --cflags opencv`   $< `pkg-config --libs opencv` -o $@
+	$(CXX) $(CXXFLAGS) `pkg-config --cflags opencv`   $^ `pkg-config --libs opencv` -o $@
 
 moments : moments.cpp Makefile
-	$(CXX) $(CXXFLAGS) `pkg-config --cflags opencv`   $< `pkg-config --libs opencv` -o $@
+	$(CXX) $(CXXFLAGS) `pkg-config --cflags opencv`   $^ `pkg-config --libs opencv` -o $@
 
 ocl_c++11: ocl_c++11.cpp Makefile
-	$(CXX) $(CXXFLAGS)  $(CXXFLAGSOCL) $< $(LFLAGSOCL) -o $@ 
+	$(CXX) $(CXXFLAGS)  $(CXXFLAGSOCL) $^ $(LFLAGSOCL) -o $@ 
 	#AMD E1 HP laptop: CL_VERSION 2.0 threw cl::Error: clGetPlatformIDs(-1001)
 
 
 ocl_header: ocl_header.cpp Makefile
-	$(CXX) $(CXXFLAGS)  $(CXXFLAGSOCL) $< $(LFLAGSOCL) -o $@
+	$(CXX) $(CXXFLAGS)  $(CXXFLAGSOCL) $^ $(LFLAGSOCL) -o $@
 
 ocl_ker_q: ocl_ker_q.cpp Makefile
-	$(CXX) $(CXXFLAGS)  $(CXXFLAGSOCL) $< $(LFLAGSOCL) -o $@
+	$(CXX) $(CXXFLAGS)  $(CXXFLAGSOCL) $^ $(LFLAGSOCL) -o $@
 
 ocldemo: ocldemo.cpp Makefile
-	$(CXX) $(CXXFLAGS)  $(CXXFLAGSOCL) $< $(LFLAGSOCL) -o $@
+	$(CXX) $(CXXFLAGS)  $(CXXFLAGSOCL) $^ $(LFLAGSOCL) -o $@
 
 ocldemo2: ocldemo2.cpp Makefile
-	$(CXX) $(CXXFLAGS)  $(CXXFLAGSOCL) $< $(LFLAGSOCL) -o $@
+	$(CXX) $(CXXFLAGS)  $(CXXFLAGSOCL) $^ $(LFLAGSOCL) -o $@
 
 ocllistdev: ocllistdev.c Makefile
-	$(CC) $(CXXFLAGS)  $(CXXFLAGSOCL) $< $(LFLAGSOCL) -o $@
+	$(CC) $(CXXFLAGS)  $(CXXFLAGSOCL) $^ $(LFLAGSOCL) -o $@
 
 oclvecadd: oclvecadd.cpp Makefile
-	$(CXX) $(CXXFLAGS)  $(CXXFLAGSOCL) $< $(LFLAGSOCL) -o $@
+	$(CXX) $(CXXFLAGS)  $(CXXFLAGSOCL) $^ $(LFLAGSOCL) -o $@
 
 
 pathfind : pathfind.cpp
-	$(CXX) $(CXXFLAGS)  $< -o $@ -lGL -lglut -lGLEW 
+	$(CXX) $(CXXFLAGS)  $^ -o $@ -lGL -lglut -lGLEW 
 	./$@
 
 gl3ctx : gl3ctx.cpp
@@ -132,35 +132,35 @@ gl3ctx : gl3ctx.cpp
 	./gl3ctx
 
 glVAO_VBO : glVAO_VBO.cpp
-	$(CXX) $(CXXFLAGS)  $< -o $@ -lGL -lglut -lGLEW 
+	$(CXX) $(CXXFLAGS)  $^ -o $@ -lGL -lglut -lGLEW 
 	./$@
 
 # http://learnopengl.com/code_viewer.php?code=getting-started/shaders-interpolated
 glfwShaderInterp : glfwShaderInterp.cpp
-	$(CXX) $(CXXFLAGS)  $< -o $@ -lGL -lGLEW -lglfw
+	$(CXX) $(CXXFLAGS)  $^ -o $@ -lGL -lGLEW -lglfw
 	./$@
 
 #  http://learnopengl.com/#!Getting-started/Shaders
 glfwShaderUniform : glfwShaderUniform.cpp
-	$(CXX) $(CXXFLAGS)  $< -o $@ -lGL -lGLEW -lglfw
+	$(CXX) $(CXXFLAGS)  $^ -o $@ -lGL -lGLEW -lglfw
 	./$@
 
 #### http://learnopengl.com/code_viewer.php?code=advanced/geometry_shader_explode_shaders
 ### more complicated: needs "Shader.h" "Camera.h" "Model.h" files, plus the model
 ### TODO: make code standalone
 ## glfwShaderGeometry : glfwShaderGeometry.cpp
-##	$(CXX) $(CXXFLAGS)  $< -o $@ -lGL -lGLEW -lglfw
+##	$(CXX) $(CXXFLAGS)  $^ -o $@ -lGL -lGLEW -lglfw
 ##	./$@
 
 pthread : pthread.c
 	clang -Wall -pthread pthread.c -o pthread
 
 boost-open : boost-open
-	$(CXX) $< -o $@ -lboost_iostreams
+	$(CXX) $^ -o $@ -lboost_iostreams
 
 jsoncpp : jsoncpp.cpp Makefile
-	$(CXX) $(CXXFLAGS) `pkg-config --cflags jsoncpp`   $< `pkg-config --libs jsoncpp` -o $@
-	#$(CXX) $(CXXFLAGS) $< -o $@ -ljsoncpp
+	$(CXX) $(CXXFLAGS) `pkg-config --cflags jsoncpp`   $^ `pkg-config --libs jsoncpp` -o $@
+	#$(CXX) $(CXXFLAGS) $^ -o $@ -ljsoncpp
 
 vectorization : vectorization.cpp Makefile
 	@echo compiler $(CXX)
@@ -214,15 +214,19 @@ tp: tp.cpp tp.h
 	# clang++ -DTEST -Wall -std=c++11 -Ofast tp.cpp -o tp -pthread 
 
 curses-progress: curses-progress.cpp
-	g++ -std=c++11 $< -o $@ -lcurses
+	g++ -std=c++11 $^ -o $@ -lcurses
 
 curses-box: curses-box.cpp
-	g++ -std=c++11 $< -o $@ -lcurses
+	g++ -std=c++11 $^ -o $@ -lcurses
+
+# cpp14-auto-lambda.cpp is a C++14 program
+cpp14-auto-lambda: cpp14-auto-lambda.cpp
+	g++ -Wall -std=c++14 $^ -o $@
 
 # pimpl.cpp is a C++14 program
 pimpl: pimpl.cpp
-	g++ -Wall -std=c++14 pimpl.cpp -o pimpl
+	g++ -Wall -std=c++14 $^ -o $@
 
 # getaddrinfo_a, gai_suspend, gai_error, gai_cancel - asynchronous network address and service translation
 getaddrinfo_a: getaddrinfo_a.cpp
-	g++ -Wall -std=c++11 getaddrinfo_a.cpp -o getaddrinfo_a -lanl
+	g++ -Wall -std=c++11 $^ -o $@ -lanl
