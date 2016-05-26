@@ -75,7 +75,7 @@ LFLAGSOCL   = -L/opt/$(AMDAPP)/lib/x86_64 -lOpenCL
 OPTLFLAGS   = -lrt -pthread
 LFLAGS      = $(OPTLFLAGS)
 
-% : %.cpp Makefile
+% : %.cpp 
 	$(CXX) $(CXXFLAGS) $^ -o $@ $(LFLAGS)
 
 # compile fastforward with g++.  Clang++ on matrix has header problems.
