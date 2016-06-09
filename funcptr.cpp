@@ -20,6 +20,7 @@
 #include <iomanip>    // setprecision for printing doubles
 #include <cstdlib>    // random
 #include <thread>     // std::async
+#include <string>
 
 using namespace std;
 
@@ -30,7 +31,7 @@ int main(int argc, char**argv)
   // 1. just call the function
   std::cout <<  "sqrt(1000) = " << sqrt(1000) << "\n";
 
-  // 2. C pointer to a function - OOP144
+  // 2. C pointer to a function - // 1977 or OOP144
   double (*f)(double arg);  // a pointer to a function that returns a double and takes a double as an argument
 
   f = sqrt;
@@ -147,7 +148,11 @@ int main(int argc, char**argv)
 
   // 7. threads are functions. std::thread
   // They might be running on another core, if there is another core.
-  auto threadFunction = [] (int foo) { std::this_thread::sleep_for( std::chrono::milliseconds ( foo )); };
+  auto threadFunction = [] (int foo) 
+    { 
+      std::this_thread::sleep_for( std::chrono::milliseconds ( foo )); 
+      std::cout << std::string("Threadfunction slept for ") + to_string(foo) + " ms.\n";
+    };
 
   cout << "launching thread ... \n";
   std::thread t ( threadFunction, 1500); // run function in a separate thread. sleep for 1.5 sec (1500 milliseconds)
@@ -179,13 +184,12 @@ int main(int argc, char**argv)
   // create a job table of function pointers, use bind to initialize the table, launch each job as a thread, time everything
     const int NUMTHREADS = 10;
     std::function<void()> jobTable[NUMTHREADS];
-    std::thread tidTable[NUMTHREADS];
-
-    for(int i = 0; i < NUMTHREADS; i++)
+    for(int i = 0; i < NUMTHREADS; i++)                    // initialise the job table
       jobTable[i] = std::bind (threadFunction, 150*(i+1));
 
+    std::thread tidTable[NUMTHREADS];
     start = std::chrono::high_resolution_clock::now(); 
-    for(int i = 0; i < NUMTHREADS; i++) {
+    for(int i = 0; i < NUMTHREADS; i++) {                  // initialize the thred id table (launch thread)
       // std::function<void()> job = jobTable[i];
       // tidTable[i] = std::thread( job );
       tidTable[i] = std::thread( jobTable[i] );
