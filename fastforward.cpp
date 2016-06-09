@@ -26,6 +26,7 @@
 #include <string>    // C++ strings
 #include <thread>    // thread, join, thread ids, ..
 #include <vector>    // STL Container
+#include <csignal>   // trap segmentation fault
 
 // using namespace std;
 // week01
@@ -110,8 +111,7 @@ void FundamentalTypes()
   uint8_t       u8  = 1 << (8-1);
   uint16_t      u16 = 1 << (16-1);
   uint32_t      u32 = 1 << (32-1);
-  uint64_t      u64 = 1uLL << (64-1);
-
+  uint64_t      u64 = 1uLL << (64-1); // or u64 = 1; u64 <<= 63;  
   int8_t        i8  = 1 << (8-1);
   int16_t       i16 = 1 << (16-1);
   int32_t       i32 = 1 << (32-1);
@@ -182,7 +182,7 @@ void CompoundTypes()
   enum TrafficLightStates { GREEN, YELLOW, RED, FLASHING_GREEN};
   std::cout << "arrays - c-code OOP144\n";
   std::cout << "classes - C++ OOP244\n";
-  std::cout << "structs - c-code OOP144, struct with member functionsa C++ OOP244\n";
+  std::cout << "structs - c-code OOP144, struct with member functions C++ OOP244\n";
   std::cout << "bit-fields - c-code OOP144\n";
   struct bits_s {
     uint64_t bit0     : 1; // least significant bit, or LSB
@@ -190,16 +190,40 @@ void CompoundTypes()
     uint64_t bit2and3 : 2;
     uint64_t filler   : 59;
     uint64_t MSB      : 1; // most significate bit, or MSB
-
   } bits;
+
   std::cout << "unions - c-code OOP144\n";
-  union {
+  union myUnion_u {
     float    Float;
     uint32_t UInt32;
+    int32_t  Int32;
     uint16_t UInt16[2];
     uint8_t  UInt8[4];
-
   } myUnion;
+
+  myUnion.Float = -1.5;
+  std::cout << "Unions Float,UInt32,Int32, UIntr16[0], UInt16[1],UInt8[0],UInt8[1],UInt8[2], UInt8[3]="
+            << myUnion.Float<<","
+            << myUnion.UInt32<<","
+            << myUnion.Int32<<","
+            << myUnion.UInt16[0]<<","<< myUnion.UInt16[1]<<","
+            << (unsigned)myUnion.UInt8[0]<<","<<(unsigned)myUnion.UInt8[1]<<","<<(unsigned)myUnion.UInt8[2]<<","<< (unsigned)myUnion.UInt8[3]
+            << "\n";
+
+  myUnion.UInt8[0] = 192;
+  myUnion.UInt8[1] = 168;
+  myUnion.UInt8[2] = 2;
+  myUnion.UInt8[3] = 101;
+  std::cout << "Unions Float,UInt32,Int32, UIntr16[0], UInt16[1],UInt8[0],UInt8[1],UInt8[2], UInt8[3]="
+            << myUnion.Float<<","
+            << myUnion.UInt32<<","
+            << myUnion.Int32<<","
+            << myUnion.UInt16[0]<<","<< myUnion.UInt16[1]<<","
+            << (unsigned)myUnion.UInt8[0]<<","<<(unsigned)myUnion.UInt8[1]<<","<<(unsigned)myUnion.UInt8[2]<<","<< (unsigned)myUnion.UInt8[3]
+            << "\n";
+
+  myUnion_u abc;
+  abc.Int32 = -1;
 
   std::cout << "week 03 compound type\n";
   std::cout << "Move-constructor, Move-Assignment Operator - C++11 code OOP345!\n";
@@ -207,6 +231,8 @@ void CompoundTypes()
   public:
     void print(std::string s, const char*&  x)         { std::cout << s << ", value=" << x << " is a l-value\n"; }
     void print(std::string s, const char*&&  x)        { std::cout << s << ", value=" << x << " is a r-value\n"; }
+    // void print(std::string s, const int   x)           { std::cout << s << ", value=" << x << " is a call-by-value parameter\n"; }
+    // confuses compiler - syntax error
     void print(std::string s, const int&  x)           { std::cout << s << ", value=" << x << " is a l-value\n"; }
     void print(std::string s, const int&& x)           { std::cout << s << ", value=" << x << " is a r-value\n"; }
     void operator()(std::string s, const int&  x)      { std::cout << s << ", value=" << x << " is a l-value\n"; }
@@ -268,7 +294,7 @@ void CompoundTypes()
       }
     MoveClass& operator=(const MoveClass& rhs)  // assignment operator (deep copy of data) OOP244
       { 
-        if(this != &rhs) memcpy(b,rhs.b,sizeof(*b)*size); 
+        if(this != &rhs) { if(!b) b = new int[size]; memcpy(b,rhs.b,sizeof(*b)*size); }
         std::cout << "assignment operator (deep copy) this=" << (void*)this << ", b=" << (void*) b << "\n";
         return *this; 
       }
@@ -485,7 +511,7 @@ void Composition()
 void Association()
 {
   // Association: A relationship between two or more objects where all objects 
-  // have their own lifecycle abd there is no owwner.
+  // have their own lifecycle and there is no owwner.
 
   // Clubs and people are independent.  The club can fold or a person can die 
   // without destroying the other.
@@ -561,7 +587,7 @@ void Aggregation()
   class Pond {
     std::list<Duck> ducks;
     public:
-    void Addduck(Duck duck) { ducks.push_back(duck); }
+    void AddDuck(Duck duck) { ducks.push_back(duck); }
   };
 
   Pond golden;
@@ -576,15 +602,15 @@ void Aggregation()
   Duck evil;
   Duck neutral;
 
-  golden.Addduck(donald);
-  golden.Addduck(ronald);
-  golden.Addduck(daffy);
-  golden.Addduck(black);
-  golden.Addduck(good);
-  golden.Addduck(neutral);
+  golden.AddDuck(donald);
+  golden.AddDuck(ronald);
+  golden.AddDuck(daffy);
+  golden.AddDuck(black);
+  golden.AddDuck(good);
+  golden.AddDuck(neutral);
 
-  oxbow.Addduck(bad);
-  oxbow.Addduck(evil);
+  oxbow.AddDuck(bad);
+  oxbow.AddDuck(evil);
 }
 
 void Expressions()
@@ -604,6 +630,26 @@ void Expressions()
    std::cout << "i=" << i << "\n";
 
    std::cout << "double trouble:"; for(auto e : trouble) std::cout << e; std::cout << "\n";
+
+ #if 1
+   // char *ref = "123456789";
+   char ref[] ={ '1','2','3','4','5','6','7','8','9','\0'};
+   char *p = ref;
+   std::cout << "ref=" << ref << "\n";
+   std::cout << "*p = " << *p << "\n";
+   std::cout << " before : *p = *p++;\n";
+   std::cout << " segmentation fault?\n";
+   signal(SIGSEGV,  // SIGSEGV = segment violation, a 'segfault' 
+     [] (int sig) { 
+       std::cout << "caught signal " << sig << " (SIGSEGV=" << SIGSEGV << ") - YES! it SEGFAULTED\n"; 
+       exit(sig); 
+     } );
+   *p = *p++;
+   std::cout << " after : *p = *p++;\n";
+   std::cout << "*p = " << *p << "\n";
+   std::cout << "*p offset from ref = " << p-ref << "\n";
+ #endif
+
 } // Expressions
 
 void SimpleDIYPrintf(const char *fmt, ...)  // a variable argument function (variadic function)
@@ -640,6 +686,11 @@ void Functions()
 {
   // 1. C pointer to a function - OOP144
   double (*f)(double arg);  // a pointer to a function that returns a dounble and takes a double as an argument
+
+  f = sqrt;
+  std::cout <<  "sqrt(" << 1000. << ")=" << f(1000.) << "\n"; 
+  f = fabs;
+  std::cout <<  "fabs(" << -1000. << ")=" << f(-1000.) << "\n"; 
 
   #define F(FUN,ARG) f=FUN; std::cout <<  #FUN "(" #ARG ")=" << f(ARG) << "\n"; 
   F(sqrt, 1000.)
@@ -1277,7 +1328,6 @@ int main(int argc, char**argv)
   RUN(11, file stream);
   RUN(12, more fundamental + compound types);
   RUN(13, more on functions + course review);
-  
 
   std::cout << R"bar(So there you go.
 
@@ -1324,10 +1374,6 @@ int main(int argc, char**argv)
   Greg Blair, 
   john.blair@senecacollege.ca
 
-  2015 Fall Semester Office Hours TEL Building either T2105 or Open Lab: 
-    Monday,     after 345ABC (S1206)  9:50 to 11:35 class
-    Tuesday,    after 345B   (T3074)  8:00 to 09:45 class
-    Tuesday,    after 345A   (T3074) 13:30 to 15:15 class
   )bar";
   
   return 0;
