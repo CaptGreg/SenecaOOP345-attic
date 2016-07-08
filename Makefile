@@ -38,14 +38,24 @@ endif
 ifeq ($(HOSTNAME),hp)
   CC   = gcc-5
   CXX  = g++-5
+
+  CC   = gcc
+  CXX  = g++
+  # Ubuntu 16.04 is release 5.3.1
 endif
 
 ifeq ($(HOSTNAME),matrix)
-  # Fall 2014 semester (2014-09-08), matrix g++ is 4.6.2, released October 26, 2011
-  CXX = g++
-  C11FLAG = -std=c++0x 
-  # g++ 4.9
-  CXX = /usr/local/gcc/gcc-cilk/bin/g++
+  CXX     = g++
+  # matrix g++ is 4.6.2, released October 26, 2011
+  C11FLAG = std=c++0x 
+
+  CXX     = /usr/local/gcc/gcc-cilk/bin/g++
+  # 2013-05-20 vintage g++ (GCC) 4.8.0 20130520 (experimental) was installed in folder
+  # this compiler is EXPERIMENTAL and is NOT recommended for compiling production code.
+  C11FLAG = -std=c++11 
+
+  CXX     = /usr/local/gcc/5.2.0/bin/g++
+  # version 5.2.0 installed Dec 22, 2015
   C11FLAG = -std=c++11 
 endif
 
