@@ -3,44 +3,31 @@
 # -fmax-errors=N give up after N errors. Present in GCC 4.6 and later.
 # -Wfatal-errors give up after one error. Present in GCC 4.0 and later.
 
-CFLAGS = -Wall -mmmx -msse -fmax-errors=1 -Wfatal-errors
-CC       = gcc
-CXXFLAGS = -std=c++11 -Wall -mmmx -msse -fmax-errors=1 -Wfatal-errors
+CFLAGS    = -Wall -mmmx -msse -fmax-errors=1 -Wfatal-errors
+CC        = gcc
+CXXFLAGS  = -std=c++11 -Wall -mmmx -msse -fmax-errors=1 -Wfatal-errors
 CXXDFLAGS = -ggdb
 
-C11FLAG  = -std=c++11 
-CXX      = g++-5
-CXX5     = g++-5
+C11FLAG   = -std=c++11 
+CXX       = clang++
 # May 15, 2015, clang++ has missing/corrupt header files: won't compile fastforward, includes fail
 # use g++ for fastforward
-CXX      = clang++
-CXX      = g++
+CXX       = g++
 
 ifeq ($(HOSTNAME),raspberrypi)
-  CC   = gcc
-  CXX  = g++
-endif
-
-ifeq ($(HOSTNAME),raspberrypi)
-  CC   = gcc
-  CXX  = g++
+  CC      = gcc
+  CXX     = g++
 endif
 
 ifeq ($(HOSTNAME),amd1100t)
-  CC   = gcc-5
-  CXX  = g++
-  CXX  = clang++
-  CXX  = g++-5
-  CC5  = gcc-5
-  CXX5 = g++-5
+  CC      = gcc
+  CXX     = clang++
+  CXX     = g++
 endif
 
 ifeq ($(HOSTNAME),hp)
-  CC   = gcc-5
-  CXX  = g++-5
-
-  CC   = gcc
-  CXX  = g++
+  CC      = gcc
+  CXX     = g++
   # Ubuntu 16.04 is release 5.3.1
 endif
 
