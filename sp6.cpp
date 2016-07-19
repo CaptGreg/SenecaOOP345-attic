@@ -40,7 +40,8 @@ int main(int argc, char**argv)
     cout << "ssp.use_count ()=" << ssp.use_count()  << "\n";
     cout << "ssp2.use_count()=" << ssp2.use_count() << "\n";
 
-    std::shared_ptr<X> ssp3 =  ssp2;   // assignment operator
+    std::shared_ptr<X> ssp3;
+    ssp3 =  ssp2;   // assignment operator
     ssp3->hello();
     cout << "ssp.use_count ()=" << ssp.use_count()  << "\n";
     cout << "ssp2.use_count()=" << ssp2.use_count() << "\n";

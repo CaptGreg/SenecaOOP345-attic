@@ -8,7 +8,6 @@ class X {
 public:
   X(const std::string& n) { name = n; cout << "X ctor " << name << "\n"; }
   ~X() { cout << "X dtor " << name << "\n"; }
-  void hello() const { cout << "hello from " << name << "\n\n"; }
 };
 
 X xgbefore("global xgbefore before main");
