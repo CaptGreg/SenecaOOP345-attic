@@ -88,7 +88,7 @@ atomic_int _number;
 atomic_int _next;
 atomic_int _turn[n];
 
-// GB - don't know about numThreads, not atomic, incremented by func as thta thread begins execution.
+// GB - don't know about numThreads, not atomic, incremented by func as that thread begins execution.
 int        numThreads;
 
 // mutex      coutMutex;   // GB use lock-free I/O method via string
