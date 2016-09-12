@@ -3,7 +3,7 @@
 // The actual mechanics are:
 // 1. The ctor allocates space for any static sized private data members.
 // 2. the ctor code executes.
-// 3. If it throws, the provate data elelments are deallocated.
+// 3. If it throws, the private data elelments are deallocated.
 
 #include <exception>   // std::bad_alloc
 #include <cstdlib>     // malloc/free
@@ -35,7 +35,7 @@ void* operator new (size_t size)
 {
   void *p=malloc(size); 
   if(bVerboseNewDelete) 
-    cout << "global new(" << size << ") = " << p << "\n";
+    cout << "global DIY new(" << size << ") = " << p << "\n";
   if (!p) // did malloc succeed?
     throw std::bad_alloc(); // ANSI/ISO compliant behavior
   mallocBlocks++;
@@ -45,7 +45,7 @@ void* operator new (size_t size)
 void operator delete (void *p)
 {
   if(bVerboseNewDelete) 
-    cout << "global delete(" << p << ")\n";
+    cout << "global DIY delete(" << p << ")\n";
   if(p) 
     free(p); 
   mallocBlocks--;
