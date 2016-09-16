@@ -128,6 +128,10 @@ gl3ctx : gl3ctx.cpp
 	$(CXX) gl3ctx.cpp -o gl3ctx -lGL  -lX11 
 	./gl3ctx
 
+glx3 : glx3.cpp
+	$(CXX) $(CXXFLAGS) $^ -o $@ -lGL  -lX11 
+	./$@
+
 glVAO_VBO : glVAO_VBO.cpp
 	$(CXX) $(CXXFLAGS)  $^ -o $@ -lGL -lglut -lGLEW 
 	./$@
@@ -218,6 +222,9 @@ curses-box: curses-box.cpp
 
 # cpp14-auto-lambda.cpp is a C++14 program
 cpp14-auto-lambda: cpp14-auto-lambda.cpp
+	g++ -Wall -std=c++14 $^ -o $@
+
+cpp14: cpp14.cpp
 	g++ -Wall -std=c++14 $^ -o $@
 
 # pimpl.cpp is a C++14 program
