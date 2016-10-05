@@ -8,7 +8,9 @@ class test {
     int b;
 
     int add      (){ return a + b; }
+    int subtract (){ return a - b; }
     int multiply (){ return a * b; }
+    int divide   (){ return a / b; }
 
     public:
     int calculate (char operatr, int operand1, int operand2){
@@ -18,7 +20,9 @@ class test {
         b = operand2;
 
         if (operatr == '+') opPtr = &test::add;
+        if (operatr == '-') opPtr = &test::subtract;
         if (operatr == '*') opPtr = &test::multiply;
+        if (operatr == '/') opPtr = &test::divide;
 
         return (this->*opPtr)();
     }
@@ -26,7 +30,10 @@ class test {
 
 int main(){
     test t;
-    std::cout << t.calculate ('+', 2, 3);
+    std::cout << t.calculate ('+', 2, 3)  << "\n";
+    std::cout << t.calculate ('-', 2, 6)  << "\n";
+    std::cout << t.calculate ('*', 2, 3)  << "\n";
+    std::cout << t.calculate ('/', 20, 3) << "\n";
 }
 
 // http://tipsandtricks.runicsoft.com/Cpp/MemberFunctionPointers.html
