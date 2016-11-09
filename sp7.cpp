@@ -12,8 +12,6 @@ public:
   ~X() { cout << "X dtor " << name << " this=" << this << "\n"; }
 };
 
-X xbeforeMain("X before main");
-
 int main(int argc, char**argv)
 {
   cout << "main starting...\n";
@@ -39,7 +37,8 @@ int main(int argc, char**argv)
     cout << "ssp2.get()=" << ssp2.get() << "\n";
     cout << "\n";
 
-    std::shared_ptr<X> ssp3 =  ssp2;   // assignment operator
+    std::shared_ptr<X> ssp3;
+    ssp3 =  ssp2;   // assignment operator
     cout << "ssp.use_count()=" << ssp.use_count()  << "\n";
     cout << "ssp.get()=" << ssp.get()  << "\n";
     cout << "ssp2.use_count()=" << ssp2.use_count() << "\n";
@@ -63,5 +62,3 @@ int main(int argc, char**argv)
 
   cout << "main terminating...\n";
 }
-
-X xafterMain("X after main");
