@@ -47,14 +47,14 @@ void csvReader(char* filename, char delim, std::vector< std::vector<std::string>
            field += line[i];
          } else {
             trim(field);
-            fields.push_back(field);
-            field.clear();
+            fields.push_back(move(field));
+            // field.clear(); // not needed if we do a move
          }
       }
       trim(field);
       fields.push_back(field);
-      csv.push_back(fields);
-      fields.clear();
+      csv.push_back(move(fields));
+      // field.clear(); // not needed if we do a move
     }
     is.close();
   } else {
