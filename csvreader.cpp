@@ -18,6 +18,7 @@ std::string& trim(std::string& s, char trimChar)
 }
 
 #define PROCESS_DOUBLE_QUOTES
+void csvReader(char* filename, char delim, std::vector< std::vector<std::string> > &csv);
 void csvReader(char* filename, char delim, std::vector< std::vector<std::string> > &csv)
 {
   std::ifstream is(filename);
