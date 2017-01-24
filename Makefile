@@ -231,6 +231,21 @@ cpp14: cpp14.cpp
 pimpl: pimpl.cpp
 	g++ -Wall -std=c++14 $^ -o $@
 
+# c++14 threadpool, needs std::index_sequence
+tp14: tp14.cpp
+	g++ -Wall -std=c++14 $^ -o $@ -pthread
+
 # getaddrinfo_a, gai_suspend, gai_error, gai_cancel - asynchronous network address and service translation
 getaddrinfo_a: getaddrinfo_a.cpp
 	g++ -Wall -std=c++11 $^ -o $@ -lanl
+
+longdouble: longdouble.cpp
+	g++ longdouble.cpp -o $@ 
+	./$@
+	g++ -m32 longdouble.cpp -o $@ 
+	./$@
+	gcc longdouble.c -o $@ 
+	./$@
+	gcc -m32 longdouble.c -o $@ 
+	./$@
+	rm $@
