@@ -43,5 +43,8 @@ int main()
   cout << "l = " << l << "\n";
   cout << "m = " << m << "\n";
 
+
+  cout << R"xxx(cout << (1,2,3) << "\n";)xxx" << "\n";
+  cout << (1,2,3) << "\n";
   return 0;
 }
