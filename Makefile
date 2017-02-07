@@ -239,6 +239,9 @@ tp14: tp14.cpp
 getaddrinfo_a: getaddrinfo_a.cpp
 	g++ -Wall -std=c++11 $^ -o $@ -lanl
 
+externconstMain : externconstMain.cpp externconst.cpp externconst.h 
+	g++ externconstMain.cpp externconst.cpp -o externconstMain
+
 longdouble: longdouble.cpp
 	g++ longdouble.cpp -o $@ 
 	./$@
