@@ -50,20 +50,20 @@ step 2.
 
 step 3.
   * calculate the amount of work each thread will do. (Call it 'chunk')
-    either
-      int chunk = N / NUM_THREADS;
-    or
-      int chunk = (N + NUM_THREADS-1) / NUM_THREADS;  // round chunk up to the next integer
+
+    either, if N is large:
+
+      size_t chunk = N / NUM_THREADS;
+
+    or if N is small, round up to the next integer:
+
+      size_t chunk = (N + NUM_THREADS-1) / NUM_THREADS; 
 
 step 4.
-  * calculate the amount of work each thread will do. (Call it 'chunk')
-    int chunk = N / NUM_THREADS;
+  * declare a array to hold the thread identifier (tid)
+    std::thread tid[NUM_THREADS];
 
 step 5.
-  * declare a array to hold the thread identifier (tid)
-    std::thread tid[N];
-
-step 6.
   * launch the threads using thread/join
   * thread(...) step:
     for(int t = 0; i < NUM_THREADS; t++) {
@@ -74,10 +74,10 @@ step 6.
       tid[t] = std::thread(doWork, s, e);
     }
 
-step 7.
+step 6.
   * wait for the threads to finish
   * join() step:
-    for(auto e ; tid)
+    for(auto e : tid)
       e.join();
 
 */
