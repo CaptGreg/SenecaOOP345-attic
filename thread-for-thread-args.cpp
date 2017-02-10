@@ -65,24 +65,24 @@ step 2.
 
 step 3.
   * calculate the amount of work each thread will do. (Call it 'chunk')
-    either
-      int chunk = N / NUM_THREADS;
-    or
-      int chunk = (N + NUM_THREADS-1) / NUM_THREADS;  // round chunk up to the next integer
+
+    either, if N is large:
+
+      size_t chunk = N / NUM_THREADS;
+
+    or if N is small, round up to the next integer:
+
+      size_t chunk = (N + NUM_THREADS-1) / NUM_THREADS; 
 
 step 4.
-  * calculate the amount of work each thread will do. (Call it 'chunk')
-    int chunk = N / NUM_THREADS;
+  * declare a array to hold the future
+    std::future<int> fut[NUM_THREADS]; // suppose doWork returns 'int'
 
 step 5.
-  * declare a array to hold the future
-    std::future<int> fut[N]; // suppose doWork returns 'int'
-
-step 6.
   * declare a structure array to hold the args and return value for each thread
     Args args[N];
 
-step 7.
+step 6.
   * launch the threads using thread/join
   * thread(...) step:
     for(int t = 0; t < NUM_THREADS; t++) {
@@ -94,7 +94,7 @@ step 7.
       fut[t] = async(launch::async, doWork, args+t);
     }
 
-step 8.
+step 7.
   * wait for the threads to finish
   * get() step:
     count = 0;
