@@ -1,3 +1,7 @@
+// GB March 22, 2017: 'time thread-schedule' executes in zero time without producing any output.
+// GB Is this code doing anything?
+// GB appears NO - fix was to initialize 'running' to 'false'
+
 // http://codereview.stackexchange.com/questions/28437/multithreaded-task-scheduler
 
 // This is (supposedly) a multi-threaded scheduler for one-time and/or repeating tasks. The tasks are simple std::function<void()> objects. I built it to be a crucial part of a larger project I'm working on, but I developed it stand-alone, so no context is missing for a review.
@@ -21,6 +25,32 @@
 #include <utility>
 #include <vector>
 #include <algorithm>   // GB find
+#include <iostream>    // GB cout
+
+
+class Timer {
+  std::chrono::time_point<std::chrono::high_resolution_clock> start;
+  std::chrono::time_point<std::chrono::high_resolution_clock> stop;
+public:
+  Timer() {}
+  void Start() { start = std::chrono::high_resolution_clock::now(); }
+  void Stop()  { stop  = std::chrono::high_resolution_clock::now(); }
+  uint64_t msecs() {
+    typedef std::chrono::duration<int,std::milli> millisecs_t ;
+    millisecs_t duration_get( std::chrono::duration_cast<millisecs_t>(stop-start) ) ;
+    return duration_get.count();
+  }
+  uint64_t usecs() {
+    typedef std::chrono::duration<int,std::micro> microsecs_t ;
+    microsecs_t duration_get( std::chrono::duration_cast<microsecs_t>(stop-start) ) ;
+    return duration_get.count();
+  }
+  uint64_t nsecs() {
+    typedef std::chrono::duration<int,std::nano> nanosecs_t ;
+    nanosecs_t duration_get( std::chrono::duration_cast<nanosecs_t>(stop-start) ) ;
+    return duration_get.count();
+  }
+};
 
 namespace scheduling {
     template <class Clock>
@@ -43,6 +73,7 @@ namespace scheduling {
         };
     public:
         typedef typename std::list<Task>::iterator task_handle;
+        // std::ostream& operator<< (std::ostream& os, task_handle h) { os << (void*) & h; return os; } // GB
     private:
         std::mutex mutex;
         std::condition_variable tasks_updated;
@@ -56,7 +87,8 @@ namespace scheduling {
 
         std::vector<std::thread> threads;
     public:
-        Scheduler() : threads(4) {
+        Scheduler() : threads(4) , running(false) // GB initialize 'running'
+        {
 
         }
 
@@ -64,12 +96,15 @@ namespace scheduling {
             halt();
         }
 
-        task_handle schedule(task_type&& task, const time_point& start, const duration& repeat=duration::zero()) {
+        task_handle schedule(task_type&& task, const time_point& start, const duration& repeat=duration::zero()) 
+        {
             task_handle h;
             {
                 std::lock_guard<std::mutex> lk(mutex);
                 h = tasks.emplace(tasks.end(), std::move(task), start, repeat);
                 handles.push_back(h);
+                std::cout << "schedule task=" << (void*) & handles.back() << "\n"; // GB
+                // std::cout << "schedule size: task/handles=" << tasks.size() << "/" << handles.size() << "\n";  // GB
             }
             tasks_updated.notify_all();
             return h;
@@ -115,6 +150,15 @@ namespace scheduling {
                 if (!running) break;
 
                 auto task_it = min_element(tasks.begin(), tasks.end());
+                std::cout << "run task=" << (void*) & task_it << "\n"; // GB
+
+                // TODO: igure out how to print the task_it->start time_point
+                // uint64_t msecs = [] (std::chrono::time_point<std::chrono::high_resolution_clock> t) {
+                  // typedef std::chrono::duration<int,std::milli> millisecs_t ;
+                  // millisecs_t duration_get( std::chrono::duration_cast<millisecs_t>(t) ) ;
+                  // return duration_get.count();
+                // };
+
                 time_point next_task = task_it == tasks.end() ? clock_type::time_point::max() : task_it->start;
                 if (tasks_updated.wait_until(lk, next_task) == std::cv_status::timeout) {
                     if (task_it->repeat != clock_type::duration::zero()) {
@@ -175,16 +219,24 @@ void outp(const std::string& outp) {
 int main(int argc, char* argv[]) {
     scheduling::Scheduler<std::chrono::steady_clock> sched;
 
-    sched.schedule([&sched]{outp("Task 1");}, std::chrono::steady_clock::now());
-    sched.schedule([&sched]{outp("Task 2");}, std::chrono::steady_clock::now()+std::chrono::seconds(2), std::chrono::seconds(2));
-    sched.schedule([&sched]{outp("Task 3");}, std::chrono::steady_clock::now()+std::chrono::seconds(2), std::chrono::seconds(2));
-    sched.schedule([&sched]{outp("Task 4");}, std::chrono::steady_clock::now()+std::chrono::seconds(2), std::chrono::seconds(2));
-    sched.schedule([&sched]{outp("Task 5");}, std::chrono::steady_clock::now()+std::chrono::seconds(2), std::chrono::seconds(2));
-    sched.schedule([&sched]{outp("Task 6");}, std::chrono::steady_clock::now()+std::chrono::seconds(3));
-    sched.schedule([&sched]{outp("Task 7");}, std::chrono::steady_clock::now()+std::chrono::seconds(3));
-    sched.schedule([&sched]{outp("Task 8");}, std::chrono::steady_clock::now()+std::chrono::seconds(3));
-    sched.schedule([&sched]{outp("Task 9");}, std::chrono::steady_clock::now()+std::chrono::seconds(3));
-    sched.schedule([&sched]{outp("Task 10"); sched.halt(); }, std::chrono::steady_clock::now()+std::chrono::seconds(5));
+    // GB NOTE: no harm but need to capture &sched
+    // GB       (could be useful if task needs to reschedule itself at some later time)
+    // scheduling::task_handle h;
+    // std::list<scheduling::Scheduler::Task>::iterator h;
+    sched.schedule([&sched]{outp("Task 1 now"     );}, std::chrono::steady_clock::now());
+    sched.schedule([&sched]{outp("Task 2 in 2 sec");}, std::chrono::steady_clock::now()+std::chrono::seconds(2), std::chrono::seconds(2));
+    sched.schedule([&sched]{outp("Task 3 in 2 sec");}, std::chrono::steady_clock::now()+std::chrono::seconds(2), std::chrono::seconds(2));
+    sched.schedule([&sched]{outp("Task 4 in 2 sec");}, std::chrono::steady_clock::now()+std::chrono::seconds(2), std::chrono::seconds(2));
+    sched.schedule([&sched]{outp("Task 5 in 2 sec");}, std::chrono::steady_clock::now()+std::chrono::seconds(2), std::chrono::seconds(2));
+    sched.schedule([&sched]{outp("Task 5a in 2 sec");}, std::chrono::steady_clock::now()+std::chrono::seconds(2), std::chrono::seconds(2));
+    sched.schedule([&sched]{outp("Task 5b in 2 sec");}, std::chrono::steady_clock::now()+std::chrono::seconds(2), std::chrono::seconds(2));
+    sched.schedule([&sched]{outp("Task 6 in 3 sec");}, std::chrono::steady_clock::now()+std::chrono::seconds(3));
+    sched.schedule([&sched]{outp("Task 7 in 3 sec");}, std::chrono::steady_clock::now()+std::chrono::seconds(3));
+    sched.schedule([&sched]{outp("Task 8 in 3 sec");}, std::chrono::steady_clock::now()+std::chrono::seconds(3));
+    sched.schedule([&sched]{outp("Task 9 in 3 sec");}, std::chrono::steady_clock::now()+std::chrono::seconds(3));
+
+    // GB task 10 halts the run in 5 seconds which allows 'run' to exit, joining the threads
+    sched.schedule([&sched]{outp("Task 10 in 5 sec"); sched.halt(); }, std::chrono::steady_clock::now()+std::chrono::seconds(5));
 
     sched.run();
 }

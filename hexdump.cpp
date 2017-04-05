@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include <iomanip>
+#include <string>
 #include <cctype>  // isprint
 
 // using namespace std;
@@ -51,6 +52,43 @@ void hexdump(char *b, long count)
 {
   hexdump(std::cout,  b, count);
 }
+
+void hexdumpString(std::ostream& os, string& b)
+{
+    std::ios_base::fmtflags fmtfl =  os.flags(); // save <iomanip> state
+
+    os << std::hex << std::setfill('0');
+    for(long address = 0; b.size() > address; address += 16 ) {
+        const char* line = b.c_str() + address;
+
+        long thisLineBytes = b.size() - address;
+        if(thisLineBytes > 16) thisLineBytes = 16;
+
+        // Show the address
+        os << std::setw(8) << address;
+
+        // Show the hex codes
+        for( int i = 0; i < 16; i++ ) {
+            if( i % 8 == 0 ) os << ' ';
+            if( i < thisLineBytes )
+                os << ' ' << std::setw(2) << (unsigned)line[i];
+            else 
+                os << "   ";
+        }
+
+        // Show printable characters
+        os << "  ";
+        for( int i = 0; i < thisLineBytes; i++) {
+            // if( i % 8 == 0 ) os << ' ';
+            os << ( std::isprint(line[i]) ? line[i]: '.' ); 
+        }
+
+        os << "\n";
+    }
+
+    os.flags(fmtfl); // restore <iomanip> state
+}
+
 
 #include <fstream>
 #include <string>

@@ -21,7 +21,7 @@
 //Vertex, texcoords and normals.
 //Vertex and color.
 //
-//As for the IBO, we will use 16 bit unsigned integers.
+//As for the IBO (index buffer obj), we will use 16 bit unsigned integers.
 //
 //http://freeglut.sourceforge.net
 //http://glew.sourceforge.net

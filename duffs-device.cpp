@@ -14,7 +14,7 @@ void send( short *to, short  *from, int count ) // Tom Duff's device
   }
 }
 
-void *memcpy(void *dst, void *src, int count) // GB Tom Duff's device applied to memcpy
+void *DDmemcpy(void *dst, void *src, int count) // GB Tom Duff's device applied to DDmemcpy
 {
   char *d   = (char*) dst;
   char *s   = (char*) src;

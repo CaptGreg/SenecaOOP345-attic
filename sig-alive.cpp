@@ -21,6 +21,9 @@ void signalCallback(int sig) {
     signal(SIGINT, signalCallback);
     cout << "\nsignalCallback: I'm alive\n";
     break;
+  case SIGABRT:
+    cout << "\nsignalCallback: SIGABRT\n";
+    break;
   case SIGINT:
     cout << "\nsignalCallback: SIGINT (Pressed Ctrl-C)\n";
     cout << "signalCallback: I'm running, waiting for a signal\n";

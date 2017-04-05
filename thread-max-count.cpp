@@ -42,8 +42,8 @@ int main()
   int i;
   try {
     for(i=0; ; i++) {
-	t[i] = thread(somefunction);
-	cout << i<< "\n";
+      t[i] = thread(somefunction);
+      cout << i<< "\n";
     }
   } catch (exception& e) {
     cout << e.what() << "\n";

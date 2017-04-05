@@ -1,3 +1,5 @@
+// cppreference.com example of using a promise to create a singe event barrier
+
 // http://en.cppreference.com/w/cpp/thread/promise
 
 // std::promise

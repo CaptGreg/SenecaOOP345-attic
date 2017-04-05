@@ -36,6 +36,10 @@ int main()
 #endif
 
   x = 1;
+  x = x+1 ;
+  std::cout <<"after x=1; x = x+1 x is " << x << "\n";
+
+  x = 1;
   x = x++;
   std::cout <<"after x=1; x = x++; x is " << x << "\n";
 

@@ -1,7 +1,7 @@
 #include <iostream>
 using namespace std;
 
-#define  SIZE 10000000
+#define  SIZE 10000000 // 10 million
 
 int main(int argc, char ** argv)
 {

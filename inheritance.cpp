@@ -9,24 +9,24 @@ class Mother {
     Mother ()
       { cout << "Mother: no parameters\n"; }
     Mother (int a)
-      { cout << "Mother: int parameter\n"; }
+      { cout << "Base class Mother: int parameter a=" << a << "\n"; }
 };
 
 class Daughter : public Mother {
   public:
     Daughter (int a)
-      { cout << "Daughter: int parameter\n\n"; }
+      { cout << "derived class Daughter: int parameter a=" << a << "\n\n"; }
 };
 
 class Son : public Mother {
   public:
     Son (int a) : Mother (a)
-      { cout << "Son: int parameter\n\n"; }
+      { cout << "derived class Son: int parameter a=" << a << "\n\n"; }
 };
 
 int main () {
-  Daughter kelly(0);
-  Son bud(0);
+  Daughter kelly(123);
+  Son bud(456);
   
   return 0;
 }

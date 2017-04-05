@@ -13,6 +13,8 @@ public:
     ~DIY_unique_ptr() { delete  pData; }             // destructor
     T& operator*   () { return *pData; }             // operator*  overload
     T* operator->  () { return  pData; }             // operator-> overload
+    DIY_unique_ptr (const DIY_unique_ptr& rhs)             = delete; // DO NOT DUPLICATE a unique_ptr
+    DIY_unique_ptr&  operator= (const DIY_unique_ptr& rhs) = delete; // DO NOT DUPLICATE a unique_ptr
 };
 
 class X {
@@ -47,6 +49,11 @@ int main(int argc, char**argv)
        cout << "argc > 1, we are throwing\n";
        throw string("we are throwing");
     }
+
+
+    // DO NOT DUPLICATE a unique_ptr
+    // DIY_unique_ptr<X> diy_up2( diy_up ); // <-- compiler error
+    // error: use of deleted function ‘DIY_unique_ptr<T>::DIY_unique_ptr(const DIY_unique_ptr<T>&) [with T = X]’
 
     delete p;
   } catch (const std::exception& e){

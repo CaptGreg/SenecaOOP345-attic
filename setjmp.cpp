@@ -12,11 +12,11 @@ void cppFun(void)
 
 int main(int argc, char**argv)
 {
-    int r;
-    if(r = setjmp(jb)) {
-	std::cout << "setjmp returned " << r << "\n";
-	return 1;
-    }
-    cppFun();
-    return 0;
+  int r;
+  if( ( r = setjmp(jb) ) ) {
+    std::cout << "setjmp returned " << r << "\n";
+    return 1;
+  }
+  cppFun();
+  return 0;
 }

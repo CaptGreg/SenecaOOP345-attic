@@ -25,7 +25,6 @@ class B : public A
       void Protect(int p)  { protect = p; }
     protected:
       int protect;
-
 };
 
 class C : public B
@@ -35,7 +34,6 @@ class C : public B
       void Protect(int p)  { protect = p; }
     protected:
       int protect;
-
 };
 
 int main (int argc, char**argv)
@@ -54,6 +52,7 @@ int main (int argc, char**argv)
     cout << "c.A::protect = " << c.A::Protect() << "\n";
     cout << "c.B::protect = " << c.B::Protect() << "\n";
     cout << "c.C::protect = " << c.Protect() << "\n";
+    cout << "c.C::protect = " << c.C::Protect() << "\n";
 
     return 0;
 }

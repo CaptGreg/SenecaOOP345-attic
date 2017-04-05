@@ -118,5 +118,17 @@ int main(int argc, char**argv)
  cout << "x:"; x.print();
  cout << "A:"; A.print();
 
+
+ x = x;
+
+ x = std::move(x);
+ 
+ cout << "--------------------\n";
+ cout << "what happens with 'x = X<double> (1234);'?\n";
+ cout << "'X<double> (1234);' <-- is this a l-value or a r-value?\n";
+ x = X<double> (1234);
+ cout << "--------------------\n";
+
+
  cout << "LINE " << __LINE__ << ": MAIN OVER\n\n";
 }

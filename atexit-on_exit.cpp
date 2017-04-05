@@ -23,7 +23,8 @@ int main(int argc, char**argv)
   cout << "Main starting up\n";
 
   atexit( [] { cout << "Main is over, atexit callback function has control\n";} );
-  char*p=new char[1000*1000*1000];
+  // char*p=new char[50LL*1000LL*1000LL*1000LL]; // thhrows std::exception::bad_alloc
+  char*p=new char[5LL*1000LL*1000LL*1000LL];
   cout << "p = " << (void*)p << "\n";
   cout << "registering on_exit callback\n";
   on_exit([] (int i,void*p) 

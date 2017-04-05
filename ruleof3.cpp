@@ -74,5 +74,7 @@ int main(int argc, char**argv)
  cout << "z:"; z.print();
  cout << "x:"; x.print();
 
+ x = x;
+
  cout << "LINE " << __LINE__ << ": MAIN OVER\n\n";
 }

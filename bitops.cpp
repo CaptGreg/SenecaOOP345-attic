@@ -8,17 +8,20 @@ const wchar_t* koreanWCharDigits  = L"공일이삼사오육칠팔구"; // All 10
 const std::wstring chineseWString = chineseWCharDigits;
 const std::wstring koreanWString  = koreanWCharDigits;
 
+
 template<typename T>
 bool bittest(T t, int bit)
 {
-  return t & (1 << bit);
+  return t & (T(1) << bit);
 }
+
 
 template<typename T>
 void bitprint(T t, int bits)
 {
   for(int i = bits -1 ; i >= 0 ; i--) {
     wcout << "01"[bittest(t,i)];
+    // wcout << "FT"[bittest(t,i)];
     // wcout << chineseWCharDigits[bittest(t,i)];
     // wcout << koreanWCharDigits[bittest(t,i)];
   }
@@ -43,11 +46,7 @@ int main()
   // std::wcin.imbue( std::locale() ) ;       // not using wcin
   // std::wcerr.imbue( std::locale() ) ;      // not using wcerr
 
-  const int BITS = 1;
-  for(int i = 0; i < (1 << BITS); i++) {
-    bitprint(i, BITS);
-    wcout << "\n";
-  }
+  const int BITS = 2;
 
   wcout << "& - AND - ON if both bit ON\n";
   printHeading(BITS);

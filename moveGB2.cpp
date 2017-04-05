@@ -37,6 +37,7 @@ public:
     cout << "assignment op: this,that=" << (void*) this << "," << (void*) &that << "\n";
     if(this != &that) {
       cout << "assignment op: calling memcpy\n";
+      if(!d) d = new double [ALLOC_SIZE];
       memcpy (d, that.d, sizeof(double) * ALLOC_SIZE);
     } else {
       cout << "assignment op: this == that\n";

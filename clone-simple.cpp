@@ -49,10 +49,12 @@ int main()
     vehicleUnknown->describe();
 
     cout << "+++ vehicleUnknown = cloned car\n";
+    delete vehicleUnknown; // delete plane clone
     vehicleUnknown = car->clone();
     vehicleUnknown->describe();
 
     cout << "+++ vehicleUnknown = cloned passenger plane\n";
+    delete vehicleUnknown; // delete car clone
     vehicleUnknown = passengerplane->clone();
     vehicleUnknown->describe();
 
