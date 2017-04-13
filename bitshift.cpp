@@ -37,6 +37,18 @@ void printBits(T target)
     }
 }
 
+template <class T>
+T bit_rol(T t, int bits = 1)  // rol = rotate left
+{
+  return (t << bits) | (t >> (8*sizeof(T) - bits));
+}
+
+template <class T>
+T bit_ror(T t, int bits = 1)  // ror = rotate right
+{
+  return (t >> bits) | (t << (8*sizeof(T) - bits));
+}
+
 int main(int argc, char ** argv, char ** env)
 {
     for(int bit = 0; bit < 8; bit++ ) {
@@ -91,4 +103,13 @@ int main(int argc, char ** argv, char ** env)
 
 	cout << "A = " << (int) A << "\n";
 	cout << "B = " << (int) B << "\n";
+
+  for(int i = 0; i< 256; i++) {
+    A = i;
+    cout << "i=" << i  << " ";
+         printBits(A); cout  << " ";
+         printBits(bit_rol(A, 1)); cout << " ";
+         printBits(bit_ror(A, 1));
+         cout << "\n";
+  }
 }
