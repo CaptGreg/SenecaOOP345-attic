@@ -40,4 +40,3 @@ int main(int argc, char*argv[])
     cerr << "Cannot open file '" << in << "'\n";
   }
 }
-
