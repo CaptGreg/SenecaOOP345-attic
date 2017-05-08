@@ -2,10 +2,10 @@
 #include <exception>
 #include <malloc.h>
 
-
 using namespace std;
 
 #if 1
+// DIY new + delete
 void* operator new (std::size_t n)
 {
   cout << "DIY new allocate " << n  << " bytes (" << n*1e-9 << " GigaBytes)\n";
@@ -29,18 +29,100 @@ void* operator new[] (std::size_t n)
 void operator delete(void * p)
 {
   cout << "DIY delete: pointer=" << p << "\n";
-  free(p);
+  if(p) free(p);
 }
 void operator delete[](void * p)
 {
   cout << "DIY delete[]: pointer=" << p << "\n";
   // ::delete p;
-  free(p);
+  if(p) free(p);
 }
 #endif
 
+
+template <class T>
+class X { // a rule-of-five class
+  size_t size;
+  T*     data;
+public:
+  X() : X(0) { cout << "X constructor()\n"; }
+
+  X(size_t s) : size(s), data(new T[size]) { cout << "X (" << s << ") constructor\n"; }
+
+  ~X() { cout << "X destructor, size=" << size << "\n"; delete [] data; }
+
+  void print() { cout << "size=" << size << " (" << size*sizeof(T) << " BYTES)\n"; }
+
+  X& operator= (const X& rhs) // C++
+  {
+    cout << "assignment operator size,rhs.size=" << size << "," << rhs.size << "\n";
+    if(this != &rhs) {
+      if(data) // if(data) is needed.  The copy constructor may have a block of memory with garbage in the 'data' field.
+        delete [] data;
+
+      data = nullptr;
+      size = 0;
+
+      if(rhs.data) {
+        size = rhs.size;
+        data = memcpy( new T[size], rhs.data, size * sizeof(T) );
+      }
+    } else {
+      cout << "assignment operator called on itself\n";
+    }
+    return *this;
+  }
+
+  X(const X& rhs) // C++ copy constructor
+  {
+    cout << "copy constructor rhs.size=" << rhs.size << "\n";
+    data = nullptr;
+    *this = rhs;      // Let copy assignment operator do the work.
+  }
+
+  X&& operator= (X&& rhs) // C++11 move assignment operator
+  {
+    cout << "move assignment operator size,rhs.size=" << size << "," << rhs.size << "\n";
+    if(this != &rhs) {
+      if(data) // if(data) is needed.  The move constructor may have a block of memory with garbage in the 'data' field.
+        delete [] data;
+
+      size = rhs.size; // Steal brains (copy size+pointer)
+      data = rhs.data;
+
+      rhs.size = 0;    // Zombie
+      rhs.data = nullptr;
+    } else {
+      cout << "move assignment operator called on itself\n";
+    }
+    return std::move(*this);
+  }
+
+  X(X&& rhs) // C++11 move constructor
+  {
+    cout << "move constructor rhs.size=" << rhs.size << "\n";
+    data = nullptr;
+    *this = std::move(rhs);      // Let move assignment operator do the work.
+  }
+};
+
+
+X<double> xGlobal0;
+X<double> xGlobal1(1000000000);;
+int intGlobal;
+
 int main()
 {
+  X<float> xLocal0;
+  X<float> xLocal1(1000000000);
+  int intLocal;
+
+  cout << "address of xGlobal0  =" << (void*) &xGlobal0 << ", size=" << sizeof(xGlobal0) << "\n";
+  cout << "address of xGlobal1  =" << (void*) &xGlobal1 << ", size=" << sizeof(xGlobal1) << "\n";
+  cout << "address of intGlobal =" << (void*) &intGlobal << ", size=" << sizeof(intGlobal) << "\n";
+  cout << "address of xLocal0   =" << (void*) &xLocal0 << ", size=" << sizeof(xLocal0) << "\n";
+  cout << "address of xLocal1   =" << (void*) &xLocal1 << ", size=" << sizeof(xLocal1) << "\n";
+  cout << "address of intLocal  =" << (void*) &intLocal << ", size=" << sizeof(intLocal) << "\n";
 
   cout << "main starting\n";
 
@@ -67,8 +149,8 @@ int main()
    operator<< (cout, "delete 4GB\n");
    delete    cpp;
 
-   operator<< (cout, "double delete of 4GB\n");
-   delete [] cpp; // double delete
+   // operator<< (cout, "double delete of 4GB\n");
+   // delete [] cpp; // double delete
 
   } catch (std::exception& e) { 
     cerr << e.what() << "\n";
