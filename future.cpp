@@ -10,24 +10,27 @@
 int main(int argc, char**argv)
 {
     // future from a packaged_task
-    std::packaged_task<int()> task([](){ return 7; }); // wrap the function
+    std::packaged_task<int()> task( [] { return 7; } ); // wrap the function
     std::future<int> f1 = task.get_future();  // get a future
     std::thread(std::move(task)).detach(); // launch on a thread
  
     // future from an async()
-    std::future<int> f2 = std::async(std::launch::async, [](){ return 8; });
+    std::future<int> f2 = std::async(std::launch::async, [] { return 8; } );
  
     // future from a promise
     std::promise<int> promise;
     std::future<int> f3 = promise.get_future();
     std::thread( 
 
-         // function:
-         // [](std::promise<int> promise){ promise.set_value_at_thread_exit(9); }, // error no member
-         [](std::promise<int> promise){ promise.make_ready_at_thread_exit(9); }, // error no member
-         // error: ‘class std::promise<int>’ has no member named ‘make_ready_at_thread_exit’
+         // thread function:
 
-         // arg:
+         // [] (std::promise<int> promise) { promise.set_value_at_thread_exit(9); }, // error no member
+         // error: ‘class std::promise<int>’ has no member named ‘make_ready_at_thread_exit’
+         // GB fix --- add '&&'
+         [] (std::promise<int>&& promise) { promise.set_value_at_thread_exit(9); }, // error no member
+
+
+         // thread function arg:
          std::move(promise) 
     ).detach();
  
