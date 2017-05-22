@@ -77,46 +77,59 @@ LFLAGS      = $(OPTLFLAGS)
 
 # compile fastforward with g++.  Clang++ on matrix has header problems.
 # compiles fine on matrix with /usr/local/gcc/gcc-cilk/bin/g++
-# fastforward : fastforward.cpp Makefile
+# fastforward : fastforward.cpp
 	# $(CXX) -std=c++0x  $^ -o $@ -pthread
 
+# asan - address sanitization - new/delete error catcher
+# needs  -fsanitize=address flag.  Compiles with g++ 4.8 or later.  asan_symbolize is part of clang
 
-camera : camera.cpp Makefile
+asan-global-buffer-overflow : asan-global-buffer-overflow.cpp
+	g++ -O -g -fsanitize=address -Wall -std=c++11 $^ -o $@
+asan-heap-buffer-overflow : asan-heap-buffer-overflow.cpp
+	g++ -O -g -fsanitize=address -Wall -std=c++11 $^ -o $@
+asan-heap-use-after-free : asan-heap-use-after-free.cpp
+	g++ -O -g -fsanitize=address -Wall -std=c++11 $^ -o $@
+asan-stack-buffer-overflow : asan-stack-buffer-overflow.cpp
+	g++ -O -g -fsanitize=address -Wall -std=c++11 $^ -o $@
+
+asan : asan-global-buffer-overflow asan-heap-buffer-overflow asan-heap-use-after-free asan-stack-buffer-overflow
+
+camera : camera.cpp
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags opencv`   $^ `pkg-config --libs opencv` -o $@
 
-canny : canny.cpp Makefile
+canny : canny.cpp
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags opencv`   $^ `pkg-config --libs opencv` -o $@
 
-find_contours : find_contours.cpp Makefile
+find_contours : find_contours.cpp
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags opencv`   $^ `pkg-config --libs opencv` -o $@
 
-hough : hough.cpp Makefile
+hough : hough.cpp
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags opencv`   $^ `pkg-config --libs opencv` -o $@
 
-moments : moments.cpp Makefile
+moments : moments.cpp
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags opencv`   $^ `pkg-config --libs opencv` -o $@
 
-ocl_c++11: ocl_c++11.cpp Makefile
+ocl_c++11: ocl_c++11.cpp
 	$(CXX) $(CXXFLAGS)  $(CXXFLAGSOCL) $^ $(LFLAGSOCL) -o $@ 
 	#AMD E1 HP laptop: CL_VERSION 2.0 threw cl::Error: clGetPlatformIDs(-1001)
 
 
-ocl_header: ocl_header.cpp Makefile
+ocl_header: ocl_header.cpp
 	$(CXX) $(CXXFLAGS)  $(CXXFLAGSOCL) $^ $(LFLAGSOCL) -o $@
 
-ocl_ker_q: ocl_ker_q.cpp Makefile
+ocl_ker_q: ocl_ker_q.cpp
 	$(CXX) $(CXXFLAGS)  $(CXXFLAGSOCL) $^ $(LFLAGSOCL) -o $@
 
-ocldemo: ocldemo.cpp Makefile
+ocldemo: ocldemo.cpp
 	$(CXX) $(CXXFLAGS)  $(CXXFLAGSOCL) $^ $(LFLAGSOCL) -o $@
 
-ocldemo2: ocldemo2.cpp Makefile
+ocldemo2: ocldemo2.cpp
 	$(CXX) $(CXXFLAGS)  $(CXXFLAGSOCL) $^ $(LFLAGSOCL) -o $@
 
-ocllistdev: ocllistdev.c Makefile
+ocllistdev: ocllistdev.c
 	$(CC) $(CXXFLAGS)  $(CXXFLAGSOCL) $^ $(LFLAGSOCL) -o $@
 
-oclvecadd: oclvecadd.cpp Makefile
+oclvecadd: oclvecadd.cpp
 	$(CXX) $(CXXFLAGS)  $(CXXFLAGSOCL) $^ $(LFLAGSOCL) -o $@
 
 
@@ -159,11 +172,11 @@ pthread : pthread.c
 boost-open : boost-open
 	$(CXX) $^ -o $@ -lboost_iostreams
 
-jsoncpp : jsoncpp.cpp Makefile
+jsoncpp : jsoncpp.cpp
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags jsoncpp`   $^ `pkg-config --libs jsoncpp` -o $@
 	#$(CXX) $(CXXFLAGS) $^ -o $@ -ljsoncpp
 
-vectorization : vectorization.cpp Makefile
+vectorization : vectorization.cpp
 	@echo compiler $(CXX)
 	# compiles fine on AMD1100t with Ubuntu 14.04 and g++ 4.9/5.0
 	# fails to resolve instrinsics with clang++
