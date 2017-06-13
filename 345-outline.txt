@@ -1,0 +1,188 @@
+Fundamental Types
+  integer types char, wchar_t, short, int, long, long long
+  floating point types float, double, long double
+  auto (type inference)
+  structure alignment alignas/alignof
+   struct alignas(16) B {
+     A a[] {1, 'a', 2, 'b', 3, 'c'};
+     std::cout << "align of A = " << alignof(A)
+
+
+Non-Fundamental Types
+  pointers, references, arrays
+  std::move, std::ref, l-value + r-value (arg-type&& arg)
+  union, class, struct, bit-fields (after mid-term break)
+  rule-of-5
+
+Classes and Scoped Enumerations
+  classes
+  enumerations, scoped enumerations
+  enum {ONE, TWO, THREE};  // C++98
+  enum class enum1_e {ONE = 100, TWO, THREE}; // C++14
+  enum class enum2_e {ONE = 200, TWO, THREE};
+  enum class enum3_e {ONE = 300, TWO, THREE};
+  usage: enum2_e::ONE
+
+Inheritance and Inclusion Polymorphism
+  multiple inheritance, 
+    - how many copies of base class? 
+      - one for each derived class - derive it
+      - shared for all derived classes - declare 'virtual'
+  clone
+    class B {public: virtual B* clone() const = 0; ...};
+    class D1 : public B { public: D1* clone() const { return new D1(*this); } ... };
+    class D2 : public B { public: D2* clone() const { return new D2(*this); } ... };
+
+Templates
+  Function templates // OOP244
+  template <typename T> T& min(T& a, T& b) { return a < b? a: b; }
+
+  Class templates    // OOP244+ and OOP345
+  template <typename T> class X{T* tTable; public: ...};
+  
+Compositions, Aggregations and Associations
+  Compositions, 
+    class room; class building;
+    class building{ vector<room> roomList; void addRoom(room& r) {roomList.push_back(r);} ...}
+
+  Aggregations
+    class duck; class pond;
+    class pond{ 
+      list<duck> duckList; 
+    public: 
+      void addDuck(duck& d){ duckList.push_back(d);} 
+      void removeDuck(duck d)
+      {
+        for(auto it = duckList.begin(); it != duckList.end(); it++) {
+          if(*it == d) {
+            it->erase();
+            return;
+          }
+        }
+        throw "removeDuck: cannot find duck";
+      }
+    };
+
+  Associations
+    class club; class member;
+    class club{ list<member> memberList; public: void addMember(member m); void removeMember(member m); };
+    class member{ list<club> clubList; public: void addClub(club c); void removeClub(club c); };
+
+ Expressions
+   SURPRISE! these two expressions behave differently
+     i = i++;
+
+     double trouble[100];
+     i = 2;
+     trouble[i] = trouble[i++];
+
+Functions
+  pointers
+    float (*f) (double arg1, int arg2, char arg3, float arg4);  // C1977
+    std::function<float (double, int, char, float)> f;          // C++11
+  bind - takes function and arguments, returns std::function<void(void)> function pointer
+
+  int i;
+
+  void func(int i, ...) { ...}
+  std::function<void(void)> f = bind(func, i, ...);
+  cout << f() << "\n";
+
+  void func(int& i, ...) { ...}
+  std::function<void(void)> f = bind(func, std::ref(i), ...);
+  cout << f() << "\n";
+
+  class FunctionObject {public: void operator () (int arg) { return 5 * arg * arg + 6; } }; // c++98
+  FunctionObject fo;
+  cout << fo(99) << "\n";
+
+  int ii = 47;
+  auto f1 = [ii] (int arg) { return ii * arg * arg + 6 ; }; // c++11 lambda/capture/closure/anonymous
+  cout << f1(99) << "\n";
+  ii = 100;
+  cout << f1(99) << "\n";
+
+  int ii = 47;
+  auto f2 = [&ii] (int arg) { return ii * arg * arg + 6 ; }; // c++11 lambda/capture/closure/anonymous
+  cout << f2(99) << "\n";
+  ii = 100;
+  cout << f2(99) << "\n";
+
+  auto f3 = [=] (int arg) { return ii * arg * arg + 6 ; }; // c++11 lambda/capture/closure/anonymous
+  auto f4 = [&] (int arg) { return ii * arg * arg + 6 ; }; // c++11 lambda/capture/closure/anonymous
+
+Error Handling
+  try {
+    ...
+  } catch(type1 t1) { 
+    ...
+  } catch(type2 t2) { 
+    ...
+  } catch(type3 t3) { 
+    ...
+  }
+
+  exit(i), abort(), terminate(), 
+  atexit( std::function<void(void)> ) or equivalently  atexit( void (*f) (void) )
+
+  void* datablock = new ...;
+  on_exit( int exitCode, std::function<void(void)> ) or equivalently  
+
+  on_exit( void (*f) (int exitCode, void* dataBlock), void* dataBlock )
+
+  void f(int exitCode, void* dataBlock)
+  {
+    cout << "program exiting with code " << exitCode << " " << (char*) dataBlock << "\n";
+  }
+  char* p = "we are over!";
+  on_exit( f, (void*) p);
+
+Standard Library
+  string, wstring
+  list, vector, queue, stack, deque (set, map, multimap not covered, but cool!)
+  std::string_view (<string_view>) - a read-only contiguous sequence of characters (see above)
+  std::variant<T, ...>() (<variant>) - represents a type-safe union
+  std::optional<T> (<optional>) - may or may not contain a value (beyond scope)
+  std::any (<any>) - single values of any type (beyond scope)
+  std::uncaught_exceptions (<exception>) - stack is in the process of unwinding
+  Uniform container access std::size std::empty std::data - number of elements, emptiness, direct access to underlying array
+
+
+Containers and Iterators
+  list, vector, queue, stack, deque (set, map, multimap not covered, but cool!)
+
+  vector<int> v;
+  for( vector<int>::iterator it = v.begin(); it != v.end(); it++) { // C++98
+    cout << *it << "\n";
+  }
+  for( auto it = v.begin(); it != v.end(); it++) { // C++11
+    cout << *it << "\n";
+  }
+  
+
+<mid-term break>
+
+Algorithms
+
+File Stream Objects
+
+Raw Pointers
+
+Smart Pointers
+
+Multi-Threading
+
+Thread Classes
+
+Pre-Processor Directives
+
+Arrays and Pointers to Arrays
+
+Multiple Inheritance
+
+Bit-Wise Expressions
+
+Linked List Technology
+
+Other Topics
+
