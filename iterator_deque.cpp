@@ -16,6 +16,9 @@
 
      p.back() = 40.5;   // reset last
      p.erase(p.begin()); // remove first
+     for(auto iter = p.begin(); iter != p.end(); iter++)
+         std::cout << *iter << "  ";
+     std::cout << "\n";
 
      for(auto iter = p.begin(); iter != p.end(); iter++)
          std::cout << *iter << "  ";
@@ -26,6 +29,14 @@
 
      for(auto iter = p.begin(); iter != p.end(); iter++)
          std::cout << "iterator-based for " << *iter << "  \n";
+
+     for(auto e : p )
+         std::cout << "range-based for " << e << "  \n";
+     std::cout << "\n";
+
+     for(auto &e : p )
+         std::cout << "range-based for " << e++ << "  \n";
+     std::cout << "\n";
 
      for(auto e : p )
          std::cout << "range-based for " << e << "  \n";

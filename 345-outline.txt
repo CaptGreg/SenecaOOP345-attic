@@ -1,11 +1,15 @@
+This file was produced by examining the topic list from the course website as of June 2017
+
+
 Fundamental Types
   integer types char, wchar_t, short, int, long, long long
   floating point types float, double, long double
   auto (type inference)
-  structure alignment alignas/alignof
-   struct alignas(16) B {
-     A a[] {1, 'a', 2, 'b', 3, 'c'};
-     std::cout << "align of A = " << alignof(A)
+  structure alignment alignas/alignof - byte boundaries for creating something
+   struct alignas(8)  A { int n; char c;} a[] {1, 'a', 2, 'b', 3, 'c'}};
+   std::cout << "align of A = " << alignof(A) << " " << (void*)&a;  // &a is on a 8 byte boundary
+   struct alignas(16) B { int n; char c;} b[] {1, 'a', 2, 'b', 3, 'c'}};
+   std::cout << "align of B = " << alignof(B) << " " << (void*)&b;  // &b is on a 16 byte boundary
 
 
 Non-Fundamental Types
@@ -26,9 +30,9 @@ Classes and Scoped Enumerations
 Inheritance and Inclusion Polymorphism
   multiple inheritance, 
     - how many copies of base class? 
-      - one for each derived class - derive it
-      - shared for all derived classes - declare 'virtual'
-  clone
+      - private copy for each derived class - derive it
+      - shared copy for all derived classes - declare 'virtual'
+  clone - commonly used, often source of memory leaks, need to be properly deleted
     class B {public: virtual B* clone() const = 0; ...};
     class D1 : public B { public: D1* clone() const { return new D1(*this); } ... };
     class D2 : public B { public: D2* clone() const { return new D2(*this); } ... };
@@ -76,21 +80,24 @@ Compositions, Aggregations and Associations
      i = 2;
      trouble[i] = trouble[i++];
 
+   When in doubt, use brackets and place ++/-- operators on seperate lines.
+
 Functions
-  pointers
+  functions pointers (a pointer that points to a function)
     float (*f) (double arg1, int arg2, char arg3, float arg4);  // C1977
     std::function<float (double, int, char, float)> f;          // C++11
   bind - takes function and arguments, returns std::function<void(void)> function pointer
+       - requires the use of std::ref if an argument to the function is called by reference
 
-  int i;
+          int i;
 
-  void func(int i, ...) { ...}
-  std::function<void(void)> f = bind(func, i, ...);
-  cout << f() << "\n";
+          void func1(int i, ...) { ...}
+          std::function<void(void)> f1 = bind(func1, i, ...);
+          cout << f1() << "\n";
 
-  void func(int& i, ...) { ...}
-  std::function<void(void)> f = bind(func, std::ref(i), ...);
-  cout << f() << "\n";
+          void func2(int& i, ...) { ...}
+          std::function<void(void)> f2 = bind(func2, std::ref(i), ...);
+          cout << f2() << "\n";
 
   class FunctionObject {public: void operator () (int arg) { return 5 * arg * arg + 6; } }; // c++98
   FunctionObject fo;

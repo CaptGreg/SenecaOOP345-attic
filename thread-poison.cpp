@@ -2,8 +2,8 @@
 // rrd = round robin database. a circular data structure
 
 // rrd_is_thread_safe.h
-`
-#pragma GCC poison strtok asctime ctime gmtime localtime tmpnam strerror
+
+// #pragma GCC poison strtok asctime ctime gmtime localtime tmpnam strerror
 
 #if 0
 NOTES FOR RRD CONTRIBUTORS
@@ -11,7 +11,7 @@ NOTES FOR RRD CONTRIBUTORS
 Some precautions must be followed when developing RRD from now on:
 
     Only use thread-safe functions in library code. Many often used libc functions 
-    aren't thread-safe. Take care in the following situations or when using the 
+    are not thread-safe. Take care in the following situations or when using the 
     following library functions:
         Direct calls to strerror() must be avoided: use rrd_strerror() instead, 
         it provides a per-thread error message.

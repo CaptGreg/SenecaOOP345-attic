@@ -1,11 +1,20 @@
 #include <exception>
 #include <iostream>
+#include <iomanip>      // setprecision(9) for printing nsec to 9 decimal places
 #include <string>
 #include <chrono>      //  timers
 
 using namespace std;
 
+#ifdef __WIN
+// windows needs max - what header? write our own
+template <typename T>
+T max(T a, T b) { return a < b? b: a; }
+#endif
+
+
 bool verbose = false;
+// bool verbose = true;
 
 class X {
        char*   b = nullptr;   // c++14 initialize buffer
@@ -57,7 +66,7 @@ public:
     if(verbose)     print( "cp ctor: 'this' OUT" );
   }
 
-  X& operator= (const X& rhs) // C++98 copy assignmant operator
+  X& operator= (const X& rhs) // C++98 copy assignment operator
   {
     if(verbose)     print( "cp = op: 'this' in" );
     if(verbose) rhs.print( "cp = op: 'rhs'  in" );
@@ -106,17 +115,20 @@ public:
       delete [] b;
       memActive -= s;
 
-      b = rhs.b;
+      // steal 'brains' from rhs
       s = rhs.s;
+      b = rhs.b;
 
-      rhs.b = nullptr;
+      // convert rhs into a 'zombie'
       rhs.s = 0;
+      rhs.b = nullptr;
     } else {
       cout << "X mv = operator --- self assignmant\n";
     }
     if(verbose) print( "mv = op: 'this' OUT" );
     return move(*this);
   }
+
 
   X& operator+= (const X& rhs) // C++98 += operator
   {
@@ -204,33 +216,45 @@ int app(int argc, char* argv[])
   // with move ctor, I + J created and mv ctor called for K
   // without move ctor, I + J created and cp ctor called, complete with deep copy, for K
 
-  #define RUN(CMD) \
-          cout << #CMD " START\n"; \
-          timer.Start(); \
-          CMD; \
-          timer.Stop(); \
-          cout <<  #CMD " FINISH " + to_string(1e-9*timer.nsecs()) + " sec\n\n";
+ // out << fixed << setprecision(9);  // print nanoseconds to 9 decimal places (requires <iomanip>)
+  cout.precision(9);  // print nanoseconds to 9 decimal places (requires <iomanip>)
+
+// Windows likes macros on one line --- yuk!
+#define RUN(CMD) cout << #CMD " START\n"; timer.Start(); CMD; timer.Stop(); cout <<  #CMD " FINISH " << 1e-9*timer.nsecs() << " sec\n\n";
+// cout <<  #CMD " FINISH " + to_string(1e-9*timer.nsecs()) + " sec\n\n";
 
 
-  RUN(X  I(100000000))
+// to stress test a program, use large numbers.
+// small number prove nothing
+#ifdef __WIN
+  size_t baseSize = 81.25 * 1000 * 1000;       // runs fine in Windows with this size
+#else
+  size_t baseSize = 200 * 1000 * 1000;         // too big for windows
+  // baseSize   max Mem
+  // 100 MB       2.1 GB
+  // 200 MB       4.2 GB
+  // 300 MB       6.3 GB
+  // 300 MB       8.4 GB
+  // 500 MB      10.5 GB     
+  // 600 MB      12.6 GB   
+  // 700 MB      14.7 GB      
+  // 800 MB      16.8 GB      
+#endif
+
+  RUN(X  I(1 * baseSize))
   // timer.Start();
   // X  I(100000000);
   // timer.Stop();
   // I.print(string("I ") + to_string(1e-9*timer.nsecs()) + " sec");
 
-  RUN(X  J(200000000))
+  RUN(X  J(2 * baseSize))
   // timer.Start();
   // X  J(200000000);
   // timer.Stop();
   // J.print(string("J ") + to_string(1e-9*timer.nsecs()) + " sec");
 
-  #define RUN_PRINT(CMD,INSTANCE) \ 
-          cout << #CMD " START\n"; \ 
-          timer.Start(); \
-          CMD; \
-          timer.Stop(); \
-          INSTANCE.print(string(#CMD " ") + "FINISH " + to_string(1e-9*timer.nsecs()) + " sec"); \
-          cout<<"\n";
+// Windows likes macros on one line --- yuk!
+#define RUN_PRINT(CMD,INSTANCE) cout << #CMD " START\n"; timer.Start(); CMD; timer.Stop(); INSTANCE.print(string(#CMD " ") + "FINISH " + to_string(1e-9*timer.nsecs()) + " sec"); cout<<"\n";
 
 
   RUN_PRINT( X  K = I + J, K)
@@ -287,6 +311,7 @@ int app(int argc, char* argv[])
   cout << "   active instances = " << X::instancesActive  << "\n";
   cout << "   active  memory   = " << 1e0*X::memActive  << "\n";
   cout << "   maximum memory   = " << 1e0*X::maxMem  << "\n";
+  cout << "   base size        = " << 1e0*baseSize << "\n";
 
   cout << "**********APP RETURNING**********\n";
   return 0;
@@ -318,5 +343,6 @@ int main(int argc, char* argv[])
     cout << "**********NORMAL TERMINATION**********\n";
   }
 
+  cout << "This program is " << 8 * sizeof(void*) << "-bit code.\n";
   return ret;
 }
