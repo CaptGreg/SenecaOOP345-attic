@@ -14,20 +14,27 @@ Fundamental Types
 
 Non-Fundamental Types
   pointers, references, arrays
+  typedef (synonym), please end typedefs with '_t'  typedef float Real_t;
   std::move, std::ref, l-value + r-value (arg-type&& arg)
   union, class, struct, bit-fields (after mid-term break)
+  unions: please end unions with '_u'  union MyUnion_u { ... };
+  structs: please end structs with '_s'  struct MyElement_s { ... };
+  range-based for
   rule-of-5
 
 Classes and Scoped Enumerations
-  classes
+  class, struct, union
+  copy constructors, move contructors
+  class variable (static class variables)
   enumerations, scoped enumerations
-  enum {ONE, TWO, THREE};  // C++98
+  enum enum_e {ONE, TWO, THREE};  // C++98, C1977
   enum class enum1_e {ONE = 100, TWO, THREE}; // C++14
   enum class enum2_e {ONE = 200, TWO, THREE};
   enum class enum3_e {ONE = 300, TWO, THREE};
   usage: enum2_e::ONE
 
 Inheritance and Inclusion Polymorphism
+  ABC's Abstract Base Class, pure virtual function, virtual func (arg,...) const = 0;
   multiple inheritance, 
     - how many copies of base class? 
       - private copy for each derived class - derive it
@@ -36,13 +43,18 @@ Inheritance and Inclusion Polymorphism
     class B {public: virtual B* clone() const = 0; ...};
     class D1 : public B { public: D1* clone() const { return new D1(*this); } ... };
     class D2 : public B { public: D2* clone() const { return new D2(*this); } ... };
+  #include <typeinfo>
+    typeid( some variable ).name() <-- reutrns a name created by the compiler for the vairable
 
 Templates
   Function templates // OOP244
   template <typename T> T& min(T& a, T& b) { return a < b? a: b; }
+  template <> // denotes specialization (turns off default function template)
+  char* min<char*>(char* a, char* b) { return std::strcmp(a, b) < 0 ? a : b; }
 
   Class templates    // OOP244+ and OOP345
   template <typename T> class X{T* tTable; public: ...};
+  X<double> xDouble;
   
 Compositions, Aggregations and Associations
   Compositions, 
@@ -83,6 +95,9 @@ Compositions, Aggregations and Associations
    When in doubt, use brackets and place ++/-- operators on seperate lines.
 
 Functions
+  function trailing return type  auto f = [] (int a) -> double { return 2f * a; };
+  decltype(2 * 5 +7.) r = 99;
+  recursion
   functions pointers (a pointer that points to a function)
     float (*f) (double arg1, int arg2, char arg3, float arg4);  // C1977
     std::function<float (double, int, char, float)> f;          // C++11
