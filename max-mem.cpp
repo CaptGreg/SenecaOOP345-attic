@@ -19,7 +19,7 @@ int app(int argc, char* argv[])
 
      uint8_t* b= new uint8_t[mid];
      delete [] b;
-     cout << mid << " byte allocation sucessful\n"; 
+     cout << mid << " byte allocation successful\n"; 
 
      lo = mid;
    } catch(exception& e) {

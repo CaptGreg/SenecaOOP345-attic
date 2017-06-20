@@ -67,7 +67,7 @@ Compositions, Aggregations and Associations
       list<duck> duckList; 
     public: 
       void addDuck(duck& d){ duckList.push_back(d);} 
-      void removeDuck(duck d)
+      void removeDuck(duck& d)
       {
         for(auto it = duckList.begin(); it != duckList.end(); it++) {
           if(*it == d) {

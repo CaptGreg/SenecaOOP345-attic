@@ -20,21 +20,19 @@ public:
   virtual ~X3() 
   { 
     cout << "X3 destructor, size=" << size << "\n";
-    if(data) // If(data) not needed but good practice. 'delete [] nullptr' handled correctly in C++.
-      delete [] data;
+    delete [] data;
   }
 
-  void print() 
+  virtual void print() 
   {
     cout << "X3 print: size=" << size << " (" << size*sizeof(T) << " BYTES)\n";
   }
 
-  X3& operator= (const X3& rhs) // C++
+  virtual X3& operator= (const X3& rhs) // C++
   {
     cout << "X3 copy assignment operator size,rhs.size=" << size << "," << rhs.size << "\n";
     if(this != &rhs) {
-      if(data) // If(data) is needed.  The copy constructor may have a block of memory with garbage in the 'data' field.
-        delete [] data;
+      delete [] data;
 
       data = nullptr;
       size = 0;
@@ -78,8 +76,7 @@ public:
   {
     cout << "X move assignment operator size,rhs.size=" << X3<T>::size << "," << rhs.size << "\n";
     if(this != &rhs) {
-      if(X3<T>::data) // 'if(data)' is needed.  The move constructor may have a block of memory with garbage in the 'data' field.
-        delete [] X3<T>::data;
+      delete [] X3<T>::data;
 
       X3<T>::size = rhs.size; // Steal brains (copy size+pointer)
       X3<T>::data = rhs.data;

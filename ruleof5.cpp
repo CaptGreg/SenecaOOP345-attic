@@ -5,42 +5,46 @@ using namespace std;
 
 template <class T>
 class X {
-  size_t size;
-  T*     data;
+  size_t size = 0;         // C++14
+  T *data     = nullptr;   // C++14
 public:
-  X() : size(0), data(nullptr) 
+  X() // : size(0), data(nullptr)    <-- initialization done above with C++14
   { cout << "X constructor()\n"; }
 
   X(size_t s) : size(s), data(new T[size]) 
   { cout << "X (" << s << ") constructor\n"; }
 
-  ~X() 
-  { 
+  ~X() { 
     cout << "X destructor, size=" << size << "\n";
-    if(data) // If(data) not needed but good practice. 'delete [] nullptr' handled correctly in C++.
-      delete [] data;
+    delete [] data;
   }
 
-  void print() 
-  {
-    cout << "size=" << size << " (" << size*sizeof(T) << " BYTES)\n";
-  }
-
-  X& operator= (const X& rhs) // C++
+  X& operator= (const X& rhs) // C++98 copy assignment operator
   {
     cout << "assignment operator size,rhs.size=" << size << "," << rhs.size << "\n";
     if(this != &rhs) {
-      if(data) // If(data) is needed.  The copy constructor may have a block of memory with garbage in the 'data' field.
-        delete [] data;
+      delete [] data;
 
-      data = nullptr;
+      data = nullptr;  // we are a zombie
       size = 0;
 
       if(rhs.data) {
         size = rhs.size;
         data = new T[size];
-        memcpy( data, rhs.data, size * sizeof(T) );
+        // void *memcpy(void *dest, const void *src, size_t n);
+        // SYNOPSIS
+               // #include <string.h>
+               // void *memcpy(void *dest, const void *src, size_t n);
+        // DESCRIPTION
+               // The  memcpy()  function  copies  n bytes from memory area src to memory
+               // area dest.  The memory areas must not overlap.  Use memmove(3)  if  the
+               // memory areas do overlap.
+        // RETURN VALUE
+               // The memcpy() function returns a pointer to dest.
+        
+        memcpy( data, rhs.data, size * sizeof(T) );  // returns dest (data in our case)
         // data = memcpy( new T[size], rhs.data, size * sizeof(T) );  // 1 line
+        // for(size_t i=0; i<size;i++) data[i]=rhs.data[i]; // DEEP COPY using a for loop
       }
     } else {
       cout << "assignment operator called on itself\n";
@@ -48,19 +52,23 @@ public:
     return *this;
   }
 
-  X(const X& rhs) // C++ copy constructor
+  X(const X& rhs) // C++98 copy constructor
   {
     cout << "copy constructor rhs.size=" << rhs.size << "\n";
     data = nullptr;
-    *this = rhs;      // Let copy assignment operator do the work.
+    *this = rhs;      // let assignment operator do the work.
+  }
+
+  void print() 
+  {
+    cout << "size=" << size << " (" << size*sizeof(T) << " BYTES)\n";
   }
 
   X&& operator= (X&& rhs) // C++11 move assignment operator
   {
     cout << "move assignment operator size,rhs.size=" << size << "," << rhs.size << "\n";
     if(this != &rhs) {
-      if(data) // If(data) is needed.  The move constructor may have a block of memory with garbage in the 'data' field.
-        delete [] data;
+      delete [] data;
 
       size = rhs.size; // Steal brains (copy size+pointer)
       data = rhs.data;
