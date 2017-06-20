@@ -26,7 +26,7 @@ sp?.cpp     - smart pointer resources
 
 mi-*.cpp    - multiple inheritance resources, clone+diamond problem
 
-template-simple.cpp - simple example of class and tfuntion templet
+template-simple.cpp - simple example of class and function template
 
 theading?01?.cpp - threading101?.cpp - basic threading, mutexes
                  - threading201?.cpp - futures and promises
