@@ -44,7 +44,7 @@ Inheritance and Inclusion Polymorphism
     class D1 : public B { public: D1* clone() const { return new D1(*this); } ... };
     class D2 : public B { public: D2* clone() const { return new D2(*this); } ... };
   #include <typeinfo>
-    typeid( some variable ).name() <-- reutrns a name created by the compiler for the vairable
+    typeid( some variable ).name() <-- returns a name created by the compiler for the variable
 
 Templates
   Function templates // OOP244

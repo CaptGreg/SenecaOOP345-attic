@@ -23,8 +23,8 @@ int main(int argc, char**argv)
 {
 #define TID(var)  cout << setw(30) << "typeid(" #var ").name()" << " = " << typeid(var).name() << "\n";
 
+  TID(void)
   TID(void*)
-  TID(size_t)
   TID(streampos) // defined in <iostream> or <fstream>
   TID(int)
   TID(int*)

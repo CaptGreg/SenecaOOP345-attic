@@ -5,10 +5,10 @@
 
 CFLAGS    = -Wall -mmmx -msse -fmax-errors=1 -Wfatal-errors
 CC        = gcc
-CXXFLAGS  = -std=c++11 -Wall -mmmx -msse -fmax-errors=1 -Wfatal-errors
+CXXFLAGS  = -std=c++17 -Wall -mmmx -msse -fmax-errors=1 -Wfatal-errors
 CXXDFLAGS = -ggdb
 
-C11FLAG   = -std=c++11 
+C11FLAG   = -std=c++17 
 CXX       = clang++
 # May 15, 2015, clang++ has missing/corrupt header files: won't compile fastforward, includes fail
 # use g++ for fastforward
@@ -39,11 +39,11 @@ ifeq ($(HOSTNAME),matrix)
   CXX     = /usr/local/gcc/gcc-cilk/bin/g++
   # 2013-05-20 vintage g++ (GCC) 4.8.0 20130520 (experimental) was installed in folder
   # this compiler is EXPERIMENTAL and is NOT recommended for compiling production code.
-  C11FLAG = -std=c++11 
+  C11FLAG = -std=c++17 
 
   CXX     = /usr/local/gcc/5.2.0/bin/g++
   # version 5.2.0 installed Dec 22, 2015
-  C11FLAG = -std=c++11 
+  C11FLAG = -std=c++17 
 endif
 
 OPTCFLAGS = -fopenmp -fmax-errors=1 -Wfatal-errors 
@@ -84,13 +84,13 @@ LFLAGS      = $(OPTLFLAGS)
 # needs  -fsanitize=address flag.  Compiles with g++ 4.8 or later.  asan_symbolize is part of clang
 
 asan-global-buffer-overflow : asan-global-buffer-overflow.cpp
-	g++ -O -g -fsanitize=address -Wall -std=c++11 $^ -o $@
+	g++ -O -g -fsanitize=address -Wall -std=c++17 $^ -o $@
 asan-heap-buffer-overflow : asan-heap-buffer-overflow.cpp
-	g++ -O -g -fsanitize=address -Wall -std=c++11 $^ -o $@
+	g++ -O -g -fsanitize=address -Wall -std=c++17 $^ -o $@
 asan-heap-use-after-free : asan-heap-use-after-free.cpp
-	g++ -O -g -fsanitize=address -Wall -std=c++11 $^ -o $@
+	g++ -O -g -fsanitize=address -Wall -std=c++17 $^ -o $@
 asan-stack-buffer-overflow : asan-stack-buffer-overflow.cpp
-	g++ -O -g -fsanitize=address -Wall -std=c++11 $^ -o $@
+	g++ -O -g -fsanitize=address -Wall -std=c++17 $^ -o $@
 
 asan : asan-global-buffer-overflow asan-heap-buffer-overflow asan-heap-use-after-free asan-stack-buffer-overflow
 
@@ -181,9 +181,9 @@ vectorization : vectorization.cpp
 	# compiles fine on AMD1100t with Ubuntu 14.04 and g++ 4.9/5.0
 	# fails to resolve instrinsics with clang++
 	# needs the -mmmx -msse flags to compile instrinsics
-	$(CXX) -std=c++11  -ggdb -Ofast -mmmx -msse -msse2  vectorization.cpp -o vectorization && ./vectorization 
+	$(CXX) -std=c++17  -ggdb -Ofast -mmmx -msse -msse2  vectorization.cpp -o vectorization && ./vectorization 
 	# compile again with auto vectorization turned on
-	$(CXX) -std=c++11  -ggdb -Ofast -mmmx -msse -msse2  -ftree-vectorize -ftree-vectorizer-verbose=2 vectorization.cpp -o vectorization && ./vectorization 
+	$(CXX) -std=c++17  -ggdb -Ofast -mmmx -msse -msse2  -ftree-vectorize -ftree-vectorizer-verbose=2 vectorization.cpp -o vectorization && ./vectorization 
 
 # using clang++ to dump class layout
 # http://eli.thegreenplace.net/2012/12/17/dumping-a-c-objects-memory-layout-with-clang/
@@ -196,42 +196,42 @@ vectorization : vectorization.cpp
 #  This will never work since the shell truncates myfile.cpp before invoking the compiler)
 
 mandelbrot-345a : mandelbrot-345a.cpp
-	g++ -std=c++11 -Ofast mandelbrot-345a.cpp -o mandelbrot-345a -ljpeg -ltiff -lpng -pthread
+	g++ -std=c++17 -Ofast mandelbrot-345a.cpp -o mandelbrot-345a -ljpeg -ltiff -lpng -pthread
 
 mandelbrot-345b : mandelbrot-345b.cpp
-	g++ -std=c++11 -Ofast mandelbrot-345b.cpp tp.cpp -o mandelbrot-345b -ljpeg -ltiff -lpng -pthread
+	g++ -std=c++17 -Ofast mandelbrot-345b.cpp tp.cpp -o mandelbrot-345b -ljpeg -ltiff -lpng -pthread
 
 mandelbrot-345aphase2 : mandelbrot-345aphase2.cpp
-	g++ -std=c++11 -Ofast mandelbrot-345aphase2.cpp -o mandelbrot-345aphase2 -ljpeg -ltiff -lpng -pthread
+	g++ -std=c++17 -Ofast mandelbrot-345aphase2.cpp -o mandelbrot-345aphase2 -ljpeg -ltiff -lpng -pthread
 
 mandelbrot-345bphase2 : mandelbrot-345bphase2.cpp
-	g++ -std=c++11 -Ofast mandelbrot-345bphase2.cpp -o mandelbrot-345bphase2 -ljpeg -ltiff -lpng -pthread
+	g++ -std=c++17 -Ofast mandelbrot-345bphase2.cpp -o mandelbrot-345bphase2 -ljpeg -ltiff -lpng -pthread
 
 mandelbrot-345aphase3 : mandelbrot-345aphase3.cpp tp345a.cpp tp345a.h
-	g++ -std=c++11 -Ofast mandelbrot-345aphase3.cpp tp345a.cpp -o mandelbrot-345aphase3 -lSDL -ljpeg -ltiff -lpng -pthread
+	g++ -std=c++17 -Ofast mandelbrot-345aphase3.cpp tp345a.cpp -o mandelbrot-345aphase3 -lSDL -ljpeg -ltiff -lpng -pthread
 
 mandelbrot-345bphase3 : mandelbrot-345bphase3.cpp tp345b.cpp tp345b.h
-	g++ -std=c++11 -Ofast mandelbrot-345bphase3.cpp tp345b.cpp -o mandelbrot-345bphase3 -lSDL -ljpeg -ltiff -lpng -pthread
+	g++ -std=c++17 -Ofast mandelbrot-345bphase3.cpp tp345b.cpp -o mandelbrot-345bphase3 -lSDL -ljpeg -ltiff -lpng -pthread
 
 mandelbrot-candidate: mandelbrot-candidate.cpp tp.cpp tp.h
-	g++ -std=c++11 -Ofast mandelbrot-candidate.cpp tp.cpp -o mandelbrot-candidate -ljpeg -ltiff -lpng -pthread
+	g++ -std=c++17 -Ofast mandelbrot-candidate.cpp tp.cpp -o mandelbrot-candidate -ljpeg -ltiff -lpng -pthread
 
 mandelbrot-candidate-sdl: mandelbrot-candidate-sdl.cpp tp.cpp tp.h
-	g++ -std=c++11 -Ofast mandelbrot-candidate-sdl.cpp tp.cpp -o mandelbrot-candidate-sdl -lSDL -ljpeg -ltiff -lpng -pthread 
+	g++ -std=c++17 -Ofast mandelbrot-candidate-sdl.cpp tp.cpp -o mandelbrot-candidate-sdl -lSDL -ljpeg -ltiff -lpng -pthread 
 
 tp345a: tp345a.cpp tp.h
-	g++ -DTEST -Wall -std=c++11 -Ofast tp345a.cpp -o tp345a -pthread 
+	g++ -DTEST -Wall -std=c++17 -Ofast tp345a.cpp -o tp345a -pthread 
 tp345b: tp345b.cpp tp.h
-	g++ -DTEST -Wall -std=c++11 -Ofast tp345b.cpp -o tp345b -pthread 
+	g++ -DTEST -Wall -std=c++17 -Ofast tp345b.cpp -o tp345b -pthread 
 tp: tp.cpp tp.h
-	g++ -DTEST -Wall -std=c++11 -Ofast tp.cpp -o tp -pthread 
-	# clang++ -DTEST -Wall -std=c++11 -Ofast tp.cpp -o tp -pthread 
+	g++ -DTEST -Wall -std=c++17 -Ofast tp.cpp -o tp -pthread 
+	# clang++ -DTEST -Wall -std=c++17 -Ofast tp.cpp -o tp -pthread 
 
 curses-progress: curses-progress.cpp
-	g++ -std=c++11 $^ -o $@ -lcurses
+	g++ -std=c++17 $^ -o $@ -lcurses
 
 curses-box: curses-box.cpp
-	g++ -std=c++11 $^ -o $@ -lcurses
+	g++ -std=c++17 $^ -o $@ -lcurses
 
 # cpp14-auto-lambda.cpp is a C++14 program
 cpp14-auto-lambda: cpp14-auto-lambda.cpp
@@ -248,9 +248,12 @@ pimpl: pimpl.cpp
 tp14: tp14.cpp
 	g++ -Wall -std=c++14 $^ -o $@ -pthread
 
+map-reduce: map-reduce.cpp
+	g++ -Wall -std=c++17 $^ -o $@ -pthread
+
 # getaddrinfo_a, gai_suspend, gai_error, gai_cancel - asynchronous network address and service translation
 getaddrinfo_a: getaddrinfo_a.cpp
-	g++ -Wall -std=c++11 $^ -o $@ -lanl
+	g++ -Wall -std=c++17 $^ -o $@ -lanl
 
 externconstMain : externconstMain.cpp externconst.cpp externconst.h 
 	g++ externconstMain.cpp externconst.cpp -o externconstMain

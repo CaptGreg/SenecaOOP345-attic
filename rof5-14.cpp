@@ -82,7 +82,7 @@ public:
         b[i] = rhs.b[i];       // deep copy
       }
     } else {
-      cout << "X cp = operator --- self assignmant\n";
+      cout << "X cp = operator --- self assignment\n";
     }
     if(verbose) print( "cp = op: 'this' OUT" );
     return *this;
@@ -107,7 +107,7 @@ public:
     if(verbose) print( "mv ctor: 'this' OUT" );
   }
 
-  X&& operator= (X&& rhs) // C++11 move assignmant operator
+  X&& operator= (X&& rhs) // C++11 move assignment operator
   {
     if(verbose)     print( "mv = op: 'this' in" );
     if(verbose) rhs.print( "mv = op: 'rhs'  in" );
