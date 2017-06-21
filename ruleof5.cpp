@@ -8,7 +8,7 @@ class X {
   size_t size = 0;         // C++14
   T *data     = nullptr;   // C++14
 public:
-  X() // : size(0), data(nullptr)    <-- initialization done above with C++14
+  X() // : size(0), data(nullptr)    <-- c++14 initialization above
   { cout << "X constructor()\n"; }
 
   X(size_t s) : size(s), data(new T[size]) 
@@ -55,7 +55,7 @@ public:
   X(const X& rhs) // C++98 copy constructor
   {
     cout << "copy constructor rhs.size=" << rhs.size << "\n";
-    data = nullptr;
+    // data = nullptr; // c++14 initialization to nullptr above
     *this = rhs;      // let assignment operator do the work.
   }
 
@@ -84,7 +84,7 @@ public:
   X(X&& rhs) // C++11 move constructor
   {
     cout << "move constructor rhs.size=" << rhs.size << "\n";
-    data = nullptr;
+    // data = nullptr; // c++14 initialization to nullptr above
     *this = std::move(rhs);      // Let move assignment operator do the work.
   }
 };

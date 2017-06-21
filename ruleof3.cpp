@@ -55,7 +55,7 @@ public:
   X(const X& rhs) // C++98 copy constructor
   {
     cout << "copy constructor rhs.size=" << rhs.size << "\n";
-    data = nullptr;
+    // data = nullptr; // C++14 initialzed above
     *this = rhs;      // let assignment operator do the work.
   }
 
@@ -69,7 +69,7 @@ int main(int argc, char**argv)
 {
  cout << "program " << argv[0] << "\n\n";
 
- cout << "LINE " << __LINE__ << ": X<double> x, y(1000);\n";
+ cout << "LINE " << __LINE__ << ": X<double> x, y(1000 * 1000);\n";
  X<double> x, y(1000 * 1000);
  cout << "x:"; x.print();
  cout << "y:"; y.print();
