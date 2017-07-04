@@ -241,7 +241,7 @@ public:
 
     signal(SIGSEGV, cb);
     signal(SIGABRT, cb);
-    cout << "Startup(): SIGSEGV signal callback registered.\n";
+    cout << "Startup(): signal callback registered.\n";
     cout << "\n";
     cout << "Startup(): " << pMain;
     cout << "\n";
