@@ -3,7 +3,11 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <chrono>     // platform independent C++11 std::chrono time functions
+#include <algorithm>  // shuffle <-- include not required
+
 // appears GNU C++11 knows about time_t, time, srand, and rand
+// use platform independent C++11 std::chrono time functions
 // #include <cstdlib>  // rand, srand
 // #include <ctime>    // time_t, time
 
@@ -40,27 +44,40 @@ int main(int argc, char**argv)
   // seed the random number generator with the current time
   // seconds since epoch, January 1, 1970 (midnight UTC/GMT), not counting leap seconds 
   // (in ISO 8601: 1970-01-01T00:00:00Z).
-  time_t t = time(0LL);    
-  srand((unsigned) t); // srandom( (unsigned) t);
+  // time_t t = time(0LL);    
+  // srand((unsigned) t); // srandom( (unsigned) t);
+  // initialize the random number generator with a time-based seed:
+  unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+  srand(seed);
+  // srandom( seed );
 
   const char *lineEnding = flagDOS? "\r\n": "\n";
 
 #define METHOD1
 // time cat *.cpp | ./permute | wc
-//   45317  183617 1427830
-// real	0m0.104s
-// user	0m0.120s
-// sys	0m0.004s
+//   52052  210732 1634684
+// real    0m1.590s
+// user    0m0.368s
+// sys     0m0.080s
+
 
 // #define METHOD2
 // time cat *.cpp | permute | wc
-//   45317  183617 1427830
-// real	0m3.494s
-// user	0m3.580s
-// sys	0m0.020s
+//   52053  210729 1634692
+// real    0m8.743s
+// user    0m8.764s
+// sys     0m0.012s
 
 
-// METHOD 1 is about 35 x faster than METHOD 2.
+// #define METHOD3
+//   52055  210735 1634728
+// real    0m8.765s
+// user    0m8.780s
+// sys     0m0.016s
+
+
+
+// METHOD 1 is faster than METHOD 2 or METHOD 3
 
 #ifdef METHOD1
   for(size_t l = 0; l < lines.size(); l++)
@@ -77,4 +94,14 @@ int main(int argc, char**argv)
     lines.erase(lines.begin()+l);
   }
 #endif
+
+#ifdef METHOD3
+  // http://www.cplusplus.com/reference/algorithm/shuffle/
+  shuffle (lines.begin(), lines.end(), std::default_random_engine(seed));
+
+  for(size_t l = 0; l < lines.size(); l++)
+    cout << lines[l] << lineEnding;
+#endif
+
+
 }
