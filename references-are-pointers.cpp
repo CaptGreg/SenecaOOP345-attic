@@ -8,7 +8,7 @@
 
 // QED: References are pointers.
 
-int fValue   (int i)  {return  i *  i; }
+int fValue   (int  i) {return  i *  i; }
 int fRef     (int& r) {return  r *  r; }  // generates identical assembler to fPointer
 int fPointer (int* p) {return *p * *p; }  // generates identical assembler to fRef
 
