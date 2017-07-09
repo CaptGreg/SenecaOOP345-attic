@@ -268,3 +268,7 @@ longdouble: longdouble.cpp
 	gcc -m32 longdouble.c -o $@ 
 	./$@
 	rm $@
+
+references-are-pointers : references-are-pointers.cpp
+	g++ -Wa,-adhln -g references-are-pointers.cpp -o references-are-pointers > references-are-pointers.s
+
