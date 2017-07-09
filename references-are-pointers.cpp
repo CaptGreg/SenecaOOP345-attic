@@ -19,8 +19,8 @@ int main()
   i = 7;
   ret = fValue(i);
 
-  ret = fPointer(&i);
+  ret = fPointer(&i);                     // generates identical calling sequence to fRef
 
-  ret = fRef(i);
+  ret = fRef(i);                          // generates identical calling sequence to fPointer
   return 0;
 }
