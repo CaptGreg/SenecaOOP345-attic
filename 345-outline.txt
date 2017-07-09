@@ -35,10 +35,12 @@ Classes and Scoped Enumerations
 
 Inheritance and Inclusion Polymorphism
   ABC's Abstract Base Class, pure virtual function, virtual func (arg,...) const = 0;
+  polymorphism: each derived class implements functions wth the same name
+    - can be enforced by deriving derived classes from an ABC with pure virtual functions
   multiple inheritance, 
     - how many copies of base class? 
       - private copy for each derived class - derive it
-      - shared copy for all derived classes - declare 'virtual'
+      - shared copy for all derived classes - declare base class as 'virtual'
   clone - commonly used, often source of memory leaks, need to be properly deleted
     class B {public: virtual B* clone() const = 0; ...};
     class D1 : public B { public: D1* clone() const { return new D1(*this); } ... };
@@ -160,7 +162,7 @@ Error Handling
   on_exit( f, (void*) p);
 
 Standard Library
-  string, wstring
+  string, wstring, cout, wcout, fstream, wfstream, ios::, wios::, ...
   list, vector, queue, stack, deque (set, map, multimap not covered, but cool!)
   std::string_view (<string_view>) - a read-only contiguous sequence of characters (see above)
   std::variant<T, ...>() (<variant>) - represents a type-safe union
@@ -174,37 +176,68 @@ Containers and Iterators
   list, vector, queue, stack, deque (set, map, multimap not covered, but cool!)
 
   vector<int> v;
+  for(size_t i = 0;  i < v.size(); i++) { // C++98
+    cout << v[i] << "\n";
+  }
   for( vector<int>::iterator it = v.begin(); it != v.end(); it++) { // C++98
     cout << *it << "\n";
   }
   for( auto it = v.begin(); it != v.end(); it++) { // C++11
     cout << *it << "\n";
   }
+  for( auto e : v) { { //  makes a deep copy of the 'v' element. his involves ctor/dtor/copy assignment operators/...
+    cout << e << "\n"; //  really bad idea to use this form of range-based for 
+  }
+  for( auto& e : v) {  // uses references which are pointers, no ctor/dtor/copy assignment operators/...
+    cout << e << "\n"; // use this instead
+  }
   
 
 <mid-term break>
 
 Algorithms
+  - mainly wrapper for a for loop
+  - check with roule-of-5 class to see if madness going on
 
 File Stream Objects
+  - file open parameters for read, write, read-write, at-the-end, append mode, binary
+  - error such as eof
+  - 'w' versions for processing files with wide characters
 
 Raw Pointers
+  - 'C' pointers
 
 Smart Pointers
+  - pass pointer allocated by 'new' to class. When calls goes out of scope, the class destructor calls delete
 
 Multi-Threading
+  - race conditions
+  - priority inversion
 
 Thread Classes
+  - thread/join/detach
+  - future/async/get
 
 Pre-Processor Directives
+  - define macros with parameters #, ## operators
 
 Arrays and Pointers to Arrays
+  - tables of data
+  - fixed size table item count = sizeof(table) / sizeof(table[0])
 
 Multiple Inheritance
+  - covered above
 
 Bit-Wise Expressions
+  ~ - | & ^ << >> 
+  bitprint, left and right circular shift
+  negate an integer -i computed by compliment and increment operation : -i = (~i) + 1
 
 Linked List Technology
+  - STL library linked-list conitainer: stacks, queues, deque, list 
+  - doubley linked lists, circular lists, xor linked list
+  - double buffer, triple buffer, etc
+  - take DSA555 data Structures and Algorithms
 
 Other Topics
 
