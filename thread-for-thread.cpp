@@ -37,6 +37,7 @@ step 1.
       void doWork(int start, int end) { 
         for(int i = start; i < end; i++) {
           - do something based on the for loop index i
+        }
       }
 
   * call the function
@@ -66,7 +67,7 @@ step 4.
 step 5.
   * launch the threads using thread/join
   * thread(...) step:
-    for(int t = 0; i < NUM_THREADS; t++) {
+    for(int t = 0; t < NUM_THREADS; t++) {
       int s = t * chunk;
       int e = s + chunk;
       if(t == NUM_THREADS-1) // NUM_THREADS may not evenly divide the problem size, 'N'.

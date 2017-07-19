@@ -8,29 +8,25 @@ const int NUM_THREADS = 10;
 void threadfunction_cout(int arg) 
 {
   cout << "cout: " << arg << "\n";
-
   cout << "cout: ";
-
   cout << arg;
-
   cout << "\n";
-
 }
 
 int main() 
 {
   int arg;
-  thread t[NUM_THREADS];
+  thread tid[NUM_THREADS];
 
   cout << "\nthreads using cout:\n\n";
   // launch threads
   arg = 100;
-  for (int i = 0; i < NUM_THREADS; ++i)
-    t[i] = thread(threadfunction_cout, arg++); // pass i as arg to thread
+  for (int t = 0; t < NUM_THREADS; t++)
+    tid[t] = thread(threadfunction_cout, arg++); // pass i as arg to thread
 
   // wait for thread to complete
-  for (int i = 0; i < NUM_THREADS; ++i)
-    t[i].join();
+  for (int t = 0; t < NUM_THREADS; t++)
+    tid[t].join();
 
   return 0;
 }
