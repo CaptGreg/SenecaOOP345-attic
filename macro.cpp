@@ -61,4 +61,24 @@ tableEntry_t commandTable[] ={
 
   for (size_t i = 0; i < sizeof(commandTable)/sizeof(tableEntry_t); i++)
     cout << i << ": " << commandTable[i].command << "\n";
+  cout << "\n";
+
+#define MAX(A,B) ((A) > (B) ? (A) : (B))
+cout << "#define MAX(A,B) ((A) > (B) ? (A) : (B))\n";
+
+  cout <<"MAX(1,2) = " << MAX(1,2) << "\n";
+
+  int i, j;
+  i = 1, j = 2;
+  cout << "i,j=" << i << "," << j << "\n";
+  cout <<"MAX(i++,j++) = " << MAX(i++,j++) << "\n";
+  cout << "i,j=" << i << "," << j << "\n";
+  cout << "\n";
+
+#define MAX_LAMBDA(A,B) [](decltype(A) a, decltype(B) b) { return a>b ? a : b;} (A,B)
+cout << "#define MAX_LAMBDA(A,B) [](decltype(A) a, decltype(B) b) { return a>b ? a : b;} (A,B)\n";
+  i = 1, j = 2;
+  cout << "i,j=" << i << "," << j << "\n";
+  cout <<"MAX_LAMBDA(i++,j++) = " << MAX_LAMBDA(i++,j++) << "\n";
+  cout << "i,j=" << i << "," << j << "\n";
 }
