@@ -138,8 +138,8 @@ pathfind : pathfind.cpp
 	./$@
 
 gl3ctx : gl3ctx.cpp
-	$(CXX) gl3ctx.cpp -o gl3ctx -lGL  -lX11 
-	./gl3ctx
+	$(CXX) $^ -o $@ -lGL  -lX11 
+	./$@ 
 
 glx3 : glx3.cpp
 	$(CXX) $(CXXFLAGS) $^ -o $@ -lGL  -lX11 
@@ -159,12 +159,20 @@ glfwShaderUniform : glfwShaderUniform.cpp
 	$(CXX) $(CXXFLAGS)  $^ -o $@ -lGL -lGLEW -lglfw
 	./$@
 
+xlib : xlib.cpp  
+	$(CXX) $(CXXFLAGS) $^ -o $@ -lX11 
+	./$@
+
+Xlib-example : Xlib-example.c  
+	$(CC) $(CFLAGS) $^ -o $@ -lX11 
+	./$@
+
 #### http://learnopengl.com/code_viewer.php?code=advanced/geometry_shader_explode_shaders
 ### more complicated: needs "Shader.h" "Camera.h" "Model.h" files, plus the model
 ### TODO: make code standalone
 ## glfwShaderGeometry : glfwShaderGeometry.cpp
 ##	$(CXX) $(CXXFLAGS)  $^ -o $@ -lGL -lGLEW -lglfw
-##	./$@
+##	./$@Xlib-example
 
 pthread : pthread.c
 	clang -Wall -pthread pthread.c -o pthread
