@@ -78,7 +78,7 @@ step 5.
 step 6.
   * wait for the threads to finish
   * join() step:
-    for(auto e : tid)
+    for(auto& e : tid)
       e.join();
 
 */
