@@ -495,7 +495,7 @@ void Composition()
     std::list<Room*> rooms; 
   public:
     void AddRoom(std::string name) {rooms.push_back(new Room(name));}
-    ~House() { for(auto e : rooms) delete e; } 
+    ~House() { for(auto& e : rooms) delete e; } 
   }; 
 
   House myHouse;
@@ -833,7 +833,7 @@ void STLContainers()
   std::cout << l.size() << " Chinese animals - NOTE print order is the same as the insert order\n";
   std::cout << "'rat' was added to the end of the list first. 'pig' was added to the end of the list last.\n";
   std::cout << "This list is a queue, a FIFO: first in, first out. Just like the coffee lineup at Tim Hortons.\n";
-  for(auto e : l) std::cout << e << "\n";
+  for(auto& e : l) std::cout << e << "\n";
 } // STLContainers
 
 void StdLibAlgorthms()
