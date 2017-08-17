@@ -5,13 +5,17 @@ using namespace std;
 template <typename T>
 void printBits(T t, int bits=8*sizeof(T))
 {
-  for(int bit = bits-1; bit >= 0; bit--)
+  for(int bit = bits-1; bit >= 0; bit--) {
+#if 0
     cout << (bool) (t & (1 << bit));
+#else
+    cout << (bool) ((t >> bit)&1);
+#endif
+  }
 }
+
 int main()
 {
-
-
  for(int16_t i = 0; i <= 32; i++) {
    cout << "i=" << setw(2) << i;
    cout <<" "; printBits(i); cout<<" ";
@@ -32,7 +36,5 @@ int main()
    cout << "\n";
  }
 
-
- return 0;
-
+ return EXIT_SUCCESS;
 }
