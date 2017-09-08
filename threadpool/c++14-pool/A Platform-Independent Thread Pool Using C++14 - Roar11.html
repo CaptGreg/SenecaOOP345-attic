@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.4.1 by Michael Rose
+  Copyright 2017 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
+-->
+<html class=" js " lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+
+<!-- begin SEO -->
+
+
+
+
+
+
+
+
+
+<title>A Platform-Independent Thread Pool Using C++14 - Roar11</title>
+
+
+
+
+<meta name="description" content="One of the major benefits&nbsp;provided by the new generation of graphics APIs&nbsp;is much better support for multithreaded command list&nbsp;generation and submission. &nbsp;It’s not uncommon for computers nowadays to contain&nbsp;2, 4, 8, or even 16 core processors. &nbsp;The goal of the solution in this post is to ensure we can use the power our CPU provides, not just for generating graphics command lists, but for any task that can be easily parallelized.">
+
+
+
+
+<meta name="author" content="Will Pearce">
+
+<meta property="og:locale" content="en">
+<meta property="og:site_name" content="Roar11">
+<meta property="og:title" content="A Platform-Independent Thread Pool Using C++14">
+
+
+  <link rel="canonical" href="http://roar11.com/2016/01/a-platform-independent-thread-pool-using-c14/">
+  <meta property="og:url" content="http://roar11.com/2016/01/a-platform-independent-thread-pool-using-c14/">
+
+
+
+  <meta property="og:description" content="One of the major benefits&nbsp;provided by the new generation of graphics APIs&nbsp;is much better support for multithreaded command list&nbsp;generation and submission. &nbsp;It’s not uncommon for computers nowadays to contain&nbsp;2, 4, 8, or even 16 core processors. &nbsp;The goal of the solution in this post is to ensure we can use the power our CPU provides, not just for generating graphics command lists, but for any task that can be easily parallelized.">
+
+
+
+
+
+  
+
+  
+
+
+
+
+
+  <meta property="og:type" content="article">
+  <meta property="article:published_time" content="2016-01-03T00:00:00-05:00">
+
+
+
+
+
+
+
+
+  <script type="application/ld+json">
+    {
+      "@context" : "http://schema.org",
+      "@type" : "Person",
+      "name" : "Will Pearce",
+      "url" : "http://roar11.com",
+      "sameAs" : null
+    }
+  </script>
+
+
+
+
+
+
+<!-- end SEO -->
+
+
+<link href="http://roar11.com/feed.xml" type="application/atom+xml" rel="alternate" title="Roar11 Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="A%20Platform-Independent%20Thread%20Pool%20Using%20C++14%20-%20Roar11_files/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+<meta http-equiv="cleartype" content="on">
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use http://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+  <script type="text/javascript" async="" src="A%20Platform-Independent%20Thread%20Pool%20Using%20C++14%20-%20Roar11_files/embed.js"></script><script async="" type="text/javascript" src="A%20Platform-Independent%20Thread%20Pool%20Using%20C++14%20-%20Roar11_files/count.js"></script><style id="fit-vids-style">.fluid-width-video-wrapper{width:100%;position:relative;padding:0;}.fluid-width-video-wrapper iframe,.fluid-width-video-wrapper object,.fluid-width-video-wrapper embed {position:absolute;top:0;left:0;width:100%;height:100%;}</style><link rel="prefetch" href="A%20Platform-Independent%20Thread%20Pool%20Using%20C++14%20-%20Roar11_files/a_data/lounge.css"><link rel="prefetch" href="A%20Platform-Independent%20Thread%20Pool%20Using%20C++14%20-%20Roar11_files/a_data/common.js"><link rel="prefetch" href="A%20Platform-Independent%20Thread%20Pool%20Using%20C++14%20-%20Roar11_files/a_data/lounge.js"><link rel="prefetch" href="A%20Platform-Independent%20Thread%20Pool%20Using%20C++14%20-%20Roar11_files/a_data/config.js"><script src="A%20Platform-Independent%20Thread%20Pool%20Using%20C++14%20-%20Roar11_files/alfalfa.js" async="" charset="UTF-8"></script></head>
+
+  <body class="layout--single" style="margin-bottom: 222px;">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="http://roar11.com/">Roar11</a>
+        <ul class="visible-links">
+          
+            
+            <li class="masthead__menu-item"><a href="http://roar11.com/projects/">Projects</a></li>
+          
+            
+            <li class="masthead__menu-item"><a href="http://roar11.com/blog/">Blog</a></li>
+          
+            
+            <li class="masthead__menu-item"><a href="http://roar11.com/about/">About</a></li>
+          
+            
+            <li class="masthead__menu-item"><a href="http://roar11.com/contact/">Contact</a></li>
+          
+        </ul>
+        <button count="0" class="hidden"><div class="navicon"></div></button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+<div itemscope="" itemtype="http://schema.org/Person">
+
+  
+
+  <div class="author__content">
+    <h3 class="author__name" itemprop="name">Will Pearce</h3>
+    
+      <p class="author__bio" itemprop="description">
+        Software developer
+      </p>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope="" itemtype="http://schema.org/Place">
+          <i class="fa fa-fw fa-map-marker" aria-hidden="true"></i> <span itemprop="name">VA</span>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://twitter.com/willp_tweets" itemprop="sameAs">
+            <i class="fa fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.linkedin.com/in/will-pearce-2852137" itemprop="sameAs">
+            <i class="fa fa-fw fa-linkedin-square" aria-hidden="true"></i> LinkedIn
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fa fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope="" itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="A Platform-Independent Thread Pool Using C++14">
+    <meta itemprop="description" content="One of the major benefits&nbsp;provided by the new generation of graphics APIs&nbsp;is much better support for multithreaded command list&nbsp;generation and submission. &nbsp;It’s not uncommon for computers nowadays to contain&nbsp;2, 4, 8, or even 16 core processors. &nbsp;The goal of the solution in this post is to ensure we can use the power our CPU provides, not just for generating graphics command lists, but for any task that can be easily parallelized.">
+    <meta itemprop="datePublished" content="January 03, 2016">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 class="page__title" itemprop="headline">A Platform-Independent Thread Pool Using C++14
+</h1>
+          
+            <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  13 minute read
+</p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        <aside class="sidebar__right">
+<nav class="toc">
+    <header><h4 class="nav__title"><i class="fa fa-file-text"></i> On This Page</h4></header>
+<ul class="toc__menu" id="markdown-toc">
+  <li><a href="#introduction" id="markdown-toc-introduction">Introduction</a></li>
+  <li><a href="#implementation" id="markdown-toc-implementation">Implementation</a>    <ul>
+      <li><a href="#a-thread-safe-queue" id="markdown-toc-a-thread-safe-queue">A Thread-Safe Queue</a></li>
+      <li><a href="#the-thread-pool" id="markdown-toc-the-thread-pool">The Thread Pool</a></li>
+      <li><a href="#submitting-work-to-the-thread-pool" id="markdown-toc-submitting-work-to-the-thread-pool">Submitting Work to the Thread Pool</a></li>
+    </ul>
+  </li>
+  <li><a href="#does-it-work" id="markdown-toc-does-it-work">Does It Work?</a></li>
+  <li><a href="#about-the-number-of-pooled-threads" id="markdown-toc-about-the-number-of-pooled-threads">About the Number of Pooled Threads</a></li>
+  <li><a href="#conclusion" id="markdown-toc-conclusion">Conclusion</a></li>
+  <li><a href="#thank-you" id="markdown-toc-thank-you">Thank You</a></li>
+  <li><a href="#references" id="markdown-toc-references">References</a></li>
+</ul>
+
+  </nav>
+</aside>
+
+<h1 id="introduction">Introduction</h1>
+
+<p>One of the major benefits&nbsp;provided by the new generation of 
+graphics APIs&nbsp;is much better support for multithreaded command 
+list&nbsp;generation and submission. &nbsp;It’s not uncommon for 
+computers nowadays to contain&nbsp;2, 4, 8, or even 16 core processors. 
+&nbsp;The goal of the solution in this post is to ensure we can use the 
+power our CPU provides, not just for generating graphics command lists, 
+but for any task that can be easily parallelized.</p>
+
+<p>At&nbsp;its simplest, a thread pool is a collection of threads that 
+run continuously waiting to take on a task to complete. &nbsp;If there’s
+ no task available, they yield or sleep for some amount of time, wake 
+back up, and check again. &nbsp;When&nbsp;a task is available, one of 
+the waiting threads claims it, runs it, and returns to the waiting 
+state.</p>
+
+<p>The reason we would want to use a thread pool instead of creating new
+ threads over and over for each task we want to run on a separate thread
+ is to save on the&nbsp;time it would otherwise take to construct&nbsp;a
+ thread, submit work to it, and deconstruct it when it’s done running. 
+&nbsp;With a small collection of threads continuously running and 
+waiting on tasks, we’re only left with the middle step - work 
+submission.</p>
+
+<h1 id="implementation">Implementation</h1>
+
+<p>The thread pool presented here is based off the implementation 
+provided in [1]. &nbsp;It has been updated to include 
+variadic&nbsp;arguments for added flexibility.</p>
+
+<h2 id="a-thread-safe-queue">A Thread-Safe Queue</h2>
+
+<p>Before we build the pool itself, we need a means of submitting work 
+in a thread-safe manner. &nbsp;Jobs should be picked up in the same 
+order they are submitted to the pool,&nbsp;which means a queue is a good
+ candidate. &nbsp;Jobs are pushed to the back of the queue, and popped 
+from the front.</p>
+
+<div class="language-cpp highlighter-rouge"><pre class="highlight"><code><span class="cm">/**
+ * The ThreadSafeQueue class.
+ * Provides a wrapper around a basic queue to provide thread safety.
+ */</span>
+<span class="cp">#pragma once
+</span>
+<span class="cp">#ifndef THREADSAFEQUEUE_HPP
+#define THREADSAFEQUEUE_HPP
+</span>
+<span class="cp">#include &lt;atomic&gt;
+#include &lt;condition_variable&gt;
+#include &lt;mutex&gt;
+#include &lt;queue&gt;
+#include &lt;utility&gt;
+</span>
+<span class="k">namespace</span> <span class="n">MyNamespace</span>
+<span class="p">{</span>
+    <span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+    <span class="k">class</span> <span class="nc">ThreadSafeQueue</span>
+    <span class="p">{</span>
+    <span class="k">public</span><span class="o">:</span>
+        <span class="cm">/**
+         * Destructor.
+         */</span>
+        <span class="o">~</span><span class="n">ThreadSafeQueue</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">invalidate</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="cm">/**
+         * Attempt to get the first value in the queue.
+         * Returns true if a value was successfully written to the out parameter, false otherwise.
+         */</span>
+        <span class="kt">bool</span> <span class="n">tryPop</span><span class="p">(</span><span class="n">T</span><span class="o">&amp;</span> <span class="n">out</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">std</span><span class="o">::</span><span class="n">lock_guard</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span> <span class="n">lock</span><span class="p">{</span><span class="n">m_mutex</span><span class="p">};</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">m_queue</span><span class="p">.</span><span class="n">empty</span><span class="p">()</span> <span class="o">||</span> <span class="o">!</span><span class="n">m_valid</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">m_queue</span><span class="p">.</span><span class="n">front</span><span class="p">());</span>
+            <span class="n">m_queue</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span>
+            <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="cm">/**
+         * Get the first value in the queue.
+         * Will block until a value is available unless clear is called or the instance is destructed.
+         * Returns true if a value was successfully written to the out parameter, false otherwise.
+         */</span>
+        <span class="kt">bool</span> <span class="n">waitPop</span><span class="p">(</span><span class="n">T</span><span class="o">&amp;</span> <span class="n">out</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">std</span><span class="o">::</span><span class="n">unique_lock</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span> <span class="n">lock</span><span class="p">{</span><span class="n">m_mutex</span><span class="p">};</span>
+            <span class="n">m_condition</span><span class="p">.</span><span class="n">wait</span><span class="p">(</span><span class="n">lock</span><span class="p">,</span> <span class="p">[</span><span class="k">this</span><span class="p">]()</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="o">!</span><span class="n">m_queue</span><span class="p">.</span><span class="n">empty</span><span class="p">()</span> <span class="o">||</span> <span class="o">!</span><span class="n">m_valid</span><span class="p">;</span>
+            <span class="p">});</span>
+            <span class="cm">/*
+             * Using the condition in the predicate ensures that spurious wakeups with a valid
+             * but empty queue will not proceed, so only need to check for validity before proceeding.
+             */</span>
+            <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">m_valid</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">m_queue</span><span class="p">.</span><span class="n">front</span><span class="p">());</span>
+            <span class="n">m_queue</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span>
+            <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="cm">/**
+         * Push a new value onto the queue.
+         */</span>
+        <span class="kt">void</span> <span class="n">push</span><span class="p">(</span><span class="n">T</span> <span class="n">value</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">std</span><span class="o">::</span><span class="n">lock_guard</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span> <span class="n">lock</span><span class="p">{</span><span class="n">m_mutex</span><span class="p">};</span>
+            <span class="n">m_queue</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">value</span><span class="p">));</span>
+            <span class="n">m_condition</span><span class="p">.</span><span class="n">notify_one</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="cm">/**
+         * Check whether or not the queue is empty.
+         */</span>
+        <span class="kt">bool</span> <span class="n">empty</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span>
+        <span class="p">{</span>
+            <span class="n">std</span><span class="o">::</span><span class="n">lock_guard</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span> <span class="n">lock</span><span class="p">{</span><span class="n">m_mutex</span><span class="p">};</span>
+            <span class="k">return</span> <span class="n">m_queue</span><span class="p">.</span><span class="n">empty</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="cm">/**
+         * Clear all items from the queue.
+         */</span>
+        <span class="kt">void</span> <span class="n">clear</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">std</span><span class="o">::</span><span class="n">lock_guard</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span> <span class="n">lock</span><span class="p">{</span><span class="n">m_mutex</span><span class="p">};</span>
+            <span class="k">while</span><span class="p">(</span><span class="o">!</span><span class="n">m_queue</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span>
+            <span class="p">{</span>
+                <span class="n">m_queue</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="n">m_condition</span><span class="p">.</span><span class="n">notify_all</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="cm">/**
+         * Invalidate the queue.
+         * Used to ensure no conditions are being waited on in waitPop when
+         * a thread or the application is trying to exit.
+         * The queue is invalid after calling this method and it is an error
+         * to continue using a queue after this method has been called.
+         */</span>
+        <span class="kt">void</span> <span class="n">invalidate</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">std</span><span class="o">::</span><span class="n">lock_guard</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span> <span class="n">lock</span><span class="p">{</span><span class="n">m_mutex</span><span class="p">};</span>
+            <span class="n">m_valid</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+            <span class="n">m_condition</span><span class="p">.</span><span class="n">notify_all</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="cm">/**
+         * Returns whether or not this queue is valid.
+         */</span>
+        <span class="kt">bool</span> <span class="n">isValid</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="k">const</span>
+        <span class="p">{</span>
+            <span class="n">std</span><span class="o">::</span><span class="n">lock_guard</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span> <span class="n">lock</span><span class="p">{</span><span class="n">m_mutex</span><span class="p">};</span>
+            <span class="k">return</span> <span class="n">m_valid</span><span class="p">;</span>
+        <span class="p">}</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">atomic_bool</span> <span class="n">m_valid</span><span class="p">{</span><span class="nb">true</span><span class="p">};</span>
+        <span class="k">mutable</span> <span class="n">std</span><span class="o">::</span><span class="n">mutex</span> <span class="n">m_mutex</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">queue</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">m_queue</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">condition_variable</span> <span class="n">m_condition</span><span class="p">;</span>
+    <span class="p">};</span>
+<span class="p">}</span>
+
+<span class="cp">#endif
+</span></code></pre>
+</div>
+
+<p>Most of this is pretty standard fare for designing a thread-safe 
+class. &nbsp;We lock a mutex anytime we need to read or write data and 
+provide a simplified interface over a <code class="highlighter-rouge">std::queue</code> where writes are checked for validity before being performed. &nbsp;This is why <code class="highlighter-rouge">tryPop</code> and <code class="highlighter-rouge">waitPop</code> return bools for success and write to the provide parameter in successful cases.</p>
+
+<p>Any time <code class="highlighter-rouge">push</code> is called with a new task, it calls <code class="highlighter-rouge">notify_one()</code>
+ on the condition variable which will wake one thread blocked on the 
+condition. &nbsp;The mutex is locked, the predicate is checked, and if 
+all conditions are met (the queue is not empty and the queue is still 
+valid), a task is popped and returned from the queue.</p>
+
+<p>Because this queue provides a blocking&nbsp;method, <code class="highlighter-rouge">waitPop</code>,
+ that depends on a condition variable being set to continue, it also 
+needs a way to signal to&nbsp;anything waiting on the condition in the 
+case that the queue needs to be deconstructed while&nbsp;there are 
+threads still blocked on the condition. &nbsp;This is accomplished 
+through the <code class="highlighter-rouge">invalidate()</code> method that first sets the <code class="highlighter-rouge">m_valid</code> member to false and then calls <code class="highlighter-rouge">notify_all()</code> on the condition variable. &nbsp;This will wake up every thread blocked on the condition and <code class="highlighter-rouge">waitPop</code> will return with a value of <code class="highlighter-rouge">false</code>, indicating to the call site that no work is being returned.</p>
+
+<p>Another&nbsp;nicety the condition variable gives us is protection 
+from spurious wakeups [3]. &nbsp;If a spurious wakeup does occur and the
+ entire predicate isn’t met, the thread goes back to waiting.</p>
+
+<h2 id="the-thread-pool">The Thread Pool</h2>
+
+<p>The implementation of the thread pool is shown below.</p>
+
+<div class="language-cpp highlighter-rouge"><pre class="highlight"><code><span class="cm">/**
+ * The ThreadPool class.
+ * Keeps a set of threads constantly waiting to execute incoming jobs.
+ */</span>
+<span class="cp">#pragma once
+</span>
+<span class="cp">#ifndef THREADPOOL_HPP
+#define THREADPOOL_HPP
+</span>
+<span class="cp">#include "ThreadSafeQueue.hpp"
+</span>
+<span class="cp">#include &lt;algorithm&gt;
+#include &lt;atomic&gt;
+#include &lt;cstdint&gt;
+#include &lt;functional&gt;
+#include &lt;future&gt;
+#include &lt;memory&gt;
+#include &lt;thread&gt;
+#include &lt;type_traits&gt;
+#include &lt;utility&gt;
+#include &lt;vector&gt;
+</span>
+<span class="k">namespace</span> <span class="n">MyNamespace</span>
+<span class="p">{</span>
+    <span class="k">class</span> <span class="nc">ThreadPool</span>
+    <span class="p">{</span>
+    <span class="k">private</span><span class="o">:</span>
+        <span class="k">class</span> <span class="nc">IThreadTask</span>
+        <span class="p">{</span>
+        <span class="k">public</span><span class="o">:</span>
+            <span class="n">IThreadTask</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
+            <span class="k">virtual</span> <span class="o">~</span><span class="n">IThreadTask</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
+            <span class="n">IThreadTask</span><span class="p">(</span><span class="k">const</span> <span class="n">IThreadTask</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span> <span class="o">=</span> <span class="k">delete</span><span class="p">;</span>
+            <span class="n">IThreadTask</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">IThreadTask</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span> <span class="o">=</span> <span class="k">delete</span><span class="p">;</span>
+            <span class="n">IThreadTask</span><span class="p">(</span><span class="n">IThreadTask</span><span class="o">&amp;&amp;</span> <span class="n">other</span><span class="p">)</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
+            <span class="n">IThreadTask</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="n">IThreadTask</span><span class="o">&amp;&amp;</span> <span class="n">other</span><span class="p">)</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
+
+            <span class="cm">/**
+             * Run the task.
+             */</span>
+            <span class="k">virtual</span> <span class="kt">void</span> <span class="n">execute</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="p">};</span>
+
+        <span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">Func</span><span class="o">&gt;</span>
+        <span class="k">class</span> <span class="nc">ThreadTask</span><span class="o">:</span> <span class="k">public</span> <span class="n">IThreadTask</span>
+        <span class="p">{</span>
+        <span class="k">public</span><span class="o">:</span>
+            <span class="n">ThreadTask</span><span class="p">(</span><span class="n">Func</span><span class="o">&amp;&amp;</span> <span class="n">func</span><span class="p">)</span>
+                <span class="o">:</span><span class="n">m_func</span><span class="p">{</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">func</span><span class="p">)}</span>
+            <span class="p">{</span>
+            <span class="p">}</span>
+
+            <span class="o">~</span><span class="n">ThreadTask</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="n">override</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
+            <span class="n">ThreadTask</span><span class="p">(</span><span class="k">const</span> <span class="n">ThreadTask</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span> <span class="o">=</span> <span class="k">delete</span><span class="p">;</span>
+            <span class="n">ThreadTask</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">ThreadTask</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span> <span class="o">=</span> <span class="k">delete</span><span class="p">;</span>
+            <span class="n">ThreadTask</span><span class="p">(</span><span class="n">ThreadTask</span><span class="o">&amp;&amp;</span> <span class="n">other</span><span class="p">)</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
+            <span class="n">ThreadTask</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="n">ThreadTask</span><span class="o">&amp;&amp;</span> <span class="n">other</span><span class="p">)</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
+
+            <span class="cm">/**
+             * Run the task.
+             */</span>
+            <span class="kt">void</span> <span class="n">execute</span><span class="p">()</span> <span class="n">override</span>
+            <span class="p">{</span>
+                <span class="n">m_func</span><span class="p">();</span>
+            <span class="p">}</span>
+
+        <span class="k">private</span><span class="o">:</span>
+            <span class="n">Func</span> <span class="n">m_func</span><span class="p">;</span>
+        <span class="p">};</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="cm">/**
+         * A wrapper around a std::future that adds the behavior of futures returned from std::async.
+         * Specifically, this object will block and wait for execution to finish before going out of scope.
+         */</span>
+        <span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+        <span class="k">class</span> <span class="nc">TaskFuture</span>
+        <span class="p">{</span>
+        <span class="k">public</span><span class="o">:</span>
+            <span class="n">TaskFuture</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">future</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;&amp;</span> <span class="n">future</span><span class="p">)</span>
+                <span class="o">:</span><span class="n">m_future</span><span class="p">{</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">future</span><span class="p">)}</span>
+            <span class="p">{</span>
+            <span class="p">}</span>
+
+            <span class="n">TaskFuture</span><span class="p">(</span><span class="k">const</span> <span class="n">TaskFuture</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span> <span class="o">=</span> <span class="k">delete</span><span class="p">;</span>
+            <span class="n">TaskFuture</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">TaskFuture</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span> <span class="o">=</span> <span class="k">delete</span><span class="p">;</span>
+            <span class="n">TaskFuture</span><span class="p">(</span><span class="n">TaskFuture</span><span class="o">&amp;&amp;</span> <span class="n">other</span><span class="p">)</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
+            <span class="n">TaskFuture</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="n">TaskFuture</span><span class="o">&amp;&amp;</span> <span class="n">other</span><span class="p">)</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
+            <span class="o">~</span><span class="n">TaskFuture</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">if</span><span class="p">(</span><span class="n">m_future</span><span class="p">.</span><span class="n">valid</span><span class="p">())</span>
+                <span class="p">{</span>
+                    <span class="n">m_future</span><span class="p">.</span><span class="n">get</span><span class="p">();</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+
+            <span class="k">auto</span> <span class="n">get</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="n">m_future</span><span class="p">.</span><span class="n">get</span><span class="p">();</span>
+            <span class="p">}</span>
+
+
+        <span class="k">private</span><span class="o">:</span>
+            <span class="n">std</span><span class="o">::</span><span class="n">future</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">m_future</span><span class="p">;</span>
+        <span class="p">};</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="cm">/**
+         * Constructor.
+         */</span>
+        <span class="n">ThreadPool</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+            <span class="o">:</span><span class="n">ThreadPool</span><span class="p">{</span><span class="n">std</span><span class="o">::</span><span class="n">max</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="kr">thread</span><span class="o">::</span><span class="n">hardware_concurrency</span><span class="p">(),</span> <span class="mi">2u</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1u</span><span class="p">}</span>
+        <span class="p">{</span>
+            <span class="cm">/*
+             * Always create at least one thread.  If hardware_concurrency() returns 0,
+             * subtracting one would turn it to UINT_MAX, so get the maximum of
+             * hardware_concurrency() and 2 before subtracting 1.
+             */</span>
+        <span class="p">}</span>
+
+        <span class="cm">/**
+         * Constructor.
+         */</span>
+        <span class="k">explicit</span> <span class="n">ThreadPool</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="kt">uint32_t</span> <span class="n">numThreads</span><span class="p">)</span>
+            <span class="o">:</span><span class="n">m_done</span><span class="p">{</span><span class="nb">false</span><span class="p">},</span>
+            <span class="n">m_workQueue</span><span class="p">{},</span>
+            <span class="n">m_threads</span><span class="p">{}</span>
+        <span class="p">{</span>
+            <span class="k">try</span>
+            <span class="p">{</span>
+                <span class="k">for</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="kt">uint32_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0u</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">numThreads</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+                <span class="p">{</span>
+                    <span class="n">m_threads</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ThreadPool</span><span class="o">::</span><span class="n">worker</span><span class="p">,</span> <span class="k">this</span><span class="p">);</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">catch</span><span class="p">(...)</span>
+            <span class="p">{</span>
+                <span class="n">destroy</span><span class="p">();</span>
+                <span class="k">throw</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="cm">/**
+         * Non-copyable.
+         */</span>
+        <span class="n">ThreadPool</span><span class="p">(</span><span class="k">const</span> <span class="n">ThreadPool</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span> <span class="o">=</span> <span class="k">delete</span><span class="p">;</span>
+
+        <span class="cm">/**
+         * Non-assignable.
+         */</span>
+        <span class="n">ThreadPool</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">ThreadPool</span><span class="o">&amp;</span> <span class="n">rhs</span><span class="p">)</span> <span class="o">=</span> <span class="k">delete</span><span class="p">;</span>
+
+        <span class="cm">/**
+         * Destructor.
+         */</span>
+        <span class="o">~</span><span class="n">ThreadPool</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">destroy</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="cm">/**
+         * Submit a job to be run by the thread pool.
+         */</span>
+        <span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">Func</span><span class="p">,</span> <span class="k">typename</span><span class="p">...</span> <span class="n">Args</span><span class="o">&gt;</span>
+        <span class="k">auto</span> <span class="n">submit</span><span class="p">(</span><span class="n">Func</span><span class="o">&amp;&amp;</span> <span class="n">func</span><span class="p">,</span> <span class="n">Args</span><span class="o">&amp;&amp;</span><span class="p">...</span> <span class="n">args</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">auto</span> <span class="n">boundTask</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">bind</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">forward</span><span class="o">&lt;</span><span class="n">Func</span><span class="o">&gt;</span><span class="p">(</span><span class="n">func</span><span class="p">),</span> <span class="n">std</span><span class="o">::</span><span class="n">forward</span><span class="o">&lt;</span><span class="n">Args</span><span class="o">&gt;</span><span class="p">(</span><span class="n">args</span><span class="p">)...);</span>
+            <span class="k">using</span> <span class="n">ResultType</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">result_of_t</span><span class="o">&lt;</span><span class="k">decltype</span><span class="p">(</span><span class="n">boundTask</span><span class="p">)()</span><span class="o">&gt;</span><span class="p">;</span>
+            <span class="k">using</span> <span class="n">PackagedTask</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">packaged_task</span><span class="o">&lt;</span><span class="n">ResultType</span><span class="p">()</span><span class="o">&gt;</span><span class="p">;</span>
+            <span class="k">using</span> <span class="n">TaskType</span> <span class="o">=</span> <span class="n">ThreadTask</span><span class="o">&lt;</span><span class="n">PackagedTask</span><span class="o">&gt;</span><span class="p">;</span>
+            
+            <span class="n">PackagedTask</span> <span class="n">task</span><span class="p">{</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">boundTask</span><span class="p">)};</span>
+            <span class="n">TaskFuture</span><span class="o">&lt;</span><span class="n">ResultType</span><span class="o">&gt;</span> <span class="n">result</span><span class="p">{</span><span class="n">task</span><span class="p">.</span><span class="n">get_future</span><span class="p">()};</span>
+            <span class="n">m_workQueue</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">make_unique</span><span class="o">&lt;</span><span class="n">TaskType</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">task</span><span class="p">)));</span>
+            <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
+        <span class="p">}</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="cm">/**
+         * Constantly running function each thread uses to acquire work items from the queue.
+         */</span>
+        <span class="kt">void</span> <span class="n">worker</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">while</span><span class="p">(</span><span class="o">!</span><span class="n">m_done</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">IThreadTask</span><span class="o">&gt;</span> <span class="n">pTask</span><span class="p">{</span><span class="nb">nullptr</span><span class="p">};</span>
+                <span class="k">if</span><span class="p">(</span><span class="n">m_workQueue</span><span class="p">.</span><span class="n">waitPop</span><span class="p">(</span><span class="n">pTask</span><span class="p">))</span>
+                <span class="p">{</span>
+                    <span class="n">pTask</span><span class="o">-&gt;</span><span class="n">execute</span><span class="p">();</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="cm">/**
+         * Invalidates the queue and joins all running threads.
+         */</span>
+        <span class="kt">void</span> <span class="n">destroy</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">m_done</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+            <span class="n">m_workQueue</span><span class="p">.</span><span class="n">invalidate</span><span class="p">();</span>
+            <span class="k">for</span><span class="p">(</span><span class="k">auto</span><span class="o">&amp;</span> <span class="kr">thread</span> <span class="o">:</span> <span class="n">m_threads</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">if</span><span class="p">(</span><span class="kr">thread</span><span class="p">.</span><span class="n">joinable</span><span class="p">())</span>
+                <span class="p">{</span>
+                    <span class="kr">thread</span><span class="p">.</span><span class="n">join</span><span class="p">();</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">atomic_bool</span> <span class="n">m_done</span><span class="p">;</span>
+        <span class="n">ThreadSafeQueue</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">IThreadTask</span><span class="o">&gt;&gt;</span> <span class="n">m_workQueue</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="kr">thread</span><span class="o">&gt;</span> <span class="n">m_threads</span><span class="p">;</span>
+    <span class="p">};</span>
+
+    <span class="k">namespace</span> <span class="n">DefaultThreadPool</span>
+    <span class="p">{</span>
+        <span class="cm">/**
+         * Get the default thread pool for the application.
+         * This pool is created with std::thread::hardware_concurrency() - 1 threads.
+         */</span>
+        <span class="kr">inline</span> <span class="n">ThreadPool</span><span class="o">&amp;</span> <span class="n">getThreadPool</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">static</span> <span class="n">ThreadPool</span> <span class="n">defaultPool</span><span class="p">;</span>
+            <span class="k">return</span> <span class="n">defaultPool</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="cm">/**
+         * Submit a job to the default thread pool.
+         */</span>
+        <span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">Func</span><span class="p">,</span> <span class="k">typename</span><span class="p">...</span> <span class="n">Args</span><span class="o">&gt;</span>
+        <span class="kr">inline</span> <span class="k">auto</span> <span class="n">submitJob</span><span class="p">(</span><span class="n">Func</span><span class="o">&amp;&amp;</span> <span class="n">func</span><span class="p">,</span> <span class="n">Args</span><span class="o">&amp;&amp;</span><span class="p">...</span> <span class="n">args</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="n">getThreadPool</span><span class="p">().</span><span class="n">submit</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">forward</span><span class="o">&lt;</span><span class="n">Func</span><span class="o">&gt;</span><span class="p">(</span><span class="n">func</span><span class="p">),</span> <span class="n">std</span><span class="o">::</span><span class="n">forward</span><span class="o">&lt;</span><span class="n">Args</span><span class="o">&gt;</span><span class="p">(</span><span class="n">args</span><span class="p">)...);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="cp">#endif
+</span></code></pre>
+</div>
+
+<p>There are a few pieces to touch on here. &nbsp;First, we have an <code class="highlighter-rouge">IThreadTask</code> interface that defines an <code class="highlighter-rouge">execute()</code>
+ pure virtual function. &nbsp;The reason for this&nbsp;interface is 
+simply so we can maintain a collection of them in one container type 
+(the <code class="highlighter-rouge">ThreadSafeQueue&lt;T&gt;</code>). &nbsp;<code class="highlighter-rouge">ThreadTask&lt;T&gt;</code> implements <code class="highlighter-rouge">IThreadTask</code> and takes a callable type <code class="highlighter-rouge">T</code> for its template parameter.</p>
+
+<p>When constructing the thread pool, we attempt to read the number of hardware threads available to the system by using <code class="highlighter-rouge">std::thread::hardware_concurrency()</code>. &nbsp;We always ensure the pool is started with at least one thread running, and ideally started with <code class="highlighter-rouge">hardware_concurrency - 1</code> threads running. &nbsp;The reason for the minus one will be discussed later. &nbsp;For each thread available, we construct a <code class="highlighter-rouge">std::thread</code> object that runs the private member function <code class="highlighter-rouge">worker()</code>.</p>
+
+<p>The worker function’s only job is to endlessly check the queue to see
+ if there is work to be done and execute the task if there is. 
+&nbsp;Since we’ve taken care to design the queue in a thread-safe 
+manner, we don’t need to do any additional synchronization here. 
+&nbsp;The thread will enter the loop, get to <code class="highlighter-rouge">waitPop</code>, and either pop and execute a queued&nbsp;task, or wait on a task to become available via the submit function. &nbsp;If <code class="highlighter-rouge">waitPop</code> returns true, we know <code class="highlighter-rouge">pTask</code>
+ has been written to and can immediately execute it. &nbsp;If it returns
+ false, it most likely means that the queue has been invalidated.</p>
+
+<p>The <code class="highlighter-rouge">submit</code> function is the 
+public facing interface of the thread pool. &nbsp;It starts by creating a
+ few handy type definitions that make the actual implementation easier 
+to follow. &nbsp;First, the&nbsp;provided function and its arguments are
+ bound to a callable object with no parameters using&nbsp;<code class="highlighter-rouge">std::bind</code>. &nbsp;We need this for our <code class="highlighter-rouge">ThreadTask&lt;T&gt;</code>
+ class to be able to call execute on its&nbsp;functor without having to 
+know the arguments that came with the original function. &nbsp;We then 
+create a <code class="highlighter-rouge">std::packaged_task</code> with the bound task and extract the <code class="highlighter-rouge">std::future</code>
+ from it before pushing it onto the queue. &nbsp;Here again, we do not 
+need to do any additional synchronization due to the thread-safe 
+implementation of the queue. &nbsp;You’ll notice the <code class="highlighter-rouge">std::future</code> returned from the <code class="highlighter-rouge">std::packaged_task</code> is wrapped in a class called <code class="highlighter-rouge">TaskFuture&lt;T&gt;</code>.
+ &nbsp;This was a design decision because of the way I intend to use the
+ pool in my specific application. &nbsp;I wanted the futures to mimic 
+the way <code class="highlighter-rouge">std::async</code> futures work, 
+specifically that they will block until their work is complete when they
+ are going out of scope and being destructed. &nbsp;<code class="highlighter-rouge">std::packaged_task</code> futures don’t do this out of the box, so we give them a simple wrapper to emulate the behavior [2]. &nbsp;Like <code class="highlighter-rouge">std::future</code>, <code class="highlighter-rouge">TaskFuture</code>
+ is movable-only, so the synchronization does not have to occur in the 
+same method as the call site as long as it’s passed along from&nbsp;the 
+method.</p>
+
+<p>You will see where the queue’s <code class="highlighter-rouge">invalidate</code> method&nbsp;is called in the thread pool’s <code class="highlighter-rouge">destroy()</code> method, which is called from the destructor or if an exception is thrown while creating the threads in the constructor,&nbsp;<strong>before</strong> joining the threads, and <strong>after</strong>
+ setting the thread pool’s done marker to true. &nbsp;The order is 
+important to ensure that the threads know to exit their worker functions
+ instead of re-attempting to obtain more work from the invalidated 
+queue. &nbsp;Due to the way the predicate is set up on the queue’s 
+condition variable, it is not an error to re-enter <code class="highlighter-rouge">waitPop</code> on an invalidated queue since it will just return false, but it is a waste of time.</p>
+
+<p>An optional nicety I decided to throw in is the <code class="highlighter-rouge">DefaultThreadPool</code>
+ namespace. &nbsp;This creates a thread pool with the maximum number of 
+threads as discussed previously and is accessible from anywhere in the 
+application that includes the thread pool header. &nbsp;I prefer using 
+this as opposed to having each subsystem owning its own thread pool, but
+ there’s nothing wrong with creating thread pool instances through the 
+constructors, either.</p>
+
+<h2 id="submitting-work-to-the-thread-pool">Submitting Work to the Thread Pool</h2>
+
+<p>With the above in place. &nbsp;Submitting work is as simple as including the thread pools header file and calling its <code class="highlighter-rouge">submit</code> function with a callable object&nbsp;and optionally arguments to be provided to it.</p>
+
+<div class="language-cpp highlighter-rouge"><pre class="highlight"><code><span class="k">auto</span> <span class="n">taskFuture</span> <span class="o">=</span> <span class="n">MyNamespace</span><span class="o">::</span><span class="n">DefaultThreadPool</span><span class="o">::</span><span class="n">submitJob</span><span class="p">([]()</span>
+<span class="p">{</span>
+    <span class="n">lengthyProcess</span><span class="p">();</span>
+<span class="p">});</span>
+
+<span class="k">auto</span> <span class="n">taskFuture2</span> <span class="o">=</span> <span class="n">MyNamespace</span><span class="o">::</span><span class="n">DefaultThreadPool</span><span class="o">::</span><span class="n">submitJob</span><span class="p">([](</span><span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="kt">float</span> <span class="n">b</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">lengthyProcessWithArguments</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">);</span>
+<span class="p">},</span> <span class="mi">5</span><span class="p">,</span> <span class="mf">10.0</span><span class="n">f</span><span class="p">);</span>
+</code></pre>
+</div>
+
+<p>If submitting a reference for an argument, it is important to remember to wrap it with <code class="highlighter-rouge">std::ref</code> or <code class="highlighter-rouge">std::cref</code>.</p>
+
+<div class="language-cpp highlighter-rouge"><pre class="highlight"><code><span class="n">MyObject</span> <span class="n">obj</span><span class="p">;</span>
+<span class="k">auto</span> <span class="n">taskFuture</span> <span class="o">=</span> <span class="n">MyNamespace</span><span class="o">::</span><span class="n">DefaultThreadPool</span><span class="o">::</span><span class="n">submitJob</span><span class="p">([](</span><span class="k">const</span> <span class="n">MyObject</span><span class="o">&amp;</span> <span class="n">object</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">lengthyProcessThatNeedsToReadObject</span><span class="p">(</span><span class="n">object</span><span class="p">);</span>
+<span class="p">},</span> <span class="n">std</span><span class="o">::</span><span class="n">cref</span><span class="p">(</span><span class="n">obj</span><span class="p">));</span>
+</code></pre>
+</div>
+
+<h1 id="does-it-work">Does It Work?</h1>
+
+<p>To ensure the thread pool and backing queue work not only in ideal 
+cases, but also in the case where work is being submitted faster than 
+the threads can take it on, we can write a little program that submits a
+ bunch of jobs that sleep for a while and then synchronizes on them. 
+&nbsp;My machine reports eight as the result of <code class="highlighter-rouge">std::thread::hardware_concurrency()</code>,
+ so I create a thread pool with seven threads. &nbsp;The task I’m 
+running is just to sleep whatever thread is executing for one second and
+ finish. &nbsp;I’ll submit twenty-one of these jobs to the pool. 
+&nbsp;We know that this would take about twenty-one seconds if executed 
+serially, and since we’re running a thread pool with seven threads, we 
+know that if everything is working well the jobs should all complete in 
+about three seconds.</p>
+
+<div class="language-cpp highlighter-rouge"><pre class="highlight"><code><span class="k">using</span> <span class="k">namespace</span> <span class="n">MyNamespace</span><span class="p">;</span>
+<span class="n">Timer</span> <span class="n">saturationTimer</span><span class="p">;</span>
+<span class="k">const</span> <span class="k">auto</span> <span class="n">startTime</span> <span class="o">=</span> <span class="n">saturationTimer</span><span class="p">.</span><span class="n">tick</span><span class="p">();</span>
+<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">ThreadPool</span><span class="o">::</span><span class="n">TaskFuture</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;&gt;</span> <span class="n">v</span><span class="p">;</span>
+<span class="k">for</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="kt">uint32_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0u</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">21u</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">v</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">DefaultThreadPool</span><span class="o">::</span><span class="n">submitJob</span><span class="p">([]()</span>
+    <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">this_thread</span><span class="o">::</span><span class="n">sleep_for</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">seconds</span><span class="p">(</span><span class="mi">1</span><span class="p">));</span>
+    <span class="p">}));</span>
+<span class="p">}</span>
+<span class="k">for</span><span class="p">(</span><span class="k">auto</span><span class="o">&amp;</span> <span class="n">item</span><span class="o">:</span> <span class="n">v</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">item</span><span class="p">.</span><span class="n">get</span><span class="p">();</span>
+<span class="p">}</span>
+<span class="k">const</span> <span class="k">auto</span> <span class="n">dt</span> <span class="o">=</span> <span class="n">saturationTimer</span><span class="p">.</span><span class="n">tick</span><span class="p">()</span> <span class="o">-</span> <span class="n">startTime</span><span class="p">;</span>
+</code></pre>
+</div>
+
+<p>Running the above code on my machine, the result is just about what 
+would be expected, averaging around&nbsp;3.005 seconds over a dozen 
+runs.</p>
+
+<h1 id="about-the-number-of-pooled-threads">About the Number of Pooled Threads</h1>
+
+<p>Earlier I mentioned that I start the thread pool with <code class="highlighter-rouge">std::thread::hardware_concurrency() - 1</code>
+ threads. &nbsp;The reason for this is simple. &nbsp;The thread that’s 
+calling the thread pool is a perfectly valid thread to do work on while 
+you’re waiting for the results of submitted tasks to become available. 
+&nbsp;Despite the example from the Does It Work? section, submitting a 
+bunch of jobs and then just waiting on them to complete is hardly 
+optimal, so it makes sense to have the thread pool executing up to 
+NumThreads - 1 jobs and the main thread doing whatever work it can 
+accomplish in the meantime. &nbsp;Splitting the workload up evenly 
+across all available threads&nbsp;is usually the best approach with a 
+task-based setup like this.</p>
+
+<h1 id="conclusion">Conclusion</h1>
+
+<p>This post has discussed what a thread pool is, why they’re useful, 
+and how to get started implementing one. &nbsp;There are very likely 
+ways to make the provided thread pool more performant by specializing it
+ more to&nbsp;avoid&nbsp;memory allocations on job submissions, but for 
+my use cases I typically ensure the jobs being submitted are large 
+enough that they make up for the time lost to allocating and 
+deallocating memory with the time gained by running them in parallel 
+with other large tasks. &nbsp;Your mileage may vary, but at the very 
+least you should have a solid start to customizing a thread pool to fit 
+your exact needs.</p>
+
+<h1 id="thank-you">Thank You</h1>
+
+<p>A big thank you to the members of <a href="https://www.reddit.com/r/cpp/">/r/cpp</a>&nbsp;who helped&nbsp;with code review and provided excellent feedback!</p>
+
+<h1 id="references">References</h1>
+
+<p>[1] William, Anthony. &nbsp;<em>C++ Concurrency in Action: &nbsp;Practical Multithreading</em>. &nbsp;ISBN: &nbsp;9781933988771</p>
+
+<p>[2] <a href="http://scottmeyers.blogspot.com/2013/03/stdfutures-from-stdasync-arent-special.html">http://scottmeyers.blogspot.com/2013/03/stdfutures-from-stdasync-arent-special.html</a></p>
+
+<p>[3]&nbsp;<a href="http://en.cppreference.com/w/cpp/thread/condition_variable/wait">http://en.cppreference.com/w/cpp/thread/condition_variable/wait</a></p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+        
+          <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Updated:</strong> <time datetime="2016-01-03T00:00:00-05:00">January 03, 2016</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">Share on</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=A%20Platform-Independent%20Thread%20Pool%20Using%20C++14%20http://roar11.com/2016/01/a-platform-independent-thread-pool-using-c14/" class="btn btn--twitter" title="Share on Twitter"><i class="fa fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http://roar11.com/2016/01/a-platform-independent-thread-pool-using-c14/" class="btn btn--facebook" title="Share on Facebook"><i class="fa fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://plus.google.com/share?url=http://roar11.com/2016/01/a-platform-independent-thread-pool-using-c14/" class="btn btn--google-plus" title="Share on Google Plus"><i class="fa fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http://roar11.com/2016/01/a-platform-independent-thread-pool-using-c14/" class="btn btn--linkedin" title="Share on LinkedIn"><i class="fa fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="http://roar11.com/2015/12/screen-space-glossy-reflections-demo-available/" class="pagination--pager" title="Screen Space Glossy Reflections Demo Available
+">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+      <div class="page__comments">
+  
+    
+        <h4 class="page__comments-title">Leave a Comment</h4>
+        <section id="disqus_thread"><iframe id="dsq-app5407" name="dsq-app5407" allowtransparency="true" scrolling="no" tabindex="0" title="Disqus" style="width: 1px !important; min-width: 100% !important; border: medium none !important; overflow: hidden !important; height: 4770px !important;" src="A%20Platform-Independent%20Thread%20Pool%20Using%20C++14%20-%20Roar11_files/a.html" horizontalscrolling="no" verticalscrolling="no" width="100%" frameborder="0"></iframe></section>
+      
+</div>
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You May Also Enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope="" itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://roar11.com/2015/12/screen-space-glossy-reflections-demo-available/" rel="permalink">Screen Space Glossy Reflections Demo Available
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  3 minute read
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Earlier this
+ year I wrote a post discussing an&nbsp;implementation of real-time 
+screen space glossy reflections. &nbsp;The post has received a lot of 
+positive feedback...</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope="" itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://roar11.com/2015/07/screen-space-glossy-reflections/" rel="permalink">Screen Space Glossy Reflections
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  31 minute read
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Reflections 
+are an important effect present in any routine attempting&nbsp;to 
+approximate global illumination. &nbsp;They give the user important 
+spatial information a...</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope="" itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://roar11.com/2015/05/dealing-with-shadow-map-artifacts/" rel="permalink">Dealing with Shadow Map Artifacts
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  5 minute read
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">In a 
+previous post on stack&nbsp;stabilization,&nbsp;the linked video showed a
+ few major issue with shadow mapping. &nbsp;These issues have plagued 
+the technique since it’s...</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope="" itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://roar11.com/2015/05/stacks-on-stacks/" rel="permalink">Stacks on Stacks
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  2 minute read
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">A long while
+ back, I realized my scenes would be better served and more interesting 
+if there was a more dynamic component to them. &nbsp;Outside of the very
+ basic...</p>
+  </article>
+</div>
+        
+      </div>
+    </div>
+  
+</div>
+
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+    
+    
+    
+    
+    
+    <li><a href="http://roar11.com/feed.xml"><i class="fa fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">© 2017 Will Pearce. Powered by <a href="http://jekyllrb.com/" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    <script src="A%20Platform-Independent%20Thread%20Pool%20Using%20C++14%20-%20Roar11_files/main.js"></script>
+
+
+
+  
+      
+  <script type="text/javascript">
+  	/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+  	var disqus_shortname = 'roar11-com';
+
+  	/* * * DON'T EDIT BELOW THIS LINE * * */
+  	(function() {
+  		var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  		dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  	})();
+
+  	/* * * DON'T EDIT BELOW THIS LINE * * */
+  	(function () {
+  		var s = document.createElement('script'); s.async = true;
+  		s.type = 'text/javascript';
+  		s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+  		(document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+  	}());
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="<a class="vglnk" href="http://disqus.com/?ref_noscript" rel="nofollow"><span>http</span><span>://</span><span>disqus</span><span>.</span><span>com</span><span>/?</span><span>ref</span><span>_</span><span>noscript</span></a>">comments powered by Disqus.</a></noscript>
+
+    
+
+
+
+  
+
+<iframe style="display: none;"></iframe></body></html>
