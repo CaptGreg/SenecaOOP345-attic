@@ -9,19 +9,19 @@ class X {
   T *data     = nullptr;   // C++14
 public:
   X() // : size(0), data(nullptr)    <-- initialization done above with C++14
-  { cout << "X constructor()\n"; }
+  { cout << (void*) this << ": X constructor()\n"; }
 
   X(size_t s) : size(s), data(new T[size]) 
-  { cout << "X (" << s << ") constructor\n"; }
+  { cout << (void*) this << ": X (" << s << ") constructor\n"; }
 
   ~X() { 
-    cout << "X destructor, size=" << size << "\n";
+    cout << (void*) this << ": X destructor, size=" << size << "\n";
     delete [] data;
   }
 
   X& operator= (const X& rhs) // C++98 copy assignment operator
   {
-    cout << "assignment operator size,rhs.size=" << size << "," << rhs.size << "\n";
+    cout << (void*) this << ": assignment operator size,rhs.size=" << size << "," << rhs.size << "\n";
     if(this != &rhs) {
       delete [] data;
 
@@ -47,26 +47,26 @@ public:
         // for(size_t i=0; i<size;i++) data[i]=rhs.data[i]; // DEEP COPY using a for loop
       }
     } else {
-      cout << "assignment operator called on itself\n";
+      cout << (void*) this << ": copy assignment operator called on itself\n";
     }
     return *this;
   }
 
   X(const X& rhs) // C++98 copy constructor
   {
-    cout << "copy constructor rhs.size=" << rhs.size << "\n";
+    cout << (void*) this << ": copy constructor rhs.size=" << rhs.size << "\n";
     data = nullptr;
     *this = rhs;      // let assignment operator do the work.
   }
 
   void print() 
   {
-    cout << "size=" << size << " (" << size*sizeof(T) << " BYTES)\n";
+    cout << (void*)this << ": size=" << size << " (" << size*sizeof(T) << " BYTES)\n";
   }
 
   X&& operator= (X&& rhs) // C++11 move assignment operator
   {
-    cout << "move assignment operator size,rhs.size=" << size << "," << rhs.size << "\n";
+    cout << (void*) this << ": move assignment operator size,rhs.size=" << size << "," << rhs.size << "\n";
     if(this != &rhs) {
       delete [] data;
 
@@ -76,14 +76,14 @@ public:
       rhs.size = 0;    // Zombie
       rhs.data = nullptr;
     } else {
-      cout << "move assignment operator called on itself\n";
+      cout << (void*) this <<": move assignment operator called on itself\n";
     }
     return std::move(*this);
   }
 
   X(X&& rhs) // C++11 move constructor
   {
-    cout << "move constructor rhs.size=" << rhs.size << "\n";
+    cout << (void*) this << ": move constructor rhs.size=" << rhs.size << "\n";
     data = nullptr;
     *this = std::move(rhs);      // Let move assignment operator do the work.
   }
@@ -126,17 +126,26 @@ int main(int argc, char**argv)
  cout << "x:"; x.print();
  cout << "A:"; A.print();
 
-
  x = x;
-
  x = std::move(x);
  
  cout << "--------------------\n";
- cout << "what happens with 'x = X<double> (1234);'?\n";
- cout << "'X<double> (1234);' <-- is this a l-value or a r-value?\n";
+ cout << "What happens with 'x = X<double> (1234);'?\n";
+ cout << "Is right hand side 'X<double> (1234);' a l-value or a r-value?\n";
  x = X<double> (1234);
  cout << "--------------------\n";
 
+ cout << "  ANSWER 'X<double> (1234);' <-- is a r-value, as expected\n";
+ cout << "    PROOF PART 1: X (1234) constructor\n";
+ cout << "    PROOF PART 2: move assignment operator size,rhs.size=0,1234\n";
+ cout << "    PROOF PART 3: X destructor, size=0\n";
+ cout << "--------------------\n";
+
+ cout << "NOTE: these all call the basic constructor\n";
+ cout << "  1. X<double> x1 = X<double> (1234); --> "; X<double> x1 = X<double> (1234);
+ cout << "  2. X<double> x2(X<double> (1234) ); --> "; X<double> x2( X<double> (1234) );
+ cout << "  3. X<double> x3(1234);              --> "; X<double> x3(1234);
+ cout << "--------------------\n";
 
  cout << "LINE " << __LINE__ << ": MAIN OVER\n\n";
 }
