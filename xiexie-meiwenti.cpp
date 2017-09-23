@@ -1,3 +1,5 @@
+// wide characters: 'thankyou, no problem', in Chinese
+
 #include <iostream>
 #include <locale> // <-- not needed with g++
 
