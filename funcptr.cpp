@@ -189,7 +189,7 @@ int main(int argc, char**argv)
 
     std::thread tidTable[NUMTHREADS];
     start = std::chrono::high_resolution_clock::now(); 
-    for(int i = 0; i < NUMTHREADS; i++) {                  // initialize the thred id table (launch thread)
+    for(int i = 0; i < NUMTHREADS; i++) {                  // initialize the thread id table (launch thread)
       // std::function<void()> job = jobTable[i];
       // tidTable[i] = std::thread( job );
       tidTable[i] = std::thread( jobTable[i] );
