@@ -28,7 +28,7 @@ vector<string> advs {"affectionately", "ardently", "anxiously", "beautifully", "
 
 vector<string> verbs {"adores", "attracts", "clings to", "holds dear", "hopes for", "hungers for", "likes", "longs for", "loves", "lusts after", "pants for", "pines for", "sighs for", "tempts", "thirsts for", "treasures", "yearns for", "woos"};
 
-void print_array(vector<string> arr) {
+void print_array(vector<string>& arr) {
 	for(auto el : arr) 
     cout <<  el << " \n";
 }
