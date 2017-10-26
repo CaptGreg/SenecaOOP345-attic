@@ -5,7 +5,7 @@
 #include <string>
 using namespace std;
 
-const vector<string> splitChar(const string& s, const char& delimiter, bool bIgnoreEmpty = false)
+const vector<string> splitChar(const string& s, const char& delimiter, const bool bIgnoreEmpty = false)
 {
   string token;
 	vector<string> v;
@@ -25,7 +25,7 @@ const vector<string> splitChar(const string& s, const char& delimiter, bool bIgn
 	return v;
 }
 
-vector<string> splitString(string& s, string delimiter, bool bIgnoreEmpty = false) // destroys s
+vector<string> splitString(string& s, const string delimiter, const bool bIgnoreEmpty = false) // destroys s
 {
   string token;
   vector<string> v;
@@ -56,7 +56,6 @@ int main()
     v = splitChar(str, delimiter, true);
     for(auto n:v) cout << "ignoring empty fields <" << n << ">\n";
 	
-    str = "the quick brown fox jumps over the lazy   dog";
     cout << '"' << str << '"' << "\n";
     v = splitChar(str, delimiter, false);
     for(auto n:v) cout << "storing empty fields <" << n << ">\n";
@@ -66,10 +65,10 @@ int main()
     string delimiter = string(" ");
     str = "the quick brown fox jumps over the lazy   dog";
     cout << '"' << str << '"' << "\n";
-    v = splitString(str, delimiter, true);
+    v = splitString(str, delimiter, true);                  // destroys str
     for(auto n:v) cout << "ignoring empty fields <" << n << ">\n";
 	
-    str = "the quick brown fox jumps over the lazy   dog";
+    str = "the quick brown fox jumps over the lazy   dog";  // reinitialize str
     cout << '"' << str << '"' << "\n";
     v = splitString(str, delimiter, false);
     for(auto n:v) cout << "storing empty fields <" << n << ">\n";
