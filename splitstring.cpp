@@ -13,9 +13,8 @@ const vector<string> splitChar(const string& s, const char& delimiter, const boo
 	for(auto n:s) {
 		if(n != delimiter) {
       token += n; 
-    } else if(not token.empty()) {  // not empty, add token
-      v.push_back( move(token) );
-    } else if(not bIgnoreEmpty) {   // empty, add empty token anyway
+      // add token if 1. not empty or 2. empty and don't ignore empty, 
+    } else if(not token.empty() or (token.empty() and not bIgnoreEmpty)) 
       v.push_back( move(token) );
     }
 	}
@@ -33,16 +32,31 @@ vector<string> splitString(string& s, const string delimiter, const bool bIgnore
   size_t pos = 0;
   while ((pos = s.find(delimiter)) != string::npos) {
       token = s.substr(0, pos);
-      if(not token.empty()) {          // not empty, add token
+      // add token if 1. not empty or 2. empty and don't ignore empty, 
+      if(not token.empty() or (token.empty() and not bIgnoreEmpty)) 
         v.push_back( move(token) );
-      } else if(not bIgnoreEmpty) {    // empty, add empty token anyway
-        v.push_back( move(token) );
-      }
       s.erase(0, pos + delimiter.length());
   }
-  v.push_back( move(s) );
+  if(not s.empty() or (s.empty() and not bIgnoreEmpty)) 
+    v.push_back( move(s) );
   return v;
 }
+
+vector<string> splitGB ( const string& s , char delimiter = ',' , bool bIgnoreEmpty = true) {
+  string token;
+	vector<string> v;
+	
+    for(auto c:s)
+      if(n != delimiter) 
+        token += c; 
+      else 
+      // add token if 1. not empty or 2. empty and don't ignore empty, 
+      if(not token.empty() or (token.empty() and not bIgnoreEmpty)) 
+        v.push_back( move(token) );  // add token.
+    if(not s.empty() or (s.empty() and not bIgnoreEmpty)) 
+      v.push_back( move(token) );
+    return v;
+  };
 
 int main()
 {
