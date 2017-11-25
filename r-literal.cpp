@@ -30,6 +30,8 @@ and moose tails
   cout << p;
 
 #ifdef __GNUC__
+  std::ios::sync_with_stdio(false);  // NEED THIS!
+  // without unsynching from C, GNU libstdc++ goes through C IO streams, which can never print a wide char after printing a narrow char on the same stream
   wcout.sync_with_stdio(false);
   wcout.imbue(locale("en_US.utf8"));
 #endif

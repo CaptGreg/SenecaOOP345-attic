@@ -76,6 +76,8 @@ int main(int argc, char*argv[])
   _setmode(_fileno(stdout), _O_WTEXT); // or __O_U16TEXT
 #endif
 
+  std::ios::sync_with_stdio(false);  // NEED THIS!
+  // without unsynching from C, GNU libstdc++ goes through C IO streams, which can never print a wide char after printing a narrow char on the same stream
   std::locale::global( std::locale( "" ) ) ;
   // std::wcout.imbue( std::locale() ) ;      // works fine without this line
   // std::wcin .imbue( std::locale() ) ;      // not using wcin

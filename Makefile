@@ -1,10 +1,15 @@
 # usage: make filename
 
+# makefile recipe variables
+# $@ target
+# $^ all dependencies, regardless of file suffx. Include .h files if in dependency list
+
+# g++ error flags
 # -fmax-errors=N give up after N errors. Present in GCC 4.6 and later.
 # -Wfatal-errors give up after one error. Present in GCC 4.0 and later.
 
 CFLAGS    = -Wall -mmmx -msse -fmax-errors=1 -Wfatal-errors
-CC        = gcc
+CC        = gcc-7
 CXXFLAGS  = -std=c++17 -Wall -mmmx -msse -fmax-errors=1 -Wfatal-errors
 CXXDFLAGS = -ggdb
 
@@ -12,7 +17,7 @@ C11FLAG   = -std=c++17
 CXX       = clang++
 # May 15, 2015, clang++ has missing/corrupt header files: won't compile fastforward, includes fail
 # use g++ for fastforward
-CXX       = g++
+CXX       = g++-7
 
 ifeq ($(HOSTNAME),raspberrypi)
   CC      = gcc
@@ -36,13 +41,9 @@ ifeq ($(HOSTNAME),matrix)
   # matrix g++ is 4.6.2, released October 26, 2011
   C11FLAG = std=c++0x 
 
-  CXX     = /usr/local/gcc/gcc-cilk/bin/g++
-  # 2013-05-20 vintage g++ (GCC) 4.8.0 20130520 (experimental) was installed in folder
-  # this compiler is EXPERIMENTAL and is NOT recommended for compiling production code.
-  C11FLAG = -std=c++17 
-
-  CXX     = /usr/local/gcc/5.2.0/bin/g++
-  # version 5.2.0 installed Dec 22, 2015
+  CXX     = /usr/local/gcc/7.2.0/bin/g++
+  # 'g++ --version' reports g++ (GCC) 7.2.0
+  # installed 2017 Sep 1 
   C11FLAG = -std=c++17 
 endif
 
@@ -278,5 +279,8 @@ longdouble: longdouble.cpp
 	rm $@
 
 references-are-pointers : references-are-pointers.cpp
+	# are references pointers?
 	g++ -Wa,-adhln -g references-are-pointers.cpp -o references-are-pointers > references-are-pointers.s
+	# ABSOLUTELY!
+	# the assembler generated for a function expecting a pointer and a function expecting a reference is a exactly the same.
 
