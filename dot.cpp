@@ -6,6 +6,11 @@ using namespace std;
 
 int main(int argc, char*argv[])
 {
+  if(argc == 1) {
+    cerr << "Usage: " << argv[0] << " graphviz-dot-file-list\n";
+    return 1;
+  }
+
   vector<string> dotLocations {
     "/usr/bin/dot",                                       // default UNIX
     "/usr/local/bin/dot",                                 // sometimes a UNIX package is installed in /usr/local
@@ -15,8 +20,10 @@ int main(int argc, char*argv[])
   string dot;
   for(auto& e: dotLocations) {
     auto fileexist = [] (string file) {fstream f(file, ios::in); return f.is_open();};
-    if( fileexist(e) )
+    if( fileexist(e) ) {
       dot = move(e);
+      break;
+    }
   }
 
   if(dot.empty()){
@@ -42,11 +49,11 @@ int main(int argc, char*argv[])
       Documentation, samples, binary versions for common operating systems, 
       or the source code can be downloaded from "http://graphviz.org".
     )foo";
-    return 1;
+    return 2;
   }
 
   for(int arg = 1; arg < argc; arg++) {
-    string cmd = move(dot);
+    string cmd = dot;
 
     string file(argv[arg]);
 
