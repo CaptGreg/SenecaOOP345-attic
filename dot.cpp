@@ -57,7 +57,7 @@ int main(int argc, char*argv[])
 
     string file(argv[arg]);
 
-    cmd += " -Tpng " + file + " > " + file + ".png";
+    cmd += " -Tpng -O " + file; // -O flag - automatically generate the output file name with the proper suffix determined by -T image type flag 
 
     cout << "Running command -->" << cmd << "<--\n";
     int result = system(cmd.c_str());
