@@ -6,6 +6,9 @@
 // copy algorithm example
 #include <algorithm>    // std::copy
 #include <chrono>       // std::chrono
+// #include <filesystem>   // C++17 filesystem functions  (not found)
+#include <experimental/filesystem>  // Found!
+// /usr/include/c++/7/experimental/filesystem
 #include <fstream>      // std::fstream
 #include <iostream>     // std::cout
 #include <sstream>      // std::stringstream
@@ -84,9 +87,9 @@ int main (int argc, char* argv[])
     if(in.is_open()) {
       std::string data((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>()); // needs extra ()
       in.close();
-      std::cout << "string via istreambuf_iterator: size of '" << dataFile << "' is " << data.size() << " BYTES\n";
+      std::cout << "1. string via istreambuf_iterator: size of '" << dataFile << "' is " << data.size() << " BYTES\n";
     }
-    t.Stop(); std::cout << "string via istreambuf_iterator: " << t.microsecs() << " usec (slowest)\n";
+    t.Stop(); std::cout << "1. string via istreambuf_iterator: " << 1.e-6*t.microsecs() << " sec (slowest)\n";
   }
 
   // try using string iterator initialization to read a file
@@ -99,9 +102,9 @@ int main (int argc, char* argv[])
       std::string data { std::istreambuf_iterator<char>(in), std::istreambuf_iterator<char>() };
       in.close();
 
-      std::cout << "string via istreambuf_iterator: size of '" << dataFile << "' is " << data.size() << " BYTES\n";
+      std::cout << "2. string via istreambuf_iterator: size of '" << dataFile << "' is " << data.size() << " BYTES\n";
     }
-    t.Stop(); std::cout << "string via istreambuf_iterator: " << t.microsecs() << " usec (slow)\n";
+    t.Stop(); std::cout << "2. string via istreambuf_iterator: " << 1.e-6*t.microsecs() << " sec (slow)\n";
 
   }
 
@@ -112,9 +115,9 @@ int main (int argc, char* argv[])
     if(in.is_open()) {
       std::string data(static_cast<std::stringstream const&>(std::stringstream() << in.rdbuf()).str());
       in.close();
-      std::cout << "string via stringstream and rdbuf: size of '" << dataFile << "' is " << data.size() << " BYTES\n";
+      std::cout << "3. string via stringstream rdbuf: size of '" << dataFile << "' is " << data.size() << " BYTES\n";
     }
-    t.Stop(); std::cout << "string via stringstream and rdbuf: " << t.microsecs() << " usec (fast)\n";
+    t.Stop(); std::cout << "3. string via stringstream rdbuf: " << 1.e-6*t.microsecs() << " sec (fast)\n";
   }
 
   {
@@ -128,9 +131,9 @@ int main (int argc, char* argv[])
       in.read(bytes.data(), fileSize);
       std::string data(std::move(bytes.data()), fileSize); // GB: assume C++11 or later, use move
       in.close();
-      std::cout << "string via vector read string: size of '" << dataFile << "' is " << data.size() << " BYTES\n";
+      std::cout << "4. string via vector read string: size of '" << dataFile << "' is " << data.size() << " BYTES\n";
     }
-    t.Stop(); std::cout << "string via vector read string: " << t.microsecs() << " usec (fastest)\n";
+    t.Stop(); std::cout << "4. string via vector read string: " << 1.e-6*t.microsecs() << " sec (fast)\n";
   }
 
   {
@@ -140,10 +143,41 @@ int main (int argc, char* argv[])
     if(in.is_open()) {
       std::string data(std::istreambuf_iterator<char>{in}, {});
       in.close();
-      std::cout << "1 line string via istreambuf_iterator: size of '" << dataFile << "' is " << data.size() << " BYTES\n";
+      std::cout << "5. 1 line string istreambuf_iterator: size of '" << dataFile << "' is " << data.size() << " BYTES\n";
     }
-    t.Stop(); std::cout << "1 line string via istreambuf_iterator: " << t.microsecs() << " usec (slow)\n";
+    t.Stop(); std::cout << "5. 1 line string istreambuf_iterator: " << 1.e-6*t.microsecs() << " sec (slow)\n";
+
   }
+  {
+    std::fstream in(dataFile, std::ios::in | std::ios::binary);
+
+    t.Start();
+    if(in.is_open()) {
+      std::string data(static_cast<std::stringstream const&>(std::stringstream() << in.rdbuf()).str());
+      in.close();
+      std::cout << "6. 1 line stringstream rdbuf: size of '" << dataFile << "' is " << data.size() << " BYTES\n";
+    }
+    t.Stop(); std::cout << "6. 1 line stringstream rdbuf: " << 1.e-6*t.microsecs() << " sec (slow)\n";
+
+  }
+
+  {
+    std::fstream in(dataFile, std::ios::in | std::ios::binary | std::ios::ate);
+
+    t.Start();
+    if(in.is_open()) {
+      // in.exceptions(std::ios_base::badbit | std::ios_base::failbit | std::ios_base::eofbit);
+      std::ifstream::pos_type fileSize = in.tellg();
+      std::string data((size_t) fileSize, '\0');
+      in.seekg(0, std::ios::beg);
+      in.read(data.data(), data.size());
+      in.close();
+      std::cout << "7. resize read: size of '" << dataFile << "' is " << data.size() << " BYTES\n";
+    }
+    t.Stop(); std::cout << "7. resize read: " << 1.e-6*t.microsecs() << " sec (fastest)\n";
+
+  }
+
 
   // try using copy to read a file into a string
   {
@@ -161,87 +195,37 @@ int main (int argc, char* argv[])
       );
       in.close();
 
-      std::cout << "std::copy via istreambuf_iterator: size of '" << dataFile << "' is " << data.size() << " BYTES\n";
+      std::cout << "8. std::copy via istreambuf_iterator: size of '" << dataFile << "' is " << data.size() << " BYTES\n";
     }
-    t.Stop(); std::cout << "std::copy via istreambuf_iterator: " << t.microsecs() << " usec (slow)\n";
+    t.Stop(); std::cout << "8. std::copy via istreambuf_iterator: " << 1.e-6*t.microsecs() << " sec (slow)\n";
   }
+#if 0
+  // g++-7 -std=C++17 doesn't compile
+  {
+    namespace fs = std::experimental::filesystem;        // ld undefined symbol
+    // namespace fs = std::experimental::filesystem::v1; // ld undefined symbol
+    
+    // Open the stream to 'lock' the file.
+    std::ifstream f{ dataFile };
+
+    t.Start();
+
+    // Obtain the size of the file.
+    const auto sz = fs::file_size(dataFile);
+
+    // Create a buffer.
+    std::string data(sz, ' ');
+
+    // Read the whole file into the buffer.
+    f.read(data.data(), sz);
+
+    std::cout << "8. C++17 filesystem: size of '" << dataFile << "' is " << data.size() << " BYTES\n";
+    t.Stop(); std::cout << "8. C++17 filesystem: " << 1.e-6*t.microsecs() << " sec (slow)\n";
+  }
+  // Note: you may need to use <experimental/filesystem> and std::experimental::filesystem if your standard library 
+  // doesn't yet fully support C++17. You might also need to replace result.data() with &result[0] if it doesn't 
+  // support non-const std::basic_string data.
+#endif
 
   return 0;
 }
-
-/*
-  small 248K file
-  $ g++-7 -Wall -std=c++17  stdcopy.cpp -o stdcopy
-  std::copy myvector contains: 10 20 30 40 50 60 70
-  copyDIY   myvector contains: 10 20 30 40 50 60 70
-  string via istreambuf_iterator: size of './stdcopy' is 248784 BYTES
-  string via istreambuf_iterator: 31829 usec (slowest)
-  string via istreambuf_iterator: size of './stdcopy' is 248784 BYTES
-  string via istreambuf_iterator: 13673 usec (slow)
-  string via stringstream and rdbuf: size of './stdcopy' is 248784 BYTES
-  string via stringstream and rdbuf: 207 usec (fast)
-  string via vector read string: size of './stdcopy' is 248784 BYTES
-  string via vector read string: 53 usec (fastest)
-  1 line string via istreambuf_iterator: size of './stdcopy' is 248784 BYTES
-  1 line string via istreambuf_iterator: 13393 usec (slow)
-  std::copy via istreambuf_iterator: size of './stdcopy' is 248784 BYTES
-  std::copy via istreambuf_iterator: 12793 usec (slow)
-
-  $ g++-7 -Wall -std=c++17 -Ofast stdcopy.cpp -o stdcopy
-  std::copy myvector contains: 10 20 30 40 50 60 70
-  copyDIY   myvector contains: 10 20 30 40 50 60 70
-  string via istreambuf_iterator: size of './stdcopy' is 20824 BYTES
-  string via istreambuf_iterator: 127 usec (slowest)
-  string via istreambuf_iterator: size of './stdcopy' is 20824 BYTES
-  string via istreambuf_iterator: 90 usec (slow)
-  string via stringstream and rdbuf: size of './stdcopy' is 20824 BYTES
-  string via stringstream and rdbuf: 25 usec (fast)
-  string via vector read string: size of './stdcopy' is 20824 BYTES
-  string via vector read string: 16 usec (fastest)
-  1 line string via istreambuf_iterator: size of './stdcopy' is 20824 BYTES
-  1 line string via istreambuf_iterator: 85 usec (slow)
-  std::copy via istreambuf_iterator: size of './stdcopy' is 20824 BYTES
-  std::copy via istreambuf_iterator: 67 usec (slow)
-
-
-  large 0.5GB (481.1MB) file
-  $ g++-7 -Wall -std=c++17  stdcopy.cpp -o stdcopy
-  std::copy myvector contains: 10 20 30 40 50 60 70
-  copyDIY   myvector contains: 10 20 30 40 50 60 70
-  string via istreambuf_iterator: size of 'CppCon 2015 - Kate Gregory “Stop Teaching C'-YnWhqhNdYyk.mkv' is 481120300 BYTES
-  string via istreambuf_iterator: 24500722 usec (slowest)
-  string via istreambuf_iterator: size of 'CppCon 2015 - Kate Gregory “Stop Teaching C'-YnWhqhNdYyk.mkv' is 481120300 BYTES
-  string via istreambuf_iterator: 24512268 usec (slow)
-  string via stringstream and rdbuf: size of 'CppCon 2015 - Kate Gregory “Stop Teaching C'-YnWhqhNdYyk.mkv' is 481120300 BYTES
-  string via stringstream and rdbuf: 299765 usec (fast)
-  string via vector read string: size of 'CppCon 2015 - Kate Gregory “Stop Teaching C'-YnWhqhNdYyk.mkv' is 481120300 BYTES
-  string via vector read string: 202209 usec (fastest)
-  1 line string via istreambuf_iterator: size of 'CppCon 2015 - Kate Gregory “Stop Teaching C'-YnWhqhNdYyk.mkv' is 481120300 BYTES
-  1 line string via istreambuf_iterator: 24594003 usec (slow)
-  std::copy via istreambuf_iterator: size of 'CppCon 2015 - Kate Gregory “Stop Teaching C'-YnWhqhNdYyk.mkv' is 481120300 BYTES
-  std::copy via istreambuf_iterator: 23933574 usec (slow)
-
-  real	1m38.045s
-  user	1m37.296s
-  sys	0m0.744s
-
-  $ g++-7 -Wall -std=c++17 -Ofast stdcopy.cpp -o stdcopy
-  std::copy myvector contains: 10 20 30 40 50 60 70
-  copyDIY   myvector contains: 10 20 30 40 50 60 70
-  string via istreambuf_iterator: size of 'CppCon 2015 - Kate Gregory “Stop Teaching C'-YnWhqhNdYyk.mkv' is 481120300 BYTES
-  string via istreambuf_iterator: 1290502 usec (slowest)
-  string via istreambuf_iterator: size of 'CppCon 2015 - Kate Gregory “Stop Teaching C'-YnWhqhNdYyk.mkv' is 481120300 BYTES
-  string via istreambuf_iterator: 1287334 usec (slow)
-  string via stringstream and rdbuf: size of 'CppCon 2015 - Kate Gregory “Stop Teaching C'-YnWhqhNdYyk.mkv' is 481120300 BYTES
-  string via stringstream and rdbuf: 300333 usec (fast)
-  string via vector read string: size of 'CppCon 2015 - Kate Gregory “Stop Teaching C'-YnWhqhNdYyk.mkv' is 481120300 BYTES
-  string via vector read string: 201364 usec (fastest)
-  1 line string via istreambuf_iterator: size of 'CppCon 2015 - Kate Gregory “Stop Teaching C'-YnWhqhNdYyk.mkv' is 481120300 BYTES
-  1 line string via istreambuf_iterator: 1282412 usec (slow)
-  std::copy via istreambuf_iterator: size of 'CppCon 2015 - Kate Gregory “Stop Teaching C'-YnWhqhNdYyk.mkv' is 481120300 BYTES
-  std::copy via istreambuf_iterator: 953438 usec (slow)
-
-  real	0m5.318s
-  user	0m4.432s
-  sys	0m0.856s
-*/
