@@ -133,6 +133,18 @@ int main (int argc, char* argv[])
     t.Stop(); std::cout << "string via vector read string: " << t.microsecs() << " usec (fastest)\n";
   }
 
+  {
+    std::fstream in(dataFile, std::ios::in | std::ios::binary);
+
+    t.Start();
+    if(in.is_open()) {
+      std::string data(std::istreambuf_iterator<char>{in}, {});
+      in.close();
+      std::cout << "1 line string via istreambuf_iterator: size of '" << dataFile << "' is " << data.size() << " BYTES\n";
+    }
+    t.Stop(); std::cout << "1 line string via istreambuf_iterator: " << t.microsecs() << " usec (slow)\n";
+  }
+
   // try using copy to read a file into a string
   {
     std::fstream in(dataFile, std::ios::in | std::ios::binary | std::ios::ate);
@@ -159,34 +171,77 @@ int main (int argc, char* argv[])
 
 /*
   small 248K file
+  $ g++-7 -Wall -std=c++17  stdcopy.cpp -o stdcopy
   std::copy myvector contains: 10 20 30 40 50 60 70
   copyDIY   myvector contains: 10 20 30 40 50 60 70
-  string via istreambuf_iterator: size of './stdcopy' is 249184 BYTES
-  string via istreambuf_iterator: 14062 usec (slowest)
-  string via istreambuf_iterator: size of './stdcopy' is 249184 BYTES
-  string via istreambuf_iterator: 13819 usec (slow)
-  string via stringstream and rdbuf: size of './stdcopy' is 249184 BYTES
-  string via stringstream and rdbuf: 217 usec (fast)
-  string via vector read string: size of './stdcopy' is 249184 BYTES
-  string via vector read string: 48 usec (fastest)
-  std::copy via istreambuf_iterator: size of './stdcopy' is 249184 BYTES
-  std::copy via istreambuf_iterator: 12840 usec (slow)
+  string via istreambuf_iterator: size of './stdcopy' is 248784 BYTES
+  string via istreambuf_iterator: 31829 usec (slowest)
+  string via istreambuf_iterator: size of './stdcopy' is 248784 BYTES
+  string via istreambuf_iterator: 13673 usec (slow)
+  string via stringstream and rdbuf: size of './stdcopy' is 248784 BYTES
+  string via stringstream and rdbuf: 207 usec (fast)
+  string via vector read string: size of './stdcopy' is 248784 BYTES
+  string via vector read string: 53 usec (fastest)
+  1 line string via istreambuf_iterator: size of './stdcopy' is 248784 BYTES
+  1 line string via istreambuf_iterator: 13393 usec (slow)
+  std::copy via istreambuf_iterator: size of './stdcopy' is 248784 BYTES
+  std::copy via istreambuf_iterator: 12793 usec (slow)
+
+  $ g++-7 -Wall -std=c++17 -Ofast stdcopy.cpp -o stdcopy
+  std::copy myvector contains: 10 20 30 40 50 60 70
+  copyDIY   myvector contains: 10 20 30 40 50 60 70
+  string via istreambuf_iterator: size of './stdcopy' is 20824 BYTES
+  string via istreambuf_iterator: 127 usec (slowest)
+  string via istreambuf_iterator: size of './stdcopy' is 20824 BYTES
+  string via istreambuf_iterator: 90 usec (slow)
+  string via stringstream and rdbuf: size of './stdcopy' is 20824 BYTES
+  string via stringstream and rdbuf: 25 usec (fast)
+  string via vector read string: size of './stdcopy' is 20824 BYTES
+  string via vector read string: 16 usec (fastest)
+  1 line string via istreambuf_iterator: size of './stdcopy' is 20824 BYTES
+  1 line string via istreambuf_iterator: 85 usec (slow)
+  std::copy via istreambuf_iterator: size of './stdcopy' is 20824 BYTES
+  std::copy via istreambuf_iterator: 67 usec (slow)
+
 
   large 0.5GB (481.1MB) file
+  $ g++-7 -Wall -std=c++17  stdcopy.cpp -o stdcopy
   std::copy myvector contains: 10 20 30 40 50 60 70
   copyDIY   myvector contains: 10 20 30 40 50 60 70
   string via istreambuf_iterator: size of 'CppCon 2015 - Kate Gregory “Stop Teaching C'-YnWhqhNdYyk.mkv' is 481120300 BYTES
-  string via istreambuf_iterator: 25866286 usec (slowest)
+  string via istreambuf_iterator: 24500722 usec (slowest)
   string via istreambuf_iterator: size of 'CppCon 2015 - Kate Gregory “Stop Teaching C'-YnWhqhNdYyk.mkv' is 481120300 BYTES
-  string via istreambuf_iterator: 25876051 usec (slow)
+  string via istreambuf_iterator: 24512268 usec (slow)
   string via stringstream and rdbuf: size of 'CppCon 2015 - Kate Gregory “Stop Teaching C'-YnWhqhNdYyk.mkv' is 481120300 BYTES
-  string via stringstream and rdbuf: 294888 usec (fast)
+  string via stringstream and rdbuf: 299765 usec (fast)
   string via vector read string: size of 'CppCon 2015 - Kate Gregory “Stop Teaching C'-YnWhqhNdYyk.mkv' is 481120300 BYTES
-  string via vector read string: 198100 usec (fastest)
+  string via vector read string: 202209 usec (fastest)
+  1 line string via istreambuf_iterator: size of 'CppCon 2015 - Kate Gregory “Stop Teaching C'-YnWhqhNdYyk.mkv' is 481120300 BYTES
+  1 line string via istreambuf_iterator: 24594003 usec (slow)
   std::copy via istreambuf_iterator: size of 'CppCon 2015 - Kate Gregory “Stop Teaching C'-YnWhqhNdYyk.mkv' is 481120300 BYTES
-  std::copy via istreambuf_iterator: 24418362 usec (slow)
+  std::copy via istreambuf_iterator: 23933574 usec (slow)
 
-  real	1m16.655s
-  user	1m15.960s
-  sys	0m0.692s
+  real	1m38.045s
+  user	1m37.296s
+  sys	0m0.744s
+
+  $ g++-7 -Wall -std=c++17 -Ofast stdcopy.cpp -o stdcopy
+  std::copy myvector contains: 10 20 30 40 50 60 70
+  copyDIY   myvector contains: 10 20 30 40 50 60 70
+  string via istreambuf_iterator: size of 'CppCon 2015 - Kate Gregory “Stop Teaching C'-YnWhqhNdYyk.mkv' is 481120300 BYTES
+  string via istreambuf_iterator: 1290502 usec (slowest)
+  string via istreambuf_iterator: size of 'CppCon 2015 - Kate Gregory “Stop Teaching C'-YnWhqhNdYyk.mkv' is 481120300 BYTES
+  string via istreambuf_iterator: 1287334 usec (slow)
+  string via stringstream and rdbuf: size of 'CppCon 2015 - Kate Gregory “Stop Teaching C'-YnWhqhNdYyk.mkv' is 481120300 BYTES
+  string via stringstream and rdbuf: 300333 usec (fast)
+  string via vector read string: size of 'CppCon 2015 - Kate Gregory “Stop Teaching C'-YnWhqhNdYyk.mkv' is 481120300 BYTES
+  string via vector read string: 201364 usec (fastest)
+  1 line string via istreambuf_iterator: size of 'CppCon 2015 - Kate Gregory “Stop Teaching C'-YnWhqhNdYyk.mkv' is 481120300 BYTES
+  1 line string via istreambuf_iterator: 1282412 usec (slow)
+  std::copy via istreambuf_iterator: size of 'CppCon 2015 - Kate Gregory “Stop Teaching C'-YnWhqhNdYyk.mkv' is 481120300 BYTES
+  std::copy via istreambuf_iterator: 953438 usec (slow)
+
+  real	0m5.318s
+  user	0m4.432s
+  sys	0m0.856s
 */
