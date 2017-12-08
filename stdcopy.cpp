@@ -85,27 +85,11 @@ int main (int argc, char* argv[])
 
     t.Start();
     if(in.is_open()) {
-      std::string data((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>()); // needs extra ()
+      std::string data { std::istreambuf_iterator<char>(in), std::istreambuf_iterator<char>() };
       in.close();
       std::cout << "1. string via istreambuf_iterator: size of '" << dataFile << "' is " << data.size() << " BYTES\n";
     }
     t.Stop(); std::cout << "1. string via istreambuf_iterator: " << 1.e-6*t.microsecs() << " sec (slowest)\n";
-  }
-
-  // try using string iterator initialization to read a file
-  // https://stackoverflow.com/questions/195323/what-is-the-most-elegant-way-to-read-a-text-file-with-c
-  {
-    std::fstream in(dataFile, std::ios::in | std::ios::binary);
-
-    t.Start();
-    if(in.is_open()) {
-      std::string data { std::istreambuf_iterator<char>(in), std::istreambuf_iterator<char>() };
-      in.close();
-
-      std::cout << "2. string via istreambuf_iterator: size of '" << dataFile << "' is " << data.size() << " BYTES\n";
-    }
-    t.Stop(); std::cout << "2. string via istreambuf_iterator: " << 1.e-6*t.microsecs() << " sec (slow)\n";
-
   }
 
   {
@@ -115,9 +99,9 @@ int main (int argc, char* argv[])
     if(in.is_open()) {
       std::string data(static_cast<std::stringstream const&>(std::stringstream() << in.rdbuf()).str());
       in.close();
-      std::cout << "3. string via stringstream rdbuf: size of '" << dataFile << "' is " << data.size() << " BYTES\n";
+      std::cout << "2. string via stringstream rdbuf: size of '" << dataFile << "' is " << data.size() << " BYTES\n";
     }
-    t.Stop(); std::cout << "3. string via stringstream rdbuf: " << 1.e-6*t.microsecs() << " sec (fast)\n";
+    t.Stop(); std::cout << "2. string via stringstream rdbuf: " << 1.e-6*t.microsecs() << " sec (fast)\n";
   }
 
   {
@@ -131,9 +115,9 @@ int main (int argc, char* argv[])
       in.read(bytes.data(), fileSize);
       std::string data(std::move(bytes.data()), fileSize); // GB: assume C++11 or later, use move
       in.close();
-      std::cout << "4. string via vector read string: size of '" << dataFile << "' is " << data.size() << " BYTES\n";
+      std::cout << "3. string via vector read string: size of '" << dataFile << "' is " << data.size() << " BYTES\n";
     }
-    t.Stop(); std::cout << "4. string via vector read string: " << 1.e-6*t.microsecs() << " sec (fast)\n";
+    t.Stop(); std::cout << "3. string via vector read string: " << 1.e-6*t.microsecs() << " sec (fast)\n";
   }
 
   {
@@ -143,9 +127,9 @@ int main (int argc, char* argv[])
     if(in.is_open()) {
       std::string data(std::istreambuf_iterator<char>{in}, {});
       in.close();
-      std::cout << "5. 1 line string istreambuf_iterator: size of '" << dataFile << "' is " << data.size() << " BYTES\n";
+      std::cout << "4. 1 line string istreambuf_iterator: size of '" << dataFile << "' is " << data.size() << " BYTES\n";
     }
-    t.Stop(); std::cout << "5. 1 line string istreambuf_iterator: " << 1.e-6*t.microsecs() << " sec (slow)\n";
+    t.Stop(); std::cout << "4. 1 line string istreambuf_iterator: " << 1.e-6*t.microsecs() << " sec (slow)\n";
 
   }
   {
@@ -155,9 +139,9 @@ int main (int argc, char* argv[])
     if(in.is_open()) {
       std::string data(static_cast<std::stringstream const&>(std::stringstream() << in.rdbuf()).str());
       in.close();
-      std::cout << "6. 1 line stringstream rdbuf: size of '" << dataFile << "' is " << data.size() << " BYTES\n";
+      std::cout << "5. 1 line stringstream rdbuf: size of '" << dataFile << "' is " << data.size() << " BYTES\n";
     }
-    t.Stop(); std::cout << "6. 1 line stringstream rdbuf: " << 1.e-6*t.microsecs() << " sec (slow)\n";
+    t.Stop(); std::cout << "5. 1 line stringstream rdbuf: " << 1.e-6*t.microsecs() << " sec (slow)\n";
 
   }
 
@@ -168,13 +152,16 @@ int main (int argc, char* argv[])
     if(in.is_open()) {
       // in.exceptions(std::ios_base::badbit | std::ios_base::failbit | std::ios_base::eofbit);
       std::ifstream::pos_type fileSize = in.tellg();
-      std::string data((size_t) fileSize, '\0');
+      // std::string data((size_t) fileSize, '\0'); //0.119338 sec, 0.118474 sec
+      std::string data;
+      // data.reserve((size_t) fileSize);
+      data.resize((size_t) fileSize, '\0'); //0.117693 sec, 0.118642 sec 
       in.seekg(0, std::ios::beg);
       in.read(data.data(), data.size());
       in.close();
-      std::cout << "7. resize read: size of '" << dataFile << "' is " << data.size() << " BYTES\n";
+      std::cout << "6. resize read: size of '" << dataFile << "' is " << data.size() << " BYTES\n";
     }
-    t.Stop(); std::cout << "7. resize read: " << 1.e-6*t.microsecs() << " sec (fastest)\n";
+    t.Stop(); std::cout << "6. resize read: " << 1.e-6*t.microsecs() << " sec (fastest)\n";
 
   }
 
@@ -195,9 +182,9 @@ int main (int argc, char* argv[])
       );
       in.close();
 
-      std::cout << "8. std::copy via istreambuf_iterator: size of '" << dataFile << "' is " << data.size() << " BYTES\n";
+      std::cout << "7. std::copy via istreambuf_iterator: size of '" << dataFile << "' is " << data.size() << " BYTES\n";
     }
-    t.Stop(); std::cout << "8. std::copy via istreambuf_iterator: " << 1.e-6*t.microsecs() << " sec (slow)\n";
+    t.Stop(); std::cout << "7. std::copy via istreambuf_iterator: " << 1.e-6*t.microsecs() << " sec (slow)\n";
   }
 #if 0
   // g++-7 -std=C++17 doesn't compile
