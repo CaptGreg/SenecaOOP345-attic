@@ -1,3 +1,10 @@
+// graphviz resources
+//   https://www.youtube.com/watch?v=JXfobuvyFOA
+//   http://www.webgraphviz.com/
+//   https://en.wikipedia.org/wiki/Graphviz
+//   https://everipedia.org/wiki/Graphviz/
+//   http://www.graphviz.com/
+
 #include <fstream>
 #include <iostream>
 #include <string>
