@@ -71,7 +71,7 @@ int main()
   		optadj2 = (distribution(generator) < 5) ? "" : rel(adjs);
   		noun2 = rel(nouns);
   
-    if (last != UNDEFINED || last == LONG) {
+      if (last != UNDEFINED || last == LONG) {
   			concat = ". ";
   		}
   
