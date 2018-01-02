@@ -21,7 +21,8 @@ int main(int argc, char*argv[])
   vector<string> dotLocations {
     "/usr/bin/dot",                                       // default UNIX
     "/usr/local/bin/dot",                                 // sometimes a UNIX package is installed in /usr/local
-    "C:/\"Program Files (x86)\"/Graphviz2.38/bin/dot.exe" // a known DOS location for graphviz 2.38 (current package as of Nov 25, 2017)
+    "C:/\"Program Files (x86)\"/Graphviz2.38/bin/dot.exe", // a known DOS location for graphviz 2.38 (current package as of Nov 25, 2017)
+    R"foo(C:/"Program Files (x86)"/Graphviz2.38/bin/dot.exe)foo" // a known DOS location for graphviz 2.38 (current package as of Nov 25, 2017)
   };
 
   string dot;
