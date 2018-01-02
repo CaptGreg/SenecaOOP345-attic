@@ -32,10 +32,13 @@ struct President
         std::cout << "I am being moved.\n";
     }
     President& operator=(const President& other) = default;
+    ~President() { std::cout << "President destructor\n"; }
 };
  
 int main()
 {
+    atexit([] {std::cout << "main over (atexit called).\n";});
+
     std::vector<President> elections;
     std::cout << "emplace_back:\n";
     elections.emplace_back("Nelson Mandela", "South Africa", 1994);
@@ -53,4 +56,5 @@ int main()
         std::cout << president.name << " was re-elected president of "
                   << president.country << " in " << president.year << ".\n";
     }
+    std::cout << "End of main.\n";
 }
