@@ -5,10 +5,19 @@
 //   https://everipedia.org/wiki/Graphviz/
 //   http://www.graphviz.com/
 
-#include <fstream>
+#include <fstream>   // fstream required for 'fileexists'
 #include <iostream>
 #include <string>
 #include <vector>
+
+// C++11 experimental/filesystem feature works with g++ version 5.4.1 with -std=c++11
+#if (10000*__GNUC__ + 100*__GNUC_MINOR__ + __GNUC_PATCHLEVEL__) >= 50401
+  #define CPP11
+  #include <experimental/filesystem>  // C++11
+  // This file requires compiler and library support for the ISO C++ 2011 standard. 
+  // This support must be enabled with the -std=c++11 or -std=gnu++11 compiler options.
+#endif
+
 using namespace std;
 
 int main(int argc, char*argv[])
@@ -19,10 +28,22 @@ int main(int argc, char*argv[])
   }
 
   vector<string> dotLocations {
-    "/usr/bin/dot",                                       // default UNIX
-    "/usr/local/bin/dot",                                 // sometimes a UNIX package is installed in /usr/local
-    "C:/\"Program Files (x86)\"/Graphviz2.38/bin/dot.exe", // a known DOS location for graphviz 2.38 (current package as of Nov 25, 2017)
-    R"foo(C:/"Program Files (x86)"/Graphviz2.38/bin/dot.exe)foo" // a known DOS location for graphviz 2.38 (current package as of Nov 25, 2017)
+      "/usr/bin/dot"                                       // default UNIX
+    , "/usr/local/bin/dot"                                 // sometimes a UNIX package is installed in /usr/local
+    , "C:/\"Program Files (x86)\"/Graphviz2.38/bin/dot.exe" // a known DOS location for graphviz 2.38 (current package as of Nov 25, 2011)
+    , R"foo(C:/"Program Files (x86)"/Graphviz2.38/bin/dot.exe)foo" // a known DOS location for graphviz 2.38 (current package as of Nov 25, 2011)
+    , R"foo(C:\"Program Files (x86)"\Graphviz2.38\bin\dot.exe)foo" // a known DOS location for graphviz 2.38 (current package as of Nov 25, 2011)
+#ifdef CPP11
+    , string("C:")
+        + std::experimental::filesystem::path::preferred_separator  // C++11
+        + "Program Files (x86)"
+        + std::experimental::filesystem::path::preferred_separator  // C++11
+        + "Graphviz2.38"
+        + std::experimental::filesystem::path::preferred_separator  // C++11
+        + "bin"
+        + std::experimental::filesystem::path::preferred_separator  // C++11
+        + "dot.exe"
+#endif
   };
 
   string dot;
