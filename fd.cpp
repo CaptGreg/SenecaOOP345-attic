@@ -25,7 +25,7 @@ int main()
     // FILE* fp =  ::fopen("test.txt", "r");     // two lines 1 of 2
     // int fd = fileno(fp);                      // two lines 2 of 2
   #else
-    int fd = open("test.txt", 0);
+    int fd = open("test.txt", O_RDONLY);
   #endif
     cout << "fd(posix_handle)=" << fd << "\n";
 
