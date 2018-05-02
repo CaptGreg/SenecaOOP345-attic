@@ -35,7 +35,8 @@ int main1()
 {
     thread a(increase_rage, "a"), b(increase_rage, "b");
  
-    { lock_guard<mutex> lock(cout_mutex);
+    { 
+      lock_guard<mutex> lock(cout_mutex);
       cout << "Rage counter for main: " << rage << '\n';
     }
  
@@ -51,13 +52,33 @@ int main()
 {
   main1();
 
-  cout << "tli=" << tli << "\n";
+  cout << "main tli=" << tli << "\n";
 
-  thread([] {tli = 3; cout << "tli="<<tli<<", rage=" << rage << "\n"; }).join();
-  thread([] {tli = 4; cout << "tli="<<tli<<", rage=" << rage << "\n"; }).join();
-  thread([] {tli = 5; cout << "tli="<<tli<<", rage=" << rage << "\n"; }).join();
-  thread([] {tli = 6; cout << "tli="<<tli<<", rage=" << rage << "\n"; }).join();
-  cout << "tli=" << tli << "\n";
+  thread([] {
+    cout << "A tli="<<tli<<", rage=" << rage << "\n"; 
+    tli = 3; 
+    cout << "A tli="<<tli<< "\n"; 
+  }).join();
+
+  thread([] {
+    cout << "B tli="<<tli<<", rage=" << rage << "\n"; 
+    tli = 4; 
+    cout << "B tli="<<tli<< "\n"; 
+  }).join();
+
+  thread([] {
+    cout << "C tli="<<tli<<", rage=" << rage << "\n"; 
+    tli = 5; 
+    cout << "C tli="<<tli<< "\n"; 
+  }).join();
+
+  thread([] {
+    cout << "D tli="<<tli<<", rage=" << rage << "\n"; 
+    tli = 6; 
+    cout << "D tli="<<tli<< "\n"; 
+  }).join();
+
+  cout << "main tli=" << tli << "\n";
 
   return 0;
 }
