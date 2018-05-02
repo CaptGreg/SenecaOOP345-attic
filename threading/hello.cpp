@@ -8,16 +8,13 @@
 #include <thread>
 #include <vector>
 
-#include "cmdline.h"
-
 void thread_fcn(int myID);
 
 /* ---- main program ---- */
 
 int main(int argc, char* argv[]) {
 
-    int num_threads = 
-        get_integer_environment("NUM_THREADS", 1, "number of threads");
+    int num_threads = std::thread::hardware_concurrency();
 
     std::vector<std::thread> threads;
 

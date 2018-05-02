@@ -1,4 +1,7 @@
 // http://www.opengl.org/wiki/Tutorial1:_Rendering_shapes_with_glDrawRangeElements,_VAO,_VBO,_shaders_%28C%2B%2B_/_freeGLUT%29
+
+// https://www.khronos.org/opengl/wiki/Tutorials
+
 // g++ glVAO.cpp -o glVAO -lGL -lglut -lGLEW && ./glVAO
 
 // needs packages libglew-dev, freeglut3-dev
@@ -34,7 +37,7 @@
 #include <string>
 #include <sstream>
 #include <cstdlib>  // atexit()
-#include <cstring>  // memcpy
+#include <cstring>  // memset
 
 using namespace std;
 

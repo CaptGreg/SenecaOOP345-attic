@@ -8,73 +8,57 @@
  *
  * environment variable NUM_THREADS gives number of threads.
  */
-#include <cstdio>
-#include <cstdlib>
+#include <iostream>
 #include <cmath>
-/* copied from not-strictly-standard part of math.h */
-#define M_PI		3.14159265358979323846
-#include <unistd.h>
+// #define M_PI		3.14159265358979323846 //  copied from not-strictly-standard part of math.h
 
 #include <thread>
 #include <vector>
 #include <mutex>
 
-#include "timer.h"          /* has get_time() */
-#include "cmdline.h"
+#include "timer.h"
+
+using namespace std;
 
 #define NUM_STEPS 400000000 
 
-void thread_fcn(int my_id, int num_threads, double step, 
-        double *sum_p, std::mutex *lock_p);
+void thread_fcn(int my_id, int num_threads, double step, double *sum_p, std::mutex *lock_p);
 
 /* ---- main program ---- */
 
 int main(int argc, char *argv[]) {
 
-    double start_time, end_time;
     double pi;
     double sum = 0.0;
     double step = 1.0/(double) NUM_STEPS; 
 
-    int num_threads = 
-        get_integer_environment("NUM_THREADS", 1, "number of threads");
+    int num_threads = std::thread::hardware_concurrency();
 
     std::mutex lock;
 
-    /* record start time */
-    start_time = get_time();
+    Timer timer;
+    timer.Start();
 
-    /* create and start threads */
     std::vector<std::thread> threads;
-    for (int i = 0; i < num_threads; ++i) {
-        threads.push_back(std::thread(
-                    thread_fcn, i, num_threads, step, &sum, &lock));
+    for (int i = 0; i < num_threads; ++i)  {
+        // threads.push_back(std::thread(thread_fcn, i, num_threads, step, &sum, &lock));
+        threads.emplace_back(thread_fcn, i, num_threads, step, &sum, &lock);
     }
-    /* wait for them to complete */
-    for (auto& t : threads) {
-        t.join();
-    }
+    for (auto& t : threads) t.join();
 
-    /* finish computation */
     pi = step * sum;
 
-    /* record end time */
-    end_time = get_time();
+    timer.Stop();
 
-    /* print results */
-    printf("parallel program results with %d threads:\n", num_threads);
-    printf("computed pi = %g  (%17.15f)\n",pi, pi);
-    printf("difference between computed pi and math.h M_PI = %17.15f\n", 
-            fabs(pi - M_PI));
-    printf("time to compute = %g seconds\n", end_time - start_time);
+    cout << "parallel program results with " << num_threads << " threads:\n";
+    cout << "difference between computed pi " << pi << " and math.h M_PI " << M_PI << " = " << fabs(pi - M_PI) << "\n";
+    timer.Print_ms(cout , "time to compute = " );
 
     return EXIT_SUCCESS;
 }
 
 /* ---- code to be executed by each thread ---- */
-
-void thread_fcn(int my_id, int num_threads, double step, 
-        double *sum_p, std::mutex *lock_p)
+void thread_fcn(int my_id, int num_threads, double step, double *sum_p, std::mutex *lock_p)
 {
     double x;
     double part_sum = 0.0;
