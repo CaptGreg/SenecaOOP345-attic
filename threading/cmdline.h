@@ -1,5 +1,4 @@
-#ifndef CMDLINE_H__
-#define CMDLINE_H__
+#pragma once
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -152,5 +151,3 @@ long get_integer_environment_extended(const char* varname, long min_val,
     }
     return rval;
 }
-
-#endif
