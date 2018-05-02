@@ -10,9 +10,21 @@
 // (Study and implement the Lamport’s Bakery Algorithm for Interprocess synchronization using C/C++ programming language)
 //
 
-#include <thread>
+#include <cassert>
+#include <cstdio>
+#include <cstdlib>
 #include <chrono>
-class Timer { // use C++11 std::chrono features to create a stop-watch timer class
+#include <iostream>
+#include <mutex>
+#include <thread>
+
+void nap_us(int us)
+{
+  // std::this_thread::sleep_for(60*1000*1000);
+  std::this_thread::sleep_for (std::chrono::microseconds(us));
+}
+
+class Timer {
   std::chrono::time_point<std::chrono::high_resolution_clock> start;
   std::chrono::time_point<std::chrono::high_resolution_clock> stop;
 public:
@@ -38,43 +50,11 @@ public:
   RET(nano)  // creates member function 'uint64_t nanosecs()'  - which returns 'stop-start' in nanosecs
 };
 
-int usleep(unsigned usec) // A DIY C++11 std::chrono platform independent usleep()
-{
-  // NAME
-  //      usleep - suspend execution for microsecond intervals
-  // SYNOPSIS
-  //      #include <unistd.h>
-  //      int usleep(useconds_t usec);
-  // RETURN VALUE
-  //      The usleep() function returns 0 on success.  On error, -1 is returned, with errno set to indicate the cause of the error.
-  // ERRORS
-  //      EINTR  Interrupted by a signal; see signal(7).
-  //      EINVAL usec is not smaller than 1000000.  (On systems where that is considered an error.)
-  // NOTES
-  //     The  type  useconds_t  is  an  unsigned  integer  type capable of holding 
-  //     integers in the range [0,1000000].  Programs will be more portable if 
-  //     they never mention this type explicitly.  Use
-  //        #include <unistd.h>
-  //        ...
-  //            unsigned int usecs;
-  //        ...
-  //            usleep(usecs);
-
-  std::this_thread::sleep_for (std::chrono::microseconds(usec));  // void
-  return 0;
-}
-
 #define NUMBER1
 // #define NUMBER2
 // #define NUMBER3
 
 #ifdef NUMBER1
-#include <thread>      // GB C++11
-#include <mutex>       // GB C++11
-#include <iostream>
-#include <cstdio>
-#include <cstdlib>
-#include <cassert>
  
 // Compile with: g++ -Wall -O3 bakery.cpp -pthread -o bakery
  
@@ -98,7 +78,7 @@ VOLATILE unsigned number  [NTHREADS];
 VOLATILE int count = 0;
 VOLATILE int total = 0;
  
-unsigned getmax(int n)
+inline unsigned getmax(int n)
 {
   unsigned max = 0;
   for (int i = 0; i < n; i++) {
@@ -107,7 +87,7 @@ unsigned getmax(int n)
   return max;
 }
  
-bool check(int i, int j)
+inline bool check(int i, int j)
 {
   return number[j] < number[i] || 
          (number[j] == number[i] && j < i);
@@ -246,7 +226,7 @@ int main()
     n[i] = i;
     t[i] = std::thread(threadfun, (void*)&n[i]);
   }
-  usleep(60*1000*1000);
+  nap_us(60*1000*1000);
   exitFlag= true;
   std::cout << "\n";
   for (int i = 0; i < NTHREADS; i++) {
@@ -260,7 +240,7 @@ int main()
     n[i] = i;
     t[i] = std::thread(threadfunMutex, (void*)&n[i]);
   }
-  usleep(60*1000*1000);
+  nap_us(60*1000*1000);
   exitFlag= true;
   std::cout << "\n";
   for (int i = 0; i < NTHREADS; i++) {
@@ -287,7 +267,7 @@ volatile int Entering[11] = {0};
 
 volatile bool exitFlag = false;
 
-int Max()
+inline int Max()
 {
   int i = 0;
   // int j = 0;
@@ -335,19 +315,19 @@ int main()
       printf("In main: creating thread %d\n", t+1);
       threads[t] =  std::thread(Thread, (void*)&t);
     }
-    usleep(duration*1000);
+    nap_us(duration*1000);
     for(int t=0; t < NUM_THREADS; t++) {
       printf("count of thread no %d is %d\n",t+1,count_cs[t+1]);
     }
 
-    usleep(duration*1000);
+    nap_us(duration*1000);
     for(int t=0; t < NUM_THREADS; t++) {
       printf("count of thread no %d is %d\n",t+1,count_cs[t+1]);
     }
 
     exitFlag = true;
     std::cout << " GB waiting for threads to exit\n";
-    usleep(1000*1000);
+    nap_us(1000*1000);
     std::cout << " GB kill threads\n";
     for(int t=0; t < NUM_THREADS; t++)
       pthread_kill(threads[t].native_handle(), SIGTERM);
@@ -459,19 +439,19 @@ int main(int argc,char*argv[])
       printf("In main: creating thread %d\n", t+1);
       threads[t] =  std::thread(Thread, (void*)&t);
     }
-    usleep(duration*1000);
+    nap_us(duration*1000);
     for(int t=0; t < NUM_THREADS; t++) {
       printf("count of thread no %d is %d\n",t+1,count_cs[t+1]);
     }
 
-    usleep(duration*1000);
+    nap_us(duration*1000);
     for(int t=0; t < NUM_THREADS; t++) {
       printf("count of thread no %d is %d\n",t+1,count_cs[t+1]);
     }
 
     exitFlag = true;
     std::cout << " GB waiting for threads to exit\n";
-    usleep(1000*1000);
+    nap_us(1000*1000);
     std::cout << " GB kill threads\n";
     for(int t=0; t < NUM_THREADS; t++)
       pthread_kill(threads[t].native_handle(), SIGTERM);
