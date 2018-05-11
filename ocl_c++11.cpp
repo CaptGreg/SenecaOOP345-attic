@@ -1,5 +1,52 @@
 // GB, not sure how effective this code is at utilizing the GPU
 // GB - try two pass, P1 = elements rounded to 256, P2 = balance
+//
+// this will make it compile on Ubuntu.  It still needs the native OCL SDK:
+//       sudo apt-get install libopencv-core-dev
+//       sudo apt-get install opencl-clhpp-headers
+//       sudo apt-get install opencl-clhpp-headers-doc
+
+
+// No surprise, opencl fails for 2008 vintage Athlon 4200+, 
+// heck it has a 2008 mobo NVidia gpu
+// lspci -vnn | grep VGA -A 12
+// 00:0d.0 VGA compatible controller [0300]: NVIDIA Corporation C61 [GeForce 6150SE nForce 430] [10de:03d0] (rev a2) (prog-if 00 [VGA controller])
+//  Subsystem: Elitegroup Computer Systems C61 [GeForce 6150SE nForce 430] [1019:2601]
+//
+// also fails for AMD RV516 PCI card
+// lspci -vnn | grep VGA -A 12
+// 02:00.0 VGA compatible controller [0300]: Advanced Micro Devices, Inc. [AMD/ATI] RV516 [Radeon X1300/X1550 Series] [1002:7187] (prog-if 00 [VGA controller])
+//  Subsystem: Dell RV516 [Radeon X1300/X1550 Series] [1028:0402]
+//
+//  Release Date January 1st, 2007
+//   256 MB 64-bit PCIE 1.0 x16
+//   DirectX           9.0c
+//   Mantle           -
+//   Vulkan           -
+//   OpenGL           2.0
+//   OpenCL           -
+//   Shader Model     3.0
+
+//  Performance
+//   Pixel Fillrate   2.4 GPixels/s
+//   Texture Fillrate 2.4 GTexel/s
+//   SPFP Performance 4.8 GFLOPS
+//  Pixel Pipelines   4
+//  Vertex Pipelines  2
+//  TMUs              4
+//  ROPs              4
+//  Memory Bus Width 64-bit
+//  Memory Bandwidth 5.3 GB/s
+
+
+// +++++++++++++++++++++++++
+// g++ compiler version 7.3.0
+// AuthenticAMD AMD Athlon(tm) 64 X2 Dual Core Processor 4200+
+// This is a 2 core machine.
+// CL_VERSION 2.0
+// +++++++++++++++++++++++++
+// threw cl::Error: clGetPlatformIDs(-1001)
+// +++++++++++++++++++++++++
 
 // GB timings May 20, 2015 T2108 hot machine, no OpenCL, Ubuntu 14.04 
 // +++++++++++++++++++++++++
@@ -157,34 +204,34 @@
 // +++++++++++++++++++++++++
 
 // clinfo
-//   Platform Profile:				 FULL_PROFILE
-//   Platform Version:				 OpenCL 1.2 AMD-APP (1214.3)
-//   Platform Name:				 AMD Accelerated Parallel Processing
-//   Platform Vendor:				 Advanced Micro Devices, Inc.
-//   Platform Extensions:			 cl_khr_icd cl_amd_event_callback cl_amd_offline_devices
-//   Platform Name:				 AMD Accelerated Parallel Processing
-//   Device Type:				 CL_DEVICE_TYPE_GPU
-//   Board name:				 AMD Radeon HD 6900 Series
-//   Max compute units:				 24
-//   Max work items dimensions:			 3
-//     Max work items[0]:			 256
-//     Max work items[1]:			 256
-//     Max work items[2]:			 256
-//   Max work group size:			 256
-//   Max clock frequency:			 880Mhz
-//   Max memory allocation:			 536870912
-//   Global memory size:			 2075131904
-//   Constant buffer size:			 65536
-//   Local memory size:				 32768
-//   Kernel Preferred work group size multiple:	 64
-//   Platform ID:				 0x00007f70428dffc0
-//   Name:					 Cayman
-//   Vendor:					 Advanced Micro Devices, Inc.
-//   Device OpenCL C version:			 OpenCL C 1.2 
-//   Driver version:				 1214.3 (VM)
-//   Profile:					 FULL_PROFILE
-//   Version:					 OpenCL 1.2 AMD-APP (1214.3)
-//   Extensions:				 cl_khr_fp64 cl_amd_fp64 cl_khr_global_int32_base_atomics cl_khr_global_int32_extended_atomics cl_khr_local_int32_base_atomics cl_khr_local_int32_extended_atomics cl_khr_3d_image_writes cl_khr_byte_addressable_store cl_khr_gl_sharing cl_ext_atomic_counters_32 cl_amd_device_attribute_query cl_amd_vec3 cl_amd_printf cl_amd_media_ops cl_amd_media_ops2 cl_amd_popcnt cl_amd_image2d_from_buffer_read_only 
+//   Platform Profile:                                 FULL_PROFILE
+//   Platform Version:                                 OpenCL 1.2 AMD-APP (1214.3)
+//   Platform Name:                                 AMD Accelerated Parallel Processing
+//   Platform Vendor:                                 Advanced Micro Devices, Inc.
+//   Platform Extensions:                         cl_khr_icd cl_amd_event_callback cl_amd_offline_devices
+//   Platform Name:                                 AMD Accelerated Parallel Processing
+//   Device Type:                                 CL_DEVICE_TYPE_GPU
+//   Board name:                                 AMD Radeon HD 6900 Series
+//   Max compute units:                                 24
+//   Max work items dimensions:                         3
+//     Max work items[0]:                         256
+//     Max work items[1]:                         256
+//     Max work items[2]:                         256
+//   Max work group size:                         256
+//   Max clock frequency:                         880Mhz
+//   Max memory allocation:                         536870912
+//   Global memory size:                         2075131904
+//   Constant buffer size:                         65536
+//   Local memory size:                                 32768
+//   Kernel Preferred work group size multiple:         64
+//   Platform ID:                                 0x00007f70428dffc0
+//   Name:                                         Cayman
+//   Vendor:                                         Advanced Micro Devices, Inc.
+//   Device OpenCL C version:                         OpenCL C 1.2 
+//   Driver version:                                 1214.3 (VM)
+//   Profile:                                         FULL_PROFILE
+//   Version:                                         OpenCL 1.2 AMD-APP (1214.3)
+//   Extensions:                                 cl_khr_fp64 cl_amd_fp64 cl_khr_global_int32_base_atomics cl_khr_global_int32_extended_atomics cl_khr_local_int32_base_atomics cl_khr_local_int32_extended_atomics cl_khr_3d_image_writes cl_khr_byte_addressable_store cl_khr_gl_sharing cl_ext_atomic_counters_32 cl_amd_device_attribute_query cl_amd_vec3 cl_amd_printf cl_amd_media_ops cl_amd_media_ops2 cl_amd_popcnt cl_amd_image2d_from_buffer_read_only 
 
 // 
 // GB timings May 19, 2015 on 
@@ -211,31 +258,31 @@
 // +++++++++++++++++++++++++
 
 //clinfo for HD5870 laptop GPU
-//  Platform Profile:				 FULL_PROFILE
-//  Platform Version:				 OpenCL 2.0 AMD-APP (1642.5)
-//  Platform Name:				 AMD Accelerated Parallel Processing
-//  Platform Vendor:				 Advanced Micro Devices, Inc.
-//  Platform Name:				 AMD Accelerated Parallel Processing
-//  Device Type:				 CL_DEVICE_TYPE_GPU
-//  Vendor ID:					 1002h
-//  Board name:					 AMD Mobility Radeon HD 5800 Series
-//  Max compute units:				 10
-//  Max work group size:			 256
-//  Max memory allocation:			 134217728
-//  Cache size:					 0
-//  Global memory size:				 536870912
-//  Constant buffer size:			 65536
-//  Local memory size:				 32768
-//  Kernel Preferred work group size multiple:	 64
-//  Unified memory for Host and Device:		 0
-//  Platform ID:				 0x7f9343f47fd0
-//  Name:					 Juniper
-//  Vendor:					 Advanced Micro Devices, Inc.
-//  Device OpenCL C version:			 OpenCL C 1.2 
-//  Driver version:				 1642.5
-//  Profile:					 FULL_PROFILE
-//  Version:					 OpenCL 1.2 AMD-APP (1642.5)
-//  Extensions:					 cl_khr_global_int32_base_atomics cl_khr_global_int32_extended_atomics cl_khr_local_int32_base_atomics cl_khr_local_int32_extended_atomics cl_khr_3d_image_writes cl_khr_byte_addressable_store cl_khr_gl_sharing cl_ext_atomic_counters_32 cl_amd_device_attribute_query cl_amd_vec3 cl_amd_printf cl_amd_media_ops cl_amd_media_ops2 cl_amd_popcnt cl_amd_image2d_from_buffer_read_only cl_khr_spir cl_khr_gl_event 
+//  Platform Profile:                                 FULL_PROFILE
+//  Platform Version:                                 OpenCL 2.0 AMD-APP (1642.5)
+//  Platform Name:                                 AMD Accelerated Parallel Processing
+//  Platform Vendor:                                 Advanced Micro Devices, Inc.
+//  Platform Name:                                 AMD Accelerated Parallel Processing
+//  Device Type:                                 CL_DEVICE_TYPE_GPU
+//  Vendor ID:                                         1002h
+//  Board name:                                         AMD Mobility Radeon HD 5800 Series
+//  Max compute units:                                 10
+//  Max work group size:                         256
+//  Max memory allocation:                         134217728
+//  Cache size:                                         0
+//  Global memory size:                                 536870912
+//  Constant buffer size:                         65536
+//  Local memory size:                                 32768
+//  Kernel Preferred work group size multiple:         64
+//  Unified memory for Host and Device:                 0
+//  Platform ID:                                 0x7f9343f47fd0
+//  Name:                                         Juniper
+//  Vendor:                                         Advanced Micro Devices, Inc.
+//  Device OpenCL C version:                         OpenCL C 1.2 
+//  Driver version:                                 1642.5
+//  Profile:                                         FULL_PROFILE
+//  Version:                                         OpenCL 1.2 AMD-APP (1642.5)
+//  Extensions:                                         cl_khr_global_int32_base_atomics cl_khr_global_int32_extended_atomics cl_khr_local_int32_base_atomics cl_khr_local_int32_extended_atomics cl_khr_3d_image_writes cl_khr_byte_addressable_store cl_khr_gl_sharing cl_ext_atomic_counters_32 cl_amd_device_attribute_query cl_amd_vec3 cl_amd_printf cl_amd_media_ops cl_amd_media_ops2 cl_amd_popcnt cl_amd_image2d_from_buffer_read_only cl_khr_spir cl_khr_gl_event 
 
 
 
@@ -308,38 +355,60 @@
 // +++++++++++++++++++++++++
 
 // clinfo says 2 compute units and may be 256 compute elements per compute unit
-//   Max compute units:				 2
-//   Kernel Preferred work group size multiple:	 64
-//   Max work group size:			 256
-//   Max memory allocation:			 142344192  // GB: only 142 MB of memory, or 142M x 4-byte memory elements?
-//                                                          // GB: our 3 20M float element buffers are 240 MBytes
-//                                                          // GB: 3 35M float element buffers are 420 MBytes
-//                                                          // GB: 3 36M float element buffers are 426 MBytes <-- throws
-//  clinfo for E1 laptop:
-//   Platform Profile:				 FULL_PROFILE
-//   Platform Version:				 OpenCL 2.0 AMD-APP (1642.5)
-//   Platform Name:				 AMD Accelerated Parallel Processing
-//   Platform Vendor:				 Advanced Micro Devices, Inc.
-//   Platform Extensions:			 cl_khr_icd cl_amd_event_callback cl_amd_offline_devices 
-//   Platform Name:				 AMD Accelerated Parallel Processing
-// Number of devices:				 2
-//   Device Type:				 CL_DEVICE_TYPE_GPU
-//   Board name:				 AMD Radeon(TM) R2 Graphics  
-//   Device Topology:				 PCI[ B#0, D#1, F#0 ]
-//   Max compute units:				 2
-//   Max work group size:			 256
-//   Max memory allocation:			 142344192
-//   Cache size:				 16384
-//   Global memory size:			 569376768
-//   Constant buffer size:			 65536
-//   Local memory size:				 32768
-//   Kernel Preferred work group size multiple:	 64
-//   Unified memory for Host and Device:	 1
-//   Name:					 Mullins
-//   Device OpenCL C version:			 OpenCL C 2.0 
-//   Profile:					 FULL_PROFILE
-//   Version:					 OpenCL 2.0 AMD-APP (1642.5)
-//   Extensions:				 cl_khr_fp64 cl_amd_fp64 cl_khr_global_int32_base_atomics cl_khr_global_int32_extended_atomics cl_khr_local_int32_base_atomics cl_khr_local_int32_extended_atomics cl_khr_int64_base_atomics cl_khr_int64_extended_atomics cl_khr_3d_image_writes cl_khr_byte_addressable_store cl_khr_gl_sharing cl_ext_atomic_counters_32 cl_amd_device_attribute_query cl_amd_vec3 cl_amd_printf cl_amd_media_ops cl_amd_media_ops2 cl_amd_popcnt cl_khr_image2d_from_buffer cl_khr_spir cl_khr_subgroups cl_khr_gl_event cl_khr_depth_images 
+//   Max compute units:                           2
+//   Kernel Preferred work group size multiple:   64
+//   Max work group size:                         256
+//   Max memory allocation:                       142344192  // GB: only 142 MB of memory, or 142M x 4-byte memory elements?
+//                                                // GB: our 3 20M float element buffers are 240 MBytes
+//                                                // GB: 3 35M float element buffers are 420 MBytes
+//                                                // GB: 3 36M float element buffers are 426 MBytes <-- throws
+//  clinfo for E1 laptop
+//   Platform Profile:                            FULL_PROFILE
+//   Platform Version:                            OpenCL 2.0 AMD-APP (1642.5)
+//   Platform Name:                               AMD Accelerated Parallel Processing
+//   Platform Vendor:                             Advanced Micro Devices, Inc.
+//   Platform Extensions:                         cl_khr_icd cl_amd_event_callback cl_amd_offline_devices 
+//   Platform Name:                               AMD Accelerated Parallel Processing
+// Number of devices:                             2
+//   Device Type:                                 CL_DEVICE_TYPE_GPU
+//   Board name:                                  AMD Radeon(TM) R2 Graphics  
+//   Device Topology:                             PCI[ B#0, D#1, F#0 ]
+//   Max compute units:                           2
+//   Max work group size:                         256
+//   Max memory allocation:                       142344192
+//   Cache size:                                  16384
+//   Global memory size:                          569376768
+//   Constant buffer size:                        65536
+//   Local memory size:                           32768
+//   Kernel Preferred work group size multiple:   64
+//   Unified memory for Host and Device:          1
+//   Name:                                        Mullins
+//   Device OpenCL C version:                     OpenCL C 2.0 
+//   Profile:                                     FULL_PROFILE
+//   Version:                                     OpenCL 2.0 AMD-APP (1642.5)
+//   Extensions:                                  cl_khr_fp64 
+//                                                cl_amd_fp64 
+//                                                cl_khr_global_int32_base_atomics 
+//                                                cl_khr_global_int32_extended_atomics 
+//                                                cl_khr_local_int32_base_atomics 
+//                                                cl_khr_local_int32_extended_atomics 
+//                                                cl_khr_int64_base_atomics 
+//                                                cl_khr_int64_extended_atomics 
+//                                                cl_khr_3d_image_writes 
+//                                                cl_khr_byte_addressable_store 
+//                                                cl_khr_gl_sharing 
+//                                                cl_ext_atomic_counters_32 
+//                                                cl_amd_device_attribute_query 
+//                                                cl_amd_vec3 
+//                                                cl_amd_printf 
+//                                                cl_amd_media_ops 
+//                                                cl_amd_media_ops2 
+//                                                cl_amd_popcnt 
+//                                                cl_khr_image2d_from_buffer 
+//                                                cl_khr_spir 
+//                                                cl_khr_subgroups 
+//                                                cl_khr_gl_event 
+//                                                cl_khr_depth_images 
 // 
 
 
