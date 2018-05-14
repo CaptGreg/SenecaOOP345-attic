@@ -14,19 +14,19 @@
   #pragma GCC diagnostic ignored "-Wunused-private-field"
 #endif
 
-#include <algorithm> // accumulate, inner_product, ...
 #include <cmath>     // sqrt, abs, fmod, trig functions, ...
+#include <csignal>   // trap segmentation fault signal
 #include <cstdarg>   // vararg
-#include <iostream>  // cout
 #include <future>    // future, async, ...
 #include <iomanip>   // setw,left,right for cout
+#include <iostream>  // cout
 #include <list>      // STL Container
 #include <memory.h>  // memcpy used for deep copies
+#include <numeric>   // std::accumulate, std::inner_product
 #include <queue>     // STL Container
 #include <string>    // C++ strings
 #include <thread>    // thread, join, thread ids, ..
 #include <vector>    // STL Container
-#include <csignal>   // trap segmentation fault
 
 // using namespace std;
 // week01
@@ -279,48 +279,80 @@ void CompoundTypes()
   #undef P
 
   class MoveClass { // rule of three C++ OOP244    rule of five C++11 OOP345
-    int *b;
-    const int size = 1000000;
+    int size = 0;        // C++14
+    int *b   = nullptr;  // C++14 
   public: 
+    MoveClass(int s) // constructor OOP244
+       : size(s), b(new int[s]) 
+    { 
+       std::cout << "ctor (allocate memory) this=" << (void*)this << ", b=" << (void*) b << "\n";
+    }
     MoveClass() // constructor OOP244
-      { 
-        b = new int[size]; 
-        std::cout << "ctor (allocate memory) this=" << (void*)this << ", b=" << (void*) b << "\n";
-      }
+       : size(1000000), b(new int[size]) 
+    { 
+       std::cout << "ctor (allocate memory) this=" << (void*)this << ", b=" << (void*) b << "\n";
+    }
     MoveClass(const MoveClass& rhs)  // copy constructor (deep copy of data) OOP244
-      { 
-        b = new int[size]; memcpy(b,rhs.b,sizeof(*b)*size); 
-        std::cout << "copy ctor (deep copy) this=" << (void*)this << ", b=" << (void*) b << "\n";
+    { 
+      size = rhs.size;
+      if(size) {
+        // b = new int[size];                               // two line
+        // memcpy(b,rhs.b,sizeof(*b)*size);
+        // b = memcpy(new int[size],rhs.b,sizeof(*b)*size); // one line.  Need to cast memcpy return value
+        b = reinterpret_cast<int*> (memcpy(new int[size],rhs.b,sizeof(*b)*size));  // one line with cast
       }
+      std::cout << "copy ctor (deep copy) this=" << (void*)this << ", b=" << (void*) b << "\n";
+    }
     MoveClass& operator=(const MoveClass& rhs)  // assignment operator (deep copy of data) OOP244
-      { 
-        if(this != &rhs) { if(!b) b = new int[size]; memcpy(b,rhs.b,sizeof(*b)*size); }
-        std::cout << "assignment operator (deep copy) this=" << (void*)this << ", b=" << (void*) b << "\n";
-        return *this; 
+    { 
+      if(this != &rhs) { 
+        delete [] b; 
+        b     = nullptr; 
+        size  = rhs.size; 
+        if(size) {                             // allocate memory and deep copy
+          // b = new int[size];                               // two line
+          // memcpy(b,rhs.b,sizeof(*b)*size);
+          // b = memcpy(new int[size],rhs.b,sizeof(*b)*size); // one line.  Need to cast memcpy return value
+          b = reinterpret_cast<int*> (memcpy(new int[size],rhs.b,sizeof(*b)*size));  // one line with cast
+        } 
       }
+      std::cout << "assignment operator (deep copy) this=" << (void*)this << ", b=" << (void*) b << "\n";
+      return *this; 
+    }
     ~MoveClass() // destructor OOP244
-      { 
-        std::cout << "dtor this=" << (void*)this << ", b=" << (void*) b << "\n";
-        if(b) delete [] b;
-      }
+    { 
+      std::cout << "dtor this=" << (void*)this << ", b=" << (void*) b << "\n";
+      delete [] b;
+    }
   
     MoveClass(MoveClass&& rhs)  // move constructor   (no copy, move pointer) C++11
-      { 
-        b = rhs.b; rhs.b = nullptr; 
-        std::cout << "assignment operator (move pointers) this=" << (void*)this << ", b=" << (void*) b << "\n";
-      }
+    { 
+      b        = rhs.b;       // steal 'brains'
+      size     = rhs.size;
+      rhs.b    = nullptr;     // make rhs a 'zombie'
+      rhs.size = 0;                
+      std::cout << "assignment operator (move pointers) this=" << (void*)this << ", b=" << (void*) b << "\n";
+    }
   
     MoveClass& operator=(MoveClass&& rhs)  // move assignment operator   (no copy, move pointer) C++11
-      { 
-        if(this != &rhs) 
-          {if(b) delete [] b; b = rhs.b; rhs.b = nullptr;} 
-        std::cout << "move assignment operator (move pointers) this=" << (void*)this << ", b=" << (void*) b << "\n";
-        return *this; 
-      }
+    { 
+      if(this != &rhs) {
+        delete [] b; 
+        b        = rhs.b;      // steal 'brains'
+        size     = rhs.size; 
+        rhs.b    = nullptr;    // make rhs a 'zombie'
+        rhs.size = 0;
+      } 
+      std::cout << "move assignment operator (move pointers) this=" << (void*)this << ", b=" << (void*) b << "\n";
+      return *this; 
+    }
   };
 
+  std::cout<<"MoveClass mc1, mc2;\n";
   MoveClass mc1, mc2;
+  std::cout<<"mc1 = mc2;\n";
   mc1 = mc2;                        // assignment operator         C++ OOP244
+  std::cout<<"mc2 = std::move(mc1);\n";
   mc2 = std::move(mc1);             // move assignment operator    C++11
   MoveClass mc3(mc2);               // copy constructor            C++ OOP244
   MoveClass mc4(std::move(mc2));    // move constructor            C++11
@@ -328,7 +360,7 @@ void CompoundTypes()
 } // CompoundTypes
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void Inheritance()
+void Inheritance() // is a
 {
   class B {
     uint8_t b[1000];
@@ -397,40 +429,40 @@ void Inheritance()
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // CANNOT DEFINE TEMPLATES INSIDE A FUNCTION
 // TEMPLATES MUST BE GLOBAL
-  template <typename T>
-  T myMin(T a, T b) { return a < b? a : b; }
+template <typename T>
+T myMin(T a, T b) { return a < b? a : b; }
 
-  // function template specialization
-  template <> // (tell compiler to turn off template for the next function)
-  const char *myMin(const char* a, const char*b) { return strcmp(a,b) < 0 ? a: b; }
+// function template specialization
+template <> // (tell compiler to turn off template for the next function)
+const char *myMin(const char* a, const char*b) { return strcmp(a,b) < 0 ? a: b; }
 
-  template <class T,int SIZE>   // C++ OOP244 class template with non-class parameter
-  class templateType {
-    T data[SIZE];
-  };
+template <class T,int SIZE>   // C++ OOP244 class template with non-class parameter
+class templateType {
+  T data[SIZE];
+};
 
-  // variadic templates C++11 OOP345
-  // Variable argument (variadic) templates work by defining two or more templates, 
-  // that is:
-  //  *  one or more specializations 
-  //  *  the actual template with the variable arguments.
-  // the compiler generates multiple recursive calls to the variadic template function 
-  // each time calling one of the viable specialized template until all args are processed.
+// variadic templates C++11 OOP345
+// Variable argument (variadic) templates work by defining two or more templates, 
+// that is:
+//  *  one or more specializations 
+//  *  the actual template with the variable arguments.
+// the compiler generates multiple recursive calls to the variadic template function 
+// each time calling one of the viable specialized template until all args are processed.
 
-  // NOTE: uncomment the 'std::cout << __PRETTY_FUNCTION__ << "\n";' to see what is going on
+// NOTE: uncomment the 'std::cout << __PRETTY_FUNCTION__ << "\n";' to see what is going on
 
-  template <typename T> // a C++ OOP244 function template
-  void print(const T& t) { // function template print for single argument
-    // std::cout << __PRETTY_FUNCTION__ << "\n";
-    std::cout << t << "\n";
-  }
+template <typename T> // a C++ OOP244 function template
+void print(const T& t) { // function template print for single argument
+  // std::cout << __PRETTY_FUNCTION__ << "\n";
+  std::cout << t << "\n";
+}
 
-  template <typename First, typename... Rest>  // a C++11 variable argument (variadic) template
-  void print(const First& first, const Rest&... rest) {
-    // std::cout << __PRETTY_FUNCTION__ << "\n";
-    print(first); // calls above function template
-    print(rest...); // recursively call this variadic template using 'pack expansion' '(const Rest&...)'
-  }
+template <typename First, typename... Rest>  // a C++11 variable argument (variadic) template
+void print(const First& first, const Rest&... rest) {
+  // std::cout << __PRETTY_FUNCTION__ << "\n";
+  print(first); // calls above function template
+  print(rest...); // recursively call this variadic template using 'pack expansion' '(const Rest&...)'
+}
 
 void Templates()
 {
@@ -482,13 +514,13 @@ void Templates()
 
 } // Templates
 
-void Composition()
+void Composition() // depends
 {
   // Composition: 
   // The parent contains or is composed of the children.
   // A 'death' relationship.  Destroying the parent, destroys the children.
 
-  // A house contains rooms.
+  // A house contains rooms. It depends on its rooms.
   // Run over a house with a bulldozer and the rooms are destroyed
   class House { 
     class Room {std::string name; public:Room(std::string n) : name(n){}};
@@ -508,7 +540,7 @@ void Composition()
   myHouse.AddRoom("basement");
 }
 
-void Association()
+void Association() // uses
 {
   // Association: A relationship between two or more objects where all objects 
   // have their own lifecycle and there is no owwner.
@@ -554,10 +586,9 @@ void Association()
   
   Mary.AddCollege(&Centennial);
   Centennial.AddStudent(&Mary);
-  
 }
 
-void Aggregation()
+void Aggregation() // has or "has-a"
 {
   // Aggregation: Specialized form of Association where all objects have their 
   // own lifecycle but there is ownership.  
@@ -571,13 +602,13 @@ void Aggregation()
   // A motor can only be in one car.
   class Motor{ };
   class Car{
-    Motor* motor;  // A car "has-a" motor.
+    Motor* motor = nullptr;  // A car "has-a" motor. Initialization (=nullptr) is C++14
   public:
-    Car()         : motor(nullptr) {}
+    Car()         : motor(nullptr) {} // initialization not need if initialized above
     Car(Motor* m) : motor(m)       {}
-    void newMotor(Motor* m) { if(motor) delete motor; motor = m; }
+    void newMotor(Motor* m) { delete motor; motor = m; }
     Motor* pullMotor() { Motor* ret = motor; motor = nullptr; return ret; }
-    ~Car() { if(motor) delete motor; }
+    ~Car() { delete motor; }
   };
 
   // A duck can exist without a pond
@@ -693,14 +724,14 @@ void Functions()
   std::cout <<  "fabs(" << -1000. << ")=" << f(-1000.) << "\n"; 
 
   #define F(FUN,ARG) f=FUN; std::cout <<  #FUN "(" #ARG ")=" << f(ARG) << "\n"; 
-  F(sqrt, 1000.)
+  F(sqrt,  1000.)
   F(fabs, -1000.)
   #undef F
 
   // 2. C++ pointer to a function
   std::function<double(double)> g;
   #define G(FUN,ARG) g=FUN; std::cout <<  #FUN "(" #ARG ")=" << g(ARG) << "\n"; 
-  G(sqrt, 81.)
+  G(sqrt,   81.)
   G(fabs, -123.)
   #undef G
 
@@ -1290,26 +1321,36 @@ int main(int argc, char**argv)
   std::cout << R"gnu(
   /******************************************************************\
   * This program was developed on a 64-bit Ubuntu 14.04 LTS system.  *
-  * It runs correctly in this environment.                           *
+  * using C++11.                                                     *
+  *                                                                  *
+  * It runs correctly in a UNIX environment.                         *
+  *                                                                  *
+  * May 2018                                                         *
+  *  -  Ported to use C++14 features                                 *
+  *     Needs a c++14 compiler or later                              *
   *                                                                  *
   * Compile with either g++ or clang++                               * 
-  *   g++     -std=c++11 fastforward.cpp -o fastfoward -pthread      *
-  *   g++-5   -std=c++11 fastforward.cpp -o fastfoward -pthread      *
-  *   clang++ -std=c++11 fastforward.cpp -o fastfoward -pthread      *
+  *   g++     -std=c++14 fastforward.cpp -o fastfoward -pthread      *
+  *   g++-5   -std=c++14 fastforward.cpp -o fastfoward -pthread      *
+  *   g++-6   -std=c++17 fastforward.cpp -o fastfoward -pthread      *
+  *   g++-7   -std=c++17 fastforward.cpp -o fastfoward -pthread      *
+  *   clang++ -std=c++14 fastforward.cpp -o fastfoward -pthread      *
   *                                                                  *
-  *  It compiles and runs fine with the Ubuntu 15.04 compilers.      *                                                                 *
+  *  May 2018: Runs using Ubuntu 18.04 LTS g++ 7 (and 8) compilers.  *
+  *   g++     -std=c++17 fastforward.cpp -o fastfoward -pthread      *
+  *   clang++ -std=c++17 fastforward.cpp -o fastfoward -pthread      *
   *                                                                  *
   * It also runs fine on Matrix, a 2011 32-bit SUSE linux system.    *
-  * Compile with either g++ 4.9.0 using the -std=c++11 flag          *
-  *   /usr/local/gcc/gcc-cilk/bin/g++ -std=c++11 fastforward.cpp ... *
-  * or compile with /usr/bin/g++ 4.6.2 using the -std=c++0x flag     *
-  *   g++ -std=c++0x fastforward.cpp -o fastfoward -pthread          *
+  * Use the g++ 7.3.0 compiler                                       *
+  *  bash command line:                                              *
+  *   % alias g++='/usr/local/gcc/7.3.0/bin/g++'                     *
+  *   % g++ -std=c++0x fastforward.cpp -o fastfoward -pthread        *
   *                                                                  *
   * NOTE:                                                            *
-  * The Matrix clang++ will not compile fastforward.cpp.             *
-  * The Matrix clang++ (version 3.4) chrono header files are broken. *
-  * Just including <chrono.h> generates syntax errors.               *
-  *     (use g++ instead)                                            *
+  *   May 2018                                                       *
+  *   - The Matrix clang++ compiler has been removed.                *
+  *   - Use the g++ 7.3.0 compiler installed at                      *
+  *     /usr/local/gcc/7.3.0/bin/g++                                 *
   \******************************************************************/
 
   )gnu";
