@@ -1,87 +1,81 @@
-// thread-pc-simple.cpp
-// a simple producer consumer threading model, mutex free, spin wait for buffer empty or available
-// single producer produces data for a single consumer.
+// thread-pc-simple.cpp - a simple producer consumer threading model
+// a single producer thread produces data for a single consumer thread.
+// mutex free, spin wait on bufValid flag for buffer empty or available
 
-#include <chrono>      // chrono::milliseconds(ms)
-#include <csignal>     // SIGTERM
+#include <functional>  // function
 #include <iostream>
-#include <pthread.h>   // pthread_kill resolved without header, perhaps <thread> includes it
-#include <string>
-#include <thread>      // thread, join, yield, sleep_for, native_handle
+#include <thread>      // thread, join, sleep_for chrono time units
 using namespace std;
 
 class PC {
-  bool   bufValid = false; // true data available for consumer, false needs filling by producer
-  int    buf      = 0;
-  bool   stop     = false;
-  thread pTid;
-  thread cTid;
-  bool   pAlive   = false;
-  bool   cAlive   = false;
+  bool      bufValid     = false; // true data available for consumer, false producer needs to create data
+  int       buf          = 0;
+  thread    pTid;
+  thread    cTid;
+  bool      pAlive       = false;
+  bool      cAlive       = false;
+  uint64_t  dataWaitTSC  = 0;
+  uint64_t  emptyWaitTSC = 0;
+  bool      stop         = false;
 
-  void waitEmpty()     { while(    bufValid and not stop); }  // spin waiting for empty buffer
-  void waitAvailable() { while(not bufValid and not stop); }  // spin waiting for data
+  uint64_t tscTimedFunction (function<void(void)> f) {
+    auto RDTSC = [] {uint32_t a,d; asm volatile("rdtsc" : "=a"(a),"=d"(d)); return (uint64_t(d)<<32)|uint64_t(a);}; // 22 clocks
+    uint64_t start = RDTSC(); 
+    f();
+    uint64_t stop  = RDTSC(); 
+    return start < stop? stop - start: start - stop;  // RDTSC wraps
+  }  
 
-  void producer()
-  {
+  void producer() {
     pAlive = true;
-    while(not stop) {
-      waitEmpty();    // wait for empty buffer
+    do {
+      auto waitForEmptyBuffer = [this] {while(bufValid and not stop);};
+      emptyWaitTSC += tscTimedFunction(waitForEmptyBuffer);
       if(stop) break;
 
-      buf++; // create some data
+      buf++; // Produce buf.
       bufValid = true;
-    }
+    } while(not stop);
     pAlive = false;
   }
 
-  void consumer()
-  {
+  void consumer() {
     cAlive = true;
-    while(not stop) {
-      waitAvailable(); // wait for data
+    do {
+      auto waitForData = [this] {while(not bufValid and not stop);};
+      dataWaitTSC += tscTimedFunction(waitForData);
       if(stop) break;
 
-      // cout << to_string(buf) + "\n"; // do something with it
+      // There is data in the buffer.  Do something with it.
+      // cout << buf << "\n"; // print it 
       bufValid = false;
-    }
+    } while(not stop);
     cAlive = false;
   }
 
 public:
-  int getBuf() { return buf; }
 
-  void run_ms(int ms)
-  {
-    pTid = thread(&PC::producer, this); // parm 1: member function
-    cTid = thread(&PC::consumer, this); // parm 2: instance
+  void run(int ms) {                            // run for 'ms' milliseconds
+    pTid = thread(&PC::producer, this);
+    cTid = thread(&PC::consumer, this);
+
+    while(pAlive == false or cAlive == false);  // wait for pipeline to come up
 
     this_thread::sleep_for(chrono::milliseconds(ms));
     stop = true;
-    // this_thread::sleep_for(chrono::milliseconds(1));  // main thread: NAP
-    this_thread::yield();                                // main thread: GIVE UP CPU
-
-    if(pAlive) {cout<<"killing producer\n"; pthread_kill(pTid.native_handle(), SIGTERM); }
-    if(cAlive) {cout<<"killing consumer\n"; pthread_kill(cTid.native_handle(), SIGTERM); }
 
     pTid.join();
     cTid.join();
-  }
-};
 
-class Main {
-public:
-  static int start(int argc, char*argv[])
-  {
+    cout << "buf=" << buf << ", " << 1. * buf << "\n";  // prints 6-8 Million on 2016 era I5 laptop
+    cout << "producer wasted clocks  = " << emptyWaitTSC << ", " << 1. * emptyWaitTSC << "\n";
+    cout << "consumer wasted clocks  = " <<  dataWaitTSC << ", " << 1. *  dataWaitTSC << "\n";
+  }
+}; // class PC
+
+int main(int argc, char*argv[]) {
     PC pc;
 
-    pc.run_ms(1000);
-    cout<< "buf=" << pc.getBuf() << "\n";  // prints 6-8 Million on 2014 era I5 laptop
+    pc.run(1000);
     return 0;
-  }
-};
-
-int main(int argc, char*argv[])
-{
-  return Main::start(argc,argv);
 }
