@@ -13,32 +13,32 @@
 
 // using namespace std;
 
-void hexdump(std::ostream& os, char *b, long count)
+void hexdump(std::ostream& os, const void* b, const size_t count)
 {
     std::ios_base::fmtflags fmtfl =  os.flags(); // save <iomanip> state
 
     os << std::hex << std::setfill('0');
-    for(long address = 0; count > address; address += 16 ) {
-        char* line = b + address;
+    for(size_t address = 0; count > address; address += 16 ) {
+        const unsigned char* line = reinterpret_cast<const unsigned char*> ( b ) + address;
 
-        long thisLineBytes = count - address;
+        size_t thisLineBytes = count - address;
         if(thisLineBytes > 16) thisLineBytes = 16;
 
         // Show the address
         os << std::setw(8) << address;
 
         // Show the hex codes
-        for( int i = 0; i < 16; i++ ) {
+        for( size_t i = 0; i < 16; i++ ) {
             if( i % 8 == 0 ) os << ' ';
             if( i < thisLineBytes )
-                os << ' ' << std::setw(2) << (unsigned)line[i];
+                os << ' ' << std::setw(2) << line[i];
             else 
                 os << "   ";
         }
 
         // Show printable characters
         os << "  ";
-        for( int i = 0; i < thisLineBytes; i++) {
+        for( size_t i = 0; i < thisLineBytes; i++) {
             // if( i % 8 == 0 ) os << ' ';
             os << ( std::isprint(line[i]) ? line[i]: '.' ); 
         }
@@ -48,37 +48,37 @@ void hexdump(std::ostream& os, char *b, long count)
 
     os.flags(fmtfl); // restore <iomanip> state
 }
-void hexdump(char *b, long count)
+void hexdump(const void *b, const size_t count)
 {
   hexdump(std::cout,  b, count);
 }
 
-void hexdumpString(std::ostream& os, string& b)
+void hexdumpString(std::ostream& os, const std::string& b)
 {
     std::ios_base::fmtflags fmtfl =  os.flags(); // save <iomanip> state
 
     os << std::hex << std::setfill('0');
-    for(long address = 0; b.size() > address; address += 16 ) {
-        const char* line = b.c_str() + address;
+    for(size_t address = 0; b.size() > address; address += 16 ) {
+        const unsigned char* line = reinterpret_cast<const unsigned char*> (b.c_str()) + address;
 
-        long thisLineBytes = b.size() - address;
+        size_t thisLineBytes = b.size() - address;
         if(thisLineBytes > 16) thisLineBytes = 16;
 
         // Show the address
         os << std::setw(8) << address;
 
         // Show the hex codes
-        for( int i = 0; i < 16; i++ ) {
+        for( size_t i = 0; i < 16; i++ ) {
             if( i % 8 == 0 ) os << ' ';
             if( i < thisLineBytes )
-                os << ' ' << std::setw(2) << (unsigned)line[i];
+                os << ' ' << std::setw(2) << line[i];
             else 
                 os << "   ";
         }
 
         // Show printable characters
         os << "  ";
-        for( int i = 0; i < thisLineBytes; i++) {
+        for( size_t i = 0; i < thisLineBytes; i++) {
             // if( i % 8 == 0 ) os << ' ';
             os << ( std::isprint(line[i]) ? line[i]: '.' ); 
         }
@@ -98,12 +98,12 @@ using namespace std;
 int main(int argc, char**argv)
 {
   const string sTable[]={ 
-    string("[1] Unix LF '0x0a'\n"),
-    string("[2] DOS CRLF '0x0d0a'\r\n"),
-    string("[3] Apple CR '0x0d' sometimes messes up getline\r"),
-    string("[4] another Unix LF '0x0a' line\n"),
-    string("[5] and another Unix LF '0x0a' line\n"),
-    string("[6] this line has no new-line")
+    "[1] Unix LF '0x0a'\n",
+    "[2] DOS CRLF '0x0d0a'\r\n",
+    "[3] Apple CR '0x0d' sometimes messes up getline\r",
+    "[4] another Unix LF '0x0a' line\n",
+    "[5] and another Unix LF '0x0a' line\n",
+    "[6] this line has no new-line"
   };
 
   string file = string(argv[0]) + string(".dat");
@@ -112,7 +112,7 @@ int main(int argc, char**argv)
   // write file
   fs.open(file, ios::out);
   if(fs.is_open()) {
-    for(auto e : sTable)
+    for(auto& e : sTable)
       fs.write(e.c_str(), e.size());
     fs.close();
   } else {
@@ -134,8 +134,8 @@ int main(int argc, char**argv)
   }
   
   // dump memory data written to file
-  string s; for(auto e : sTable) s += e;
-  hexdump(cout, const_cast<char*>(s.c_str()), s.size()); cout << "\n\n";
+  string s; for(auto& e : sTable) s += e;
+  hexdump(cout, s.c_str(), s.size()); cout << "\n\n";
   
   fs.open(file, ios::in);
   if(fs.is_open()) {
@@ -147,13 +147,13 @@ int main(int argc, char**argv)
 	   << " wrote: " << sTable[line].size() << " bytes "
 	   // << "\n-->" <<sTable[line] << "<--"
 	   << "\n";
-      hexdump(cout, const_cast<char*>(sTable[line].c_str()), sTable[line].size());
+      hexdump(cout, sTable[line].c_str(), sTable[line].size());
       cout << "\n";
 
       cout << "++++++ getline returned " << s.size() << " bytes"
 	   // << "\n -->" << s << "<--\n\n";
 	   << "\n";
-      hexdump(cout, const_cast<char*>(s.c_str()), s.size());
+      hexdump(cout, s.c_str(), s.size());
       cout << "\n";
     }
       fs.close();
