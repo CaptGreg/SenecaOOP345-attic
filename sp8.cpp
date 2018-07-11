@@ -14,7 +14,9 @@ public:
     T& operator*   () { return *pData; }             // operator*  overload
     T* operator->  () { return  pData; }             // operator-> overload
     DIY_unique_ptr (const DIY_unique_ptr& rhs)             = delete; // DO NOT DUPLICATE a unique_ptr
+    DIY_unique_ptr (DIY_unique_ptr&& rhs)                  = delete; // DO NOT DUPLICATE a unique_ptr
     DIY_unique_ptr&  operator= (const DIY_unique_ptr& rhs) = delete; // DO NOT DUPLICATE a unique_ptr
+    DIY_unique_ptr&  operator= (DIY_unique_ptr&& rhs)      = delete; // DO NOT DUPLICATE a unique_ptr
 };
 
 class X {
