@@ -60,15 +60,6 @@ LFLAGSOCL   = -L/opt/$(AMDAPP)/lib/x86_64 -lamdocl64
 CXXFLAGSOCL = -I/opt/$(AMDAPP)/include
 LFLAGSOCL   = -lOpenCL
 
-# NOTE July 11, 2018 These OpenCL flags compile, but can't find -lOpenCL
-# Ryzen 7 1700 + Radeon RX 580
-# /opt/amdgpu-pro/include/
-AMDAPP =  amdgpu-pro
-CXXFLAGSOCL = -I/opt/$(AMDAPP)/include
-# need -lOpenCL
-# lrwxrwxrwx 1 root root    18 Apr  5  2017 /usr/lib/x86_64-linux-gnu/libOpenCL.so.1 -> libOpenCL.so.1.0.0
-# -rw-r--r-- 1 root root 43072 Apr  5  2017 /usr/lib/x86_64-linux-gnu/libOpenCL.so.1.0.0
-LFLAGSOCL   = -lOpenCL
 
 # AMDAPP v 2.x at least linked and ran
 # AMDAPP      = AMDAPP
@@ -79,6 +70,17 @@ LFLAGSOCL   = -lOpenCL
 # gcc -I/opt/AMDAPP/include listdev.c -o listdev -L/opt/AMDAPP/lib/x86_64  -lOpenCL
 CXXFLAGSOCL = -I/opt/$(AMDAPP)/include
 LFLAGSOCL   = -L/opt/$(AMDAPP)/lib/x86_64 -lOpenCL
+
+# NOTE July 11, 2018 These OpenCL flags compile, but can't find -lOpenCL
+# Ryzen 7 1700 + Radeon RX 580
+# /opt/amdgpu-pro/include/
+AMDAPP      =  amdgpu-pro
+CXXFLAGSOCL = -I/opt/$(AMDAPP)/include
+# need -lOpenCL
+#  lrwxrwxrwx 2 root root    18 Apr  5  2017 /usr/lib/x86_64-linux-gnu/libOpenCL.so -> libOpenCL.so.1.0.0
+#  lrwxrwxrwx 2 root root    18 Apr  5  2017 /usr/lib/x86_64-linux-gnu/libOpenCL.so.1 -> libOpenCL.so.1.0.0
+#  -rw-r--r-- 1 root root 43072 Apr  5  2017 /usr/lib/x86_64-linux-gnu/libOpenCL.so.1.0.0
+LFLAGSOCL   = -lOpenCL
 
 # but ocl programs do not work
 # ./ocl_c++11
