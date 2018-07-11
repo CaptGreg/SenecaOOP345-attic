@@ -9,7 +9,7 @@
 # -Wfatal-errors give up after one error. Present in GCC 4.0 and later.
 
 CFLAGS    = -Wall -mmmx -msse -fmax-errors=1 -Wfatal-errors
-CC        = gcc-7
+CC        = gcc
 CXXFLAGS  = -std=c++17 -Wall -mmmx -msse -fmax-errors=1 -Wfatal-errors
 CXXDFLAGS = -ggdb
 
@@ -17,7 +17,7 @@ C11FLAG   = -std=c++17
 CXX       = clang++
 # May 15, 2015, clang++ has missing/corrupt header files: won't compile fastforward, includes fail
 # use g++ for fastforward
-CXX       = g++-7
+CXX       = g++
 
 ifeq ($(HOSTNAME),raspberrypi)
   CC      = gcc
