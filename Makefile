@@ -60,6 +60,16 @@ LFLAGSOCL   = -L/opt/$(AMDAPP)/lib/x86_64 -lamdocl64
 CXXFLAGSOCL = -I/opt/$(AMDAPP)/include
 LFLAGSOCL   = -lOpenCL
 
+# NOTE July 11, 2018 These OpenCL flags compile, but can't find -lOpenCL
+# Ryzen 7 1700 + Radeon RX 580
+# /opt/amdgpu-pro/include/
+AMDAPP =  amdgpu-pro
+CXXFLAGSOCL = -I/opt/$(AMDAPP)/include
+# need -lOpenCL
+# lrwxrwxrwx 1 root root    18 Apr  5  2017 /usr/lib/x86_64-linux-gnu/libOpenCL.so.1 -> libOpenCL.so.1.0.0
+# -rw-r--r-- 1 root root 43072 Apr  5  2017 /usr/lib/x86_64-linux-gnu/libOpenCL.so.1.0.0
+LFLAGSOCL   = -lOpenCL
+
 # AMDAPP v 2.x at least linked and ran
 # AMDAPP      = AMDAPP
 # CXXFLAGSOCL = -I/opt/$(AMDAPP)/include
@@ -69,6 +79,32 @@ LFLAGSOCL   = -lOpenCL
 # gcc -I/opt/AMDAPP/include listdev.c -o listdev -L/opt/AMDAPP/lib/x86_64  -lOpenCL
 CXXFLAGSOCL = -I/opt/$(AMDAPP)/include
 LFLAGSOCL   = -L/opt/$(AMDAPP)/lib/x86_64 -lOpenCL
+
+# but ocl programs do not work
+# ./ocl_c++11
+#   +++++++++++++++++++++++++
+#   g++ compiler version 7.3.0
+#   AuthenticAMD AMD Ryzen 7 1700 Eight-Core Processor          
+#   This is a 16 core machine.
+#   CL_VERSION 2.0
+#   +++++++++++++++++++++++++
+#   threw cl::Error: clGetPlatformIDs(-1001)
+#   +++++++++++++++++++++++++
+#   ...
+# ./ocl_header
+#   ERROR: clGetPlatformIDs(-1001)
+# ./ocl_ker_q
+#   +++++++++++++++++++++++++ compiler version 7.3.0
+#   threw cl::Error: clGetPlatformIDs(-1001)
+# ./ocldemo
+#   ERROR: clGetPlatformIDs(-1001)
+# ./ocldemo2
+#   No platforms found. Check OpenCL installation!
+# ./ocllistdev
+# ./oclvecadd
+#   CL_VERSION 2.0
+#   ERROR: clGetPlatformIDs(-1001)
+
 
 OPTLFLAGS   = -lrt -pthread
 LFLAGS      = $(OPTLFLAGS)
@@ -112,8 +148,6 @@ moments : moments.cpp
 
 ocl_c++11: ocl_c++11.cpp
 	$(CXX) $(CXXFLAGS)  $(CXXFLAGSOCL) $^ $(LFLAGSOCL) -o $@ 
-	#AMD E1 HP laptop: CL_VERSION 2.0 threw cl::Error: clGetPlatformIDs(-1001)
-
 
 ocl_header: ocl_header.cpp
 	$(CXX) $(CXXFLAGS)  $(CXXFLAGSOCL) $^ $(LFLAGSOCL) -o $@
