@@ -175,7 +175,7 @@ int main()
     count += args[t].count;
   }
 
-  cout << to_string(a.count) + " perfect squares between 0 and " + to_string(N) + "\n";
+  cout << to_string(count) + " perfect squares between 0 and " + to_string(N) + "\n";
 }
 
 /*

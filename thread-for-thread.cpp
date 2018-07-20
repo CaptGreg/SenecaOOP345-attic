@@ -7,7 +7,7 @@
 /*
 for loop threading
 
-There are three sample for loop threading eaxmples.
+There are three sample for loop threading examples.
 
 Read these files in the followiung order:
 

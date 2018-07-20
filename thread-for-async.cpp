@@ -69,7 +69,7 @@ step 3.
 step 4.
   * declare a future array, one per thread
 
-    std::future<int> tid[NUM_THREADS];   // suppose function doWork returns an 'int'
+    std::future<int> fut[NUM_THREADS];   // suppose function doWork returns an 'int'
 
 step 5.
   * launch the threads using future/async
@@ -87,7 +87,7 @@ step 6.
   * get() step:
 
     sum = 0;
-    for(auto e ; tid)
+    for(auto e ; fut)
       sum += e.get();
 
 */
