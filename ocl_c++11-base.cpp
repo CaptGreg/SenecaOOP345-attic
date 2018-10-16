@@ -29,7 +29,7 @@ int main(int argc, char* argv[]) {
     )d", true);
 
 #if CL_HPP_TARGET_OPENCL_VERSION >= 200
-    auto add = compatibility::make_kernel<Buffer, Buffer, Buffer>(addProg, "add"); // ocl 2.0 comatibility with 1.x
+    auto add = compatibility::make_kernel<Buffer, Buffer, Buffer>(addProg, "add"); // ocl 2.0 compatibility with 1.x
     // cl2.hpp says "Please use KernelFunctor directly."
 #else
     auto add = make_kernel<Buffer, Buffer, Buffer>(addProg, "add"); // deprecated in ocl 2.0
