@@ -75,7 +75,7 @@ int main()
         cout << ss.str();
       }
       int nap;
-      nap = (rand() % 1000) + 1000; // sleep for a random number of seconds between 1 and 2 (millisecs)
+      nap = (rand() % 1000) + 1000; // millisec sleep for a random number of seconds between 1 and 2
       this_thread::sleep_for(chrono::milliseconds(nap));
       {
         stringstream ss;
