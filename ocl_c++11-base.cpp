@@ -1,6 +1,12 @@
-#define __CL_ENABLE_EXCEPTIONS
-#define CL_HPP_TARGET_OPENCL_VERSION 200
-#include <CL/cl2.hpp>
+#define USE_2
+#ifdef USE_2         // OpenCL 2.0
+  #define CL_HPP_TARGET_OPENCL_VERSION 200
+  #define CL_HPP_ENABLE_EXCEPTIONS
+  #include <CL/cl2.hpp> 
+#else               // something earlier
+  #define __CL_ENABLE_EXCEPTIONS
+  #include <CL/cl.hpp>
+#endif
 
 #include <iostream>
 
@@ -40,6 +46,7 @@ int main(int argc, char* argv[]) {
     cl::copy(c, begin(result), end(result));
 
     std::copy(begin(result), end(result), ostream_iterator<float>(cout, ", "));
+    std::cout << "\n";
   } catch(cl::Error e) {
     cerr << "(" << e.err() << ") - " << e.what() << "\n";
   }
