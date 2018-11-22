@@ -35,30 +35,43 @@ void hexdump(FILE* fp, const void* b, const size_t count)
 
 int main(int argc, char**argv)
 {
-  char* file;
-  FILE* fp;
-
-  if(argc != 2) {
-    fprintf(stderr, "Usage: %s file-to-dump\n", argv[0]);
+  if(argc == 1) {
+    fprintf(stderr, "Usage: %s file-to-dump [file-to-dump ...]\n", argv[0]);
     return 1;
   }
 
-  file = argv[1];
-  fp = fopen(file, "rb");
-  if(fp) {
-    long size;
-    char* b;
-    fseek(fp,0, SEEK_END);
-    size = ftell(fp);
-    b = malloc(size);
-    fseek(fp,0, SEEK_SET);
-    fread(b, 1, size, fp);
-    fclose(fp);
-    hexdump(stdout, b, size);
-    free(b);
-  } else {
-    fprintf(stderr, "cannot open file \"%s\"\n",  file );
-  }
+  for(int arg = 1; arg < argc; arg++) {
+    char* file = argv[arg];
+    FILE* fp   = fopen(file, "rb");
+    if(fp) {
+      long size;
+      char* b;
 
+      // how large is file?
+      fseek(fp,0, SEEK_END);
+      size = ftell(fp);
+
+      // allocate buffer
+      b = malloc(size);
+      if(b) {
+        // read file
+        fseek(fp,0, SEEK_SET);
+        fread(b, 1, size, fp);
+
+        // all done with file, close it
+        fclose(fp);
+
+        // dump file
+        hexdump(stdout, b, size);
+
+        // all done with buffer, delete it
+        free(b);
+      } else {
+        fprintf(stderr, "cannot allocat buffer of size %ld for file \"%s\"\n", size, file);
+      }
+    } else {
+      fprintf(stderr, "cannot open file \"%s\"\n",  file );
+    }
+  }
   return 0;
 }
