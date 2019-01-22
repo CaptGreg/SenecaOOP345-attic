@@ -166,6 +166,9 @@ ocldemo2: ocldemo2.cpp
 ocllistdev: ocllistdev.c
 	$(CC) $(CXXFLAGS)  $(CXXFLAGSOCL) $^ $(LFLAGSOCL) -o $@
 
+ocl-max-buf: ocl-max-buf.cpp
+	$(CXX) $(CXXFLAGS)  $(CXXFLAGSOCL) $^ $(LFLAGSOCL) -o $@
+
 oclvecadd: oclvecadd.cpp
 	$(CXX) $(CXXFLAGS)  $(CXXFLAGSOCL) $^ $(LFLAGSOCL) -o $@
 
