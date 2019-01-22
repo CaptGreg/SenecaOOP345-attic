@@ -50,63 +50,9 @@ endif
 OPTCFLAGS = -fopenmp -fmax-errors=1 -Wfatal-errors 
 CXXFLAGS = -Wall $(C11FLAG) $(CXXDFLAGS) $(OPTCFLAGS)
 
-# NOTE AMDAPP Beta link paths are different from standard AMDAPP
-AMDAPP      = AMDAPP
-AMDAPP      = AMDAPPSDK-3.0-0-Beta
-CXXFLAGSOCL = -I/opt/$(AMDAPP)/include
-LFLAGSOCL   = -L/opt/$(AMDAPP)/lib/x86_64 -lamdocl64
-
-# NOTE April 19, 2015 These OpenCL flags compile
-CXXFLAGSOCL = -I/opt/$(AMDAPP)/include
-LFLAGSOCL   = -lOpenCL
-
-
-# AMDAPP v 2.x at least linked and ran
-# AMDAPP      = AMDAPP
-# CXXFLAGSOCL = -I/opt/$(AMDAPP)/include
-# LFLAGSOCL   = -L/opt/$(AMDAPP)/lib/x86_64 -lamdocl64
-
-# NOTE April 13, 2016 These OpenCL flags compile
-# gcc -I/opt/AMDAPP/include listdev.c -o listdev -L/opt/AMDAPP/lib/x86_64  -lOpenCL
-CXXFLAGSOCL = -I/opt/$(AMDAPP)/include
-LFLAGSOCL   = -L/opt/$(AMDAPP)/lib/x86_64 -lOpenCL
-
-# NOTE July 11, 2018 These OpenCL flags compile, but can't find -lOpenCL
-# Ryzen 7 1700 + Radeon RX 580
-# /opt/amdgpu-pro/include/
-AMDAPP      =  amdgpu-pro
-CXXFLAGSOCL = -I/opt/$(AMDAPP)/include
-# need -lOpenCL
-#  lrwxrwxrwx 2 root root    18 Apr  5  2017 /usr/lib/x86_64-linux-gnu/libOpenCL.so -> libOpenCL.so.1.0.0
-#  lrwxrwxrwx 2 root root    18 Apr  5  2017 /usr/lib/x86_64-linux-gnu/libOpenCL.so.1 -> libOpenCL.so.1.0.0
-#  -rw-r--r-- 1 root root 43072 Apr  5  2017 /usr/lib/x86_64-linux-gnu/libOpenCL.so.1.0.0
-LFLAGSOCL   = -lOpenCL
-
-# but ocl programs do not work
-# ./ocl_c++11
-#   +++++++++++++++++++++++++
-#   g++ compiler version 7.3.0
-#   AuthenticAMD AMD Ryzen 7 1700 Eight-Core Processor          
-#   This is a 16 core machine.
-#   CL_VERSION 2.0
-#   +++++++++++++++++++++++++
-#   threw cl::Error: clGetPlatformIDs(-1001)
-#   +++++++++++++++++++++++++
-#   ...
-# ./ocl_header
-#   ERROR: clGetPlatformIDs(-1001)
-# ./ocl_ker_q
-#   +++++++++++++++++++++++++ compiler version 7.3.0
-#   threw cl::Error: clGetPlatformIDs(-1001)
-# ./ocldemo
-#   ERROR: clGetPlatformIDs(-1001)
-# ./ocldemo2
-#   No platforms found. Check OpenCL installation!
-# ./ocllistdev
-# ./oclvecadd
-#   CL_VERSION 2.0
-#   ERROR: clGetPlatformIDs(-1001)
-
+# NOTE Jan 22, 2019 These OpenCL flags compile
+CXXFLAGSOCL = `pkg-config --cflags opencl`
+LFLAGSOCL   = `pkg-config --libs opencl`
 
 OPTLFLAGS   = -lrt -pthread
 LFLAGS      = $(OPTLFLAGS)
