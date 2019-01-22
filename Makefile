@@ -174,6 +174,9 @@ pathfind : pathfind.cpp
 	$(CXX) $(CXXFLAGS)  $^ -o $@ -lGL -lglut -lGLEW 
 	./$@
 
+filesize : filesize.cpp
+	$(CXX) $(CXXFLAGS)  $^ -o $@ -lstdc++fs
+
 gl3ctx : gl3ctx.cpp
 	$(CXX) $^ -o $@ -lGL  -lX11 
 	./$@ 
