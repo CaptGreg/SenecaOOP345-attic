@@ -20,6 +20,8 @@
 
 using namespace std;
 
+void Print_us(Timer& timer, const char* msg) { std::cout << msg << " " <<  timer.microsecs() << " us.\n"; }
+
 #define NUM_STEPS 400000000 
 
 void thread_fcn(int my_id, int num_threads, double step, double *sum_p, std::mutex *lock_p);
@@ -52,7 +54,7 @@ int main(int argc, char *argv[]) {
 
     cout << "parallel program results with " << num_threads << " threads:\n";
     cout << "difference between computed pi " << pi << " and math.h M_PI " << M_PI << " = " << fabs(pi - M_PI) << "\n";
-    timer.Print_ms(cout , "time to compute = " );
+    Print_us(timer , "time to compute = " );
 
     return EXIT_SUCCESS;
 }

@@ -6,26 +6,27 @@
  *
  * sequential version.
  */
-#include <cstdio>
 #include <cstdlib>
 #include <cmath>
-/* copied from not-strictly-standard part of math.h */
-#define M_PI		3.14159265358979323846
+#include <iostream>
+using namespace std;
 
 #include "timer.h"
+
+#define M_PI		3.14159265358979323846 // copied from not-strictly-standard part of math.h
 
 #define NUM_STEPS 400000000
 
 /* main program */
 int main(int argc, char *argv[]) {
 
-    double start_time, end_time;
+    Timer timer;
+
     double x, pi;
     double sum = 0.0;
     double step = 1.0/(double) NUM_STEPS; 
 
-    /* record start time */
-    start_time = get_time();
+    timer.Start();
 
     /* do computation */
     for (int i=0; i < NUM_STEPS; ++i) {
@@ -34,16 +35,13 @@ int main(int argc, char *argv[]) {
     }
     pi = step * sum;
 
-    /* record end time */
-    end_time = get_time();
+    timer.Stop();
 
     /* print results */
-    printf("sequential program results with %d steps:\n", 
-            NUM_STEPS);
-    printf("computed pi = %g  (%17.15f)\n",pi, pi);
-    printf("difference between computed pi and math.h M_PI = %17.15f\n", 
-            fabs(pi - M_PI));
-    printf("time to compute = %g seconds\n", end_time - start_time);
+    cout << "sequential program results with " << NUM_STEPS << " steps:\n";
+    cout << "computed pi = " << pi << "\n";
+    cout << "difference between computed pi and math.h M_PI = " << fabs(pi - M_PI) << "\n";
+    cout << "time to compute = " << timer.millisecs() << " milliseconds.\n";
 
     return EXIT_SUCCESS;
 }
