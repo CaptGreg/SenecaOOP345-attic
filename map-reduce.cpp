@@ -97,8 +97,8 @@ void app1()
 
   // The Reduce operation 
   unordered_map<wstring, size_t> result = 
-  // parallel_reduce // GB not defined
-  // std::reduce // GB not defined
+  // parallel_reduce // GB not defined verified 2019-02-14
+  // std::reduce // GB not defined verified 2019-02-14
   std::accumulate // GB reduce is an out-of-order accumulate, substitute accumulate
     ( begin(map), end(map), unordered_map<wstring, size_t>(), ReduceFunc());
 
