@@ -1,36 +1,11 @@
 #include <chrono>
 
 class Timer {
-
-  std::chrono::time_point<std::chrono::high_resolution_clock> start;
-  std::chrono::time_point<std::chrono::high_resolution_clock> stop;
-
+  decltype(std::chrono::high_resolution_clock::now()) start, stop;
 public:
-
   void Start() { start = std::chrono::high_resolution_clock::now(); }
-
   void Stop()  { stop  = std::chrono::high_resolution_clock::now(); }
-
-  uint64_t millisecs()
-  {
-   typedef std::chrono::duration<int,std::milli> millisecs_t ;
-    millisecs_t duration_get( std::chrono::duration_cast<millisecs_t>(stop-start) ) ;
-    return duration_get.count();
-  }
-
-  uint64_t microsecs()
-  {
-   typedef std::chrono::duration<int,std::micro> microsecs_t ;
-    microsecs_t duration_get( std::chrono::duration_cast<microsecs_t>(stop-start) ) ;
-    return duration_get.count();
-  }
-
-  uint64_t nanosecs()
-  {
-   typedef std::chrono::duration<int,std::nano> nanosecs_t ;
-    nanosecs_t duration_get( std::chrono::duration_cast<nanosecs_t>(stop-start) ) ;
-    return duration_get.count();
-  }
+  uint64_t millisecs() { return std::chrono::duration_cast<std::chrono::duration<int,std::milli> >(stop-start).count(); }
+  uint64_t microsecs() { return std::chrono::duration_cast<std::chrono::duration<int,std::micro> >(stop-start).count(); }
+  uint64_t nanosecs () { return std::chrono::duration_cast<std::chrono::duration<int,std::nano>  >(stop-start).count(); }
 };
-
-

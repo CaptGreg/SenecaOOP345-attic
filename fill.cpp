@@ -68,6 +68,8 @@ DATA_TYPE              array[SIZE];
 
 const size_t size =  sizeof(array) / sizeof(array[0]);
 
+void Print_us(Timer& timer, const char* msg) { std::cout << msg << " " <<  timer.microsecs() << " us.\n"; }
+
 int main(int argc,char**argv)
 {
   Timer timer;
@@ -75,36 +77,36 @@ int main(int argc,char**argv)
   timer.Start();
   for (int i=0; i<SIZE; i++) vec[i] = -1; 
   timer.Stop(); 
-  timer.Print_us("for (int i=0; i<size; i++) vec[i] = -1; ");
+  Print_us(timer, "for (int i=0; i<size; i++) vec[i] = -1; ");
   std::cout << std::accumulate(vec.begin(), vec.end(), (DATA_TYPE) 0) << "\n\n";
 
   timer.Start();
   for (DATA_TYPE& x : vec) x = -2; 
   timer.Stop(); 
-  timer.Print_us("for (DATA_TYPE& x : vec) x = -2; ");
+  Print_us(timer, "for (DATA_TYPE& x : vec) x = -2; ");
   std::cout << std::accumulate(vec.begin(), vec.end(), (DATA_TYPE) 0) << "\n\n";
 
   timer.Start();
   std::fill(vec.begin(), vec.end(), -3);
   timer.Stop(); 
-  timer.Print_us("std::fill(vec.begin(), vec.end(), -3); ");
+  Print_us(timer, "std::fill(vec.begin(), vec.end(), -3); ");
   std::cout << std::accumulate(vec.begin(), vec.end(), (DATA_TYPE) 0) << "\n\n";
 
   timer.Start();
-  for (int i=0; i<size; i++) array[i] = -4; 
+  for (size_t i=0; i<size; i++) array[i] = -4; 
   timer.Stop(); 
-  timer.Print_us("for(int i=0; i<size; i++) array[i] = -4; ");
+  Print_us(timer, "for(int i=0; i<size; i++) array[i] = -4; ");
   std::cout << std::accumulate(array, array+size, (DATA_TYPE) 0) << "\n\n";
 
   timer.Start();
   for (DATA_TYPE& x : array) x = -5; 
   timer.Stop(); 
-  timer.Print_us("for (DATA_TYPE& x : array) x = -5; ");
+  Print_us(timer, "for (DATA_TYPE& x : array) x = -5; ");
   std::cout << std::accumulate(array, array+size, (DATA_TYPE) 0) << "\n\n";
 
   timer.Start();
   std::fill(array, array+size, -6);
   timer.Stop(); 
-  timer.Print_us("std::fill(array, array+size, -6); ");
+  Print_us(timer, "std::fill(array, array+size, -6); ");
   std::cout << std::accumulate(array, array+size, (DATA_TYPE) 0) << "\n\n";
 }
