@@ -1,7 +1,7 @@
 // https://en.cppreference.com/w/cpp/experimental/barrier
 
 #include <chrono>                  // sleep_for
-// #include <experimental/barrier>    // MISSING FILE 2019-02-22 g++-7
+// #include <experimental/barrier>    // MISSING FILE 2019-03-20 g++-7
 #include <iostream>
 #include <string>
 #include <mutex>
@@ -16,10 +16,10 @@ class barrier { // DIY barrier
    std::condition_variable cv;
    volatile uint32_t       threshold;
    volatile uint32_t       count;
-   volatile uint32_t       generation;
+   volatile uint32_t       generation = 0;
 
  public:
-   barrier(unsigned int count): threshold(count), count(count), generation(0) { } 
+   barrier(unsigned int count): threshold(count), count(count) { } 
    bool arrive_and_wait() {
       std::unique_lock<std::mutex> lock(m);
       uint32_t gen = generation;
