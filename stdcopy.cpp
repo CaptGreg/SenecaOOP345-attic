@@ -89,7 +89,7 @@ int main (int argc, char* argv[])
       in.close();
       std::cout << "1. string via istreambuf_iterator: size of '" << dataFile << "' is " << data.size() << " BYTES\n";
     }
-    t.Stop(); std::cout << "1. string via istreambuf_iterator: " << 1.e-6*t.microsecs() << " sec (slowest)\n";
+    t.Stop(); std::cout << "1. string via istreambuf_iterator: " << t.microsecs() << " usec (slowest)\n";
   }
 
   {
@@ -101,7 +101,7 @@ int main (int argc, char* argv[])
       in.close();
       std::cout << "2. string via stringstream rdbuf: size of '" << dataFile << "' is " << data.size() << " BYTES\n";
     }
-    t.Stop(); std::cout << "2. string via stringstream rdbuf: " << 1.e-6*t.microsecs() << " sec (fast)\n";
+    t.Stop(); std::cout << "2. string via stringstream rdbuf: " << t.microsecs() << " usec (fast)\n";
   }
 
   {
@@ -117,7 +117,7 @@ int main (int argc, char* argv[])
       in.close();
       std::cout << "3. string via vector read string: size of '" << dataFile << "' is " << data.size() << " BYTES\n";
     }
-    t.Stop(); std::cout << "3. string via vector read string: " << 1.e-6*t.microsecs() << " sec (fast)\n";
+    t.Stop(); std::cout << "3. string via vector read string: " << t.microsecs() << " usec (fast)\n";
   }
 
   {
@@ -129,7 +129,7 @@ int main (int argc, char* argv[])
       in.close();
       std::cout << "4. 1 line string istreambuf_iterator: size of '" << dataFile << "' is " << data.size() << " BYTES\n";
     }
-    t.Stop(); std::cout << "4. 1 line string istreambuf_iterator: " << 1.e-6*t.microsecs() << " sec (slow)\n";
+    t.Stop(); std::cout << "4. 1 line string istreambuf_iterator: " << t.microsecs() << " usec (slow)\n";
 
   }
   {
@@ -141,7 +141,7 @@ int main (int argc, char* argv[])
       in.close();
       std::cout << "5. 1 line stringstream rdbuf: size of '" << dataFile << "' is " << data.size() << " BYTES\n";
     }
-    t.Stop(); std::cout << "5. 1 line stringstream rdbuf: " << 1.e-6*t.microsecs() << " sec (slow)\n";
+    t.Stop(); std::cout << "5. 1 line stringstream rdbuf: " << t.microsecs() << " usec (quick)\n";
 
   }
 
@@ -161,7 +161,7 @@ int main (int argc, char* argv[])
       in.close();
       std::cout << "6. resize read: size of '" << dataFile << "' is " << data.size() << " BYTES\n";
     }
-    t.Stop(); std::cout << "6. resize read: " << 1.e-6*t.microsecs() << " sec (fastest)\n";
+    t.Stop(); std::cout << "6. resize read: " << t.microsecs() << " usec (tied for fastest)\n";
 
   }
 
@@ -184,13 +184,11 @@ int main (int argc, char* argv[])
 
       std::cout << "7. std::copy via istreambuf_iterator: size of '" << dataFile << "' is " << data.size() << " BYTES\n";
     }
-    t.Stop(); std::cout << "7. std::copy via istreambuf_iterator: " << 1.e-6*t.microsecs() << " sec (slow)\n";
+    t.Stop(); std::cout << "7. std::copy via istreambuf_iterator: " << t.microsecs() << " usec (slow)\n";
   }
-#if 0
-  // g++-7 -std=C++17 doesn't compile
   {
-    namespace fs = std::experimental::filesystem;        // ld undefined symbol
-    // namespace fs = std::experimental::filesystem::v1; // ld undefined symbol
+    namespace fs = std::experimental::filesystem;
+    // namespace fs = std::experimental::filesystem::v1;
     
     // Open the stream to 'lock' the file.
     std::ifstream f{ dataFile };
@@ -198,7 +196,7 @@ int main (int argc, char* argv[])
     t.Start();
 
     // Obtain the size of the file.
-    const auto sz = fs::file_size(dataFile);
+    const auto sz = std::experimental::filesystem::file_size(dataFile);
 
     // Create a buffer.
     std::string data(sz, ' ');
@@ -207,12 +205,8 @@ int main (int argc, char* argv[])
     f.read(data.data(), sz);
 
     std::cout << "8. C++17 filesystem: size of '" << dataFile << "' is " << data.size() << " BYTES\n";
-    t.Stop(); std::cout << "8. C++17 filesystem: " << 1.e-6*t.microsecs() << " sec (slow)\n";
+    t.Stop(); std::cout << "8. C++17 filesystem: " << t.microsecs() << " usec (tied for fastest)\n";
   }
-  // Note: you may need to use <experimental/filesystem> and std::experimental::filesystem if your standard library 
-  // doesn't yet fully support C++17. You might also need to replace result.data() with &result[0] if it doesn't 
-  // support non-const std::basic_string data.
-#endif
 
   return 0;
 }

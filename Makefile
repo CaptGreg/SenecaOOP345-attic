@@ -123,8 +123,17 @@ pathfind : pathfind.cpp
 	$(CXX) $(CXXFLAGS)  $^ -o $@ -lGL -lglut -lGLEW 
 	./$@
 
+# C++ std::experimental::filesystem
+dirtree : dirtree.cpp
+	g++-8 $(CXXFLAGS)  $^ -o $@ -lstdc++fs
+
+# C++ std::experimental::filesystem
 filesize : filesize.cpp
 	$(CXX) $(CXXFLAGS)  $^ -o $@ -lstdc++fs
+
+# C++ std::experimental::filesystem
+stdcopy : stdcopy.cpp
+	$(CXX) $(CXXFLAGS)  -Ofast $^ -o $@ -lstdc++fs
 
 gl3ctx : gl3ctx.cpp
 	$(CXX) $^ -o $@ -lGL  -lX11 
