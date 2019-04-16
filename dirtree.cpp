@@ -6,11 +6,8 @@
 
 #include <iostream>
 
-// #include <filesystem>            // not found
-#include <experimental/filesystem>
-
-// namespace fs = std::filesystem;  // error: ‘filesystem’ is not a namespace-name
-namespace fs = std::experimental::filesystem;
+#include <filesystem>            // not found
+namespace fs = std::filesystem;  // error: ‘filesystem’ is not a namespace-name
 
 int main(int argc, char*argv[])
 {
