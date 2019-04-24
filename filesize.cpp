@@ -1,7 +1,13 @@
+// g++-8 -Wall -std=c++17  filesize.cpp -o filesize -lstdc++fs && ./filesize filesize.cpp
+
 #include <iostream>                // cout
 #include <fstream>                 // ifstream
-#include <experimental/filesystem> // link with -lstdc++fs library 
-// Verified Jan 2019 with g++ 7.3.0 (Ubuntu 7.3.0-27ubuntu1~18.04)
+
+// g++-7: #include <experimental/filesystem> + std::experimental::filesystem
+// g++-8: #include <filesystem> + std::filesystem
+
+// #include <experimental/filesystem> // link with -lstdc++fs library 
+#include <filesystem> // link with -lstdc++fs library 
 
 using namespace std;
 
@@ -16,9 +22,15 @@ int main(int argc, char**argv)
   for(int arg = 1; arg < argc; arg++) {
     cout << "DIY filesize(" << argv[arg] << ") = " << filesize(argv[arg]) << "\n";
     try {
-        const auto fsize = std::experimental::filesystem::file_size(argv[arg]); 
-        cout <<  "std::filesystem::file_size(" << argv[arg] << ") = " << fsize << "\n";
-    } catch(std::experimental::filesystem::filesystem_error& ex) {
+        // const auto fsize = std::experimental::filesystem::file_size(argv[arg]); 
+        const auto fsize = std::filesystem::file_size(argv[arg]); 
+
+        // cout <<  "std::filesystem::file_size(" << argv[arg] << ") = " << fsize << "\n";
+        cout <<  "std::file_size(" << argv[arg] << ") = " << fsize << "\n";
+    } 
+    // catch(std::experimental::filesystem::filesystem_error& ex) 
+    catch(std::filesystem::filesystem_error& ex) 
+    {
         std::cout << ex.what() << '\n';
         // filesystem error: cannot get file size: No such file or directory [xxxyyyxxx]
     }
