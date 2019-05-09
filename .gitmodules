@@ -1,0 +1,6 @@
+[submodule "queue-concurrent-moodycamel/concurrentqueue"]
+	path = queue-concurrent-moodycamel/concurrentqueue
+	url = https://github.com/cameron314/concurrentqueue.git
+[submodule "queue-concurrent-moodycamel/readerwriterqueue"]
+	path = queue-concurrent-moodycamel/readerwriterqueue
+	url = https://github.com/cameron314/readerwriterqueue.git
