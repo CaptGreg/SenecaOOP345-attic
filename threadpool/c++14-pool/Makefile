@@ -1,7 +1,7 @@
 # Author:  Greg Blair
 # Written: November 22, 2017
 
-CXX      = g++-7
+CXX      = g++-8
 CXXFLAGS = -std=c++17 
 
 # makefile variables
