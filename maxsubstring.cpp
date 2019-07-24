@@ -1,3 +1,7 @@
+// an interview question:  find max substring without duplicate chars.
+// random solutions from web, one for length of substring, the other for the substring.
+// not all web solutions work.
+
 #include <iostream>
 #include <string>
 #include <unordered_map>
