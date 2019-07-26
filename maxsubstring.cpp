@@ -133,7 +133,7 @@ string findLongestSubstring(string& str)   // GB slow
     return str.substr(start, maxlen); 
 }
 
-int main()
+int main(int argc, char*argv[])
 {
   int r = EXIT_SUCCESS;
 
@@ -151,7 +151,10 @@ int main()
   for (auto s : input)
     cout << "'" << s << "' = (" << lengthOfLongestSubstring(s) << ") '" << findLongestSubstring(s) << "'\n";
 
-  string file = "gutenberg_shakespeare";
+  if(argc == 1)
+    return EXIT_SUCCESS;
+
+  string file = argv[1];
   cout << "\n" << file << " example\n";
   fstream fs(file, ios::in);
   if(fs.is_open()) {
