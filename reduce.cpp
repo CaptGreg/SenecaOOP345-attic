@@ -281,4 +281,48 @@ reduce(std::execution::par,...) result 500000000 took 242.351666 ms
 AGAIN, in case std::reduce initialized a thread pool which remains active.
 Same calculation using reduce(std::execution::par, v.begin(), v.end(), 0.) on a 16 core machine:
 reduce(std::execution::par,...) result 500000000 took 240.733932 ms
+
+
+clang++-8 -Wall -std=c++17 -fopenmp -Ofast reduce.cpp -o reduce -pthread -ltbb && ./reduce
++++++++++++++++++++++++++++++++
+./reduce
+FILE 'reduce.cpp' compiled Aug 16 2019 at 11:24:51 by clang++ 4.2.1 Compatible Clang 8.0.0 (tags/RELEASE_800/final)
+
+accumulate result 500000000 took 353.601189 ms
+
+Same calculation using __parallel::accumulate(v.begin(), v.end(), 0.) on a 16 core machine:
+__parallel::accumulate result 500000000 took 284.073083 ms
+
+Same calculation using indexed for-loop.
+for-loop result 500000000 took 362.430558 ms
+
+Same calculation using iterator for-loop.
+for-loop result 500000000 took 352.819760 ms
+
+Same calculation using range-based-for-loop.
+range-based-for-loop result 500000000 took 351.791070 ms
+
+Same calculation using OMP PARALLEL FOR for-loop on a 16 core machine:
+OMP PARALLEL FOR for-loop result 500000000 took 286.831452 ms
+
+AGAIN, in case OMP PARALLEL FOR initialized a thread pool which remains active.
+Same calculation using OMP PARALLEL FOR for-loop on a 16 core machine:
+OMP PARALLEL FOR for-loop result 500000000 took 299.921981 ms
+
+Same calculation using DIY threaded indexed for-loop on a 16 core machine:
+DIY threaded indexed for-loop result 500000000 took 250.032659 ms
+
+Same calculation using DIY threaded iterator for-loop on a 16 core machine:
+ DIY threaded iterator for-loop result 500000000 took 241.922787 ms
+
+Same calculation using reduce(std::execution::seq, v.begin(), v.end(), 0.) on a 16 core machine:
+reduce(std::execution::seq,...) result 500000000 took 355.609328 ms
+
+Same calculation using reduce(std::execution::par, v.begin(), v.end(), 0.) on a 16 core machine:
+reduce(std::execution::par,...) result 500000000 took 240.568686 ms
+
+AGAIN, in case std::reduce initialized a thread pool which remains active.
+Same calculation using reduce(std::execution::par, v.begin(), v.end(), 0.) on a 16 core machine:
+reduce(std::execution::par,...) result 500000000 took 241.841865 ms
+
 */
