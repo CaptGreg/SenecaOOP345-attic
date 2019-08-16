@@ -1,5 +1,6 @@
-// g++-9.1 -Wall -std=c++17 -fopenmp -Ofast reduce.cpp -o reduce -pthread -ltbb && ./reduce
-// g++-9.2 -Wall -std=c++17 -fopenmp -Ofast reduce.cpp -o reduce -pthread -ltbb && ./reduce
+// g++-9.1   -Wall -std=c++17 -fopenmp -Ofast reduce.cpp -o reduce -pthread -ltbb && ./reduce
+// g++-9.2   -Wall -std=c++17 -fopenmp -Ofast reduce.cpp -o reduce -pthread -ltbb && ./reduce
+// clang++-8 -Wall -std=c++17 -fopenmp -Ofast reduce.cpp -o reduce -pthread -ltbb && ./reduce
 
 // motivated from example at http://en.cppreference.com/w/cpp/algorithm/reduce 
 
@@ -324,5 +325,25 @@ reduce(std::execution::par,...) result 500000000 took 240.568686 ms
 AGAIN, in case std::reduce initialized a thread pool which remains active.
 Same calculation using reduce(std::execution::par, v.begin(), v.end(), 0.) on a 16 core machine:
 reduce(std::execution::par,...) result 500000000 took 241.841865 ms
+
+
++++++++++++++++++++++++++++++++
+Above timings in a table
+
+                                        g++ 9.2.0        clang++ 4.2.1 Compatible 
+                                                         Clang 8.0.0
+
+accumulate                              558.977853 ms    353.601189 ms
+__parallel::accumulate                  251.344152 ms    284.073083 ms
+indexed for-loop.                       3456.176756 ms   362.430558 ms
+iterator for-loop.                      561.269577 ms    352.819760 ms
+range-based-for-loop.                   561.610121 ms    351.791070 ms
+OMP PARALLEL FOR                        244.699200 ms    286.831452 ms
+AGAIN, OMP PARALLEL FOR                 243.754653 ms    299.921981 ms
+DIY threaded indexed for-loop           242.540649 ms    250.032659 ms
+DIY threaded iterator for-loop          241.967781 ms    241.922787 ms
+reduce(std::execution::seq,...)         573.393391 ms    355.609328 ms
+reduce(std::execution::par,...)         242.351666 ms    240.568686 ms
+AGAIN, reduce(std::execution::par,...)  240.733932 ms    241.841865 ms
 
 */
