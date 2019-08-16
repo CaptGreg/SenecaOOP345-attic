@@ -1,13 +1,12 @@
+// g++-9.1 -Wall -std=c++17 -fopenmp -Ofast reduce.cpp -o reduce -pthread -ltbb && ./reduce
+// g++-9.2 -Wall -std=c++17 -fopenmp -Ofast reduce.cpp -o reduce -pthread -ltbb && ./reduce
+
 // motivated from example at http://en.cppreference.com/w/cpp/algorithm/reduce 
 
-// However, std::reduce does not exist
-// g++-8 -Wall -std=c++17   -fopenmp -Ofast reduce.cpp -o reduce -pthread
-// g++-8 -Wall -std=c++1y   -fopenmp -Ofast reduce.cpp -o reduce -pthread
-// g++-8 -Wall -std=c++1z   -fopenmp -Ofast reduce.cpp -o reduce -pthread
-// g++-8 -Wall -std=gnu++17 -fopenmp -Ofast reduce.cpp -o reduce -pthread
-// g++-8 -Wall -std=gnu++2a -fopenmp -Ofast reduce.cpp -o reduce -pthread
+// std::reduce exists in g++9.1 or later
 
 #include <chrono>
+#include <execution> // std:: execution::par, ::seq, ...
 #include <future>
 #include <iostream>
 #include <numeric>           // std::accumulate
@@ -18,63 +17,23 @@
 
 using namespace std;
 
-// want 'execution' header file
-// $ find /usr/include  -name execution
-// (nothing found)
-
-// grep -R -r ::par'\>' /usr/include 
-//    *  finds thrust, omp, mpi, ..., but no c++
-
-// try experimental:
-// ls /usr/include/c++/8/experimental
-// algorithm  deque         list             optional         set              tuple          vector
-// any        filesystem    map              propagate_const  source_location  type_traits
-// array      forward_list  memory           random           string           unordered_map
-// bits       functional    memory_resource  ratio            string_view      unordered_set
-// chrono     iterator      numeric          regex            system_error     utility
-
-
-// 2019-06-05: ls /usr/include/c++/*/parallel/
-// /usr/include/c++/7.4.0/parallel/:
-// algobase.h            base.h                  equally_split.h   for_each_selectors.h  multiseq_selection.h  omp_loop.h         partition.h       search.h          types.h
-// algo.h                basic_iterator.h        features.h        iterator.h            multiway_merge.h      omp_loop_static.h  queue.h           set_operations.h  unique_copy.h
-// algorithm             checkers.h              find.h            list_partition.h      multiway_mergesort.h  parallel.h         quicksort.h       settings.h        workstealing.h
-// algorithmfwd.h        compatibility.h         find_selectors.h  losertree.h           numeric               par_loop.h         random_number.h   sort.h
-// balanced_quicksort.h  compiletime_settings.h  for_each.h        merge.h               numericfwd.h          partial_sum.h      random_shuffle.h  tags.h
-// 
-// /usr/include/c++/7/parallel/:
-// algobase.h            base.h                  equally_split.h   for_each_selectors.h  multiseq_selection.h  omp_loop.h         partition.h       search.h          types.h
-// algo.h                basic_iterator.h        features.h        iterator.h            multiway_merge.h      omp_loop_static.h  queue.h           set_operations.h  unique_copy.h
-// algorithm             checkers.h              find.h            list_partition.h      multiway_mergesort.h  parallel.h         quicksort.h       settings.h        workstealing.h
-// algorithmfwd.h        compatibility.h         find_selectors.h  losertree.h           numeric               par_loop.h         random_number.h   sort.h
-// balanced_quicksort.h  compiletime_settings.h  for_each.h        merge.h               numericfwd.h          partial_sum.h      random_shuffle.h  tags.h
-// 
-// /usr/include/c++/8/parallel/:
-// algobase.h            base.h                  equally_split.h   for_each_selectors.h  multiseq_selection.h  omp_loop.h         partition.h       search.h          types.h
-// algo.h                basic_iterator.h        features.h        iterator.h            multiway_merge.h      omp_loop_static.h  queue.h           set_operations.h  unique_copy.h
-// algorithm             checkers.h              find.h            list_partition.h      multiway_mergesort.h  parallel.h         quicksort.h       settings.h        workstealing.h
-// algorithmfwd.h        compatibility.h         find_selectors.h  losertree.h           numeric               par_loop.h         random_number.h   sort.h
-// balanced_quicksort.h  compiletime_settings.h  for_each.h        merge.h               numericfwd.h          partial_sum.h      random_shuffle.h  tags.h
-
-// ls /usr/include/c++/*/experimental
-// /usr/include/c++/7.4.0/experimental:
-// algorithm  bits    filesystem    iterator  memory           optional         ratio  source_location  system_error  unordered_map  vector
-// any        chrono  forward_list  list      memory_resource  propagate_const  regex  string           tuple         unordered_set
-// array      deque   functional    map       numeric          random           set    string_view      type_traits   utility
-// 
-// /usr/include/c++/7/experimental:
-// algorithm  bits    filesystem    iterator  memory           optional         ratio  source_location  system_error  unordered_map  vector
-// any        chrono  forward_list  list      memory_resource  propagate_const  regex  string           tuple         unordered_set
-// array      deque   functional    map       numeric          random           set    string_view      type_traits   utility
-// 
-// /usr/include/c++/8/experimental:
-// algorithm  bits    filesystem    iterator  memory           optional         ratio  source_location  system_error  unordered_map  vector
-// any        chrono  forward_list  list      memory_resource  propagate_const  regex  string           tuple         unordered_set
-// array      deque   functional    map       numeric          random           set    string_view      type_traits   utility
-
-int main()
+int main(int argc, char*argv[])
 {
-    vector<double> v(10 * 1000 * 1000, 0.5);
+  std::cout <<"+++++++++++++++++++++++++++++++\n";
+  std::cout << argv[0] << "\n";
+  std::cout << "FILE '" << __FILE__ << "' compiled " 
+            << __DATE__ << " at " << __TIME__ 
+#ifdef __GNUC__  // either g++ or clang++
+  #ifdef __clang__
+    << " by clang++ "
+  #else
+    << " by g++ "
+  #endif
+   << __VERSION__
+#endif
+   << "\n\n";
+
+    vector<double> v(1000 * 1000 * 1000, 0.5); // 8 * 1e9 RAM
  
     {
         auto t1 = chrono::high_resolution_clock::now();
@@ -82,7 +41,7 @@ int main()
         result = accumulate(v.begin(), v.end(), result);
         auto t2 = chrono::high_resolution_clock::now();
         chrono::duration<double, milli> ms = t2 - t1;
-        cout << fixed << "accumulate result " << result
+        cout << fixed << "accumulate result " << (uint64_t) result
                   << " took " << ms.count() << " ms\n\n";
     }
 
@@ -94,7 +53,7 @@ int main()
         auto t2 = chrono::high_resolution_clock::now();
         chrono::duration<double, milli> ms = t2 - t1;
         cout << "__parallel::accumulate result "
-                  << result << " took " << ms.count() << " ms\n\n";
+                  << (uint64_t) result << " took " << ms.count() << " ms\n\n";
     }
 
     {
@@ -106,7 +65,7 @@ int main()
         auto t2 = chrono::high_resolution_clock::now();
         chrono::duration<double, milli> ms = t2 - t1;
         cout << "for-loop result "
-                  << result << " took " << ms.count() << " ms\n\n";
+                  << (uint64_t) result << " took " << ms.count() << " ms\n\n";
     }
 
     {
@@ -118,7 +77,19 @@ int main()
         auto t2 = chrono::high_resolution_clock::now();
         chrono::duration<double, milli> ms = t2 - t1;
         cout << "for-loop result "
-                  << result << " took " << ms.count() << " ms\n\n";
+                  << (uint64_t) result << " took " << ms.count() << " ms\n\n";
+    }
+
+    {
+        cout << "Same calculation using range-based-for-loop.\n";
+        auto t1 = chrono::high_resolution_clock::now();
+        double result = 0.;
+        for(double e :  v)
+          result += e;
+        auto t2 = chrono::high_resolution_clock::now();
+        chrono::duration<double, milli> ms = t2 - t1;
+        cout << "range-based-for-loop result "
+                  << (uint64_t) result << " took " << ms.count() << " ms\n\n";
     }
 
     {
@@ -132,19 +103,22 @@ int main()
         auto t2 = chrono::high_resolution_clock::now();
         chrono::duration<double, milli> ms = t2 - t1;
         cout << "OMP PARALLEL FOR for-loop result "
-                  << result << " took " << ms.count() << " ms\n\n";
+                  << (uint64_t) result << " took " << ms.count() << " ms\n\n";
     }
 
     {
-        cout << "Same calculation using range-based-for-loop.\n";
+        cout << "AGAIN, in case OMP PARALLEL FOR initialized a thread pool which remains active.\n";
+        cout << "Same calculation using OMP PARALLEL FOR for-loop on a " << thread::hardware_concurrency() << " core machine:\n";
         auto t1 = chrono::high_resolution_clock::now();
         double result = 0.;
-        for(double e :  v)
-          result += e;
+        #pragma omp parallel for reduction(+:result)
+        // #pragma omp simd reduction(+:result) // simd omp is twice as slow 
+        for(size_t i = 0; i < v.size(); i++)
+          result += v[i];
         auto t2 = chrono::high_resolution_clock::now();
         chrono::duration<double, milli> ms = t2 - t1;
-        cout << "range-based-for-loop result "
-                  << result << " took " << ms.count() << " ms\n\n";
+        cout << "OMP PARALLEL FOR for-loop result "
+                  << (uint64_t) result << " took " << ms.count() << " ms\n\n";
     }
 
     {
@@ -176,7 +150,7 @@ int main()
         auto t2 = chrono::high_resolution_clock::now();
         chrono::duration<double, milli> ms = t2 - t1;
         cout << "DIY threaded indexed for-loop result "
-                  << result << " took " << ms.count() << " ms\n\n";
+                  << (uint64_t) result << " took " << ms.count() << " ms\n\n";
     }
 
     {
@@ -208,9 +182,43 @@ int main()
         auto t2 = chrono::high_resolution_clock::now();
         chrono::duration<double, milli> ms = t2 - t1;
         cout << " DIY threaded iterator for-loop result "
-                  << result << " took " << ms.count() << " ms\n\n";
+                  << (uint64_t) result << " took " << ms.count() << " ms\n\n";
+    }
+
+    {
+        cout << "Same calculation using reduce(std::execution::seq, v.begin(), v.end(), 0.) on a " << thread::hardware_concurrency() << " core machine:\n";
+        auto t1 = chrono::high_resolution_clock::now();
+        double result = 0.;
+        result = reduce(std::execution::seq, v.begin(), v.end(), result);
+        auto t2 = chrono::high_resolution_clock::now();
+        chrono::duration<double, milli> ms = t2 - t1;
+        cout << "reduce(std::execution::seq,...) result "
+                  << (uint64_t) result << " took " << ms.count() << " ms\n\n";
+    }
+
+    {
+        cout << "Same calculation using reduce(std::execution::par, v.begin(), v.end(), 0.) on a " << thread::hardware_concurrency() << " core machine:\n";
+        auto t1 = chrono::high_resolution_clock::now();
+        double result = 0.;
+        result = reduce(std::execution::par, v.begin(), v.end(), result);
+        auto t2 = chrono::high_resolution_clock::now();
+        chrono::duration<double, milli> ms = t2 - t1;
+        cout << "reduce(std::execution::par,...) result "
+                  << (uint64_t) result << " took " << ms.count() << " ms\n\n";
     }
  
+    {
+        cout << "AGAIN, in case std::reduce initialized a thread pool which remains active.\n";
+        cout << "Same calculation using reduce(std::execution::par, v.begin(), v.end(), 0.) on a " << thread::hardware_concurrency() << " core machine:\n";
+        auto t1 = chrono::high_resolution_clock::now();
+        double result = 0.;
+        result = reduce(std::execution::par, v.begin(), v.end(), result);
+        auto t2 = chrono::high_resolution_clock::now();
+        chrono::duration<double, milli> ms = t2 - t1;
+        cout << "reduce(std::execution::par,...) result "
+                  << (uint64_t) result << " took " << ms.count() << " ms\n\n";
+    }
+
  #if 0 // OMP doesn't support range-based for-loops
     {
         // OMP spec (even 5.0) states all for-loops must be canonical.  That is 'for(init; test; increment)'.
@@ -224,22 +232,53 @@ int main()
         auto t2 = chrono::high_resolution_clock::now();
         chrono::duration<double, milli> ms = t2 - t1;
         cout << "__parallel::accumulate result "
-                  << result << " took " << ms.count() << " ms\n\n";
+                  << (uint64_t) result << " took " << ms.count() << " ms\n\n";
     }
 #endif
 
- #if 0
-    {
-        // reduce is the out-of-order version of accumulate, not today, maybe someday...
-
-        auto t1 = chrono::high_resolution_clock::now();
-        double result = reduce(execution::par, v.begin(), v.end(), 0.); // GB 'par' someday...
-        auto t2 = chrono::high_resolution_clock::now();
-        chrono::duration<double, milli> ms = t2 - t1;
-        cout << "reduce result "
-                  << result << " took " << ms.count() << " ms\n\n";
-    }
- #endif
-
     return 0;
 }
+
+/*
+g++-9.2 -Wall -std=c++17 -fopenmp -Ofast reduce.cpp -o reduce -pthread -ltbb && ./reduce
++++++++++++++++++++++++++++++++
+./reduce
+FILE 'reduce.cpp' compiled Aug 16 2019 at 11:17:10 by g++ 9.2.0
+
+accumulate result 500000000 took 558.977853 ms
+
+Same calculation using __parallel::accumulate(v.begin(), v.end(), 0.) on a 16 core machine:
+__parallel::accumulate result 500000000 took 251.344152 ms
+
+Same calculation using indexed for-loop.
+for-loop result 500000000 took 3456.176756 ms
+
+Same calculation using iterator for-loop.
+for-loop result 500000000 took 561.269577 ms
+
+Same calculation using range-based-for-loop.
+range-based-for-loop result 500000000 took 561.610121 ms
+
+Same calculation using OMP PARALLEL FOR for-loop on a 16 core machine:
+OMP PARALLEL FOR for-loop result 500000000 took 244.699200 ms
+
+AGAIN, in case OMP PARALLEL FOR initialized a thread pool which remains active.
+Same calculation using OMP PARALLEL FOR for-loop on a 16 core machine:
+OMP PARALLEL FOR for-loop result 500000000 took 243.754653 ms
+
+Same calculation using DIY threaded indexed for-loop on a 16 core machine:
+DIY threaded indexed for-loop result 500000000 took 242.540649 ms
+
+Same calculation using DIY threaded iterator for-loop on a 16 core machine:
+ DIY threaded iterator for-loop result 500000000 took 241.967781 ms
+
+Same calculation using reduce(std::execution::seq, v.begin(), v.end(), 0.) on a 16 core machine:
+reduce(std::execution::seq,...) result 500000000 took 573.393391 ms
+
+Same calculation using reduce(std::execution::par, v.begin(), v.end(), 0.) on a 16 core machine:
+reduce(std::execution::par,...) result 500000000 took 242.351666 ms
+
+AGAIN, in case std::reduce initialized a thread pool which remains active.
+Same calculation using reduce(std::execution::par, v.begin(), v.end(), 0.) on a 16 core machine:
+reduce(std::execution::par,...) result 500000000 took 240.733932 ms
+*/
