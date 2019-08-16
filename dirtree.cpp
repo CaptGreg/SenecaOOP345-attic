@@ -1,13 +1,14 @@
 // https://www.bfilipek.com/2019/04/dir-iterate.html
 // using methods from https://en.cppreference.com/w/cpp/filesystem/is_directory
 
-// g++-8 -Wall -std=c++17  dirtree.cpp -o dirtree -lstdc++fs
-// 2019-04-15 g++-8.2.0
+// 2019-08-16 tested
+// g++-9.2   -Wall -std=c++17  dirtree.cpp -o dirtree
+// clang++-8 -Wall -std=c++17  dirtree.cpp -o dirtree
 
 #include <iostream>
 
-#include <filesystem>            // not found
-namespace fs = std::filesystem;  // error: ‘filesystem’ is not a namespace-name
+#include <filesystem>
+namespace fs = std::filesystem;
 
 int main(int argc, char*argv[])
 {
