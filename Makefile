@@ -19,22 +19,16 @@ CXX       = clang++
 # use g++ for fastforward
 CXX       = g++
 
+ifeq ($(HOSTNAME),rog)
+  CC      = gcc-9.2
+  CXX     = g++-9.2
+endif
+
 ifeq ($(HOSTNAME),raspberrypi)
   CC      = gcc
   CXX     = g++
 endif
 
-ifeq ($(HOSTNAME),amd1100t)
-  CC      = gcc
-  CXX     = clang++
-  CXX     = g++
-endif
-
-ifeq ($(HOSTNAME),hp)
-  CC      = gcc
-  CXX     = g++
-  # Ubuntu 16.04 is release 5.3.1
-endif
 
 ifeq ($(HOSTNAME),matrix)
   CXX     = g++
@@ -97,6 +91,9 @@ moments : moments.cpp
 ocl_c++11: ocl_c++11.cpp
 	$(CXX) $(CXXFLAGS)  $(CXXFLAGSOCL) $^ $(LFLAGSOCL) -o $@ 
 
+ocl_c++11-base: ocl_c++11-base.cpp
+	$(CXX) $(CXXFLAGS)  $(CXXFLAGSOCL) $^ $(LFLAGSOCL) -o $@ 
+
 ocl_header: ocl_header.cpp
 	$(CXX) $(CXXFLAGS)  $(CXXFLAGSOCL) $^ $(LFLAGSOCL) -o $@
 
@@ -133,11 +130,11 @@ filesystem : filesystem.cpp
 
 # C++ std::experimental::filesystem
 filesize : filesize.cpp
-	$(CXX) $(CXXFLAGS)  $^ -o $@ -lstdc++fs
+	g++-8 $(CXXFLAGS)  $^ -o $@ -lstdc++fs
 
 # C++ std::experimental::filesystem
 stdcopy : stdcopy.cpp
-	$(CXX) $(CXXFLAGS)  -Ofast $^ -o $@ -lstdc++fs
+	g++-8 $(CXXFLAGS)  -Ofast $^ -o $@ -lstdc++fs
 
 gl3ctx : gl3ctx.cpp
 	$(CXX) $^ -o $@ -lGL  -lX11 
@@ -259,7 +256,7 @@ tp14: tp14.cpp
 	g++ -Wall -std=c++14 $^ -o $@ -pthread
 
 map-reduce: map-reduce.cpp
-	g++ -Wall -std=c++17 $^ -o $@ -pthread
+	g++-9.2 -Wall -std=c++17 $^ -o $@ -pthread -ltbb
 
 # getaddrinfo_a, gai_suspend, gai_error, gai_cancel - asynchronous network address and service translation
 getaddrinfo_a: getaddrinfo_a.cpp
