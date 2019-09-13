@@ -2,9 +2,8 @@
 
 #include <chrono>       // std::this_thread::sleep_for(std::chrono::seconds(2));
 #include <exception> 
-#include <future>       // std::promise, std::future_error, std::future_category
+#include <future>       // std::promise, std::future_error, std::future_category, includes <thread>
 #include <iostream>     // std::cout, std::cerr
-#include <chrono>
 
 class Timer {
   decltype(std::chrono::high_resolution_clock::now()) start, stop;
