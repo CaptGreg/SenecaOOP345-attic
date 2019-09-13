@@ -46,7 +46,7 @@ int main1()
     return 0;
 }
 
-thread_local int tli = 2; // one copy per thread
+thread_local int tli = 42; // one copy per thread
 
 int main()
 {
