@@ -46,10 +46,10 @@ CXXFLAGS = -Wall $(C11FLAG) $(CXXDFLAGS) $(OPTCFLAGS)
 
 # NOTE Jan 22, 2019 These OpenCL flags compile
 CXXFLAGSOCL = `pkg-config --cflags opencl`
-LFLAGSOCL   = `pkg-config --libs opencl`
+LFLAGSOCL   = `pkg-config --libs opencl` -ltbb
 
-OPTLFLAGS   = -lrt -pthread
-LFLAGS      = $(OPTLFLAGS)
+OPTLFLAGS   = -lrt -pthread -ltbb
+LFLAGS      = $(OPTLFLAGS) -ltbb
 
 % : %.cpp 
 	$(CXX) $(CXXFLAGS) $^ -o $@ $(LFLAGS)
