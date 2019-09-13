@@ -17,7 +17,7 @@ C11FLAG   = -std=c++17
 CXX       = clang++
 # May 15, 2015, clang++ has missing/corrupt header files: won't compile fastforward, includes fail
 # use g++ for fastforward
-CXX       = g++
+CXX       = g++-9.2
 
 ifeq ($(HOSTNAME),rog)
   CC      = gcc-9.2
@@ -63,13 +63,13 @@ LFLAGS      = $(OPTLFLAGS)
 # needs  -fsanitize=address flag.  Compiles with g++ 4.8 or later.  asan_symbolize is part of clang
 
 asan-global-buffer-overflow : asan-global-buffer-overflow.cpp
-	g++ -O -g -fsanitize=address -Wall -std=c++17 $^ -o $@
+	$(CXX) -O -g -fsanitize=address -Wall -std=c++17 $^ -o $@
 asan-heap-buffer-overflow : asan-heap-buffer-overflow.cpp
-	g++ -O -g -fsanitize=address -Wall -std=c++17 $^ -o $@
+	$(CXX) -O -g -fsanitize=address -Wall -std=c++17 $^ -o $@
 asan-heap-use-after-free : asan-heap-use-after-free.cpp
-	g++ -O -g -fsanitize=address -Wall -std=c++17 $^ -o $@
+	$(CXX) -O -g -fsanitize=address -Wall -std=c++17 $^ -o $@
 asan-stack-buffer-overflow : asan-stack-buffer-overflow.cpp
-	g++ -O -g -fsanitize=address -Wall -std=c++17 $^ -o $@
+	$(CXX) -O -g -fsanitize=address -Wall -std=c++17 $^ -o $@
 
 asan : asan-global-buffer-overflow asan-heap-buffer-overflow asan-heap-use-after-free asan-stack-buffer-overflow
 
@@ -122,19 +122,19 @@ pathfind : pathfind.cpp
 
 # C++ std::experimental::filesystem
 dirtree : dirtree.cpp
-	g++-8 $(CXXFLAGS)  $^ -o $@ -lstdc++fs
+	$(CXX) $(CXXFLAGS)  $^ -o $@ -lstdc++fs
 
 # C++ std::experimental::filesystem
 filesystem : filesystem.cpp
-	g++-8 $(CXXFLAGS)  $^ -o $@ -lstdc++fs
+	$(CXX) $(CXXFLAGS)  $^ -o $@ -lstdc++fs
 
 # C++ std::experimental::filesystem
 filesize : filesize.cpp
-	g++-8 $(CXXFLAGS)  $^ -o $@ -lstdc++fs
+	$(CXX) $(CXXFLAGS)  $^ -o $@ -lstdc++fs
 
 # C++ std::experimental::filesystem
 stdcopy : stdcopy.cpp
-	g++-8 $(CXXFLAGS)  -Ofast $^ -o $@ -lstdc++fs
+	$(CXX) $(CXXFLAGS)  -Ofast $^ -o $@ -lstdc++fs
 
 gl3ctx : gl3ctx.cpp
 	$(CXX) $^ -o $@ -lGL  -lX11 
@@ -203,72 +203,72 @@ vectorization : vectorization.cpp
 #  This will never work since the shell truncates myfile.cpp before invoking the compiler)
 
 mandelbrot-345a : mandelbrot-345a.cpp
-	g++ -std=c++17 -Ofast mandelbrot-345a.cpp -o mandelbrot-345a -ljpeg -ltiff -lpng -pthread
+	$(CXX) -std=c++17 -Ofast mandelbrot-345a.cpp -o mandelbrot-345a -ljpeg -ltiff -lpng -pthread
 
 mandelbrot-345b : mandelbrot-345b.cpp
-	g++ -std=c++17 -Ofast mandelbrot-345b.cpp tp.cpp -o mandelbrot-345b -ljpeg -ltiff -lpng -pthread
+	$(CXX) -std=c++17 -Ofast mandelbrot-345b.cpp tp.cpp -o mandelbrot-345b -ljpeg -ltiff -lpng -pthread
 
 mandelbrot-345aphase2 : mandelbrot-345aphase2.cpp
-	g++ -std=c++17 -Ofast mandelbrot-345aphase2.cpp -o mandelbrot-345aphase2 -ljpeg -ltiff -lpng -pthread
+	$(CXX) -std=c++17 -Ofast mandelbrot-345aphase2.cpp -o mandelbrot-345aphase2 -ljpeg -ltiff -lpng -pthread
 
 mandelbrot-345bphase2 : mandelbrot-345bphase2.cpp
-	g++ -std=c++17 -Ofast mandelbrot-345bphase2.cpp -o mandelbrot-345bphase2 -ljpeg -ltiff -lpng -pthread
+	$(CXX) -std=c++17 -Ofast mandelbrot-345bphase2.cpp -o mandelbrot-345bphase2 -ljpeg -ltiff -lpng -pthread
 
 mandelbrot-345aphase3 : mandelbrot-345aphase3.cpp tp345a.cpp tp345a.h
-	g++ -std=c++17 -Ofast mandelbrot-345aphase3.cpp tp345a.cpp -o mandelbrot-345aphase3 -lSDL -ljpeg -ltiff -lpng -pthread
+	$(CXX) -std=c++17 -Ofast mandelbrot-345aphase3.cpp tp345a.cpp -o mandelbrot-345aphase3 -lSDL -ljpeg -ltiff -lpng -pthread
 
 mandelbrot-345bphase3 : mandelbrot-345bphase3.cpp tp345b.cpp tp345b.h
-	g++ -std=c++17 -Ofast mandelbrot-345bphase3.cpp tp345b.cpp -o mandelbrot-345bphase3 -lSDL -ljpeg -ltiff -lpng -pthread
+	$(CXX) -std=c++17 -Ofast mandelbrot-345bphase3.cpp tp345b.cpp -o mandelbrot-345bphase3 -lSDL -ljpeg -ltiff -lpng -pthread
 
 mandelbrot-candidate: mandelbrot-candidate.cpp tp.cpp tp.h
-	g++ -std=c++17 -Ofast mandelbrot-candidate.cpp tp.cpp -o mandelbrot-candidate -ljpeg -ltiff -lpng -pthread
+	$(CXX) -std=c++17 -Ofast mandelbrot-candidate.cpp tp.cpp -o mandelbrot-candidate -ljpeg -ltiff -lpng -pthread
 
 mandelbrot-candidate-sdl: mandelbrot-candidate-sdl.cpp tp.cpp tp.h
-	g++ -std=c++17 -Ofast mandelbrot-candidate-sdl.cpp tp.cpp -o mandelbrot-candidate-sdl -lSDL -ljpeg -ltiff -lpng -pthread 
+	$(CXX) -std=c++17 -Ofast mandelbrot-candidate-sdl.cpp tp.cpp -o mandelbrot-candidate-sdl -lSDL -ljpeg -ltiff -lpng -pthread 
 
 tp345a: tp345a.cpp tp.h
-	g++ -DTEST -Wall -std=c++17 -Ofast tp345a.cpp -o tp345a -pthread 
+	$(CXX) -DTEST -Wall -std=c++17 -Ofast tp345a.cpp -o tp345a -pthread 
 tp345b: tp345b.cpp tp.h
-	g++ -DTEST -Wall -std=c++17 -Ofast tp345b.cpp -o tp345b -pthread 
+	$(CXX) -DTEST -Wall -std=c++17 -Ofast tp345b.cpp -o tp345b -pthread 
 tp: tp.cpp tp.h
-	g++ -DTEST -Wall -std=c++17 -Ofast tp.cpp -o tp -pthread 
+	$(CXX) -DTEST -Wall -std=c++17 -Ofast tp.cpp -o tp -pthread 
 	# clang++ -DTEST -Wall -std=c++17 -Ofast tp.cpp -o tp -pthread 
 
 curses-progress: curses-progress.cpp
-	g++ -std=c++17 $^ -o $@ -lcurses
+	$(CXX) -std=c++17 $^ -o $@ -lcurses
 
 curses-box: curses-box.cpp
-	g++ -std=c++17 $^ -o $@ -lcurses
+	$(CXX) -std=c++17 $^ -o $@ -lcurses
 
 # cpp14-auto-lambda.cpp is a C++14 program
 cpp14-auto-lambda: cpp14-auto-lambda.cpp
-	g++ -Wall -std=c++14 $^ -o $@
+	$(CXX) -Wall -std=c++14 $^ -o $@
 
 cpp14: cpp14.cpp
-	g++ -Wall -std=c++14 $^ -o $@
+	$(CXX) -Wall -std=c++14 $^ -o $@
 
 # pimpl.cpp is a C++14 program
 pimpl: pimpl.cpp
-	g++ -Wall -std=c++14 $^ -o $@
+	$(CXX) -Wall -std=c++14 $^ -o $@
 
 # c++14 threadpool, needs std::index_sequence
 tp14: tp14.cpp
-	g++ -Wall -std=c++14 $^ -o $@ -pthread
+	$(CXX) -Wall -std=c++14 $^ -o $@ -pthread
 
 map-reduce: map-reduce.cpp
-	g++-9.2 -Wall -std=c++17 $^ -o $@ -pthread -ltbb
+	$(CXX) -Wall -std=c++17 $^ -o $@ -pthread -ltbb
 
 # getaddrinfo_a, gai_suspend, gai_error, gai_cancel - asynchronous network address and service translation
 getaddrinfo_a: getaddrinfo_a.cpp
-	g++ -Wall -std=c++17 $^ -o $@ -lanl
+	$(CXX) -Wall -std=c++17 $^ -o $@ -lanl
 
 externconstMain : externconstMain.cpp externconst.cpp externconst.h 
-	g++ externconstMain.cpp externconst.cpp -o externconstMain
+	$(CXX) externconstMain.cpp externconst.cpp -o externconstMain
 
 longdouble: longdouble.cpp
-	g++ longdouble.cpp -o $@ 
+	$(CXX) longdouble.cpp -o $@ 
 	./$@
-	g++ -m32 longdouble.cpp -o $@ 
+	$(CXX) -m32 longdouble.cpp -o $@ 
 	./$@
 	gcc longdouble.c -o $@ 
 	./$@
@@ -278,7 +278,7 @@ longdouble: longdouble.cpp
 
 references-are-pointers : references-are-pointers.cpp
 	# are references pointers?
-	g++ -Wa,-adhln -g references-are-pointers.cpp -o references-are-pointers > references-are-pointers.s
+	$(CXX) -Wa,-adhln -g references-are-pointers.cpp -o references-are-pointers > references-are-pointers.s
 	# ABSOLUTELY!
 	# the assembler generated for a function expecting a pointer and a function expecting a reference is a exactly the same.
 
