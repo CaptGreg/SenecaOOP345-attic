@@ -1,19 +1,22 @@
+// motivated from reduce example at http://en.cppreference.com/w/cpp/algorithm/reduce 
+// std::reduce exists in g++9.1 or later
+
+// -Ofast makes a huge difference
+
 // g++-9.1   -Wall -std=c++17 -fopenmp -Ofast reduce.cpp -o reduce -pthread -ltbb && ./reduce
 // g++-9.2   -Wall -std=c++17 -fopenmp -Ofast reduce.cpp -o reduce -pthread -ltbb && ./reduce
 // clang++-8 -Wall -std=c++17 -fopenmp -Ofast reduce.cpp -o reduce -pthread -ltbb && ./reduce
 
-// motivated from example at http://en.cppreference.com/w/cpp/algorithm/reduce 
-
-// std::reduce exists in g++9.1 or later
-
+#include <cmath>             // rand
 #include <chrono>
-#include <execution> // std:: execution::par, ::seq, ...
-#include <future>
+#include <execution>         // execution::par, ::seq, ...
+#include <functional>        // bind
+#include <future>            // async
 #include <iostream>
-#include <numeric>           // std::accumulate
+#include <numeric>           // accumulate, reduce
 #include <omp.h>
-#include <parallel/numeric>  // std::__parallel::accumulate
-#include <thread>
+#include <parallel/numeric>  // __parallel::accumulate (gnu?)
+#include <thread>            // hardware_concurrrency
 #include <vector>
 
 using namespace std;
@@ -35,74 +38,94 @@ int main(int argc, char*argv[])
    << "\n\n";
 
     vector<double> v(1000 * 1000 * 1000, 0.5); // 8 * 1e9 RAM
+    transform(begin(v), end(v), begin(v), [] (double d) { return rand() / (RAND_MAX +0.); });
  
+  #if 0
+    // auto bbb  = bind(std::accumulate, begin(v), end(v), 0.);
+    // error: no matching function for call to ‘bind(<unresolved overloaded function type>, ...
+    // auto bbb  = std::bind(std::accumulate, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
+    // same error: no matching function for call to ‘bind(<unresolved overloaded function type>, ...
+
+    // auto timeFunction = [] (decltype(bbb) func, const char* label) 
+
+    auto timeFunction = [] (function<double(void)> func, const char* label)  // no error
     {
-        auto t1 = chrono::high_resolution_clock::now();
-        double result = 0.;
-        result = accumulate(v.begin(), v.end(), result);
-        auto t2 = chrono::high_resolution_clock::now();
-        chrono::duration<double, milli> ms = t2 - t1;
-        cout << fixed << "accumulate result " << (uint64_t) result
-                  << " took " << ms.count() << " ms\n\n";
-    }
+        auto tStart = chrono::high_resolution_clock::now();
+          double result = func();
+        auto tStop = chrono::high_resolution_clock::now();
+        chrono::duration<double, milli> ms = tStop - tStart;
+        cout << fixed << label << (uint64_t) result << " took " << ms.count() << " ms\n\n";
+    };
+    // timeFunction( bind(std::accumulate, begin(v), end(v), 0.), "accumulate result ");  // can't call it.
+    // same error: no matching function for call to ‘bind(<unresolved overloaded function type>, ...
+  #endif
 
     {
-        cout << "Same calculation using __parallel::accumulate(v.begin(), v.end(), 0.) on a " << thread::hardware_concurrency() << " core machine:\n";
-        auto t1 = chrono::high_resolution_clock::now();
+        auto tStart = chrono::high_resolution_clock::now();
         double result = 0.;
-        result = __parallel::accumulate(v.begin(), v.end(), result);
-        auto t2 = chrono::high_resolution_clock::now();
-        chrono::duration<double, milli> ms = t2 - t1;
+        result = accumulate(begin(v), end(v), result);
+        auto tStop = chrono::high_resolution_clock::now();
+        chrono::duration<double, milli> ms = tStop - tStart;
+        cout << fixed << "accumulate result " << (uint64_t) result << " took " << ms.count() << " ms\n\n";
+    };
+ 
+    {
+        cout << "Same calculation using __parallel::accumulate(begin(v), end(v), 0.) on a " << thread::hardware_concurrency() << " core machine:\n";
+        auto tStart = chrono::high_resolution_clock::now();
+        double result = 0.;
+        result = __parallel::accumulate(begin(v), end(v), result);
+        auto tStop = chrono::high_resolution_clock::now();
+        chrono::duration<double, milli> ms = tStop - tStart;
         cout << "__parallel::accumulate result "
                   << (uint64_t) result << " took " << ms.count() << " ms\n\n";
     }
 
     {
         cout << "Same calculation using indexed for-loop.\n";
-        auto t1 = chrono::high_resolution_clock::now();
+        auto tStart = chrono::high_resolution_clock::now();
         double result = 0.;
         for(unsigned i = 0; i < v.size(); i++)
           result += v[i];
-        auto t2 = chrono::high_resolution_clock::now();
-        chrono::duration<double, milli> ms = t2 - t1;
-        cout << "for-loop result "
+        auto tStop = chrono::high_resolution_clock::now();
+        chrono::duration<double, milli> ms = tStop - tStart;
+        cout << "indexed for-loop result "
                   << (uint64_t) result << " took " << ms.count() << " ms\n\n";
     }
 
     {
         cout << "Same calculation using iterator for-loop.\n";
-        auto t1 = chrono::high_resolution_clock::now();
+        auto tStart = chrono::high_resolution_clock::now();
         double result = 0.;
         for(auto it = v.begin(); it != v.end(); ++it)
           result += *it;
-        auto t2 = chrono::high_resolution_clock::now();
-        chrono::duration<double, milli> ms = t2 - t1;
-        cout << "for-loop result "
+        auto tStop = chrono::high_resolution_clock::now();
+        chrono::duration<double, milli> ms = tStop - tStart;
+        cout << "iterator for-loop result "
                   << (uint64_t) result << " took " << ms.count() << " ms\n\n";
     }
 
     {
         cout << "Same calculation using range-based-for-loop.\n";
-        auto t1 = chrono::high_resolution_clock::now();
+        auto tStart = chrono::high_resolution_clock::now();
         double result = 0.;
         for(double e :  v)
           result += e;
-        auto t2 = chrono::high_resolution_clock::now();
-        chrono::duration<double, milli> ms = t2 - t1;
+        auto tStop = chrono::high_resolution_clock::now();
+        chrono::duration<double, milli> ms = tStop - tStart;
         cout << "range-based-for-loop result "
                   << (uint64_t) result << " took " << ms.count() << " ms\n\n";
     }
 
     {
         cout << "Same calculation using OMP PARALLEL FOR for-loop on a " << thread::hardware_concurrency() << " core machine:\n";
-        auto t1 = chrono::high_resolution_clock::now();
+        auto tStart = chrono::high_resolution_clock::now();
         double result = 0.;
         #pragma omp parallel for reduction(+:result)
         // #pragma omp simd reduction(+:result) // simd omp is twice as slow 
         for(size_t i = 0; i < v.size(); i++)
           result += v[i];
-        auto t2 = chrono::high_resolution_clock::now();
-        chrono::duration<double, milli> ms = t2 - t1;
+        auto tStop = chrono::high_resolution_clock::now();
+        chrono::duration<double, milli> ms = tStop - tStart;
         cout << "OMP PARALLEL FOR for-loop result "
                   << (uint64_t) result << " took " << ms.count() << " ms\n\n";
     }
@@ -110,21 +133,21 @@ int main(int argc, char*argv[])
     {
         cout << "AGAIN, in case OMP PARALLEL FOR initialized a thread pool which remains active.\n";
         cout << "Same calculation using OMP PARALLEL FOR for-loop on a " << thread::hardware_concurrency() << " core machine:\n";
-        auto t1 = chrono::high_resolution_clock::now();
+        auto tStart = chrono::high_resolution_clock::now();
         double result = 0.;
         #pragma omp parallel for reduction(+:result)
         // #pragma omp simd reduction(+:result) // simd omp is twice as slow 
         for(size_t i = 0; i < v.size(); i++)
           result += v[i];
-        auto t2 = chrono::high_resolution_clock::now();
-        chrono::duration<double, milli> ms = t2 - t1;
+        auto tStop = chrono::high_resolution_clock::now();
+        chrono::duration<double, milli> ms = tStop - tStart;
         cout << "OMP PARALLEL FOR for-loop result "
                   << (uint64_t) result << " took " << ms.count() << " ms\n\n";
     }
 
     {
         cout << "Same calculation using DIY threaded indexed for-loop on a " << thread::hardware_concurrency() << " core machine:\n";
-        auto t1 = chrono::high_resolution_clock::now();
+        auto tStart = chrono::high_resolution_clock::now();
         size_t N = thread::hardware_concurrency();
         size_t chunk = (v.size() + N-1) / N;
         vector<future<double>> futs;
@@ -135,28 +158,28 @@ int main(int argc, char*argv[])
             end = v.size();
           futs.emplace_back( 
             async(
-                      launch::async,
-                      [&v] (size_t beg, size_t end) 
-                        { double r = 0.; for(auto i=beg; i!=end; i++) r += v[i]; return r; }, 
-                      beg, 
-                      end
-                    )
-             );
+                  launch::async,
+                  [&v] (size_t beg, size_t end) 
+                    { double r = 0.; for(auto i=beg; i!=end; i++) r += v[i]; return r; }, 
+                  beg, 
+                  end
+                )
+          );
           beg = end;
         }
 
         double result = 0.;
         for(auto& e : futs)
           result += e.get();
-        auto t2 = chrono::high_resolution_clock::now();
-        chrono::duration<double, milli> ms = t2 - t1;
+        auto tStop = chrono::high_resolution_clock::now();
+        chrono::duration<double, milli> ms = tStop - tStart;
         cout << "DIY threaded indexed for-loop result "
                   << (uint64_t) result << " took " << ms.count() << " ms\n\n";
     }
 
     {
         cout << "Same calculation using DIY threaded iterator for-loop on a " << thread::hardware_concurrency() << " core machine:\n";    
-        auto t1 = chrono::high_resolution_clock::now();
+        auto tStart = chrono::high_resolution_clock::now();
         size_t N = thread::hardware_concurrency();
         size_t chunk = (v.size() + N-1) / N;
         vector<future<double>> futs;
@@ -180,42 +203,42 @@ int main(int argc, char*argv[])
         double result = 0.;
         for(auto& e : futs)
           result += e.get();
-        auto t2 = chrono::high_resolution_clock::now();
-        chrono::duration<double, milli> ms = t2 - t1;
+        auto tStop = chrono::high_resolution_clock::now();
+        chrono::duration<double, milli> ms = tStop - tStart;
         cout << " DIY threaded iterator for-loop result "
                   << (uint64_t) result << " took " << ms.count() << " ms\n\n";
     }
 
     {
-        cout << "Same calculation using reduce(std::execution::seq, v.begin(), v.end(), 0.) on a " << thread::hardware_concurrency() << " core machine:\n";
-        auto t1 = chrono::high_resolution_clock::now();
+        cout << "Same calculation using reduce(std::execution::seq, begin(v), end(v), 0.) on a " << thread::hardware_concurrency() << " core machine:\n";
+        auto tStart = chrono::high_resolution_clock::now();
         double result = 0.;
-        result = reduce(std::execution::seq, v.begin(), v.end(), result);
-        auto t2 = chrono::high_resolution_clock::now();
-        chrono::duration<double, milli> ms = t2 - t1;
+        result = reduce(std::execution::seq, begin(v), end(v), result);
+        auto tStop = chrono::high_resolution_clock::now();
+        chrono::duration<double, milli> ms = tStop - tStart;
         cout << "reduce(std::execution::seq,...) result "
                   << (uint64_t) result << " took " << ms.count() << " ms\n\n";
     }
 
     {
-        cout << "Same calculation using reduce(std::execution::par, v.begin(), v.end(), 0.) on a " << thread::hardware_concurrency() << " core machine:\n";
-        auto t1 = chrono::high_resolution_clock::now();
+        cout << "Same calculation using reduce(std::execution::par, begin(v), end(v), 0.) on a " << thread::hardware_concurrency() << " core machine:\n";
+        auto tStart = chrono::high_resolution_clock::now();
         double result = 0.;
-        result = reduce(std::execution::par, v.begin(), v.end(), result);
-        auto t2 = chrono::high_resolution_clock::now();
-        chrono::duration<double, milli> ms = t2 - t1;
+        result = reduce(std::execution::par, begin(v), end(v), result);
+        auto tStop = chrono::high_resolution_clock::now();
+        chrono::duration<double, milli> ms = tStop - tStart;
         cout << "reduce(std::execution::par,...) result "
                   << (uint64_t) result << " took " << ms.count() << " ms\n\n";
     }
  
     {
         cout << "AGAIN, in case std::reduce initialized a thread pool which remains active.\n";
-        cout << "Same calculation using reduce(std::execution::par, v.begin(), v.end(), 0.) on a " << thread::hardware_concurrency() << " core machine:\n";
-        auto t1 = chrono::high_resolution_clock::now();
+        cout << "Same calculation using reduce(std::execution::par, begin(v), end(v), 0.) on a " << thread::hardware_concurrency() << " core machine:\n";
+        auto tStart = chrono::high_resolution_clock::now();
         double result = 0.;
-        result = reduce(std::execution::par, v.begin(), v.end(), result);
-        auto t2 = chrono::high_resolution_clock::now();
-        chrono::duration<double, milli> ms = t2 - t1;
+        result = reduce(std::execution::par, begin(v), end(v), result);
+        auto tStop = chrono::high_resolution_clock::now();
+        chrono::duration<double, milli> ms = tStop - tStart;
         cout << "reduce(std::execution::par,...) result "
                   << (uint64_t) result << " took " << ms.count() << " ms\n\n";
     }
@@ -225,13 +248,13 @@ int main(int argc, char*argv[])
         // OMP spec (even 5.0) states all for-loops must be canonical.  That is 'for(init; test; increment)'.
 
         cout << "Same calculation using OMP PARALLEL FOR range-based-for-loop concurrency on " << thread::hardware_concurrency() << " core machine:\n";
-        auto t1 = chrono::high_resolution_clock::now();
+        auto tStart = chrono::high_resolution_clock::now();
         double result = 0.;
         #pragma omp parallel for
         for(double e :  v)
           result += e;
-        auto t2 = chrono::high_resolution_clock::now();
-        chrono::duration<double, milli> ms = t2 - t1;
+        auto tStop = chrono::high_resolution_clock::now();
+        chrono::duration<double, milli> ms = tStop - tStart;
         cout << "__parallel::accumulate result "
                   << (uint64_t) result << " took " << ms.count() << " ms\n\n";
     }
@@ -248,7 +271,7 @@ FILE 'reduce.cpp' compiled Aug 16 2019 at 11:17:10 by g++ 9.2.0
 
 accumulate result 500000000 took 558.977853 ms
 
-Same calculation using __parallel::accumulate(v.begin(), v.end(), 0.) on a 16 core machine:
+Same calculation using __parallel::accumulate(begin(v), end(v), 0.) on a 16 core machine:
 __parallel::accumulate result 500000000 took 251.344152 ms
 
 Same calculation using indexed for-loop.
@@ -273,14 +296,14 @@ DIY threaded indexed for-loop result 500000000 took 242.540649 ms
 Same calculation using DIY threaded iterator for-loop on a 16 core machine:
  DIY threaded iterator for-loop result 500000000 took 241.967781 ms
 
-Same calculation using reduce(std::execution::seq, v.begin(), v.end(), 0.) on a 16 core machine:
+Same calculation using reduce(std::execution::seq, begin(v), end(v), 0.) on a 16 core machine:
 reduce(std::execution::seq,...) result 500000000 took 573.393391 ms
 
-Same calculation using reduce(std::execution::par, v.begin(), v.end(), 0.) on a 16 core machine:
+Same calculation using reduce(std::execution::par, begin(v), end(v), 0.) on a 16 core machine:
 reduce(std::execution::par,...) result 500000000 took 242.351666 ms
 
 AGAIN, in case std::reduce initialized a thread pool which remains active.
-Same calculation using reduce(std::execution::par, v.begin(), v.end(), 0.) on a 16 core machine:
+Same calculation using reduce(std::execution::par, begin(v), end(v), 0.) on a 16 core machine:
 reduce(std::execution::par,...) result 500000000 took 240.733932 ms
 
 
@@ -291,7 +314,7 @@ FILE 'reduce.cpp' compiled Aug 16 2019 at 11:24:51 by clang++ 4.2.1 Compatible C
 
 accumulate result 500000000 took 353.601189 ms
 
-Same calculation using __parallel::accumulate(v.begin(), v.end(), 0.) on a 16 core machine:
+Same calculation using __parallel::accumulate(begin(v), end(v), 0.) on a 16 core machine:
 __parallel::accumulate result 500000000 took 284.073083 ms
 
 Same calculation using indexed for-loop.
@@ -316,14 +339,14 @@ DIY threaded indexed for-loop result 500000000 took 250.032659 ms
 Same calculation using DIY threaded iterator for-loop on a 16 core machine:
  DIY threaded iterator for-loop result 500000000 took 241.922787 ms
 
-Same calculation using reduce(std::execution::seq, v.begin(), v.end(), 0.) on a 16 core machine:
+Same calculation using reduce(std::execution::seq, begin(v), end(v), 0.) on a 16 core machine:
 reduce(std::execution::seq,...) result 500000000 took 355.609328 ms
 
-Same calculation using reduce(std::execution::par, v.begin(), v.end(), 0.) on a 16 core machine:
+Same calculation using reduce(std::execution::par, begin(v), end(v), 0.) on a 16 core machine:
 reduce(std::execution::par,...) result 500000000 took 240.568686 ms
 
 AGAIN, in case std::reduce initialized a thread pool which remains active.
-Same calculation using reduce(std::execution::par, v.begin(), v.end(), 0.) on a 16 core machine:
+Same calculation using reduce(std::execution::par, begin(v), end(v), 0.) on a 16 core machine:
 reduce(std::execution::par,...) result 500000000 took 241.841865 ms
 
 
