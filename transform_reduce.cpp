@@ -4,6 +4,7 @@
 #include <chrono>
 #include <execution>
 #include <iostream>
+#include <thread>
 #include <vector>
 
 int main()
@@ -18,8 +19,10 @@ int main()
   float nsInner_product;
   float nsTransform_reduce;
 
-  const int SIZE = 1'000'000;
+  const int SIZE = 10'000'000;
   std::vector<double> X(SIZE, 1.0), Y(SIZE, 0.5);
+
+  std::cout << "This is a " << std::thread::hardware_concurrency() << " core machine.\n";
 
   t.Start();
   double result = std::inner_product ( X.begin(), X.end(), Y.begin(), 0.0);
@@ -31,21 +34,27 @@ int main()
   result = transform_reduce( std::execution::seq, X.begin(), X.end(), Y.begin(), 0.0 );
   t.Stop();
   nsTransform_reduce = t.nanosecs();
-  std::cout << "sequential transform_reduce " << result << " in " << 1e-3*nsTransform_reduce << " us.\n";
+  std::cout << "::seq       transform_reduce " << result << " in " << 1e-3*nsTransform_reduce << " us.\n";
 
-  t.Start();
-  result = transform_reduce( std::execution::par, X.begin(), X.end(), Y.begin(), 0.0 );
-  t.Stop();
-  nsTransform_reduce = t.nanosecs();
-  std::cout << "parallel   transform_reduce " << result << " in " << 1e-3*nsTransform_reduce << " us.\n";
+  for(int i = 0; i < 5; i++) {
+    t.Start();
+    result = transform_reduce( std::execution::par, X.begin(), X.end(), Y.begin(), 0.0 );
+    t.Stop();
+    nsTransform_reduce = t.nanosecs();
+    std::cout << "::par       transform_reduce " << result << " in " << 1e-3*nsTransform_reduce << " us.\n";
+  }
 
-  t.Start();
-  result = transform_reduce( std::execution::par, X.begin(), X.end(), Y.begin(), 0.0 );
-  t.Stop();
-  nsTransform_reduce = t.nanosecs();
-  std::cout << "parallel   transform_reduce " << result << " in " << 1e-3*nsTransform_reduce << " us.\n";
+  std::cout << "once the thread pool starts up, parallel transform_reduce is about " << (0.+nsInner_product)/(0.+nsTransform_reduce)  
+            << " times faster than sequential inner_product"
+            << "\n";
 
-  std::cout << "once the thread pool starts up, parallel transform_reduce is about " << (0.+nsInner_product)/(0.+nsTransform_reduce)  << " times faster than sequential inner_product\n";
+  for(int i = 0; i < 5; i++) {
+    t.Start();
+    result = transform_reduce( std::execution::par_unseq, X.begin(), X.end(), Y.begin(), 0.0 );
+    t.Stop();
+    nsTransform_reduce = t.nanosecs();
+    std::cout << "::par_unseq transform_reduce " << result << " in " << 1e-3*nsTransform_reduce << " us.\n";
+  }
 
-  return EXIT_SUCCESS;
-}
+    return EXIT_SUCCESS;
+  }
