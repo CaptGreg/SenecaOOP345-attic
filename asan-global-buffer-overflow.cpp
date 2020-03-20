@@ -3,8 +3,12 @@
 // asan = google's address sanitizer
 
 // To compile: 
-//      g++ -O -g -fsanitize=address asan-global-buffer-overflow.cpp -o asan-global-buffer-overflow && ./asan-global-buffer-overflow
-//  clang++ -O -g -fsanitize=address asan-global-buffer-overflow.cpp -o asan-global-buffer-overflow && ./asan-global-buffer-overflow
+//      g++   -O -g -fsanitize=address asan-global-buffer-overflow.cpp -o asan-global-buffer-overflow && ./asan-global-buffer-overflow
+//  clang++   -O -g -fsanitize=address asan-global-buffer-overflow.cpp -o asan-global-buffer-overflow && ./asan-global-buffer-overflow
+//  g++-9.2   -O -g -fsanitize=address asan-global-buffer-overflow.cpp -o asan-global-buffer-overflow && ./asan-global-buffer-overflow
+//  clang++-9 -O -g -fsanitize=address asan-global-buffer-overflow.cpp -o asan-global-buffer-overflow && ./asan-global-buffer-overflow
+//  clang++-9 -O -g -fsanitize=address asan-global-buffer-overflow.cpp -o asan-global-buffer-overflow && ./asan-global-buffer-overflow | asan_symbolize-9
+
 
 // Q. How to make sense out of the output?
 //
