@@ -13,8 +13,8 @@ CC        = gcc
 CXXFLAGS  = -std=c++17 -Wall -mmmx -msse -fmax-errors=1 -Wfatal-errors
 CXXDFLAGS = -ggdb
 
-C11FLAG   = -std=c++2a  # C++20
 C11FLAG   = -std=c++17 
+C11FLAG   = -std=c++2a  # C++20
 CXX       = clang++
 # May 15, 2015, clang++ has missing/corrupt header files: won't compile fastforward, includes fail
 # use g++ for fastforward
@@ -23,6 +23,7 @@ CXX       = g++-9.3
 ifeq ($(HOSTNAME),rog)
   CC      = gcc-9.3
   CXX     = g++-9.3
+  C11FLAG = -std=c++2a  # C++20
 endif
 
 ifeq ($(HOSTNAME),raspberrypi)
