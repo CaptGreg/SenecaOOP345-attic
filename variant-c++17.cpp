@@ -1,4 +1,4 @@
-// Bartek's varient blog: https://www.bfilipek.com/2018/06/variant.html
+// Bartek's variant blog: https://www.bfilipek.com/2018/06/variant.html
 
 // This example, also from Bartek, is simple, easy to follow, and concise.
 
