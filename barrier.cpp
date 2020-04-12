@@ -41,7 +41,7 @@
 //   For std::barrier, the completion phase is empty. std::flex_barrier allows the user to control the completion phase with a function object.
 // 
 //   The set of participating threads for a barrier constructed for num_threads threads is the first num_threads threads to arrive at its synchronization point after construction. 
-//   The same set of threads (except for threads that called arrive_and_drop()) must arrive at the barrier each cycle.
+//   The sAME SET Of threads (except for threads that called arrive_and_drop()) must arrive at the barrier each cycle.
 //   Member functions
 //   (constructor) constructs a barrier
 //   (public member function) (destructor)
