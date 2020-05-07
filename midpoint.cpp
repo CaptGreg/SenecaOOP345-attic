@@ -17,6 +17,9 @@ int main()
               << "Incorrect (overflow and wrapping): " << (a + b) / 2 << '\n'
               << "Correct: " << ((a >> 1) + (b >> 1)) << " (right shift and add)\n" // GB
               << "Correct: " << std::midpoint(a, b) << " (std::midpoint)\n\n";
+ // NOTE
+ //  (a+b)/2 and (a>>1 + b>>1) are identical if either (a and b are even) or (a and b) are odd
+ //  if one of a or b is odd and the other value is odd, (a>>1 + b>>1) is numerically one less than (a+b)/2
  
  
     auto on_pointers = [](int i, int j) {
