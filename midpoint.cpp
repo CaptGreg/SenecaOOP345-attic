@@ -15,7 +15,8 @@ int main()
     std::cout << "a: " << a << '\n'
               << "b: " << b << '\n'
               << "Incorrect (overflow and wrapping): " << (a + b) / 2 << '\n'
-              << "Correct: " << std::midpoint(a, b) << "\n\n";
+              << "Correct: " << ((a >> 1) + (b >> 1)) << " (right shift and add)\n" // GB
+              << "Correct: " << std::midpoint(a, b) << " (std::midpoint)\n\n";
  
  
     auto on_pointers = [](int i, int j) {
