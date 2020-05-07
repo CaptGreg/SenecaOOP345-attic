@@ -1,3 +1,5 @@
+// c++20
+
 // https://en.cppreference.com/w/cpp/numeric/lerp
 
 #include <iostream>
