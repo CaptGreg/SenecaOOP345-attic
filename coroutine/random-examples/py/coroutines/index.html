@@ -1,0 +1,369 @@
+<html>
+<head>
+<title>A Curious Course on Coroutines and Concurrency</title>
+</head>
+
+<body bgcolor="#ffffff">
+
+<table width=800>
+<tr><td>
+
+<h1>A Curious Course on Coroutines and Concurrency</h1>
+
+<span style="float:right; border-width:1; border-style:solid;">
+<table bgcolor="#c0e0ff" cellspacing=10 width=350><tr><td>
+<b><font color="#0000ff">Shameless Plug</font></b><br>
+I teach Python courses for programmers of all levels.  If
+you like this tutorial, consider coming to one of my public classes. -Dave.
+
+<p>
+<a href="../chicago/index.html">Introduction to Python</a>, May 11-13, 2009.<br>
+<a href="../chicago/index.html">Python Concurrency Workshop</a>, May 14-15, 2009.<br>
+</p>
+</td>
+</tr>
+</table>
+</span>
+
+<p>
+<b>Copyright (C) 2009, All Rights Reserved</b><br>
+<b>David Beazley</b><br>
+<b><a href="http://www.dabeaz.com">http://www.dabeaz.com</a></b><br>
+</p>
+
+<p>
+Presented at PyCon 2009, March 25, 2009.
+</p>
+
+<h2>Introduction</h2>
+
+<p>
+This tutorial is a practical exploration of using Python coroutines
+(extended generators) for solving problems in data processing, event
+handling, and concurrent programming.  The material starts off with
+generators and builds to writing a complete multitasking environment
+that can run thousands of concurrent tasks without using threads or
+using code based on event-driven callbacks (i.e., the "reactor"
+model).
+</p>
+
+<ul>
+<li><a href="Coroutines.pdf">Presentation Slides</a> (PDF)
+</ul>
+
+<p>
+<b>Note:</b> This tutorial might be viewed as a sequel to the tutorial 
+<a href="http://www.dabeaz.com/generators/index.html">Generator Tricks
+for System Programmers</a> I presented at PyCon'08 in Chicago.  If
+you have <em>never</em> used generator functions before, you might
+want to look at that presentation for more information.  This
+coroutine tutorial is meant to stand on its own, but you'll  get
+a more complete picture if you combine it with the generator presentation.
+
+<h2>Requirements and Support Data Files</h2>
+
+<p>
+This tutorial requires the use of Python 2.5 or newer.  No third party
+modules are required.  Examples have been tested on both Unix and Windows XP.
+Examples will work on Python 3 as long as you fix all of the print statements.
+</p>
+
+<P>
+The following file contains some supporting data files that are used
+by the various code samples.  Download this to your machine to work with
+the examples that follow.
+</P>
+
+<ul>
+<li><a href="coroutines.zip">coroutines.zip</a>
+</ul>
+
+<p>
+This download also includes a PDF of the lecture slides.
+</p>
+
+<h2>Code Samples</h2>
+
+<p>
+Here are various code samples from the course.  You can either cut and
+paste these from the browser or simply work with them directly in the
+"coroutines" directory. The order in which files are listed follow the
+course material.  These examples are written to run inside the
+"coroutines" directory that gets created when you unzip the above file
+containing the support data.
+</p>
+
+<p>
+<b>Part 1 : Introduction to Generators and Coroutines</b>
+
+<ul>
+<li><a href="countdown.py">countdown.py</a>.  A trivially simple generator function.
+
+<p>
+<li><a href="follow.py">follow.py</a>. A generator that follows lines
+written to a real-time log file (like Unix 'tail -f').  To run this
+program, you need to have a log-file to work with.  Run the
+program <a href="logsim.py">logsim.py</a> to create a simulated
+web-server log (written in the file <tt>access-log</tt>).  Leave this program running in the background for the
+next few parts.
+
+<p>
+<li><a href="pipeline.py">pipeline.py</a>.  An example of using generators to set up a simple processing pipeline.
+Print all server log entries containing the word 'python'.
+
+<p>
+<li><a href="grep.py">grep.py</a>.  A first example of a coroutine function.  This function receives lines
+and prints out those that contain a substring.
+
+<p>
+<li><a href="coroutine.py">coroutine.py</a>.  A decorator function that eliminates the need to call <tt>.next()</tt> when
+starting a coroutine.
+
+<p>
+<li><a href="grepclose.py">grepclose.py</a>. An example of a coroutine that catches the <tt>close()</tt> operation.
+
+<p>
+<li><a href="bogus.py">bogus.py</a>. An example of a bogus generator that generates and receives values (not a recommended
+coding style).
+
+</ul>
+
+<b>Part 2 : Coroutines, Pipelines, and Dataflow</b>
+
+<ul>
+<p>
+<li><a href="cofollow.py">cofollow.py</a>.  A simple example of feeding data from a data source into a coroutine. This
+mirrors the 'tail -f' example from earlier.
+
+<p>
+<li><a href="copipe.py">copipe.py</a>.  An example of setting up a processing pipeline with coroutines.
+
+<p>
+<li><a href="cobroadcast.py">cobroadcast.py</a>.  An example of a coroutine broadcaster.  This fans a data stream out to
+multiple targets.
+
+<p>
+<li><a href="cobroadcast2.py">cobroadcast2.py</a>.  An example of broadcasting with a slightly different data handling pattern.
+
+<p>
+<li><a href="benchmark.py">benchmark.py</a>.  A small benchmark comparing the performance of sending data into a coroutine
+vs. sending data into an instance of a class.
+
+</ul>
+
+<b>Part 3 : Coroutines and Event Dispatching</b>
+
+<ul>
+<p>
+<li><a href="basicsax.py">basicsax.py</a>.  A very basic example of the SAX API for parsing XML documents (does
+not involve coroutines).
+
+<p>
+<li><a href="cosax.py">cosax.py</a>.  An example that pushes SAX events into a coroutine.
+
+<p>
+<li><a href="buses.py">buses.py</a>.  An example of parsing and filtering XML data with a 
+series of connected coroutines.
+
+<p>
+<li><a href="coexpat.py">coexpat.py</a>.  An XML parser that turns events generated by the expat XML library into
+coroutines.  Compare with <tt>cosax.py</tt> above.
+
+<p>
+<li><a href="cxml/cxmlparse.c">cxml/cxmlparse.c</a>.  A bare-bones C
+extension module that uses the expat library and pushes events into
+coroutines.  To build this code on your own machine, you will need to
+first build and install expat and then use <tt>python setup.py
+build_ext --inplace</tt>.  Note: This main focus of this class is not
+C extension building so you might have to mess around with this to get
+it to work.  Key point: you can dispatch data into a coroutine
+directly from C.
+
+<p>
+<li><a href="iterbus.py">iterbus.py</a>.  An example of incremental
+XML parsing with the ElementTree module (for comparison with
+coroutines).
+
+</ul>
+
+<b>Part 4 : From Data Processing to Concurrent Programming</b>
+
+<ul>
+<p>
+<li><a href="cothread.py">cothread.py</a>.  A thread object that runs
+a coroutine.
+
+<p>
+<li><a href="coprocess.py">coprocess.py</a>. An example of running a
+coroutine in a subprocess.  This example runs a separate
+program <a href="busproc.py">busproc.py</a> in a subprocess and sends
+data to it.
+
+<p>
+<li><a href="cocrash.py">cocrash.py</a>. An example of crashing a
+thread by having it send data into an already executing coroutine.
+Since this example depends on thread synchronization, it may
+occasionally "work" by accident.  Run it a few more times.
+
+</ul>
+
+<b>Part 7 : Writing an Operating System</b>
+
+<ul>
+<p>
+<li><a href="pyos1.py">pyos1.py</a>. A simple object representing a "task."  It is a wrapper around
+a coroutine.
+
+<p>
+<li><a href="pyos2.py">pyos2.py</a>. A simple task scheduler that alternates between
+tasks whenever they yield.
+
+<p>
+<li><a href="taskcrash.py">taskcrash.py</a>. An example showing how the schedule crashes
+if one of the tasks terminates.
+
+<p>
+<li><a href="pyos3.py">pyos3.py</a>. An improved scheduler that properly handles
+task termination.
+
+<p>
+<li><a href="pyos4.py">pyos4.py</a>. A scheduler with support for "system calls."  
+
+<p>
+<li><a href="pyos5.py">pyos5.py</a>. A scheduler with system calls for basic task
+creation and termination.
+
+<p>
+<li><a href="pyos6.py">pyos6.py</a>. A scheduler that adds support for task waiting.
+
+<p>
+<li><a href="echobad.py">echobad.py</a>. A broken example of trying to use coroutines
+to implement a multitasking network server.  It breaks due to blocking I/O operations.
+
+<p>
+<li><a href="pyos7.py">pyos7.py</a>. A scheduler that adds support for I/O waiting.
+
+<p>
+<li><a href="echogood.py">echogood.py</a>. A slightly modified version of the echo server
+above that properly handles blocking I/O.
+
+<p>
+<li><a href="echogood2.py">echogood2.py</a>. An echo server without the "I'm alive" messages.
+
+</ul>
+
+<b>Part 8 : The Problem with Subroutines and the Stack</b>
+
+<ul>
+<p>
+<li><a href="trampoline.py">trampoline.py</a>.  An example of "trampolining" between coroutines.
+
+<p>
+<li><a href="pyos8.py">pyos8.py</a>.  The OS with an enhanced Task
+object that allows coroutines to transfer control to other coroutines
+like subroutines.
+
+<p>
+<li><a href="echoserver.py">echoserver.py</a>. A concurrent echo server using coroutines.
+
+<p>
+<li><a href="sockwrap.py">sockwrap.py</a>. An class wrapper that shows how you can emulate the
+socket interface with a collection of coroutine methods.
+
+<p>
+<li><a href="echoserver2.py">echoserver2.py</a>. An echo server using the class-based interface.
+
+<p>
+<li><a href="twistedecho.py">twistedecho.py</a>. A basic echo server
+written for Twisted.  You will need to
+install <a href="http://twistedmatrix.com">Twisted</a> to run this.
+One reason why I have included this here is that the low-level I/O
+handling is very similar. 
+Specifically, in our "operating system", I/O events are tied into task
+scheduling.  In Twisted, I/O events are tied into event handlers
+(Reactors).
+
+</ul>
+
+<b>Part 9 : Final words</b>
+
+<ul>
+<p>
+<li><a href="blaster.py">blaster.py</a>.  A very simple script that
+opens up 300 socket connections with an echo server and randomly
+blasts it with 1024 bytes messages.  The
+program <a href="runblaster.py">runblaster.py</a> will run multiple
+copies of this program in different subprocesses to increase the load.
+</p>
+
+<p>
+Note: these scripts are the same ones I used to do a basic benchmark
+on Twisted vs. Coroutines described in the handout.  The main goal of
+this class has not been performance measurement so you might want to play
+around with the scripts--changing different settings
+for the number of connections, number of processes, message size, etc.  To
+allow a large number of socket connections, you might have to fiddle
+with system settings.  For example, on my Mac, I first have to use
+'ulimit -n 1024' in the shell to change the number of file descriptors
+on the server (otherwise, only 256 connections can be handled).
+</p>
+
+<p>
+<li><a href="echothread.py">echothread.py</a>.  A threaded implementation of
+the echo server--built using the SocketServer library module.   It is
+interesting to play around with the above benchmark script on coroutines and
+then try it on a threaded server.
+</p>
+</ul>
+
+<p>
+<b>Design Commentary</b>
+
+<p>
+One of the most tricky parts of working with a language feature like 
+coroutines is figuring out how they should interact with other 
+program elements such as functions and classes.  If you look at various
+libraries and frameworks, you often find that they all vary slightly in
+how they address this issue.
+</p>
+
+<P>
+The design of the task scheduler I wrote for this class is strongly
+biased towards my prior experience teaching courses on Operating
+System design.  One of the most critical parts of writing an OS is
+both protecting the system and keeping user applications isolated.  In
+the sample code, the <tt>Scheduler</tt> class represents a kind of
+"operating system."  You will notice that the tasks defined in this
+course never directly interact with this scheduler (other than using
+yield to execute scheduler traps).  That is, they do not hold
+references to the scheduler object, they do not invoke methods on the
+scheduler, they do not inspect internal scheduler data, and they don't
+hold references to other tasks.  For all practical purposes, the
+scheduler and the tasks are two completely different execution
+domains.  There is a good reason for keeping this separation.  Namely
+it promotes a loose coupling between tasks and their execution
+environment.  One could imagine creating other kinds of task
+schedulers that run tasks within threads or subprocesses.  If you've
+set things up right and taken great care to promote the separation of
+tasks and scheduling, such schedulers would be able to run existing
+tasks without modification.  Of course, the devil is in the details
+:-).
+</P>
+
+<p>
+<b>Contact me</b>
+</p>
+
+<p>
+Concurrency is a topic that generally interests me.  I welcome all
+feedback, comments, and suggestions for improvement on this course
+material.  Please feel free to contact me by sending an email to
+"dave" at "dabeaz.com".
+</p>
+
+</td>
+</tr>
+</table>
+</body>
+</html>
+

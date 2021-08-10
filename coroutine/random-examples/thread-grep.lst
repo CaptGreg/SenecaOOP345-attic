@@ -1,0 +1,141 @@
+co_await.cpp:class async_manual_reset_event
+co_await.cpp:  async_manual_reset_event(bool initiallySet = false) noexcept;
+co_await.cpp:  async_manual_reset_event(const async_manual_reset_event&) = delete;
+co_await.cpp:  async_manual_reset_event(async_manual_reset_event&&) = delete;
+co_await.cpp:  async_manual_reset_event& operator=(const async_manual_reset_event&) = delete;
+co_await.cpp:  async_manual_reset_event& operator=(async_manual_reset_event&&) = delete;
+co_await.cpp:struct async_manual_reset_event::awaiter
+co_await.cpp:  awaiter(const async_manual_reset_event& event) noexcept
+co_await.cpp:  friend struct async_manual_reset_event;
+co_await.cpp:  const async_manual_reset_event& m_event;
+co_await.cpp:bool async_manual_reset_event::awaiter::await_ready() const noexcept
+co_await.cpp:bool async_manual_reset_event::awaiter::await_suspend(
+co_await.cpp:async_manual_reset_event::async_manual_reset_event(
+co_await.cpp:bool async_manual_reset_event::is_set() const noexcept
+co_await.cpp:void async_manual_reset_event::reset() noexcept
+co_await.cpp:void async_manual_reset_event::set() noexcept
+co_await.cpp:async_manual_reset_event::awaiter
+co_await.cpp:async_manual_reset_event::operator co_await() const noexcept
+co_await.cpp:task example(async_manual_reset_event& event)
+
+conditionVariables.cpp:// https://modernescpp.com/index.php/c-20-thread-synchronization-with-coroutines
+conditionVariables.cpp:#include <thread>
+conditionVariables.cpp:  std::thread t1(waitingForWork);               // (1)
+conditionVariables.cpp:  std::thread t2(setDataReady);                 // (2)
+cppcoroCancellation.cpp:    auto cancelSender = std::async([&canSource] { 
+cppcoroCancellation.cpp:        std::this_thread::sleep_for(2s);
+cppcoroCancellation.cpp:    auto cancelReceiver = std::async([&canToken] { 
+cppcoroCancellation.cpp:            std::this_thread::sleep_for(200ms);
+
+cppcoro_funs.cpp:// The cppcoro::generator<T> produces values in a lazy but synchronously way. That means, using the co_await operator from a coroutine returning this type is not possible. However, the cppcoro library features an asynchronous generator, called cppcoro::async_generator<T>, that makes this possible.
+cppcoro_funs.cpp:// We can change the preceding example as follows: a new coroutine, next_value() returns a value that takes some time to be computed. We simulate that by awaiting for a random number of seconds. The produce_items() coroutine waits for a new value in each loop and then returns a new item from that value. The return type, this time, is cppcoro::async_generator<T>.
+cppcoro_funs.cpp:#include <cppcoro/async_generator.hpp>
+cppcoro_funs.cpp:cppcoro::async_generator<std::string> produce_items_ag()
+cppcoro_funs.cpp:#include <cppcoro/async_manual_reset_event.hpp>
+cppcoro_funs.cpp:struct cppcoro::async_manual_reset_event::awaiter
+cppcoro_funs.cpp:  awaiter(const async_manual_reset_event& event) noexcept
+cppcoro_funs.cpp:  const async_manual_reset_event& m_event;
+cppcoro_funs.cpp:cppcoro::async_manual_reset_event event;
+cppcoro_funs.cpp:bool cppcoro::async_manual_reset_event::awaiter::await_ready() const noexcept
+cppcoro_funs.cpp:// An example: Implementing a simple thread-synchronisation primitive
+cppcoro_funs.cpp:// An asynchronous manual-reset event.
+cppcoro_funs.cpp:// when awaited needs to suspend the awaiting coroutine until some thread calls the .set() method, at which point any awaiting coroutines are resumed. 
+cppcoro_funs.cpp:// If some thread has already called .set() then the coroutine should continue without suspending.
+cppcoro_funs.cpp:cppcoro::async_manual_reset_event::awaiter
+cppcoro_funs.cpp:cppcoro::async_manual_reset_event::operator co_await() const noexcept
+
+cppcoroLatch.cpp:// https://www.modernescpp.com/index.php/c-20-thread-pools-with-cppcoro
+cppcoroLatch.cpp:#include <cppcoro/async_latch.hpp>
+cppcoroLatch.cpp:cppcoro::task<> waitFor(cppcoro::async_latch& latch) {
+cppcoroLatch.cpp:    cppcoro::async_latch latch(3);              // (1)
+cppcoroLatch.cpp:    auto waiter = std::async([&latch]{ cppcoro::sync_wait(waitFor(latch)); }); 
+cppcoroLatch.cpp:    auto counter1 = std::async([&latch] {       // (2)
+cppcoroLatch.cpp:        std::this_thread::sleep_for(2s);
+cppcoroLatch.cpp:    auto counter2 = std::async([&latch] {      // (2)
+cppcoroLatch.cpp:        std::this_thread::sleep_for(1s);
+
+cppcoroMutex.cpp:#include <cppcoro/async_mutex.hpp>
+cppcoroMutex.cpp:#include <thread>
+cppcoroMutex.cpp:cppcoro::async_mutex mutex;
+cppcoroMutex.cpp:    cppcoro::async_mutex_lock lockSum = co_await mutex.scoped_lock_async(); // (3)  
+cppcoroMutex.cpp:    std::vector<std::thread> vec(100);                                       // (1)
+cppcoroMutex.cpp:        thr = std::thread([]{ for(int n = 0; n < 100000; ++n) cppcoro::sync_wait(addToSum(n)); } );
+cppcoroMutex.cpp:    std::cout << std::to_string(elapsed.count()) + " s. 100 threads, 100000 counts per thread, 10 million mutex access\n";
+
+cppcoroProducerConsumer.cpp:    at(std::string("consumer thread waiting"));
+cppcoroProducerConsumer.cpp:    co_await event;  // suspended until some thread calls event.set()
+cppcoroProducerConsumer.cpp:    at(std::string("consumer thread proceding"));
+cppcoroProducerConsumer.cpp:    std::cout << "Consumer thread waited " << elapsed.count() << " seconds." << std::endl;
+cppcoroProducerConsumer.cpp:    at(std::string("producer thread working"));
+cppcoroProducerConsumer.cpp:    std::this_thread::sleep_for(2s);
+cppcoroProducerConsumer.cpp:    at(std::string("producer thread finished - signalling consumer"));
+cppcoroProducerConsumer.cpp:    auto con = std::async([]{ cppcoro::sync_wait(consumer()); });  // (1)
+cppcoroProducerConsumer.cpp:    auto prod = std::async(producer);                              // (2)
+
+cppcoroWhenAll.cpp:// https://www.modernescpp.com/index.php/c-20-thread-pools-with-cppcoro
+cppcoroWhenAll.cpp:#include <thread>
+cppcoroWhenAll.cpp:    std::this_thread::sleep_for(1s);                       // (3)
+cppcoroWhenAll.cpp:     std::this_thread::sleep_for(1s);                      // (3)
+cppcoroWhenAll.cpp:     std::this_thread::sleep_for(1s);                     // (3)
+
+cppcoroWhenAllOnThreadPool.cpp:// https://www.modernescpp.com/index.php/c-20-thread-pools-with-cppcoro
+cppcoroWhenAllOnThreadPool.cpp:#include <thread>
+cppcoroWhenAllOnThreadPool.cpp:#include <cppcoro/static_thread_pool.hpp>
+cppcoroWhenAllOnThreadPool.cpp:    auto tid = std::this_thread::get_id();
+cppcoroWhenAllOnThreadPool.cpp:    at( std::string("1st thread ") + stid + " sleeping for 1s");
+cppcoroWhenAllOnThreadPool.cpp:    std::this_thread::sleep_for(1s);
+cppcoroWhenAllOnThreadPool.cpp:    at(std::string("1st thread ") + stid + " woke up");
+cppcoroWhenAllOnThreadPool.cpp:    at( std::string("2nd thread ") + stid + " sleeping for 1s");
+cppcoroWhenAllOnThreadPool.cpp:    std::this_thread::sleep_for(1s);
+cppcoroWhenAllOnThreadPool.cpp:    at( std::string("2nd thread ") + stid + " woke up");
+cppcoroWhenAllOnThreadPool.cpp:    at( std::string("3rd thread ") + stid + " sleeping for 1s");
+cppcoroWhenAllOnThreadPool.cpp:    std::this_thread::sleep_for(1s);
+cppcoroWhenAllOnThreadPool.cpp:    at( std::string("3rd thread ") + stid + " woke up");
+cppcoroWhenAllOnThreadPool.cpp:    at( std::string("4th thread ") + stid + " sleeping for 1s");
+cppcoroWhenAllOnThreadPool.cpp:    std::this_thread::sleep_for(1s);
+cppcoroWhenAllOnThreadPool.cpp:    at( std::string("4th thread ") + stid + " woke up");
+cppcoroWhenAllOnThreadPool.cpp:    at( std::string("5th thread ") + stid + " sleeping for 1s");
+cppcoroWhenAllOnThreadPool.cpp:    std::this_thread::sleep_for(1s);
+cppcoroWhenAllOnThreadPool.cpp:    at( std::string("5th thread ") + stid + " woke up");
+cppcoroWhenAllOnThreadPool.cpp:cppcoro::task<std::string> runOnThreadPool(cppcoro::static_thread_pool& tp, Func func) 
+cppcoroWhenAllOnThreadPool.cpp:cppcoro::task<> runAll(cppcoro::static_thread_pool& tp) 
+cppcoroWhenAllOnThreadPool.cpp:    cppcoro::static_thread_pool tp;                         // (1)
+
+cppreference.cpp:#include <thread>    // jthread
+cppreference.cpp:auto switch_to_new_thread(std::jthread& out) {
+cppreference.cpp:    std::jthread* p_out;
+cppreference.cpp:      std::jthread& out = *p_out;
+cppreference.cpp:        throw std::runtime_error("switch_to_new_thread::awaitable Output jthread parameter not empty");
+cppreference.cpp:      out = std::jthread([h] { h.resume(); });
+cppreference.cpp:      std::cout << "switch_to_new_thread::awaitable New thread ID: " << out.get_id() << "\n";
+cppreference.cpp:task resuming_on_new_thread(std::jthread& out) 
+cppreference.cpp:  std::cout << "resuming_on_new_thread: Coroutine started on thread: " << std::this_thread::get_id() << "\n";
+cppreference.cpp:  co_await switch_to_new_thread(out);
+cppreference.cpp:  std::cout << "resuming_on_new_thread: Coroutine resumed on thread: " << std::this_thread::get_id() << "\n";
+cppreference.cpp:auto mainTid = std::this_thread::get_id();
+cppreference.cpp:  std::cout << "main: thread ID: " << mainTid << "\n";
+cppreference.cpp:  std::jthread out;
+cppreference.cpp:  resuming_on_new_thread(out);
+cppreference.cpp:  main: thread ID: 139986610030400
+cppreference.cpp:  resuming_on_new_thread: Coroutine started on thread: 139986610030400
+cppreference.cpp:  switch_to_new_thread::awaitable New thread ID: 139986610026240
+cppreference.cpp:  resuming_on_new_thread: Coroutine resumed on thread: 139986610026240
+
+lazyGenerator.cpp:auto async_get_zero() -> future<int> 
+lazyGenerator.cpp:  auto fz = async_get_zero();
+
+senderReceiver.cpp:// https://modernescpp.com/index.php/c-20-thread-synchronization-with-coroutines
+senderReceiver.cpp:#include <thread>
+senderReceiver.cpp:  auto txThread = std::thread([&event]{ event.notify(); });  // (1)
+senderReceiver.cpp:  auto rxThread = std::thread(rx, std::ref(event));   // (4)
+senderReceiver.cpp:  rxThread = std::thread(rx, std::ref(event));  // (5)
+senderReceiver.cpp:  txThread = std::thread([&event] { 
+senderReceiver.cpp:    std::this_thread::sleep_for(2s); 
+senderReceiver.cpp:  std::cout << "reuse threads: Notification after 1 seconds waiting" << std::endl;
+senderReceiver.cpp:  rxThread = std::thread(rx, std::ref(event));  // (5)
+senderReceiver.cpp:  txThread = std::thread([&event]{
+senderReceiver.cpp:    std::this_thread::sleep_for(1s);
+
+sm-co.cpp:    Note that because the coroutine is fully suspended before entering awaiter.await_suspend(), that function is free to transfer the coroutine handle across threads, 
+sm-co.cpp:    with no additional synchronization. For example, it can put it inside a callback, scheduled to run on a threadpool when async I/O operation completes. 
+sm-co.cpp:    all concurrently as await_suspend() continues its execution on the current thread, await_suspend() should treat *this as destroyed and not access it after the handle was published to other threads.

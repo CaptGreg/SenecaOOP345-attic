@@ -1,0 +1,8 @@
+To build this example, you need to have the expat XML parsing library
+installed.  For this presentation, I used expat-2.0.1.
+
+To build the example, type the following:
+
+    % python setup.py build_ext --inplace
+
+The test.py script runs a test.

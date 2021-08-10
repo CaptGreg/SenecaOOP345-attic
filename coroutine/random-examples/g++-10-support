@@ -1,0 +1,33 @@
+2021-01-10 
+g++-10 --version
+g++-10 (Ubuntu 10.2.0-5ubuntu1~20.04) 10.2.0
+working functions
+
+
+  co_await
+  co_await() 
+  co_await expression, and is later resumed, the resume point is immediately before the call to awaiter.await_resume().
+  co_await expression it is possible to suspend and resume the execution of the  expression. 
+  co_await promise.yield_value(expr)
+  co_await(static_cast<Awaitable&&>(awaitable)) for the non-member overload)
+  co_await std::suspend_always{};
+  co_await std::suspend_never{};
+  co_await suspends a coroutine and returns control to the caller. 
+  co_await switch_to_new_thread(out);
+
+
+  co_return "!";
+  co_return;
+
+  co_wait            a c++20 keyword
+
+  co_yield
+  co_yield expr 		
+
+
+missing:
+  generator
+
+-std=c++?? makes no difference
+  -std=c++2a
+  -std=c++20

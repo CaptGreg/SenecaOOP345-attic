@@ -1,0 +1,12 @@
+"Name","Item","Price","Quantity","Cost"
+Joe,"door knob",3.59,2,"=C2*D2"
+Tom,"door key",0.99,3,"=C3*D3"
+Sue,"paint brush",2.25,4,"=C4*D4"
+Mark,"paint",0.95,2,"=C5*D5"
+Moe,"door stop",1.2,1,"=C6*D6"
+,,,,
+Sum,,,,"=SUM(E2:E6)"
+,,,,
+HST,,,,"=TRUNC(0.13*E8,2)"
+"","","","",""
+Total,,,,"=ROUND(E8+E10,2)"

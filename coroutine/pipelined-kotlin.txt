@@ -1,0 +1,481 @@
+https://kotlinlang.org/docs/reference/coroutines/channels.html
+
+
+Kotlin v1.4.21
+
+Table of contents
+
+    Channels
+        Channel basics
+        Closing and iteration over channels
+        Building channel producers
+        Pipelines
+        Prime numbers with pipeline
+        Fan-out
+        Fan-in
+        Buffered channels
+        Channels are fair
+        Ticker channels
+
+Channels
+
+Deferred values provide a convenient way to transfer a single value between coroutines. Channels provide a way to transfer a stream of values.
+Channel basics
+
+A Channel is conceptually very similar to BlockingQueue. One key difference is that instead of a blocking put operation it has a suspending send, and instead of a blocking take operation it has a suspending receive.
+
+val channel = Channel<Int>()
+
+launch {
+
+    // this might be heavy CPU-consuming computation or async logic, we'll just send five squares
+
+    for (x in 1..5) channel.send(x * x)
+
+}
+
+// here we print five received integers:
+
+repeat(5) { println(channel.receive()) }
+
+println("Done!")
+
+Target platform: JVMRunning on kotlin v. 1.4.20
+
+    You can get the full code here.
+
+The output of this code is:
+
+1
+4
+9
+16
+25
+Done!
+
+Closing and iteration over channels
+
+Unlike a queue, a channel can be closed to indicate that no more elements are coming. On the receiver side it is convenient to use a regular for loop to receive elements from the channel.
+
+Conceptually, a close is like sending a special close token to the channel. The iteration stops as soon as this close token is received, so there is a guarantee that all previously sent elements before the close are received:
+
+val channel = Channel<Int>()
+
+launch {
+
+    for (x in 1..5) channel.send(x * x)
+
+    channel.close() // we're done sending
+
+}
+
+// here we print received values using `for` loop (until the channel is closed)
+
+for (y in channel) println(y)
+
+println("Done!")
+
+Target platform: JVMRunning on kotlin v. 1.4.20
+
+    You can get the full code here.
+
+Building channel producers
+
+The pattern where a coroutine is producing a sequence of elements is quite common. This is a part of producer-consumer pattern that is often found in concurrent code. You could abstract such a producer into a function that takes channel as its parameter, but this goes contrary to common sense that results must be returned from functions.
+
+There is a convenient coroutine builder named produce that makes it easy to do it right on producer side, and an extension function consumeEach, that replaces a for loop on the consumer side:
+
+val squares = produceSquares()
+
+squares.consumeEach { println(it) }
+
+println("Done!")
+
+Target platform: JVMRunning on kotlin v. 1.4.20
+
+    You can get the full code here.
+
+Pipelines
+
+A pipeline is a pattern where one coroutine is producing, possibly infinite, stream of values:
+
+fun CoroutineScope.produceNumbers() = produce<Int> {
+
+    var x = 1
+
+    while (true) send(x++) // infinite stream of integers starting from 1
+
+}
+
+And another coroutine or coroutines are consuming that stream, doing some processing, and producing some other results. In the example below, the numbers are just squared:
+
+fun CoroutineScope.square(numbers: ReceiveChannel<Int>): ReceiveChannel<Int> = produce {
+
+    for (x in numbers) send(x * x)
+
+}
+
+The main code starts and connects the whole pipeline:
+
+val numbers = produceNumbers() // produces integers from 1 and on
+
+val squares = square(numbers) // squares integers
+
+repeat(5) {
+
+    println(squares.receive()) // print first five
+
+}
+
+println("Done!") // we are done
+
+coroutineContext.cancelChildren() // cancel children coroutines
+
+Target platform: JVMRunning on kotlin v. 1.4.20
+
+    You can get the full code here.
+
+    All functions that create coroutines are defined as extensions on CoroutineScope, so that we can rely on structured concurrency to make sure that we don't have lingering global coroutines in our application.
+
+Prime numbers with pipeline
+
+Let's take pipelines to the extreme with an example that generates prime numbers using a pipeline of coroutines. We start with an infinite sequence of numbers.
+
+fun CoroutineScope.numbersFrom(start: Int) = produce<Int> {
+
+    var x = start
+
+    while (true) send(x++) // infinite stream of integers from start
+
+}
+
+The following pipeline stage filters an incoming stream of numbers, removing all the numbers that are divisible by the given prime number:
+
+fun CoroutineScope.filter(numbers: ReceiveChannel<Int>, prime: Int) = produce<Int> {
+
+    for (x in numbers) if (x % prime != 0) send(x)
+
+}
+
+Now we build our pipeline by starting a stream of numbers from 2, taking a prime number from the current channel, and launching new pipeline stage for each prime number found:
+
+numbersFrom(2) -> filter(2) -> filter(3) -> filter(5) -> filter(7) ... 
+
+The following example prints the first ten prime numbers, running the whole pipeline in the context of the main thread. Since all the coroutines are launched in the scope of the main runBlocking coroutine we don't have to keep an explicit list of all the coroutines we have started. We use cancelChildren extension function to cancel all the children coroutines after we have printed the first ten prime numbers.
+
+var cur = numbersFrom(2)
+
+repeat(10) {
+
+    val prime = cur.receive()
+
+    println(prime)
+
+    cur = filter(cur, prime)
+
+}
+
+coroutineContext.cancelChildren() // cancel all children to let main finish
+
+Target platform: JVMRunning on kotlin v. 1.4.20
+
+    You can get the full code here.
+
+The output of this code is:
+
+2
+3
+5
+7
+11
+13
+17
+19
+23
+29
+
+Note that you can build the same pipeline using iterator coroutine builder from the standard library. Replace produce with iterator, send with yield, receive with next, ReceiveChannel with Iterator, and get rid of the coroutine scope. You will not need runBlocking either. However, the benefit of a pipeline that uses channels as shown above is that it can actually use multiple CPU cores if you run it in Dispatchers.Default context.
+
+Anyway, this is an extremely impractical way to find prime numbers. In practice, pipelines do involve some other suspending invocations (like asynchronous calls to remote services) and these pipelines cannot be built using sequence/iterator, because they do not allow arbitrary suspension, unlike produce, which is fully asynchronous.
+Fan-out
+
+Multiple coroutines may receive from the same channel, distributing work between themselves. Let us start with a producer coroutine that is periodically producing integers (ten numbers per second):
+
+fun CoroutineScope.produceNumbers() = produce<Int> {
+
+    var x = 1 // start from 1
+
+    while (true) {
+
+        send(x++) // produce next
+
+        delay(100) // wait 0.1s
+
+    }
+
+}
+
+Then we can have several processor coroutines. In this example, they just print their id and received number:
+
+fun CoroutineScope.launchProcessor(id: Int, channel: ReceiveChannel<Int>) = launch {
+
+    for (msg in channel) {
+
+        println("Processor #$id received $msg")
+
+    }    
+
+}
+
+Now let us launch five processors and let them work for almost a second. See what happens:
+
+val producer = produceNumbers()
+
+repeat(5) { launchProcessor(it, producer) }
+
+delay(950)
+
+producer.cancel() // cancel producer coroutine and thus kill them all
+
+Target platform: JVMRunning on kotlin v. 1.4.20
+
+    You can get the full code here.
+
+The output will be similar to the the following one, albeit the processor ids that receive each specific integer may be different:
+
+Processor #2 received 1
+Processor #4 received 2
+Processor #0 received 3
+Processor #1 received 4
+Processor #3 received 5
+Processor #2 received 6
+Processor #4 received 7
+Processor #0 received 8
+Processor #1 received 9
+Processor #3 received 10
+
+Note that cancelling a producer coroutine closes its channel, thus eventually terminating iteration over the channel that processor coroutines are doing.
+
+Also, pay attention to how we explicitly iterate over channel with for loop to perform fan-out in launchProcessor code. Unlike consumeEach, this for loop pattern is perfectly safe to use from multiple coroutines. If one of the processor coroutines fails, then others would still be processing the channel, while a processor that is written via consumeEach always consumes (cancels) the underlying channel on its normal or abnormal completion.
+Fan-in
+
+Multiple coroutines may send to the same channel. For example, let us have a channel of strings, and a suspending function that repeatedly sends a specified string to this channel with a specified delay:
+
+suspend fun sendString(channel: SendChannel<String>, s: String, time: Long) {
+
+    while (true) {
+
+        delay(time)
+
+        channel.send(s)
+
+    }
+
+}
+
+Now, let us see what happens if we launch a couple of coroutines sending strings (in this example we launch them in the context of the main thread as main coroutine's children):
+
+val channel = Channel<String>()
+
+launch { sendString(channel, "foo", 200L) }
+
+launch { sendString(channel, "BAR!", 500L) }
+
+repeat(6) { // receive first six
+
+    println(channel.receive())
+
+}
+
+coroutineContext.cancelChildren() // cancel all children to let main finish
+
+Target platform: JVMRunning on kotlin v. 1.4.20
+
+    You can get the full code here.
+
+The output is:
+
+foo
+foo
+BAR!
+foo
+foo
+BAR!
+
+Buffered channels
+
+The channels shown so far had no buffer. Unbuffered channels transfer elements when sender and receiver meet each other (aka rendezvous). If send is invoked first, then it is suspended until receive is invoked, if receive is invoked first, it is suspended until send is invoked.
+
+Both Channel() factory function and produce builder take an optional capacity parameter to specify buffer size. Buffer allows senders to send multiple elements before suspending, similar to the BlockingQueue with a specified capacity, which blocks when buffer is full.
+
+Take a look at the behavior of the following code:
+
+val channel = Channel<Int>(4) // create buffered channel
+
+val sender = launch { // launch sender coroutine
+
+    repeat(10) {
+
+        println("Sending $it") // print before sending each element
+
+        channel.send(it) // will suspend when buffer is full
+
+    }
+
+}
+
+// don't receive anything... just wait....
+
+delay(1000)
+
+sender.cancel() // cancel sender coroutine
+
+Target platform: JVMRunning on kotlin v. 1.4.20
+
+    You can get the full code here.
+
+It prints "sending" five times using a buffered channel with capacity of four:
+
+Sending 0
+Sending 1
+Sending 2
+Sending 3
+Sending 4
+
+The first four elements are added to the buffer and the sender suspends when trying to send the fifth one.
+Channels are fair
+
+Send and receive operations to channels are fair with respect to the order of their invocation from multiple coroutines. They are served in first-in first-out order, e.g. the first coroutine to invoke receive gets the element. In the following example two coroutines "ping" and "pong" are receiving the "ball" object from the shared "table" channel.
+
+data class Ball(var hits: Int)
+
+
+fun main() = runBlocking {
+
+    val table = Channel<Ball>() // a shared table
+
+    launch { player("ping", table) }
+
+    launch { player("pong", table) }
+
+    table.send(Ball(0)) // serve the ball
+
+    delay(1000) // delay 1 second
+
+    coroutineContext.cancelChildren() // game over, cancel them
+
+}
+
+
+suspend fun player(name: String, table: Channel<Ball>) {
+
+    for (ball in table) { // receive the ball in a loop
+
+        ball.hits++
+
+        println("$name $ball")
+
+        delay(300) // wait a bit
+
+        table.send(ball) // send the ball back
+
+    }
+
+}
+
+Target platform: JVMRunning on kotlin v. 1.4.20
+
+    You can get the full code here.
+
+The "ping" coroutine is started first, so it is the first one to receive the ball. Even though "ping" coroutine immediately starts receiving the ball again after sending it back to the table, the ball gets received by the "pong" coroutine, because it was already waiting for it:
+
+ping Ball(hits=1)
+pong Ball(hits=2)
+ping Ball(hits=3)
+pong Ball(hits=4)
+
+Note that sometimes channels may produce executions that look unfair due to the nature of the executor that is being used. See this issue for details.
+Ticker channels
+
+Ticker channel is a special rendezvous channel that produces Unit every time given delay passes since last consumption from this channel. Though it may seem to be useless standalone, it is a useful building block to create complex time-based produce pipelines and operators that do windowing and other time-dependent processing. Ticker channel can be used in select to perform "on tick" action.
+
+To create such channel use a factory method ticker. To indicate that no further elements are needed use ReceiveChannel.cancel method on it.
+
+Now let's see how it works in practice:
+
+import kotlinx.coroutines.*
+
+import kotlinx.coroutines.channels.*
+
+
+fun main() = runBlocking<Unit> {
+
+    val tickerChannel = ticker(delayMillis = 100, initialDelayMillis = 0) // create ticker channel
+
+    var nextElement = withTimeoutOrNull(1) { tickerChannel.receive() }
+
+    println("Initial element is available immediately: $nextElement") // no initial delay
+
+
+    nextElement = withTimeoutOrNull(50) { tickerChannel.receive() } // all subsequent elements have 100ms delay
+
+    println("Next element is not ready in 50 ms: $nextElement")
+
+
+    nextElement = withTimeoutOrNull(60) { tickerChannel.receive() }
+
+    println("Next element is ready in 100 ms: $nextElement")
+
+
+    // Emulate large consumption delays
+
+    println("Consumer pauses for 150ms")
+
+    delay(150)
+
+    // Next element is available immediately
+
+    nextElement = withTimeoutOrNull(1) { tickerChannel.receive() }
+
+    println("Next element is available immediately after large consumer delay: $nextElement")
+
+    // Note that the pause between `receive` calls is taken into account and next element arrives faster
+
+    nextElement = withTimeoutOrNull(60) { tickerChannel.receive() } 
+
+    println("Next element is ready in 50ms after consumer pause in 150ms: $nextElement")
+
+
+    tickerChannel.cancel() // indicate that no more elements are needed
+
+}
+
+    You can get the full code here.
+
+It prints following lines:
+
+Initial element is available immediately: kotlin.Unit
+Next element is not ready in 50 ms: null
+Next element is ready in 100 ms: kotlin.Unit
+Consumer pauses for 150ms
+Next element is available immediately after large consumer delay: kotlin.Unit
+Next element is ready in 50ms after consumer pause in 150ms: kotlin.Unit
+
+Note that ticker is aware of possible consumer pauses and, by default, adjusts next produced element delay if a pause occurs, trying to maintain a fixed rate of produced elements.
+
+Optionally, a mode parameter equal to TickerMode.FIXED_DELAY can be specified to maintain a fixed delay between elements.
+
+    GitHub logo
+    Twitter logo
+    Slack logo
+    Reddit logo
+    Stack Overflow logo
+
+Contributing to Kotlin
+Releases
+Press Kit
+Security
+Blog
+Issue Tracker
+Kotlin™ is protected under the Kotlin Foundation and licensed under the Apache 2 license.
+esc

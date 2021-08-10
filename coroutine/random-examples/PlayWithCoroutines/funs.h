@@ -1,0 +1,2 @@
+void register_sigaction();
+

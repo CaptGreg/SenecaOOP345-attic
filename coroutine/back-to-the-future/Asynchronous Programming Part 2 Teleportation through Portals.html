@@ -1,0 +1,1957 @@
+<!DOCTYPE html>
+<html lang="en-US"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  
+    <meta property="og:title" content="Asynchronous Programming Part 2: Teleportation through Portals">
+  
+
+    <meta property="og:site_name" content="Kukuruku Hub">
+    <meta property="og:url" content="https://www.kukuruku.co/post/asynchronous-programming-part-2-teleportation-through-portals/">
+    <link href="https://www.kukuruku.co/images/favicon.ico" rel="shortcut icon">
+
+  
+    <meta property="og:type" content="article">
+    <meta property="og:article:published_time" content="2016-11-06T23:12:56Z">
+    <meta property="og:article:tag" content="c++">
+    <meta property="og:article:tag" content="synca">
+    
+    
+    <meta property="og:image" content="https://s3.amazonaws.com/kukuruku-co/uploads/topics/preview/00/00/02/78/ee18a93794_300crop.jpg">
+    
+    
+    <meta property="og:description" content="Finally, I have finished another article about asynchronous programming. It develops the ideas of the previous one [1]. Today we are going to discuss quite a difficult task that will reveal the power and flexibility of using coroutines in various nontrivial scenarios. At the end, we are going to consider two tasks on race-condition, and also a small bonus. By the way, the first article on asynchronous programming has become quite popular.">
+    
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@KukurukuCo">
+    <meta name="twitter:creator" content="@KukurukuCo">
+    <meta name="twitter:title" content="Asynchronous Programming Part 2: Teleportation through Portals">
+    
+    <meta property="twitter:description" content="Finally, I have finished another article about asynchronous programming. It develops the ideas of the previous one [1]. Today we are going to discuss quite...">
+    
+    <meta name="twitter:url" content="https://www.kukuruku.co/post/asynchronous-programming-part-2-teleportation-through-portals/">
+  
+
+  
+    <title>Asynchronous Programming Part 2: Teleportation through Portals</title>
+  
+
+  
+    
+    <meta name="description" content="Finally, I have finished another article about asynchronous programming. It develops the ideas of the previous one [1]. Today we are going to discuss quite...">
+    
+  
+
+    <meta name="p:domain_verify" content="fc173d84e3a4de948ed4bda2908afd3e">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  
+
+    
+    
+
+  
+    <link href="https://www.kukuruku.co/index.xml" rel="alternate" type="application/rss+xml" title="Kukuruku Hub">
+  
+
+  
+    <link rel="canonical" href="https://www.kukuruku.co/post/asynchronous-programming-part-2-teleportation-through-portals/">
+
+    <script async="" src="Asynchronous%20Programming%20Part%202%20Teleportation%20through%20Portals_files/adsbygoogle.js"></script>
+
+  
+    <script>
+      (adsbygoogle = window.adsbygoogle || []).push({
+        google_ad_client: "ca-pub-5957750206575747",
+        enable_page_level_ads: true
+      });
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "Article",
+        "headline": "Asynchronous Programming Part 2: Teleportation through Portals",
+        
+        "image": https://s3.amazonaws.com/kukuruku-co/uploads/topics/preview/00/00/02/78/ee18a93794_300crop.jpg,
+        
+        "author": {
+            "@type": "Person",
+            "name": Grigory Demchenko
+        },
+        "publisher": "Kukuruku Hub",
+        "datePublished": "2016-11-06",
+        
+        "dateModified": "2019-05-16",
+        
+        "description": "Finally, I have finished another article about asynchronous programming. It develops the ideas of the previous one [1]. Today we are going to discuss quite a difficult task that will reveal the power and flexibility of using coroutines in various nontrivial scenarios. At the end, we are going to consider two tasks on race-condition, and also a small bonus. By the way, the first article on asynchronous programming has become quite popular.",
+        "wordCount": 6609
+    }
+    </script>
+
+    <script type="text/javascript">
+    
+      var post_id =  203 ;
+      var api_url = "https://www.kukuruku.co/_p/";
+    
+    </script>
+  
+
+    <link rel="stylesheet" href="Asynchronous%20Programming%20Part%202%20Teleportation%20through%20Portals_files/styles.css">
+  </head>
+
+  <body>
+    <div id="root">
+      <div id="scroll-up" class="visible-lg-block"><i class="arrow up"></i></div>
+
+<header class="navbar">
+  <div class="container-fluid navbar-container">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="https://www.kukuruku.co/">
+        <img src="Asynchronous%20Programming%20Part%202%20Teleportation%20through%20Portals_files/25x25.png">
+      </a>
+
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".kukuruku-nav" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-menu"></span>
+      </button>
+    </div>
+
+    <div class="collapse navbar-collapse kukuruku-nav">
+      <ul class="nav navbar-nav navbar-right">
+        <li class="write-post">
+          <a rel="nofollow" class="button green" href="https://www.kukuruku.co/post-editor/">Write for us</a>
+        </li>
+        <li class="active"><a href="https://www.kukuruku.co/">Home</a></li>
+        <li><a href="https://www.kukuruku.co/hubs/">Hubs</a></li>
+        <li>
+          <div class="dropdown">
+            <img src="Asynchronous%20Programming%20Part%202%20Teleportation%20through%20Portals_files/avatar_dark.png" id="navbar-avatar">
+            <ul class="dropdown-content guest hidden">
+              <li><a href="https://www.kukuruku.co/_p/auth/github/" title="Log in with Github">Log in with Github</a></li>
+              <li><a href="https://www.kukuruku.co/_p/auth/facebook/" title="Log in with Facebook">Log in with Facebook</a></li>
+            </ul>
+            <ul class="dropdown-content non-guest">
+              <li><a href="https://www.kukuruku.co/posts/">My Posts</a></li>
+              <li><a href="https://www.kukuruku.co/logout/">Log out</a></li>
+            </ul>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</header>
+
+<nav class="navbar-hubs navbar-collapse collapse kukuruku-nav">
+  <ul class="menu">
+    <li><a href="https://www.kukuruku.co/hubs/cpp/">C++</a></li>
+    <li><a href="https://www.kukuruku.co/hubs/javascript/">JavaScript</a></li>
+    <li><a href="https://www.kukuruku.co/hubs/programming/">Programming</a></li>
+    <li><a href="https://www.kukuruku.co/hubs/webdev/">Web Development</a></li>
+    <li><a href="https://www.kukuruku.co/hubs/algorithms/">Algorithms</a></li>
+    <li><a href="https://www.kukuruku.co/hubs/infosec/">Information Security</a></li>
+    <li><a href="https://www.kukuruku.co/hubs/nix/">Unix</a></li>
+    <li><a href="https://www.kukuruku.co/hubs/funcprog/">Functional Programming</a></li>
+    <li><a href="https://www.kukuruku.co/hubs/python/">Python</a></li>
+    <li><a href="https://www.kukuruku.co/hubs/">More...</a></li>
+  </ul>
+</nav>
+
+<main role="main" class="post">
+
+	<div class="center">
+
+		<div class="site-sidebar visible-sm-block visible-md-block visible-lg-block">
+  <aside class="subscribe block">
+  <div class="item">
+    <span class="slogan">THE #1 BLOG FOR ENGINEERS</span><br>
+    <span class="slogan-part-two">Get the latest content first.</span>
+    <form action="//kukuruku.us8.list-manage.com/subscribe/post?u=e4905e022a3bd9502e281743a&amp;id=d25c804b1d" method="post" target="_blank" novalidate="">
+      <input type="email" name="EMAIL" class="email form-control" id="mce-EMAIL" placeholder="Enter your email address" required="">
+      <div style="position: absolute; left: -5000px;">
+        <input type="text" name="b_e4905e022a3bd9502e281743a_d25c804b1d" tabindex="-1">
+      </div>
+      <div class="submit-container">
+      <input type="submit" value="Subscribe" name="subscribe">
+      </div>
+    </form>
+    <div class="privacy">
+      <span class="icon-lock"></span><span class="text">No spam. Just great engineering posts.</span>
+    </div>
+  </div>
+</aside>
+  <aside class="block">
+  <div class="item">
+    <a href="https://www.bithub.com/"><img alt="BitHub – Cryptocurrency Exchange" src="Asynchronous%20Programming%20Part%202%20Teleportation%20through%20Portals_files/300x225.png" k9oi32806="" width="300" height="225" border="0"></a>
+  </div>
+</aside>
+
+  <aside class="block">
+  <div class="item">
+    
+    <ins class="adsbygoogle" style="display:inline-block;width:300px;height:250px" data-ad-client="ca-pub-5957750206575747" data-ad-slot="4872645719"></ins>
+    <script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+  </div>
+</aside>
+
+  <aside class="block">
+  <div class="item">
+    
+    <ins class="adsbygoogle" style="display:inline-block;width:300px;height:600px" data-ad-client="ca-pub-5957750206575747" data-ad-slot="4461810114"></ins>
+    <script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+  </div>
+</aside>
+
+</div>
+
+
+		<div class="content">
+
+			<article class="article" itemscope="" itemtype="http://schema.org/Article">
+        <meta itemprop="author" content="Grigory Demchenko">
+        <meta itemprop="headline" content="Asynchronous Programming Part 2: Teleportation through Portals">
+        
+        <meta itemprop="image" content="https://s3.amazonaws.com/kukuruku-co/uploads/topics/preview/00/00/02/78/ee18a93794_300crop.jpg">
+        
+        <meta itemprop="datePublished" content="2016-11-06T23:12:56+00:00">
+        <meta itemprop="wordCount" content="6609">
+
+				<header>
+					
+					<a href="http://gridem.blogspot.com/" class="post-author">Grigory Demchenko</a>
+					
+					<time datetime="2016-11-06" pubdate="">6 November 2016</time>
+					
+						<a href="https://habrahabr.ru/company/yandex/blog/240525/" class="translation"></a>
+					
+					<h1 class="post-title">Asynchronous Programming Part 2: Teleportation through Portals</h1>
+					<span class="icon-briefcase"></span>
+					
+					<a href="https://www.kukuruku.co/hubs/cpp/" class="hub-name">C++</a>
+					
+				</header>
+				<div class="post-body" itemprop="articleBody">
+					
+
+<p><img src="Asynchronous%20Programming%20Part%202%20Teleportation%20through%20Portals_files/b7977d.jpg" alt="Asynchronous Programming 1" title="Asynchronous Programming 1"></p>
+
+<p>Finally, I have finished another article about asynchronous programming. It develops the ideas of the previous one <a href="https://kukuruku.co/hub/cpp/asynchronous-programming-back-to-the-future">[1]</a>.
+ Today we are going to discuss quite a difficult task that will reveal 
+the power and flexibility of using coroutines in various nontrivial 
+scenarios. At the end, we are going to consider two tasks on 
+race-condition, and also a small bonus. By the way, <a href="https://kukuruku.co/hub/cpp/asynchronous-programming-back-to-the-future">the first article</a> on asynchronous programming has become quite popular.</p>
+
+<p>So, let’s get started!</p>
+
+<p><img src="Asynchronous%20Programming%20Part%202%20Teleportation%20through%20Portals_files/8bedb3.jpg" alt="A Troll from &amp;quot;The 10th Kingdom&amp;quot; movie" title="A Troll from &amp;quot;The 10th Kingdom&amp;quot; movie"></p>
+
+<h2 id="the-task">The Task</h2>
+
+<p>The initial statement is quite plain and simple:</p>
+
+<p><strong>Receive a heavy object through the network and pass it to UI.</strong></p>
+
+<p>We are going to complicate the task by adding a few “interesting” requirements to the UI:</p>
+
+<ol>
+<li>An action is created from a UI thread via some event.</li>
+<li>The result must be returned back to UI.</li>
+<li>We don’t want to lock UI. Therefore, the operation should be performed asynchronously.</li>
+</ol>
+
+<p>Let’s add some “fun” conditions for receiving an object:</p>
+
+<ol>
+<li>Objects will be cached — network operations are slow.</li>
+<li>We want to have a persistent cache so that objects are safe after the restart.</li>
+<li>For a better response time, we also want to cache objects in memory.</li>
+</ol>
+
+<p>Now as for the performance aspects:</p>
+
+<ol>
+<li>Writing to a cache (both persistent and in-memory) should be parallel, not sequential.</li>
+<li>Reading from a cache should also be parallel. If the value has been 
+found in one of the caches, we should use it immediately, without 
+waiting for a response from another cache.</li>
+<li>Network operations should in no way interfere with caches. So, if caches are slow, this should not affect network interactions.</li>
+<li>It would also be good to support a large number of connections in a 
+limited number of threads. That is, I want asynchronous network 
+interaction for a more careful treatment of resources.</li>
+</ol>
+
+<p>Let’s complicate it with some logic:</p>
+
+<ol>
+<li>We’ll need cancelable operation.</li>
+<li>In addition, if we have received our object through the network, 
+then we shouldn’t cancel further operations for updating the cache. That
+ is, we need to implement “cancelable cancel” for some set of actions.</li>
+</ol>
+
+<p>If this isn’t hardcore enough, let’s add more requirements:</p>
+
+<ol>
+<li>Implement timeouts for operations. Moreover, timeouts should be for 
+an entire operation as well as some parts of it. For example:</li>
+</ol>
+
+<ul>
+<li>timeout for the entire networking: connection, request, response;</li>
+<li>timeout for the entire operation, including networking and the work with the cache.</li>
+</ul>
+
+<ol>
+<li>Operation schedulers can be both our own and some other ones (e.g. the UI thread scheduler).</li>
+<li>No operations should be locked by threads. This means that the use 
+of mutexes and other methods of synchronization are not allowed as they 
+will lock our threads.
+<img src="Asynchronous%20Programming%20Part%202%20Teleportation%20through%20Portals_files/2bac96.jpg" alt="Asynchronous Programming 3" title="Asynchronous Programming 3"></li>
+</ol>
+
+<p>Now it seems enough. If someone can immediately come up with an 
+answer, I will be glad to read it. As for now, I’m providing my own 
+solution below. It’s obvious that I’m not going to emphasize the 
+implementation of caches and persistency, but instead, I will highlight 
+concrete parallel and asynchronous interaction, taking into account 
+requirements for locks and schedulers.</p>
+
+<h2 id="the-solution">The Solution</h2>
+
+<p>To solve this task, we are going to use the following pattern:</p>
+
+<p><img src="Asynchronous%20Programming%20Part%202%20Teleportation%20through%20Portals_files/c9da9c.png" alt="Object Retrieving Sequence" title="Object Retrieving Sequence"></p>
+
+<p>Let’s see what’s going on here:</p>
+
+<ol>
+<li><em>UI, Mem Cache, Disk Cache, Network</em> — objects that perform corresponding operations on the newly created Handler.</li>
+<li><em>Handler</em> is responsible for a simple sequence:</li>
+</ol>
+
+<ul>
+<li>In parallel, it runs an operation to get data from <em>Mem Cache</em> and <em>Disk Cache</em>
+ objects. In the case of success (i.e. there’s a response with a found 
+result from at least one cache), the result will be returned 
+immediately. In the case of failure (as in the diagram), the execution 
+continues.</li>
+<li>After waiting for no result from both of cashes, <em>Handler</em> tries to receive an object through the <em>Network</em>. For this purpose, we connect to the server (<em>connect</em>), send a request (<em>send</em>) and receive a response (<em>receive</em>). Such operations are performed asynchronously and do not lock other network interactions.</li>
+<li>The object received from <em>Network</em> component is written into both caches.</li>
+<li>After waiting for completion of writing to caches, a return of the value to a UI thread takes place.</li>
+</ul>
+
+<ol>
+<li>The program has the following schedulers and objects associated with them:</li>
+<li>A UI thread that initiates the asynchronous <em>Handler</em> operation. It is also the place where the result should return to.</li>
+<li>A common thread pool where all basic operations are performed, including <em>Mem Cache</em> и <em>Disk Cache.</em></li>
+<li>A network thread pool for <em>Network</em>. It is created separately from the main thread pool so that the main pool load would not affect the network thread pool.</li>
+</ol>
+
+<p>As I’ve said before, we will implement objects in a simple way as it 
+doesn’t really matter for the aspects of asynchronous programming:</p>
+
+<pre><code class="hljs thrift"><span class="hljs-comment">// stub: disc cache</span>
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">DiskCache</span>
+</span>{
+   boost::<span class="hljs-keyword">optional</span>&lt;std::<span class="hljs-built_in">string</span>&gt; get(<span class="hljs-keyword">const</span> std::<span class="hljs-built_in">string</span>&amp; key)
+   {
+       JLOG(<span class="hljs-string">"get: "</span> &lt;&lt; key);
+       return boost::<span class="hljs-keyword">optional</span>&lt;std::<span class="hljs-built_in">string</span>&gt;();
+   }
+   <span class="hljs-keyword">void</span> <span class="hljs-keyword">set</span>(<span class="hljs-keyword">const</span> std::<span class="hljs-built_in">string</span>&amp; key, <span class="hljs-keyword">const</span> std::<span class="hljs-built_in">string</span>&amp; val)
+   {
+       JLOG(<span class="hljs-string">"set: "</span> &lt;&lt; key &lt;&lt; <span class="hljs-string">";"</span> &lt;&lt; val);
+   }
+};
+<span class="hljs-comment">// memory cache: hash table</span>
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">MemCache</span>
+</span>{
+   boost::<span class="hljs-keyword">optional</span>&lt;std::<span class="hljs-built_in">string</span>&gt; get(<span class="hljs-keyword">const</span> std::<span class="hljs-built_in">string</span>&amp; key)
+   {
+      auto it = <span class="hljs-keyword">map</span>.find(key);
+      return it == <span class="hljs-keyword">map</span>.end()
+         ? boost::<span class="hljs-keyword">optional</span>&lt;std::<span class="hljs-built_in">string</span>&gt;()
+         : boost::<span class="hljs-keyword">optional</span>&lt;std::<span class="hljs-built_in">string</span>&gt;(it-&gt;second);
+   }
+   <span class="hljs-keyword">void</span> <span class="hljs-keyword">set</span>(<span class="hljs-keyword">const</span> std::<span class="hljs-built_in">string</span>&amp; key, <span class="hljs-keyword">const</span> std::<span class="hljs-built_in">string</span>&amp; val)
+   {
+      <span class="hljs-keyword">map</span>[key] = val;
+   }
+private:
+   std::unordered_map&lt;std::<span class="hljs-built_in">string</span>, std::<span class="hljs-built_in">string</span>&gt; <span class="hljs-keyword">map</span>;
+};
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Network</span>
+</span>{
+   <span class="hljs-comment">// get an object via the network</span>
+   std::<span class="hljs-built_in">string</span> get(<span class="hljs-keyword">const</span> std::<span class="hljs-built_in">string</span>&amp; key)
+   {
+       net::Socket socket;
+       JLOG(<span class="hljs-string">"connecting"</span>);
+       socket.connect(address, port);
+       <span class="hljs-comment">// the first byte is the size of the string</span>
+       Buffer sz(<span class="hljs-number">1</span>, char(key.size()));
+       socket.write(sz);
+       <span class="hljs-comment">// next - the string</span>
+       socket.write(key);
+       <span class="hljs-comment">// get the size of the result</span>
+       socket.read(sz);
+       Buffer val(size_t(sz[<span class="hljs-number">0</span>]), <span class="hljs-number">0</span>);
+       <span class="hljs-comment">// get the result itself</span>
+       socket.read(val);
+       JLOG(<span class="hljs-string">"val received"</span>);
+       return val;
+   }
+private:
+    std::<span class="hljs-built_in">string</span> address;
+    int port;
+    <span class="hljs-comment">// ...</span>
+};
+<span class="hljs-comment">// UI-object: interaction with the UI</span>
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">UI</span> : IScheduler
+</span>{
+   <span class="hljs-keyword">void</span> schedule(Handler handler)
+   {
+       <span class="hljs-comment">// schedule an operation in the UI thread</span>
+       <span class="hljs-comment">// ...</span>
+   }
+   <span class="hljs-keyword">void</span> handleResult(<span class="hljs-keyword">const</span> std::<span class="hljs-built_in">string</span>&amp; key, <span class="hljs-keyword">const</span> std::<span class="hljs-built_in">string</span>&amp; val)
+   {
+       TLOG(<span class="hljs-string">"UI result inside UI thread: "</span> &lt;&lt; key &lt;&lt; <span class="hljs-string">";"</span> &lt;&lt; val);
+       <span class="hljs-comment">// <span class="hljs-doctag">TODO:</span> add some actions</span>
+   }
+};
+</code></pre>
+
+<p>As a rule, all UI frameworks contain a method that allows invoking necessary action in a UI thread (for example, in Android: <em>Activity.runOnUiThread</em>, <em>Ultimate++: PostCallback</em>, <em>Qt</em>: through the signal-slot mechanism). These are the methods to be used in the implementation of the <em>UI::schedule</em> method.</p>
+
+<p>Initialization of all of this is in an imperative style:</p>
+
+<pre><code class="hljs cs"><span class="hljs-comment">// create a thread pool for common actions</span>
+<span class="hljs-function">ThreadPool <span class="hljs-title">cpu</span>(<span class="hljs-params"><span class="hljs-number">3</span>, <span class="hljs-string">"cpu"</span></span>)</span>;
+<span class="hljs-comment">// create a thread pool for network actions</span>
+<span class="hljs-function">ThreadPool <span class="hljs-title">net</span>(<span class="hljs-params"><span class="hljs-number">2</span>, <span class="hljs-string">"net"</span></span>)</span>;
+
+<span class="hljs-comment">// scheduler for the serialization of actions with the disc</span>
+<span class="hljs-function">Alone <span class="hljs-title">diskStorage</span>(<span class="hljs-params">cpu, <span class="hljs-string">"disk storage"</span></span>)</span>;
+<span class="hljs-comment">// scheduler for the serialization of actions with memory</span>
+<span class="hljs-function">Alone <span class="hljs-title">memStorage</span>(<span class="hljs-params">cpu, <span class="hljs-string">"mem storage"</span></span>)</span>;
+
+<span class="hljs-comment">// setting the scheduler by default</span>
+scheduler&lt;DefaultTag&gt;().attach(cpu);
+<span class="hljs-comment">// attaching the network service to the network pool</span>
+service&lt;NetworkTag&gt;().attach(net);
+<span class="hljs-comment">// attaching timeout handling to the common pool</span>
+service&lt;TimeoutTag&gt;().attach(cpu);
+
+<span class="hljs-comment">// attaching a disc portal to a disc scheduler</span>
+portal&lt;DiskCache&gt;().attach(diskStorage);
+<span class="hljs-comment">// attaching a memory portal to a corresponding scheduler</span>
+portal&lt;MemCache&gt;().attach(memStorage);
+<span class="hljs-comment">// attaching a network portal to a network pool</span>
+portal&lt;Network&gt;().attach(net);
+
+UI&amp; ui = single&lt;UI&gt;();
+<span class="hljs-comment">// attaching a UI portal to a UI scheduler</span>
+portal&lt;UI&gt;().attach(ui);
+</code></pre>
+
+<p>For some user action, we will perform the following in a UI thread:</p>
+
+<pre><code class="hljs lisp">go([key] {
+   // timeout for all operations: <span class="hljs-number">1</span>s=1000 ms
+   Timeout <span class="hljs-literal">t</span>(<span class="hljs-number">1000</span>)<span class="hljs-comment">;</span>
+   std:<span class="hljs-symbol">:string</span> val<span class="hljs-comment">;</span>
+   // get results from caches in parallel
+   boost:<span class="hljs-symbol">:optional&lt;std</span>:<span class="hljs-symbol">:string&gt;</span> result = goAnyResult&lt;std:<span class="hljs-symbol">:string&gt;</span>({
+       [<span class="hljs-symbol">&amp;key</span>] {
+           return portal&lt;DiskCache&gt;()-&gt;get(<span class="hljs-name">key</span>)<span class="hljs-comment">;</span>
+       }, [<span class="hljs-symbol">&amp;key</span>] {
+           return portal&lt;MemCache&gt;()-&gt;get(<span class="hljs-name">key</span>)<span class="hljs-comment">;</span>
+       }
+   })<span class="hljs-comment">;</span>
+   if (<span class="hljs-name">result</span>)
+   {
+       // we've got an object
+       val = std:<span class="hljs-symbol">:move</span>(<span class="hljs-name">*result</span>)<span class="hljs-comment">;</span>
+       JLOG(<span class="hljs-string">"cache val: "</span> &lt;&lt; val)<span class="hljs-comment">;</span>
+   }
+   else
+   {
+       // neither of caches has an object
+       // try to get an object through the network
+       {
+           // timeout for the network processing: <span class="hljs-number">0.5</span>s=500ms
+           Timeout tNet(<span class="hljs-number">500</span>)<span class="hljs-comment">;</span>
+           val = portal&lt;Network&gt;()-&gt;get(<span class="hljs-name">key</span>)<span class="hljs-comment">;</span>
+       }
+       JLOG(<span class="hljs-string">"net val: "</span> &lt;&lt; val)<span class="hljs-comment">;</span>
+       // starting from this moment and till the end of the block
+       // cancelables (<span class="hljs-name">and</span> timeouts) are disabled
+       EventsGuard guard<span class="hljs-comment">;</span>
+       // write to both caches in parallel
+       goWait({
+           [<span class="hljs-symbol">&amp;key</span>, <span class="hljs-symbol">&amp;val</span>] {
+               portal&lt;DiskCache&gt;()-&gt;set(<span class="hljs-name">key</span>, val)<span class="hljs-comment">;</span>
+           }, [<span class="hljs-symbol">&amp;key</span>, <span class="hljs-symbol">&amp;val</span>] {
+               portal&lt;MemCache&gt;()-&gt;set(<span class="hljs-name">key</span>, val)<span class="hljs-comment">;</span>
+           }
+       })<span class="hljs-comment">;</span>
+       JLOG(<span class="hljs-string">"cache updated"</span>)<span class="hljs-comment">;</span>
+   }
+   // move on to the UI and process the result
+   portal&lt;UI&gt;()-&gt;handleResult(<span class="hljs-name">key</span>, val)<span class="hljs-comment">;</span>
+})<span class="hljs-comment">;</span>
+</code></pre>
+
+<p><img src="Asynchronous%20Programming%20Part%202%20Teleportation%20through%20Portals_files/1fdd28.jpg" alt="The 10th Kingdom movie: Virginia participates in the Beautiful Shepherdess contest" title="The 10th Kingdom movie: Virginia participates in the Beautiful Shepherdess contest"></p>
+
+<h2 id="the-implementation-of-primitives">The Implementation of Primitives</h2>
+
+<p>As a careful reader might have noticed, I have used a considerable 
+number of primitives, the implementation of which we can only guess. 
+Therefore, I’m providing the description of used approach and classes. I
+ think this will clarify what portals are and how we should use them, as
+ well as answer the question about teleportation.</p>
+
+<p><img src="Asynchronous%20Programming%20Part%202%20Teleportation%20through%20Portals_files/c04bd5.jpg" alt="A screenshot from The 10th Kingdom movie" title="A screenshot from The 10th Kingdom movie"></p>
+
+<h2 id="waiting-primitives">Waiting Primitives</h2>
+
+<p>Let’s start with the simplest thing: waiting primitives.</p>
+
+<h3 id="gowait-running-an-asynchronous-operation-and-waiting-for-its-completion">goWait: running an asynchronous operation and waiting for its completion</h3>
+
+<p>First, we will implement a function that will run an operation asynchronously and wait for its completion:</p>
+
+<p><code>void goWait(Handler);</code>
+Invoking the handler in the current coroutine will be fine for the 
+implementation, but it will not be enough in more complex scenarios. 
+That’s why we are going to create a new coroutine for the implementation
+ of this function:</p>
+
+<pre><code class="hljs less"><span class="hljs-selector-tag">void</span> <span class="hljs-selector-tag">goWait</span>(Handler handler) {
+    <span class="hljs-selector-tag">deferProceed</span>([&amp;handler](Handler proceed) {
+        <span class="hljs-selector-tag">go</span>([proceed, &amp;handler] { <span class="hljs-comment">// create a new coroutine</span>
+            <span class="hljs-selector-tag">handler</span>();
+            <span class="hljs-selector-tag">proceed</span>(); <span class="hljs-comment">// continue the coroutine execution</span>
+        });
+    });
+}
+</code></pre>
+
+<p>Let’s describe in a few words what’s going on here. <em>goWait</em> function accepts a handler that should be invoked in a new coroutine. To perform necessary operations, we use <em>deferProceed</em> function that is implemented the following way:</p>
+
+<pre><code class="hljs cpp"><span class="hljs-keyword">typedef</span> <span class="hljs-built_in">std</span>::function&lt;<span class="hljs-keyword">void</span>(Handler)&gt; ProceedHandler; 
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">deferProceed</span><span class="hljs-params">(ProceedHandler proceed)</span> </span>{
+    <span class="hljs-keyword">auto</span>&amp; coro = currentCoro();
+    defer([&amp;coro, proceed] {
+        proceed([&amp;coro] { coro.resume(); });
+    });
+}
+</code></pre>
+
+<p>What does this function do? It actually wraps the <em>defer</em> call for a more convenient use (what <em>defer</em> is and why we should use it is described in <a href="https://kukuruku.co/hub/cpp/asynchronous-programming-back-to-the-future">my previous article</a>). Namely, it accepts <em>ProceedHandler</em> that receives <em>Handler</em> as an input parameter to continue the coroutine execution. Actually, <em>proceed</em> stores a reference to the current coroutine and invokes <em>coro.resume()</em>. Thus, we encapsulate the entire work with coroutines, and the user has to work with <em>proceed</em> handler only.</p>
+
+<p>Let’s get back to <em>goWait</em> function. Calling <em>deferProceed</em>, we have <em>proceed</em> that should be invoked upon the completion of the operation in <em>handler</em>. All we should do is create a new coroutine and trigger our <em>handler</em> handler in it. When the handler completes, we’ll immediately call <em>proceed</em> that will invoke <em>coro.resume()</em> inside itself. By doing this, we’ll continue the execution of the initial coroutine.</p>
+
+<p>This provides us with waiting without locking the thread: calling <em>goWait</em>
+ is like we put operations in the current coroutine on hold. When the 
+passed handler completes, we will continue the execution as if nothing 
+had happened.</p>
+
+<h3 id="gowait-running-several-asynchronous-operations-and-waiting-for-their-completion">goWait: running several asynchronous operations and waiting for their completion</h3>
+
+<p>Now, let’s implement a function that invokes a whole bundle of asynchronous operations and waits for their completion:</p>
+
+<p><code>void goWait(std::initializer_list&lt;Handler&gt; handlers);</code>
+Here the function accepts a list of handlers to be triggered 
+asynchronously. That is, each handler will be invoked in its coroutine. A
+ significant difference from the previous function lies in the fact that
+ we should continue the execution of the initial coroutine only after 
+completion of all handlers. Some may use various mutexes and condition 
+variablesfor this purpose (some people actually implement like this!), 
+but we shouldn’t do so (see the requirements). Therefore, we will be 
+looking for other ways of implementation.</p>
+
+<p>The idea is actually quite trivial. We should have a counter that will invoke <em>proceed</em>
+ when a certain value is reached. Each handler will update the counter 
+after its completion. Thus, the last handler will continue the execution
+ of the coroutine. However, there’s a small complexity here: we must 
+share the counter between the invoked coroutines. The last handler 
+shouldn’t only call <em>proceed</em> but also remove this counter from memory. We can implement all of this the following way:</p>
+
+<pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">goWait</span><span class="hljs-params">(<span class="hljs-built_in">std</span>::<span class="hljs-built_in">initializer_list</span>&lt;Handler&gt; handlers)</span>
+</span>{
+    deferProceed([&amp;handlers](Handler proceed) {
+        <span class="hljs-built_in">std</span>::<span class="hljs-built_in">shared_ptr</span>&lt;<span class="hljs-keyword">void</span>&gt; proceeder(<span class="hljs-literal">nullptr</span>, [proceed](<span class="hljs-keyword">void</span>*) { proceed(); });
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> <span class="hljs-keyword">auto</span>&amp; handler: handlers)
+        {
+            go([proceeder, &amp;handler] {
+                handler();
+            });
+        }
+    });
+}
+</code></pre>
+
+<p>At the very beginning, we invoke the good old <em>deferProceed</em> with some magic hidden inside. Few people know that when building <em>shared_ptr</em> we can pass not only a pointer to a data, but <em>deleter</em> as well. The latter will delete an object by means of calling not <em>delete ptr,</em> but the handler. That’s where we will put the <em>proceed</em> call, so to continue the initial coroutine at the end. There is no need to delete the object itself as we put “nothing” there: <em>nullptr</em>.
+ After that, everything is simple. We’ll loop through all handlers and 
+invoke them in the created coroutines. There’s also something to mention
+ here: we capture our <em>proceeder</em> by value, which will lead to its copy. This means our atomic reference counter inside <em>shared_ptr</em> will increase. When handler completes, our lambda with the captured <em>proceeder</em> will be removed, which will result in counter decrease. A handler that will decrease the counter to zero and remove <em>proceeder</em> object will invoke <em>deleter</em> for the <em>shared_ptr</em>, which means it will call <em>coro.proceed()</em> in the end.</p>
+
+<p><img src="Asynchronous%20Programming%20Part%202%20Teleportation%20through%20Portals_files/707a0f.jpg" alt="Asynchronous Programming 7" title="Asynchronous Programming 7"></p>
+
+<p>For clarity, I’m providing a sequence of operations by the example of triggering two handlers in different threads:</p>
+
+<p><img src="Asynchronous%20Programming%20Part%202%20Teleportation%20through%20Portals_files/02d5e2.png" alt="goWait call sequence" title="goWait call sequence"></p>
+
+<h3 id="example-recursive-parallelism-with-fibonacci-numbers">Example: recursive parallelism with Fibonacci numbers</h3>
+
+<p>To illustrate it all, let’s take a look at the following example. 
+Let’s say we’ve decided to calculate the Fibonacci series recursively 
+and in parallel. No problem:</p>
+
+<pre><code class="hljs armasm"><span class="hljs-symbol">int</span> fibo (int v)
+{
+    <span class="hljs-meta">if</span> (v &lt; <span class="hljs-number">2</span>)
+        return v<span class="hljs-comment">;</span>
+    int <span class="hljs-built_in">v1</span>, <span class="hljs-built_in">v2</span><span class="hljs-comment">;</span>
+    goWait({
+        [v, &amp;<span class="hljs-built_in">v1</span>] { <span class="hljs-built_in">v1</span> = fibo(v-<span class="hljs-number">1</span>)<span class="hljs-comment">; },</span>
+        [v, &amp;<span class="hljs-built_in">v2</span>] { <span class="hljs-built_in">v2</span> = fibo(v-<span class="hljs-number">2</span>)<span class="hljs-comment">; }</span>
+    })<span class="hljs-comment">;</span>
+    return <span class="hljs-built_in">v1</span> + <span class="hljs-built_in">v2</span><span class="hljs-comment">;</span>
+}
+</code></pre>
+
+<p>I should say that a stack overflow will never occur here. Each call of <em>fibo</em> function takes place in its own coroutine.</p>
+
+<h3 id="waiter-invoking-several-asynchronous-operations-and-waiting-for-their-completion">Waiter: invoking several asynchronous operations and waiting for their completion</h3>
+
+<p>We often need to not just wait for a fixed set of handlers but also 
+do something useful, and only then wait. Sometimes we don’t even know 
+how many handlers we’re going to need. This means that we create them in
+ the course of operations performance. In fact, we should operate with a
+ group of handlers as a single entity. For this purpose we can use <em>Waiter</em> primitive with the following interface:</p>
+
+<pre><code class="hljs cpp"><span class="hljs-keyword">struct</span> Waiter
+{
+    <span class="hljs-function">Waiter&amp; <span class="hljs-title">go</span><span class="hljs-params">(Handler)</span></span>;
+    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">wait</span><span class="hljs-params">()</span></span>;
+};
+</code></pre>
+
+<p>There are only two methods here:</p>
+
+<ol>
+<li><em>go</em>: invoke another handler;</li>
+<li><em>wait</em>: wait for all invoked handlers.</li>
+</ol>
+
+<p>We can run the above methods several times during the lifetime of the <em>Waiter</em> object.</p>
+
+<p>The idea of implementation is absolutely the same: we should have a <em>proceeder</em>, that will continue the execution of our coroutine. However, there appears one thing: now is <em>proceeder</em> shared between invoked coroutines and the <em>Waiter</em> object. Thus, at the moment of calling <em>wait</em> method we should get rid of the copy inside <em>Waiter</em> itself. Here’s how this can be done:</p>
+
+<pre><code class="hljs cpp"><span class="hljs-keyword">void</span> Waiter::wait()
+{
+    <span class="hljs-keyword">if</span> (proceeder.unique())
+    {
+        <span class="hljs-comment">// only Waiter owns proceeder =&gt;</span>
+        JLOG(<span class="hljs-string">"everything done, nothing to do"</span>);
+        <span class="hljs-keyword">return</span>;
+    }
+    defer([<span class="hljs-keyword">this</span>] {
+        <span class="hljs-comment">// move proceeder outside the coroutine</span>
+        <span class="hljs-keyword">auto</span> toDestroy = <span class="hljs-built_in">std</span>::move(proceeder);
+        <span class="hljs-comment">// the shared proceeder will be removed either here</span>
+        <span class="hljs-comment">// or in any coroutine of the handler</span>
+    });
+    <span class="hljs-comment">// proceeder has been deleted,</span>
+    <span class="hljs-comment">// let's restore it for later use</span>
+    init0();
+}
+</code></pre>
+
+<p>And again, we don’t need to do anything! Thanks for that to <em>shared_ptr</em>. Amen!</p>
+
+<p><img src="Asynchronous%20Programming%20Part%202%20Teleportation%20through%20Portals_files/0f1cbe.jpg" alt="Asynchronous Programming 9" title="Asynchronous Programming 9"></p>
+
+<h3 id="example-recursive-parallelism-with-fibonacci-numbers-1">Example: recursive parallelism with Fibonacci numbers</h3>
+
+<p>To consolidate the material, let’s consider an alternative implementation of the things we want using <em>Waiter</em>:</p>
+
+<pre><code class="hljs go"><span class="hljs-keyword">int</span> fibo (<span class="hljs-keyword">int</span> v)
+{
+    <span class="hljs-keyword">if</span> (v &lt; <span class="hljs-number">2</span>)
+        <span class="hljs-keyword">return</span> v;
+    <span class="hljs-keyword">int</span> v1;
+    Waiter w;
+    w.<span class="hljs-keyword">go</span>([v, &amp;v1] { v1 = fibo(v<span class="hljs-number">-1</span>); });
+    <span class="hljs-keyword">int</span> v2 = fibo(v<span class="hljs-number">-2</span>);
+    w.wait();
+    <span class="hljs-keyword">return</span> v1 + v2;
+}
+</code></pre>
+
+<p>Another variant:</p>
+
+<pre><code class="hljs armasm"><span class="hljs-symbol">int</span> fibo (int v)
+{
+    <span class="hljs-meta">if</span> (v &lt; <span class="hljs-number">2</span>)
+        return v<span class="hljs-comment">;</span>
+    int <span class="hljs-built_in">v1</span>, <span class="hljs-built_in">v2</span><span class="hljs-comment">;</span>
+    Waiter()
+        .go([v, &amp;<span class="hljs-built_in">v1</span>] { <span class="hljs-built_in">v1</span> = fibo (v-<span class="hljs-number">1</span>)<span class="hljs-comment">; })</span>
+        .go([v, &amp;<span class="hljs-built_in">v2</span>] { <span class="hljs-built_in">v2</span> = fibo (v-<span class="hljs-number">2</span>)<span class="hljs-comment">; })</span>
+        .wait()<span class="hljs-comment">;</span>
+    return <span class="hljs-built_in">v1</span> + <span class="hljs-built_in">v2</span><span class="hljs-comment">;</span>
+}
+</code></pre>
+
+<p>Choose what you want.</p>
+
+<h3 id="goanywait-running-several-asynchronous-operations-and-waiting-for-the-completion-of-at-least-one-of-them">goAnyWait: running several asynchronous operations and waiting for the completion of at least one of them</h3>
+
+<p>As before, we will run multiple operations in parallel. We are going to wait until at least one operation completes:</p>
+
+<p><code>size_t goAnyWait(std::initializer_list&lt;Handler&gt; handlers);</code>
+The function accepts a list of handlers and returns a number of a handler that was the first one to complete.</p>
+
+<p>To implement this primitive, we are going to update our approach a 
+little bit. Now we will share quite a specific atomic counter counter, 
+instead of <em>void* ptr == nullptr</em>. At the very beginning, it is 
+initialized by 0 value. At the end of execution, each handler increases 
+the counter and if there occurs a change of value from 0 to 1, it will 
+be the only one to call <em>proceed()</em>:</p>
+
+<pre><code class="hljs cpp"><span class="hljs-keyword">size_t</span> goAnyWait(<span class="hljs-built_in">std</span>::<span class="hljs-built_in">initializer_list</span>&lt;Handler&gt; handlers)
+{
+   VERIFY(handlers.size() &gt;= <span class="hljs-number">1</span>, <span class="hljs-string">"Handlers amount must be positive"</span>);
+   <span class="hljs-keyword">size_t</span> index = <span class="hljs-keyword">static_cast</span>&lt;<span class="hljs-keyword">size_t</span>&gt;(<span class="hljs-number">-1</span>);
+   deferProceed([&amp;handlers, &amp;index](Handler proceed) {
+      <span class="hljs-built_in">std</span>::<span class="hljs-built_in">shared_ptr</span>&lt;<span class="hljs-built_in">std</span>::atomic&lt;<span class="hljs-keyword">int</span>&gt;&gt; counter =
+         <span class="hljs-built_in">std</span>::make_shared&lt;<span class="hljs-built_in">std</span>::atomic&lt;<span class="hljs-keyword">int</span>&gt;&gt;();
+      <span class="hljs-keyword">size_t</span> i = <span class="hljs-number">0</span>;
+      <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> <span class="hljs-keyword">auto</span>&amp; handler: handlers)
+      {
+         go([counter, proceed, &amp;handler, i, &amp;index] {
+            handler();
+            <span class="hljs-keyword">if</span> (++ *counter == <span class="hljs-number">1</span>)
+            {
+               <span class="hljs-comment">// gotcha!</span>
+               index = i;
+               proceed();
+            }
+         });
+         ++ i;
+      }
+   });
+   VERIFY(index &lt; handlers.size(), <span class="hljs-string">"Incorrect index returned"</span>);
+   <span class="hljs-keyword">return</span> index;
+}
+</code></pre>
+
+<p>As you might have guessed, we can also use this trick for cases when it is necessary to wait for two, three or more handlers.</p>
+
+<h3 id="goanyresult-running-several-asynchronous-operations-and-waiting-to-get-at-least-one-result">goAnyResult: running several asynchronous operations and waiting to get at least one result</h3>
+
+<p>Now, let’s move on to the most interesting part that is essential for
+ our task. Namely: run several operations and wait for the result we 
+need. In addition, any handler can return no result. It will finish its 
+execution but will say “I did the best I could”.</p>
+
+<p>An additional complication occurs with this approach. All handlers 
+can complete their execution but we didn’t get any result. First of all,
+ we will have to check whether the necessary result has been obtained. 
+Secondly, we will return an “empty” result. To indicate emptiness, we 
+are going to use <em>boost::optional<t\_result></t\_result></em>. In addition, <em>goAnyResult</em> will be with the following simple prototype:</p>
+
+<pre><code class="hljs elixir">template&lt;typename T_result&gt;
+<span class="hljs-symbol">boost:</span><span class="hljs-symbol">:optional&lt;T_result&gt;</span> goAnyResult(
+   <span class="hljs-symbol">std:</span><span class="hljs-symbol">:initializer_list&lt;</span>
+      <span class="hljs-symbol">std:</span><span class="hljs-symbol">:function&lt;</span>
+         <span class="hljs-symbol">boost:</span><span class="hljs-symbol">:optional&lt;T_result&gt;</span>()
+      &gt;
+   &gt; handlers)
+</code></pre>
+
+<p>There’s nothing scary here: we just pass a list of handlers that optionally return our <em>T_result</em>. That is, handlers should have the following signature:</p>
+
+<p><code>boost::optional&lt;T_result&gt; handler();</code>
+Comparing to the previous primitive, the situation is slightly 
+different. The counter remains the same, but when we delete it, we must 
+check <em>counter.</em> If we get 1 when increasing it, then an “empty” 
+value should be returned, as the counter hasn’t been reset by anyone 
+else before. Thus, we have a whole <em>Counter</em> object instead of a simple atomic value for <em>counter</em>:</p>
+
+<pre><code class="hljs cpp"><span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">typename</span> T_result&gt;
+boost::optional&lt;T_result&gt; goAnyResult(
+   <span class="hljs-built_in">std</span>::<span class="hljs-built_in">initializer_list</span>&lt;
+      <span class="hljs-built_in">std</span>::function&lt;
+         boost::optional&lt;T_result&gt;()
+      &gt;
+   &gt; handlers)
+{
+    <span class="hljs-keyword">typedef</span> boost::optional&lt;T_result&gt; Result;
+    <span class="hljs-keyword">typedef</span> <span class="hljs-built_in">std</span>::function&lt;<span class="hljs-keyword">void</span>(Result&amp;&amp;)&gt; ResultHandler;
+
+    <span class="hljs-keyword">struct</span> Counter
+    {
+        Counter(ResultHandler proceed_) : proceed(<span class="hljs-built_in">std</span>::move(proceed_)) {}
+        ~Counter()
+        {
+            tryProceed(Result()); <span class="hljs-comment">// we always proceed in destructor</span>
+        }
+
+        <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">tryProceed</span><span class="hljs-params">(Result&amp;&amp; result)</span>
+        </span>{
+            <span class="hljs-keyword">if</span> (++ counter == <span class="hljs-number">1</span>)
+                proceed(<span class="hljs-built_in">std</span>::move(result));
+        }
+
+    <span class="hljs-keyword">private</span>:
+        <span class="hljs-built_in">std</span>::atomic&lt;<span class="hljs-keyword">int</span>&gt; counter;
+        ResultHandler proceed;
+    };
+
+    Result result;
+    deferProceed([&amp;handlers, &amp;result](Handler proceed) {
+        <span class="hljs-built_in">std</span>::<span class="hljs-built_in">shared_ptr</span>&lt;Counter&gt; counter = <span class="hljs-built_in">std</span>::make_shared&lt;Counter&gt;(
+            [&amp;result, proceed](Result&amp;&amp; res) {
+                result = <span class="hljs-built_in">std</span>::move(res);
+                proceed();
+            }
+        );
+
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> <span class="hljs-keyword">auto</span>&amp; handler: handlers)
+        {
+            go([counter, &amp;handler] {
+                Result result = handler();
+                <span class="hljs-keyword">if</span> (result) <span class="hljs-comment">// try to proceed only if we have some result</span>
+                    counter-&gt;tryProceed(<span class="hljs-built_in">std</span>::move(result));
+            });
+        }
+    });
+    <span class="hljs-keyword">return</span> result;
+}
+</code></pre>
+
+<p>The intrigue here is that <em>std::move</em> <strong>moves</strong> the result only when a condition inside <em>tryProceed</em> is performed. It’s all because <em>std::move</em> does not perform the move as it is, no matter how much we want this to happen. It is just a cast operation on references.</p>
+
+<p>Alright, we’re good with waitings, and now let’s move on to schedulers and thread pools.</p>
+
+<h2 id="scheduler-pools-synchronization">Scheduler, Pools, Synchronization</h2>
+
+<h3 id="the-scheduler-interface">The Scheduler Interface</h3>
+
+<p>After reviewing the foundations, we will move on to the dessert.</p>
+
+<p>Let’s introduce the scheduler interface:</p>
+
+<pre><code class="hljs cs"><span class="hljs-keyword">struct</span> IScheduler : IObject
+{
+    <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-keyword">void</span> <span class="hljs-title">schedule</span>(<span class="hljs-params">Handler handler</span>) </span>= <span class="hljs-number">0</span>;
+};
+</code></pre>
+
+<p>Its task is to execute handlers. Please note that the scheduler 
+interface has neither timeouts nor cancelables, nor deferred operations.
+ The scheduler interface should be crystal-clean so that we could easily
+ join it with various frameworks (see <a href="http://doc.akka.io/docs/akka/2.1.4/scala/scheduler.html">[2]</a>: i.e. Cancelables, actors, delays — all of that is very easy to use with UI schedulers)</p>
+
+<p><img src="Asynchronous%20Programming%20Part%202%20Teleportation%20through%20Portals_files/5034da.jpg" alt="Asynchronous Programming 10" title="Asynchronous Programming 10"></p>
+
+<h3 id="thread-pool">Thread Pool</h3>
+
+<p>To perform various actions, we are going to need a thread pool that will implement the scheduler interface:</p>
+
+<pre><code class="hljs cpp"><span class="hljs-keyword">typedef</span> boost::asio::io_service IoService;
+<span class="hljs-keyword">struct</span> IService : IObject
+{
+    <span class="hljs-function"><span class="hljs-keyword">virtual</span> IoService&amp; <span class="hljs-title">ioService</span><span class="hljs-params">()</span> </span>= <span class="hljs-number">0</span>;
+};
+
+<span class="hljs-keyword">struct</span> ThreadPool : IScheduler, IService
+{
+    ThreadPool(<span class="hljs-keyword">size_t</span> threadCount);
+    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">schedule</span><span class="hljs-params">(Handler handler)</span>
+    </span>{
+        service.post(<span class="hljs-built_in">std</span>::move(handler));
+    }
+
+<span class="hljs-keyword">private</span>:
+    <span class="hljs-function">IoService&amp; <span class="hljs-title">ioService</span><span class="hljs-params">()</span></span>;
+
+    <span class="hljs-built_in">std</span>::<span class="hljs-built_in">unique_ptr</span>&lt;boost::asio::io_service::work&gt; work;
+    boost::asio::io_service service;
+    <span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-built_in">std</span>::thread&gt; threads;
+};
+</code></pre>
+
+<p>What do we have here?</p>
+
+<ol>
+<li>A builder that will set the number of threads</li>
+<li>Implementation of the scheduler interface using <em>boost::asio::io_service::post</em>.</li>
+<li>A member of a <em>work</em> class, that holds <em>io_service</em>’s event processing loop. In case there are no events, the loop will terminate and threads will go poof.</li>
+<li>An array of threads.</li>
+</ol>
+
+<p>In addition, our class implements (privately) some strange interface <em>IService</em> using <em>ioService</em> method that returns <em>IoService</em>, which is <em>boost::asio::io_service</em>. All of this looks really strange but I’ll try to explain what it’s all about.</p>
+
+<p>The thing is, we need an advanced scheduler interface to work with 
+network sockets and timeouts. Actually, this interface is hidden inside <em>boost::asio::io_service</em>. Other components that I’m going to use in the future should somehow get access to <em>boost::asio::io_service</em> instance. In order to prevent easy access to this class, I have introduced <em>IService</em>
+ interface allowing to get the desired instance. However, this method is
+ private in the implementation. This provides some level of protection 
+from improper use, as in order to move this object outside, we should at
+ first convert <em>ThreadPool</em> to <em>IService</em>, and then call the necessary method. Using friend classes could be an alternative here but I didn’t want to spoil <em>ThreadPool</em>
+ with knowledge of possible use cases. That’s why I have decided that 
+the applied approach is a reasonable price for encapsulation.</p>
+
+<h3 id="class-of-the-coroutine">Class of the Coroutine</h3>
+
+<p>After introducing the thread pool and scheduler, it’s time to 
+introduce another class for manipulations on coroutines. Strange as it 
+may seem, it is called <em>Journey</em> (I’ll explain you later why):</p>
+
+<pre><code class="hljs cpp"><span class="hljs-keyword">struct</span> Journey
+{
+    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">proceed</span><span class="hljs-params">()</span></span>;
+    <span class="hljs-function">Handler <span class="hljs-title">proceedHandler</span><span class="hljs-params">()</span></span>;
+    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">defer</span><span class="hljs-params">(Handler handler)</span></span>;
+    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">deferProceed</span><span class="hljs-params">(ProceedHandler proceed)</span></span>;
+    <span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">create</span><span class="hljs-params">(Handler handler, mt::IScheduler&amp; s)</span></span>;
+
+<span class="hljs-keyword">private</span>:
+    Journey(mt::IScheduler&amp; s);
+
+    <span class="hljs-keyword">struct</span> CoroGuard
+    {
+        CoroGuard(Journey&amp; j_) : j(j_)  { j.onEnter0();   }
+        ~CoroGuard()                    { j.onExit0();    }
+
+        coro::Coro* <span class="hljs-keyword">operator</span>-&gt;()        { <span class="hljs-keyword">return</span> &amp;j.coro; }
+    <span class="hljs-keyword">private</span>:
+        Journey&amp; j;
+    };
+
+    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">start0</span><span class="hljs-params">(Handler handler)</span></span>;
+    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">schedule0</span><span class="hljs-params">(Handler handler)</span></span>;
+    <span class="hljs-function">CoroGuard <span class="hljs-title">guardedCoro0</span><span class="hljs-params">()</span></span>;
+    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">proceed0</span><span class="hljs-params">()</span></span>;
+    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">onEnter0</span><span class="hljs-params">()</span></span>;
+    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">onExit0</span><span class="hljs-params">()</span></span>;
+
+    mt::IScheduler* sched;
+    coro::Coro coro;
+    Handler deferHandler;
+};
+</code></pre>
+
+<p>What’s so striking here?</p>
+
+<ul>
+<li>Private constructor. It is invoked by a static public method <em>create</em>.</li>
+<li><em>Journey</em> contains the following inside itself: a pointer to <em>sched</em> scheduler, a coroutine itself and <em>deferHandler</em> that is invoked inside <em>defer</em>.</li>
+<li><em>CoroGuard</em> is a proxy class. For each operation on a coroutine, it automatically performs <em>onEnter0</em> action when entering the coroutine and <em>onExit0</em> when exiting it.</li>
+</ul>
+
+<p>To understand how this works, let’s take a look at the implementation of a few simple examples:</p>
+
+<pre><code class="hljs less"><span class="hljs-selector-tag">void</span> <span class="hljs-selector-tag">Journey</span><span class="hljs-selector-pseudo">::schedule0(Handler</span> <span class="hljs-selector-tag">handler</span>)
+{
+    <span class="hljs-selector-tag">VERIFY</span>(sched != nullptr, <span class="hljs-string">"Scheduler must be set in journey"</span>);
+    <span class="hljs-selector-tag">sched-</span>&gt;<span class="hljs-selector-tag">schedule</span>(<span class="hljs-attribute">std</span>::move(handler)); 
+}
+
+<span class="hljs-selector-tag">void</span> <span class="hljs-selector-tag">Journey</span><span class="hljs-selector-pseudo">::proceed0()</span>
+{
+    <span class="hljs-comment">// we use a guard to resume the coroutine</span>
+    <span class="hljs-selector-tag">guardedCoro0</span>()<span class="hljs-selector-tag">-</span>&gt;<span class="hljs-selector-tag">resume</span>(); 
+}
+
+<span class="hljs-selector-tag">Journey</span><span class="hljs-selector-pseudo">::CoroGuard</span> <span class="hljs-selector-tag">Journey</span><span class="hljs-selector-pseudo">::guardedCoro0()</span>
+{
+    <span class="hljs-selector-tag">return</span> <span class="hljs-selector-tag">CoroGuard</span>(*this);
+}
+
+<span class="hljs-comment">// we must use a scheduler to go back to a program</span>
+<span class="hljs-selector-tag">void</span> <span class="hljs-selector-tag">Journey</span><span class="hljs-selector-pseudo">::proceed()</span>
+{
+    <span class="hljs-selector-tag">schedule0</span>([this] {
+        <span class="hljs-selector-tag">proceed0</span>();
+    });
+}
+
+<span class="hljs-comment">// this is the handler, that returns control to a coroutine</span>
+<span class="hljs-selector-tag">Handler</span> <span class="hljs-selector-tag">Journey</span><span class="hljs-selector-pseudo">::proceedHandler()</span>
+{
+    <span class="hljs-selector-tag">return</span> <span class="hljs-selector-attr">[this]</span> {
+        <span class="hljs-selector-tag">proceed</span>();
+    };
+}
+
+<span class="hljs-comment">// start a new coroutine</span>
+<span class="hljs-selector-tag">void</span> <span class="hljs-selector-tag">Journey</span><span class="hljs-selector-pseudo">::start0(Handler</span> <span class="hljs-selector-tag">handler</span>)
+{
+    <span class="hljs-selector-tag">schedule0</span>([handler, this] {
+        <span class="hljs-comment">// we use guards here once again</span>
+        <span class="hljs-selector-tag">guardedCoro0</span>()<span class="hljs-selector-tag">-</span>&gt;<span class="hljs-selector-tag">start</span>([handler] {
+            <span class="hljs-selector-tag">JLOG</span>(<span class="hljs-string">"started"</span>);
+            <span class="hljs-comment">// let's not forget about exceptions</span>
+            <span class="hljs-selector-tag">try</span>
+            {
+                <span class="hljs-selector-tag">handler</span>();
+            }
+            <span class="hljs-selector-tag">catch</span> (<span class="hljs-attribute">std</span>::exception&amp; e)
+            {
+                (<span class="hljs-selector-tag">void</span>) <span class="hljs-selector-tag">e</span>;
+                <span class="hljs-selector-tag">JLOG</span>(<span class="hljs-string">"exception in coro: "</span> &lt;&lt; e.what());
+            }
+            <span class="hljs-selector-tag">JLOG</span>(<span class="hljs-string">"ended"</span>);
+        });
+    });
+}
+</code></pre>
+
+<p>Now, let’s see how <em>defer</em> works:</p>
+
+<pre><code class="hljs awk">void Journey::defer(Handler handler)
+{
+    <span class="hljs-regexp">//</span> preserve the handler
+    deferHandler = handler;
+    <span class="hljs-regexp">//</span> and <span class="hljs-keyword">exit</span> the current coroutine
+    coro::yield();
+}
+
+<span class="hljs-regexp">//</span> deferProceed that has been used before
+void Journey::deferProceed(ProceedHandler proceed)
+{
+    defer([this, proceed] {
+        proceed(proceedHandler());
+    });
+}
+</code></pre>
+
+<p>It’s simple! Now, we should understand where deferred <em>deferHandler</em> handlers are invoked.</p>
+
+<pre><code class="hljs cpp">TLS Journey* t_journey = <span class="hljs-literal">nullptr</span>;
+
+<span class="hljs-keyword">void</span> Journey::onEnter0()
+{
+    t_journey = <span class="hljs-keyword">this</span>;
+}
+
+<span class="hljs-keyword">void</span> Journey::onExit0()
+{
+    <span class="hljs-keyword">if</span> (deferHandler == <span class="hljs-literal">nullptr</span>)
+    {
+        <span class="hljs-comment">// no handler =&gt; no more actions, so we can selfdestruct</span>
+        <span class="hljs-keyword">delete</span> <span class="hljs-keyword">this</span>;
+    }
+    <span class="hljs-keyword">else</span>
+    {
+        <span class="hljs-comment">// otherwise, perform a deferred operation</span>
+        deferHandler();
+        deferHandler = <span class="hljs-literal">nullptr</span>;
+    }
+    <span class="hljs-comment">// restore the value as we are now outside the coroutine</span>
+    t_journey = <span class="hljs-literal">nullptr</span>;
+}
+</code></pre>
+
+<p>Finally, let’s take a look at the implementation of a static function <em>create</em>:</p>
+
+<pre><code class="hljs groovy"><span class="hljs-keyword">void</span> <span class="hljs-string">Journey:</span>:create(Handler handler, <span class="hljs-string">mt:</span>:IScheduler&amp; s)
+{
+    (<span class="hljs-keyword">new</span> Journey(s))-&gt;start0(<span class="hljs-string">std:</span>:move(handler));
+}
+</code></pre>
+
+<p>It is worth noting that the user has no way to explicitly create <em>Journey</em>. I mean he doesn’t even know this class exists. But let’s talk about it later, and now…</p>
+
+<h2 id="teleportation">Teleportation</h2>
+
+<p>Let’s get to the most interesting part! Teleportation… We will talk 
+about a primitive that can be implemented only using coroutines. This 
+primitive is so powerful and so simple that we should take a closer look
+ at it as it’s really interesting!</p>
+
+<p>It would be easier to begin with the implementation first:</p>
+
+<pre><code class="hljs groovy"><span class="hljs-keyword">void</span> <span class="hljs-string">Journey:</span>:teleport(<span class="hljs-string">mt:</span>:IScheduler&amp; s)
+{
+    <span class="hljs-keyword">if</span> (&amp;s == sched)
+    {
+        JLOG(<span class="hljs-string">"the same destination, skipping teleport &lt;-&gt; "</span> &lt;&lt; s.name());
+        <span class="hljs-keyword">return</span>;
+    }
+    JLOG(<span class="hljs-string">"teleport "</span> &lt;&lt; sched-&gt;name() &lt;&lt; <span class="hljs-string">" -&gt; "</span> &lt;&lt; s.name());
+    sched = &amp;s;
+    defer(proceedHandler());
+}
+</code></pre>
+
+<p>Two things are done here:</p>
+
+<ol>
+<li>Check whether the coroutine scheduler differs from the scheduler 
+that has been passed to the method. If they are equal, we don’t have to 
+do anything as the scheduler is the one we need.</li>
+<li>Otherwise, we change the coroutine scheduler and reenter the coroutine. <em>defer</em>
+ performs the function that results in exiting the coroutine and 
+invoking the handler for a sooner continuation of the coroutine. 
+However, we are going to use a new scheduler for the return. That’s why 
+we will enter the coroutine in a new thread pool.</li>
+</ol>
+
+<p><img src="Asynchronous%20Programming%20Part%202%20Teleportation%20through%20Portals_files/2919a2.jpg" alt="Asynchronous Programming 11" title="Asynchronous Programming 11"></p>
+
+<p>The diagram below illustrates the process of switching the coroutine execution from <em>Scheduler/Thread</em> to <em>Scheduler2/Thread2</em>:</p>
+
+<p><img src="Asynchronous%20Programming%20Part%202%20Teleportation%20through%20Portals_files/bc7d62.png" alt="teleport call sequence" title="teleport call sequence"></p>
+
+<p>What does this give us? In fact, it provides us with switching 
+between thread pools and, by the way, between schedulers. In particular,
+ we can switch between a UI thread and calculation threads, so that UI 
+wouldn’t be slow:</p>
+
+<pre><code class="hljs d"><span class="hljs-keyword">auto</span> result = someCalculations();
+teleport(uiScheduler);
+showResult(result);
+teleport(calcScheduler);
+<span class="hljs-keyword">auto</span> newResult = continueSmartCalculations(result);
+teleport(uiScheduler);
+updateResult(newResult);
+<span class="hljs-comment">//…</span>
+</code></pre>
+
+<p>That is, to go to UI, we should simply teleport to the required 
+thread. Everything will be thread-safe, in accordance with requirements 
+to the development of UI applications. It is possible to apply the same 
+approach when it is necessary to go to, say, a thread pool or a database
+ thread pool, or any place where we can use the scheduler interface.</p>
+
+<h3 id="portals">Portals</h3>
+
+<p><img src="Asynchronous%20Programming%20Part%202%20Teleportation%20through%20Portals_files/6faf39.jpg" alt="Asynchronous Programming 13" title="Asynchronous Programming 13"></p>
+
+<p>Let’s move on to another interesting part. As you might have noticed,
+ to update the state of a UI application, we had to perform 
+teleportation first to a UI scheduler, and then back. To avoid doing 
+this every time, let’s create a portal that will perform the inverse 
+return automatically as soon as the necessary action completes.</p>
+
+<pre><code class="hljs less"><span class="hljs-selector-tag">struct</span> <span class="hljs-selector-tag">Portal</span>
+{
+    <span class="hljs-selector-tag">Portal</span>(<span class="hljs-attribute">mt</span>::IScheduler&amp; destination) :
+        <span class="hljs-selector-tag">source</span>(journey().scheduler())
+    {
+        <span class="hljs-selector-tag">JLOG</span>(<span class="hljs-string">"creating portal "</span> &lt;&lt; source.name() &lt;&lt; <span class="hljs-string">" &lt;=&gt; "</span> &lt;&lt; destination.name());
+        <span class="hljs-selector-tag">teleport</span>(destination);
+    }
+    ~<span class="hljs-selector-tag">Portal</span>()
+    {
+        <span class="hljs-selector-tag">teleport</span>(source);
+    }
+
+<span class="hljs-selector-tag">private</span>:
+    <span class="hljs-selector-tag">mt</span><span class="hljs-selector-pseudo">::IScheduler</span><span class="hljs-selector-tag">&amp;</span> <span class="hljs-selector-tag">source</span>;
+};
+</code></pre>
+
+<p>This means that we preserve a source (current scheduler of the 
+coroutine) in the constructor, and then teleport the coroutine in the 
+known direction. As for the destructor, teleportation to the initial 
+scheduler takes place in it.</p>
+
+<p>Thanks to such RAII idiom, we don’t have to worry that we can 
+suddenly turn out to be in some other place (for instance, won’t perform
+ some heavy calculations in a UI thread or in a network thread pool), 
+everything will be performed automatically.</p>
+
+<p>Let’s look at an example:</p>
+
+<pre><code class="hljs lisp">ThreadPool tp1(<span class="hljs-number">1</span>, <span class="hljs-string">"tp1"</span>)<span class="hljs-comment">;</span>
+ThreadPool tp2(<span class="hljs-number">1</span>, <span class="hljs-string">"tp2"</span>)<span class="hljs-comment">;</span>
+
+go([<span class="hljs-symbol">&amp;tp2</span>] {
+    Portal p(<span class="hljs-name">tp2</span>)<span class="hljs-comment">;</span>
+    JLOG(<span class="hljs-string">"throwing exception"</span>)<span class="hljs-comment">;</span>
+    throw std:<span class="hljs-symbol">:runtime_error</span>(<span class="hljs-string">"exception occur"</span>)<span class="hljs-comment">;</span>
+}, tp1)<span class="hljs-comment">;</span>
+</code></pre>
+
+<p>The coroutine starts in <em>tp1</em>, and then a portal is created, and switching to <em>tp2</em>
+ takes place. After an exception is generated, we call the portal 
+destructor that actually freezes further exceptions, teleports to <em>tp1</em> and continues the coroutine that will rethrow an exception in another thread. It’s all for free!</p>
+
+<p><img src="Asynchronous%20Programming%20Part%202%20Teleportation%20through%20Portals_files/3f9638.gif" alt="Asynchronous Programming 14" title="Asynchronous Programming 14"></p>
+
+<p>Let’s complicate the use of portals even more:</p>
+
+<pre><code class="hljs cpp"><span class="hljs-keyword">struct</span> Scheduler
+{
+    Scheduler();
+
+    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">attach</span><span class="hljs-params">(mt::IScheduler&amp; s)</span>
+    </span>{
+        scheduler = &amp;s;
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">detach</span><span class="hljs-params">()</span>
+    </span>{
+        scheduler = <span class="hljs-literal">nullptr</span>;
+    }
+
+    <span class="hljs-keyword">operator</span> mt::IScheduler&amp;() <span class="hljs-keyword">const</span>
+    {
+        VERIFY(scheduler != <span class="hljs-literal">nullptr</span>, <span class="hljs-string">"Scheduler is not attached"</span>);
+        <span class="hljs-keyword">return</span> *scheduler;
+    }
+
+<span class="hljs-keyword">private</span>:
+    mt::IScheduler* scheduler;
+};
+
+<span class="hljs-keyword">struct</span> DefaultTag;
+
+<span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">typename</span> T_tag&gt;
+<span class="hljs-function">Scheduler&amp; <span class="hljs-title">scheduler</span><span class="hljs-params">()</span>
+</span>{
+    <span class="hljs-keyword">return</span> single&lt;Scheduler, T_tag&gt;();
+}
+
+<span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">typename</span> T&gt;
+<span class="hljs-keyword">struct</span> WithPortal : Scheduler
+{
+    <span class="hljs-keyword">struct</span> Access : Portal
+    {
+        Access(Scheduler&amp; s) : Portal(s) {}
+        T* <span class="hljs-keyword">operator</span>-&gt;()             { <span class="hljs-keyword">return</span> &amp;single&lt;T&gt;(); }
+    };
+
+    Access <span class="hljs-keyword">operator</span>-&gt;()             { <span class="hljs-keyword">return</span> *<span class="hljs-keyword">this</span>; }
+};
+
+<span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">typename</span> T&gt;
+WithPortal&lt;T&gt;&amp; portal()
+{
+    <span class="hljs-keyword">return</span> single&lt;WithPortal&lt;T&gt;&gt;();
+}
+</code></pre>
+
+<p>This allows us to attach portals to classes, like in the following example:</p>
+
+<pre><code class="hljs cs"><span class="hljs-function">ThreadPool <span class="hljs-title">tp1</span>(<span class="hljs-params"><span class="hljs-number">1</span>, <span class="hljs-string">"tp1"</span></span>)</span>;
+<span class="hljs-function">ThreadPool <span class="hljs-title">tp2</span>(<span class="hljs-params"><span class="hljs-number">1</span>, <span class="hljs-string">"tp2"</span></span>)</span>;
+
+<span class="hljs-keyword">struct</span> X
+{
+    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">op</span>(<span class="hljs-params"></span>) </span>{}
+};
+
+portal&lt;X&gt;().attach(tp2);
+go([] {
+    portal&lt;X&gt;()-&gt;op();
+}, tp1);
+</code></pre>
+
+<p>In the given example, we have attached portal <em>x</em> to thread pool <em>tp2</em>. Thus, during each call of the method of the only instance of class <em>x</em> (used in <em>return &amp;single<t>()</t></em>), the coroutine will switch to the required thread pool. <strong>Our execution context Journey will be traveling back and forth teleporting through portals of used objects!</strong></p>
+
+<p><img src="Asynchronous%20Programming%20Part%202%20Teleportation%20through%20Portals_files/916932.jpg" alt="Asynchronous Programming 15" title="Asynchronous Programming 15"></p>
+
+<p>This gives us an opportunity to monitor where we should call methods 
+of our classes. Classes will take care of switching to the required 
+thread and returning back. This is exactly the approach that has been 
+used at the very beginning when we were solving the initial task. It 
+allowed us to obtain high clarity of code and use all the power of 
+coroutines, teleportation, and portals.</p>
+
+<h3 id="non-locking-mutexes">Non-locking Mutexes</h3>
+
+<p>Mutexes are often used for working with shared resources. Well, 
+there’s no surprise here: such primitive is easy to use and it proves 
+itself in most cases.</p>
+
+<p>But what happens to a mutex when someone has already captured the 
+resource? In this case, waiting on a mutex is observed till the moment 
+the resource is available. In addition, the thread is locked and stops 
+performing useful work.</p>
+
+<p>What would we want? From the point of view of performance, we would 
+like threads to be a bit more than fully involved, and we don’t want 
+them to be distracted by waiting. “It shall be done” said the coroutine 
+and smirked.</p>
+
+<p>There are different ways to implement non-locking mutexes using 
+coroutines. I’m going to apply an elegant method allowing to reuse the 
+available functionality with a minimal number of additions. Let’s create
+ a new scheduler for this purpose:</p>
+
+<pre><code class="hljs less"><span class="hljs-selector-tag">struct</span> <span class="hljs-selector-tag">Alone</span> : <span class="hljs-selector-tag">mt</span><span class="hljs-selector-pseudo">::IScheduler</span>
+{
+    <span class="hljs-selector-tag">Alone</span>(<span class="hljs-attribute">mt</span>::IService&amp; service);
+
+    <span class="hljs-selector-tag">void</span> <span class="hljs-selector-tag">schedule</span>(Handler handler)
+    {
+        <span class="hljs-selector-tag">strand</span><span class="hljs-selector-class">.post</span>(<span class="hljs-attribute">std</span>::move(handler));
+    }
+
+<span class="hljs-selector-tag">private</span>:
+    <span class="hljs-selector-tag">boost</span><span class="hljs-selector-pseudo">::asio</span><span class="hljs-selector-pseudo">::io_service</span><span class="hljs-selector-pseudo">::strand</span> <span class="hljs-selector-tag">strand</span>;
+};
+</code></pre>
+
+<p>In the constructor of <em>Alone, IService</em> interface is used as an input parameter that allows to properly initialize <em>io_service::strand</em> from <em>boost.asio</em>. Actually, it is another <em>boost.asio</em>
+ scheduler. It guarantees that no more than one scheduler will be 
+invoked at the same time. This is precisely what we think a mutex is 
+(mutual exclusion).</p>
+
+<p>Since <em>Alone</em> idiom implements the scheduler interface, we can
+ easily use all the power of our teleportations and portals as if it is 
+necessary.</p>
+
+<p>To consolidate the material, let’s consider the following code:</p>
+
+<pre><code class="hljs cpp"><span class="hljs-keyword">struct</span> MemCache
+{
+    boost::optional&lt;<span class="hljs-built_in">std</span>::<span class="hljs-built_in">string</span>&gt; get(<span class="hljs-keyword">const</span> <span class="hljs-built_in">std</span>::<span class="hljs-built_in">string</span>&amp; key);
+    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">set</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-built_in">std</span>::<span class="hljs-built_in">string</span>&amp; key, <span class="hljs-keyword">const</span> <span class="hljs-built_in">std</span>::<span class="hljs-built_in">string</span>&amp; val)</span></span>;
+};
+<span class="hljs-comment">// initialization</span>
+<span class="hljs-function">ThreadPool <span class="hljs-title">common_pool</span><span class="hljs-params">(<span class="hljs-number">3</span>)</span></span>;             <span class="hljs-comment">// common thread pool</span>
+<span class="hljs-function">Alone <span class="hljs-title">mem_alone</span><span class="hljs-params">(common_pool)</span></span>;          <span class="hljs-comment">// serialization of actions with memory</span>
+portal&lt;MemCache&gt;().Attach(mem_alone);  <span class="hljs-comment">// attaching the portal</span>
+<span class="hljs-comment">// now, let’s perform the necessary operations</span>
+<span class="hljs-keyword">auto</span> value = portal&lt;MemCache&gt;()-&gt;get(key);
+<span class="hljs-comment">// or</span>
+portal&lt;MemCache&gt;()-&gt;<span class="hljs-built_in">set</span>(anotherKey, anotherValue);
+</code></pre>
+
+<p>Access to the object will be serialized automatically. At the same 
+time, the thread will not be locked in case of simultaneous access to 
+the object. What a magic!</p>
+
+<p><img src="Asynchronous%20Programming%20Part%202%20Teleportation%20through%20Portals_files/060ec2.jpg" alt="Asynchronous Programming 16" title="Asynchronous Programming 16"></p>
+
+<h3 id="external-events">External Events</h3>
+
+<p>It would be nice to perform operations regardless of the environment 
+but life doesn’t care about our desired minimalism. Therefore, we have 
+no choice but to move on, in spite of all difficulties and losses.</p>
+
+<p><img src="Asynchronous%20Programming%20Part%202%20Teleportation%20through%20Portals_files/771e64.jpg" alt="Asynchronous Programming 17" title="Asynchronous Programming 17"></p>
+
+<p>What awaits us in asynchronous programming? Actions that seem 
+immutable today should be reconsidered a moment later with appropriate 
+adjustments (see “cancelable”). That is, we want to cancel our actions 
+depending on the current situation.</p>
+
+<p>We should not only take into account the variable execution 
+conditions but also have an opportunity to respond to network factors — 
+properly handle timeouts. It’s good when we managed to get a result. But
+ if a result has not been received in time, it may not need it anymore. 
+There’s no use to learn the subject today if the exam was yesterday and 
+we didn’t show up.</p>
+
+<p>All these requirements are a heavy burden on existing frameworks. As a
+ rule, programmers don’t give a damn about them and then deal with 
+problems at the production when something hangs up, slows down, when 
+resources are not available, and the action continues in spite of the 
+useless result. Let’s try to find approach here.</p>
+
+<p>First of all, we will introduce types of external events and associated exceptions:</p>
+
+<pre><code class="hljs cpp"><span class="hljs-keyword">enum</span> EventStatus
+{
+    ES_NORMAL,
+    ES_CANCELLED,
+    ES_TIMEDOUT,
+};
+
+<span class="hljs-keyword">struct</span> EventException : <span class="hljs-built_in">std</span>::runtime_error
+{
+    EventException(EventStatus s);
+    <span class="hljs-function">EventStatus <span class="hljs-title">status</span><span class="hljs-params">()</span></span>;
+
+<span class="hljs-keyword">private</span>:
+    EventStatus st;
+};
+</code></pre>
+
+<p>To control a coroutine from the outside, we need some object sharing the state between the calling and the called.</p>
+
+<pre><code class="hljs cpp"><span class="hljs-keyword">struct</span> Goer
+{
+    Goer();
+    <span class="hljs-function">EventStatus <span class="hljs-title">reset</span><span class="hljs-params">()</span></span>;
+    <span class="hljs-function"><span class="hljs-keyword">bool</span> <span class="hljs-title">cancel</span><span class="hljs-params">()</span></span>;
+    <span class="hljs-function"><span class="hljs-keyword">bool</span> <span class="hljs-title">timedout</span><span class="hljs-params">()</span></span>;
+
+<span class="hljs-keyword">private</span>:
+    <span class="hljs-keyword">struct</span> State
+    {
+        State() : status(ES_NORMAL) {}
+        EventStatus status;
+    };
+
+    <span class="hljs-function"><span class="hljs-keyword">bool</span> <span class="hljs-title">setStatus0</span><span class="hljs-params">(EventStatus s)</span></span>;
+    <span class="hljs-function">State&amp; <span class="hljs-title">state0</span><span class="hljs-params">()</span></span>;
+    <span class="hljs-built_in">std</span>::<span class="hljs-built_in">shared_ptr</span>&lt;State&gt; state;
+};
+</code></pre>
+
+<p>Everything is quite trivial here. We have a smart state pointer we can check and change.</p>
+
+<p>Let’s add event handling to our <em>Journey</em> class:</p>
+
+<pre><code class="hljs cpp"><span class="hljs-keyword">void</span> Journey::handleEvents()
+{
+    <span class="hljs-comment">// callable from the destructor</span>
+    <span class="hljs-keyword">if</span> (!eventsAllowed || <span class="hljs-built_in">std</span>::uncaught_exception())
+        <span class="hljs-keyword">return</span>;
+    <span class="hljs-keyword">auto</span> s = gr.reset();
+    <span class="hljs-keyword">if</span> (s == ES_NORMAL)
+        <span class="hljs-keyword">return</span>; <span class="hljs-comment">// нет событий</span>
+    <span class="hljs-keyword">throw</span> EventException(s);
+}
+
+<span class="hljs-keyword">void</span> Journey::disableEvents()
+{
+    handleEvents();
+    eventsAllowed = <span class="hljs-literal">false</span>;
+}
+
+<span class="hljs-keyword">void</span> Journey::enableEvents()
+{
+    eventsAllowed = <span class="hljs-literal">true</span>;
+    handleEvents();
+}
+</code></pre>
+
+<p>We should pay attention to adding a flag of whether we should handle 
+the event or no. Sometimes we should perform some important actions 
+before throwing an exception. A guard is meant for this purpose:</p>
+
+<pre><code class="hljs thrift"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">EventsGuard</span>
+</span>{
+    EventsGuard(); <span class="hljs-comment">// invokes disableEvents()</span>
+    ~EventsGuard(); <span class="hljs-comment">// invokes enableEvents()</span>
+};
+</code></pre>
+
+<p>When do we call handleEvents? Here’s when:</p>
+
+<pre><code class="hljs ruby">void Journey::defer(Handler handler)
+{
+    <span class="hljs-regexp">//</span> add before exiting the coroutine
+    handleEvents();
+    deferHandler = handler;
+    coro::<span class="hljs-keyword">yield</span>();
+    <span class="hljs-regexp">//</span> <span class="hljs-keyword">and</span> right after waking up
+    handleEvents();
+}
+</code></pre>
+
+<p>That is, at the moment of any context switching, for example during 
+an asynchronous operation or teleportation. When performing heavy 
+synchronous operations we should add additional calls for <em>handleEvents</em> to our handlers for a faster response to events. This will solve the problem of operation responsiveness to external events.</p>
+
+<p>Now, let’s implement the start of the coroutine:</p>
+
+<pre><code class="hljs elixir">Goer go(Handler handler, <span class="hljs-symbol">mt:</span><span class="hljs-symbol">:IScheduler&amp;</span> scheduler)
+{
+    <span class="hljs-keyword">return</span> <span class="hljs-symbol">Journey:</span><span class="hljs-symbol">:create</span>(<span class="hljs-symbol">std:</span><span class="hljs-symbol">:move</span>(handler), scheduler);
+}
+</code></pre>
+
+<p><em>Journey::create</em> returns a shared <em>Goer</em> state to provide the reaction to external events:</p>
+
+<pre><code class="hljs php">struct Journey
+{
+    <span class="hljs-comment">// …</span>
+    Goer goer() <span class="hljs-keyword">const</span>
+    {
+        <span class="hljs-keyword">return</span> gr;
+    }
+    <span class="hljs-comment">// …</span>
+
+<span class="hljs-keyword">private</span>:
+    <span class="hljs-comment">// …</span>
+    Goer gr;
+};
+
+Goer Journey::create(Handler handler, mt::IScheduler&amp; s)
+{
+    <span class="hljs-keyword">return</span> (<span class="hljs-keyword">new</span> Journey(s))-&gt;start0(std::move(handler));
+}
+
+<span class="hljs-comment">// see our first task</span>
+Goer Journey::start0(Handler handler)
+{
+    <span class="hljs-comment">// …</span>
+    <span class="hljs-keyword">return</span> goer();
+}
+
+<span class="hljs-comment">// A small example of use</span>
+Goer op = go(myMegaHandler);
+<span class="hljs-comment">// …</span>
+<span class="hljs-keyword">If</span> (weDontNeedMegaHandlerAnymore)
+    op.cancel();
+</code></pre>
+
+<p>The state will be changed right after <em>op.cancel()</em> is called and the cancellation will start its work after the subsequent <em>handleEvents()</em> call.</p>
+
+<p><img src="Asynchronous%20Programming%20Part%202%20Teleportation%20through%20Portals_files/b0421b.jpg" alt="Asynchronous Programming 18" title="Asynchronous Programming 18"></p>
+
+<p>As you might have noticed, the creation of <em>Journey</em> traveler that will go back and forth, teleporting through portals, takes place implicitly inside function <em>go</em>. As a result, the user does not even know that has to deal with a hidden object. He just separately calls <em>go</em>, <em>defer</em>, <em>deferProceed</em>, and other methods that by using TLS restore <em>Journey’s</em> instance inside themselves.</p>
+
+<h3 id="handling-timeouts">Handling Timeouts</h3>
+
+<p>Let’s take a look at the implementation of nested timeouts:</p>
+
+<pre><code class="hljs cpp"><span class="hljs-keyword">struct</span> Timeout
+{
+    Timeout(<span class="hljs-keyword">int</span> ms);
+    ~Timeout();
+
+<span class="hljs-keyword">private</span>:
+    boost::asio::deadline_timer timer;
+};
+</code></pre>
+
+<p>We will use <em>boost::asio::deadline_timer</em>:</p>
+
+<pre><code class="hljs cpp">Timeout::Timeout(<span class="hljs-keyword">int</span> ms) :
+    timer(service&lt;TimeoutTag&gt;(), boost::posix_time::milliseconds(ms))
+{
+    <span class="hljs-comment">// get the current shared state</span>
+    Goer goer = journey().goer();
+    <span class="hljs-comment">// trigger the asynchronous handler</span>
+    timer.async_wait([goer](<span class="hljs-keyword">const</span> Error&amp; error) <span class="hljs-keyword">mutable</span> {
+        <span class="hljs-comment">// mutable, since we do not change the captured state goer</span>
+        <span class="hljs-keyword">if</span> (!error) <span class="hljs-comment">// if the timer has not been canceled, then time it out</span>
+            goer.timedout();
+    });
+}
+
+Timeout::~Timeout()
+{
+    <span class="hljs-comment">// cancel the started timer</span>
+    timer.cancel_one();
+    <span class="hljs-comment">// check whether an event has happened</span>
+    handleEvents();
+}
+</code></pre>
+
+<p>Using the RAII idiom, you can nest timeout processing into each other independently, without any limits.</p>
+
+<p>Here’s a trivial example:</p>
+
+<pre><code class="hljs less"><span class="hljs-comment">// inside the coroutine</span>
+<span class="hljs-selector-tag">Timeout</span> <span class="hljs-selector-tag">t</span>(<span class="hljs-number">100</span>); <span class="hljs-comment">// 100 ms</span>
+<span class="hljs-selector-tag">for</span> (auto <span class="hljs-attribute">element</span>: container)
+{
+    <span class="hljs-selector-tag">performOperation</span>(element);
+    <span class="hljs-selector-tag">handleEvents</span>();
+}
+</code></pre>
+
+<p>Couldn’t do it 100 ms? Bye!</p>
+
+<p><img src="Asynchronous%20Programming%20Part%202%20Teleportation%20through%20Portals_files/89891d.jpg" alt="Asynchronous Programming 19" title="Asynchronous Programming 19"></p>
+
+<p>Another example illustrates another feature of nested timeouts:</p>
+
+<pre><code class="hljs coq">// <span class="hljs-built_in">set</span> <span class="hljs-number">200</span> ms <span class="hljs-built_in">timeout</span> on all operations
+<span class="hljs-keyword">Timeout</span> outer(<span class="hljs-number">200</span>);
+portal&lt;MyObject&gt;()-&gt;performOp();
+{
+    // <span class="hljs-built_in">set</span> the <span class="hljs-built_in">timeout</span> <span class="hljs-number">100</span> ms
+    // only <span class="hljs-keyword">for</span> operations within visibility
+    <span class="hljs-keyword">Timeout</span> inner(<span class="hljs-number">100</span>);
+    portal&lt;MyAnotherObject&gt;()-&gt;performAnotherOp();
+    // <span class="hljs-keyword">let</span>’s protect this operation from invasion
+    EventsGuard guard;
+    performGuardedAction();
+}
+</code></pre>
+
+<h2 id="tasks">Tasks</h2>
+
+<p>I’ve got two tasks on race condition. Actually, catching a race 
+condition is a challenging task. Therefore, I’m giving you an 
+opportunity to think about them.</p>
+
+<p>What’s the purpose of this exercise? Let’s see:</p>
+
+<ol>
+<li>Behavior analysis will help us understand more precisely how coroutines work.</li>
+<li>Concurrency and asynchrony have specific consequences. It’s 
+important to know about any pitfalls so that we would be ready for them.</li>
+<li>Finally, it’s a nice opportunity to stretch your brain. They say it works better afterwards.</li>
+</ol>
+
+<h3 id="task-1">Task 1</h3>
+
+<p>Task number 1.</p>
+
+<p>Given a function for running a coroutine:</p>
+
+<pre><code class="hljs less"><span class="hljs-selector-tag">Goer</span> <span class="hljs-selector-tag">Journey</span><span class="hljs-selector-pseudo">::start0(Handler</span> <span class="hljs-selector-tag">handler</span>)
+{
+    <span class="hljs-selector-tag">schedule0</span>([handler, this] {
+        <span class="hljs-selector-tag">guardedCoro0</span>()<span class="hljs-selector-tag">-</span>&gt;<span class="hljs-selector-tag">start</span>([handler] {
+            <span class="hljs-selector-tag">JLOG</span>(<span class="hljs-string">"started"</span>);
+            <span class="hljs-selector-tag">try</span>
+            {
+                <span class="hljs-selector-tag">handler</span>();
+            }
+            <span class="hljs-selector-tag">catch</span> (<span class="hljs-attribute">std</span>::exception&amp; e)
+            {
+                (<span class="hljs-selector-tag">void</span>) <span class="hljs-selector-tag">e</span>;
+                <span class="hljs-selector-tag">JLOG</span>(<span class="hljs-string">"exception in coro: "</span> &lt;&lt; e.what());
+            }
+            <span class="hljs-selector-tag">JLOG</span>(<span class="hljs-string">"ended"</span>);
+        });
+    });
+    <span class="hljs-selector-tag">return</span> <span class="hljs-selector-tag">goer</span>();
+}
+</code></pre>
+
+<p>It has a race condition. Where is it? What should we change to fix this fatal drawback?</p>
+
+<p><strong>The Answer</strong></p>
+
+<pre><code class="hljs diff">Goer Journey::start0(Handler handler)
+ {
+<span class="hljs-addition">+    Goer gr = goer();</span>
+     schedule0([handler, this] {
+         guardedCoro0()-&gt;start([handler] {
+             JLOG("started");
+<span class="hljs-meta">@@ -121,7 +122,7 @@</span>
+             JLOG("ended");
+         });
+     });
+<span class="hljs-deletion">-    return goer();</span>
+<span class="hljs-addition">+    return gr;</span>
+ }
+</code></pre>
+
+<p><img src="Asynchronous%20Programming%20Part%202%20Teleportation%20through%20Portals_files/9ca2bf.png" alt="Asynchronous Programming 20" title="Asynchronous Programming 20"></p>
+
+<h3 id="task-2">Task 2</h3>
+
+<p>Same conditions. Given the code:</p>
+
+<pre><code class="hljs cpp"><span class="hljs-keyword">void</span> Journey::onExit0()
+{
+    <span class="hljs-keyword">if</span> (deferHandler == <span class="hljs-literal">nullptr</span>)
+    {
+        <span class="hljs-keyword">delete</span> <span class="hljs-keyword">this</span>;
+    }
+    <span class="hljs-keyword">else</span>
+    {
+        deferHandler();
+        deferHandler = <span class="hljs-literal">nullptr</span>;
+    }
+    t_journey = <span class="hljs-literal">nullptr</span>;
+}
+</code></pre>
+
+<p>Where’s the mistake and how can we fix it?</p>
+
+<p>The Answer</p>
+
+<pre><code class="hljs diff">{
+<span class="hljs-meta">@@ -153,8 +154,8 @@</span>
+<span class="hljs-deletion">-        deferHandler();</span>
+<span class="hljs-deletion">-        deferHandler = nullptr;</span>
+<span class="hljs-addition">+        Handler handler = std::move(deferHandler);</span>
+<span class="hljs-addition">+        handler();</span>
+     }
+</code></pre>
+
+<p><img src="Asynchronous%20Programming%20Part%202%20Teleportation%20through%20Portals_files/746c57.png" alt="Asynchronous Programming 21" title="Asynchronous Programming 21"></p>
+
+<p>In addition to the problem of replacing <em>defer handler</em>, this handler can be destroyed twice.</p>
+
+<h2 id="bonus-garbage-collector-gc">Bonus: Garbage Collector (GC)</h2>
+
+<p><img src="Asynchronous%20Programming%20Part%202%20Teleportation%20through%20Portals_files/9f8abe.jpg" alt="Asynchronous Programming 22" title="Asynchronous Programming 22"></p>
+
+<p>Yes, we’ll make the simplest GC on our coroutines. Let’s begin with the following example:</p>
+
+<pre><code class="hljs thrift"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">A</span> </span>{ ~A() { TLOG(<span class="hljs-string">"~A"</span>); } };
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">B</span>:A </span>{ ~B() { TLOG(<span class="hljs-string">"~B"</span>); } };
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">C</span> </span>{ ~C() { TLOG(<span class="hljs-string">"~C"</span>); } }
+;
+ThreadPool tp(<span class="hljs-number">1</span>, <span class="hljs-string">"tp"</span>);
+go([] {
+    A* a = gcnew&lt;B&gt;();
+    C* c = gcnew&lt;C&gt;();
+}, tp);
+</code></pre>
+
+<p>Output in the console:</p>
+
+<pre><code class="hljs r">tp<span class="hljs-comment">#1: ~C</span>
+tp<span class="hljs-comment">#1: ~B</span>
+tp<span class="hljs-comment">#1: ~A</span>
+</code></pre>
+
+<p>Take note of non-virtual destructors and a proper object destruction!
+ Although some people say we should always use virtual destructors for 
+inheritance.</p>
+
+<p>As always, all the magic is hidden inside:</p>
+
+<pre><code class="hljs cpp"><span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">typename</span> T, <span class="hljs-keyword">typename</span>... V&gt;
+<span class="hljs-function">T* <span class="hljs-title">gcnew</span><span class="hljs-params">(V&amp;&amp;... v)</span> </span>{
+    <span class="hljs-keyword">return</span> gc().add(<span class="hljs-keyword">new</span> T(<span class="hljs-built_in">std</span>::forward(v)...));
+}
+
+<span class="hljs-function">GC&amp; <span class="hljs-title">gc</span><span class="hljs-params">()</span> </span>{ <span class="hljs-keyword">return</span> journey().gc; }
+
+<span class="hljs-keyword">struct</span> GC {
+    ~GC()
+    {
+        <span class="hljs-comment">// delete in reverse order</span>
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">auto</span>&amp; deleter: boost::adaptors::reverse(deleters))
+            deleter();
+    }
+
+    <span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">typename</span> T&gt; <span class="hljs-function">T* <span class="hljs-title">add</span><span class="hljs-params">(T* t)</span>
+    </span>{
+        <span class="hljs-comment">// add a deleter of T type</span>
+        deleters.emplace_back([t] { <span class="hljs-keyword">delete</span> t; });
+        <span class="hljs-keyword">return</span> t;
+    }
+
+<span class="hljs-keyword">private</span>:
+    <span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;Handler&gt; deleters;
+};
+</code></pre>
+
+<p>GC instance is stored inside <em>Journey</em> that will be destroyed 
+when the coroutine completes. There’s a restriction: such objects should
+ not be shared, and they can only be used inside a coroutine.</p>
+
+<h2 id="summary">Summary</h2>
+
+<p>So, we have reviewed several extremely useful primitives for building quite complex applications:</p>
+
+<ol>
+<li>Non-locking primitives of waiting the completion of actions/results.</li>
+<li>Thread pools and schedulers.</li>
+<li>Non-locking synchronization.</li>
+<li>Teleportation, meaning switching between different schedulers.</li>
+<li>Portals. A powerful and flexible abstraction of performing actions 
+in a specified environment: thread, pool thread, a group of threads, 
+consistently in a group of threads, etc.</li>
+</ol>
+
+<p>The suggested approaches can significantly simplify code, without 
+sacrificing performance. Waiting primitives do not lock threads, which 
+is good for processors. As for using non-locking mutexes, they bring 
+synchronization up to an incredible level.</p>
+
+<p>Portals help us to ignore requirements to the caller. It is also good
+ when working in a heterogeneous environment: database, network, disk, 
+UI, shared data, heavy computational operations. That is, when solving 
+tasks, in which data processing and moving between various producers and
+ consumers take place.</p>
+
+<p>Actually, it’s only an introduction to asynchronous programming on 
+coroutines. The most interesting things are yet to come! Hope this 
+article has given you a programming pleasure.</p>
+
+<p><img src="Asynchronous%20Programming%20Part%202%20Teleportation%20through%20Portals_files/c617b5.jpg" alt="Asynchronous Programming 23" title="Asynchronous Programming 23"></p>
+
+<p><strong>Code</strong> <a href="https://github.com/gridem/Synca">github.com/gridem/Synca</a>
+<a href="https://bitbucket.org/gridem/synca">bitbucket.org/gridem/synca</a></p>
+
+<p><strong>Presentation C++ Party, Yandex (in Russian)</strong> <a href="https://events.yandex.ru/lib/talks/1761/">tech.yandex.ru/events/cpp-party/march-msk/talks/1761</a></p>
+
+<p><strong>Presentation C++ User Group (in Russian)</strong> <a href="https://www.youtube.com/watch?v=uUQX5QS1CCg&amp;feature=youtu.be">youtu.be/uUQX5QS1CCg</a>
+<a href="https://habrahabr.ru/company/cpp_russia/blog/212793/">habrahabr.ru/post/212793</a></p>
+
+<p>[1] <a href="https://kukuruku.co/hub/cpp/asynchronous-programming-back-to-the-future">Asynchronous Programming: Back to the Future.</a></p>
+
+<p>[2] <a href="http://doc.akka.io/docs/akka/2.1.4/scala/scheduler.html">The Interface of Akka Scheduler</a></p>
+
+				</div>
+
+				<ul class="share-buttons">
+  <li>
+    <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fkukuruku.co%2F&amp;t=" target="_blank" title="Share on Facebook" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(document.URL) + '&amp;t=' + encodeURIComponent(document.URL)); return false;" class="share-button facebook">
+      <span class="icon icon-facebook-square"></span>
+      <span>Share</span>
+    </a>
+  </li>
+  <li>
+    <a href="https://twitter.com/intent/tweet?source=https%3A%2F%2Fkukuruku.co%2F&amp;text=:%20https%3A%2F%2Fkukuruku.co%2F&amp;via=kukurukuco" target="_blank" title="Tweet" onclick="window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(document.title) + ':%20'  + encodeURIComponent(document.URL)); return false;" class="share-button twitter">
+      <span class="icon icon-twitter"></span>
+      <span>Tweet</span>
+    </a>
+  </li>
+  <li>
+    <a href="https://plus.google.com/share?url=https%3A%2F%2Fkukuruku.co%2F" target="_blank" title="Share on Google+" onclick="window.open('https://plus.google.com/share?url=' + encodeURIComponent(document.URL)); return false;" class="share-button google-plus">
+      <span class="icon icon-google-plus"></span>
+      <span>+1</span>
+    </a>
+  </li>
+  <li>
+    <a href="http://www.reddit.com/submit?url=https%3A%2F%2Fkukuruku.co%2F&amp;title=" target="_blank" title="Submit to Reddit" onclick="window.open('http://www.reddit.com/submit?url=' + encodeURIComponent(document.URL) + '&amp;title=' +  encodeURIComponent(document.title)); return false;" class="share-button reddit">
+      <span class="icon icon-reddit"></span>
+      <span>Reddit</span>
+    </a>
+  </li>
+  <li>
+    <a href="http://www.linkedin.com/shareArticle?mini=true&amp;url=https%3A%2F%2Fkukuruku.co%2F&amp;title=&amp;summary=&amp;source=https%3A%2F%2Fkukuruku.co%2F" target="_blank" title="Share on LinkedIn" onclick="window.open('http://www.linkedin.com/shareArticle?mini=true&amp;url=' + encodeURIComponent(document.URL) + '&amp;title=' +  encodeURIComponent(document.title)); return false;" class="share-button linkedin">
+      <span class="icon icon-linkedin"></span>
+      <span>Share</span>
+    </a>
+  </li>
+</ul>
+
+				<footer>
+					
+					<a href="http://gridem.blogspot.com/" class="post-author">
+						<img src="Asynchronous%20Programming%20Part%202%20Teleportation%20through%20Portals_files/avatar_light.png" style="border: 1px solid #d8e2f3; margin-right: 5px;" width="30" height="30">
+					</a>
+					<a href="http://gridem.blogspot.com/" class="post-author">Grigory Demchenko</a>
+					
+				</footer>
+				<section id="comments">
+  <h3>Comments</h3>
+  
+  
+    
+  <meta itemprop="commentCount" content="0">
+  <ol class="article-comments">
+      
+  </ol>
+  
+  
+  <div class="leave-comment-container">
+    <div class="leave-comment-form-container">
+      <form method="post" action="/_p/posts/203/comments/" class="create-comment-form">
+        <div class="avatar-container">
+          <img src="Asynchronous%20Programming%20Part%202%20Teleportation%20through%20Portals_files/avatar_light.png">
+        </div>
+        <div class="form-body">
+          <textarea name="comment" class="comment" placeholder="Github flavored markdown is allowed."></textarea>
+          <div class="actions">
+            <input type="submit" value="Post Comment" class="submit-button">
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+			</article>
+
+		
+			
+			<section class="recommendations clearfix">
+				<article>
+  <header>
+    <div class="info">
+      
+      <span class="post-author">Flux</span>
+      
+      <time datetime="2017-01-02" pubdate="">2 January 2017</time>
+      <span class="views">
+        <span class="icon-eye"></span>
+        <span>3,751</span>
+      </span>
+    </div>
+    <h2 class="headline"><a href="https://www.kukuruku.co/post/ropes-fast-strings/">Ropes — Fast Strings</a></h2>
+  </header>
+  
+  <figure>
+    <a href="https://www.kukuruku.co/post/ropes-fast-strings/"><img src="Asynchronous%20Programming%20Part%202%20Teleportation%20through%20Portals_files/ropes-fast-strings.jpg" width="160" height="110"></a>
+  </figure>
+  
+  <div class="post-body">
+    Most of us work with strings one way or another. There’s no way to 
+avoid them — when writing code, you’re doomed to concatinate strings 
+every day, split them into parts and access certain characters by index.
+ We are used to the fact that strings are fixed-length arrays of 
+characters, which leads to certain limitations when working with them. 
+For instance, we cannot quickly concatenate two strings. To do this, we 
+will at first need to allocate the required amount of memory, and then 
+copy there the data from the concatenated strings.
+  </div>
+  
+  <footer>
+    
+    
+    <a href="https://www.kukuruku.co/post/ropes-fast-strings/#comments" class="post-comments"><span class="icon-bubbles"></span> 1 comment</a>
+    
+  </footer>
+  
+</article>
+			</section>
+			
+		
+		</div>
+
+	</div>
+
+</main>
+
+<div class="subscribe-footer-block">
+  <div class="container">
+    Get the latest content first
+    <form action="//kukuruku.us8.list-manage.com/subscribe/post?u=e4905e022a3bd9502e281743a&amp;id=d25c804b1d" method="post" target="_blank" novalidate="">
+      <input type="email" name="EMAIL" class="email form-control" id="mce-EMAIL" placeholder="Enter your email address" required="">
+      <div style="position: absolute; left: -5000px;">
+        <input type="text" name="b_e4905e022a3bd9502e281743a_d25c804b1d" tabindex="-1">
+      </div>
+      <input type="submit" value="Subscribe" name="subscribe">
+    </form>
+  </div>
+</div>
+
+    </div>
+    <footer class="site-footer">
+      <div class="center">
+        <ul class="submenu list-inline pull-right">
+          <li><a href="https://www.kukuruku.co/page/privacy">Privacy Policy</a></li>
+          <li><a href="mailto:support@kukuruku.co">Contact us</a></li>
+        </ul>
+        <div class="logo">
+          <a href="https://www.kukuruku.co/">
+            <img src="Asynchronous%20Programming%20Part%202%20Teleportation%20through%20Portals_files/25x25.png">
+          </a>
+        </div>
+      </div>
+    </footer>
+    
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-49490146-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async="" src="Asynchronous%20Programming%20Part%202%20Teleportation%20through%20Portals_files/analytics.js"></script>
+
+    <script src="Asynchronous%20Programming%20Part%202%20Teleportation%20through%20Portals_files/bundle.js"></script>
+    <script type="text/javascript">
+      var infolinks_pid = 3266022;
+      var infolinks_wsid = 0;
+      </script>
+      <script type="text/javascript" src="Asynchronous%20Programming%20Part%202%20Teleportation%20through%20Portals_files/infolinks_main.js"></script>
+  
+
+</body></html>

@@ -1,0 +1,1624 @@
+<!DOCTYPE html>
+<html lang="en-US"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  
+    <meta property="og:title" content="Asynchronous Programming: Back to the Future">
+  
+
+    <meta property="og:site_name" content="Kukuruku Hub">
+    <meta property="og:url" content="https://www.kukuruku.co/post/asynchronous-programming-back-to-the-future/">
+    <link href="https://www.kukuruku.co/images/favicon.ico" rel="shortcut icon">
+
+  
+    <meta property="og:type" content="article">
+    <meta property="og:article:published_time" content="2016-10-10T00:19:26Z">
+    <meta property="og:article:tag" content="c++">
+    <meta property="og:article:tag" content="boost">
+    <meta property="og:article:tag" content="sync">
+    <meta property="og:article:tag" content="async">
+    <meta property="og:article:tag" content="synca">
+    <meta property="og:article:tag" content="coroutines">
+    
+    
+    <meta property="og:image" content="https://s3.amazonaws.com/kukuruku-co/uploads/topics/preview/00/00/02/72/0a4c4df382_300crop.jpg">
+    
+    
+    <meta property="og:description" content="Asynchronous programming… Hearing these words, programmers’ eyes begin to shine, breathing becomes shallow, hands are shaking and the brain is drawing multiple levels of abstraction… Managers’ eyes become wide, sounds become inarticulate, fists are clenched, and the voice switches to overtones. The only thing that unites these two groups of people is a rapid pulse. However, there are different reasons. While programmers are eager for the fight, managers are trying to look into the crystal ball and realize the risks, frantically trying to come up with reasons to extend the deadlines as mush as they can.">
+    
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@KukurukuCo">
+    <meta name="twitter:creator" content="@KukurukuCo">
+    <meta name="twitter:title" content="Asynchronous Programming: Back to the Future">
+    
+    <meta property="twitter:description" content="Asynchronous programming… Hearing these words, programmers’ eyes begin to shine, breathing becomes shallow, hands are shaking and the brain is drawing...">
+    
+    <meta name="twitter:url" content="https://www.kukuruku.co/post/asynchronous-programming-back-to-the-future/">
+  
+
+  
+    <title>Asynchronous Programming: Back to the Future</title>
+  
+
+  
+    
+    <meta name="description" content="Asynchronous programming… Hearing these words, programmers’ eyes begin to shine, breathing becomes shallow, hands are shaking and the brain is drawing...">
+    
+  
+
+    <meta name="p:domain_verify" content="fc173d84e3a4de948ed4bda2908afd3e">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  
+
+    
+    
+
+  
+    <link href="https://www.kukuruku.co/index.xml" rel="alternate" type="application/rss+xml" title="Kukuruku Hub">
+  
+
+  
+    <link rel="canonical" href="https://www.kukuruku.co/post/asynchronous-programming-back-to-the-future/">
+
+    <script async="" src="Asynchronous%20Programming%20Back%20to%20the%20Future_files/adsbygoogle.js"></script>
+
+  
+    <script>
+      (adsbygoogle = window.adsbygoogle || []).push({
+        google_ad_client: "ca-pub-5957750206575747",
+        enable_page_level_ads: true
+      });
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "Article",
+        "headline": "Asynchronous Programming: Back to the Future",
+        
+        "image": https://s3.amazonaws.com/kukuruku-co/uploads/topics/preview/00/00/02/72/0a4c4df382_300crop.jpg,
+        
+        "author": {
+            "@type": "Person",
+            "name": Grigory Demchenko
+        },
+        "publisher": "Kukuruku Hub",
+        "datePublished": "2016-10-10",
+        
+        "dateModified": "2019-05-15",
+        
+        "description": "Asynchronous programming… Hearing these words, programmers’ eyes begin to shine, breathing becomes shallow, hands are shaking and the brain is drawing multiple levels of abstraction… Managers’ eyes become wide, sounds become inarticulate, fists are clenched, and the voice switches to overtones. The only thing that unites these two groups of people is a rapid pulse. However, there are different reasons. While programmers are eager for the fight, managers are trying to look into the crystal ball and realize the risks, frantically trying to come up with reasons to extend the deadlines as mush as they can.",
+        "wordCount": 4898
+    }
+    </script>
+
+    <script type="text/javascript">
+    
+      var post_id =  200 ;
+      var api_url = "https://www.kukuruku.co/_p/";
+    
+    </script>
+  
+
+    <link rel="stylesheet" href="Asynchronous%20Programming%20Back%20to%20the%20Future_files/styles.css">
+  </head>
+
+  <body>
+    <div id="root">
+      <div id="scroll-up" class="visible-lg-block"><i class="arrow up"></i></div>
+
+<header class="navbar">
+  <div class="container-fluid navbar-container">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="https://www.kukuruku.co/">
+        <img src="Asynchronous%20Programming%20Back%20to%20the%20Future_files/25x25.png">
+      </a>
+
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".kukuruku-nav" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-menu"></span>
+      </button>
+    </div>
+
+    <div class="collapse navbar-collapse kukuruku-nav">
+      <ul class="nav navbar-nav navbar-right">
+        <li class="write-post">
+          <a rel="nofollow" class="button green" href="https://www.kukuruku.co/post-editor/">Write for us</a>
+        </li>
+        <li class="active"><a href="https://www.kukuruku.co/">Home</a></li>
+        <li><a href="https://www.kukuruku.co/hubs/">Hubs</a></li>
+        <li>
+          <div class="dropdown">
+            <img src="Asynchronous%20Programming%20Back%20to%20the%20Future_files/avatar_dark.png" id="navbar-avatar">
+            <ul class="dropdown-content guest hidden">
+              <li><a href="https://www.kukuruku.co/_p/auth/github/" title="Log in with Github">Log in with Github</a></li>
+              <li><a href="https://www.kukuruku.co/_p/auth/facebook/" title="Log in with Facebook">Log in with Facebook</a></li>
+            </ul>
+            <ul class="dropdown-content non-guest">
+              <li><a href="https://www.kukuruku.co/posts/">My Posts</a></li>
+              <li><a href="https://www.kukuruku.co/logout/">Log out</a></li>
+            </ul>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</header>
+
+<nav class="navbar-hubs navbar-collapse collapse kukuruku-nav">
+  <ul class="menu">
+    <li><a href="https://www.kukuruku.co/hubs/cpp/">C++</a></li>
+    <li><a href="https://www.kukuruku.co/hubs/javascript/">JavaScript</a></li>
+    <li><a href="https://www.kukuruku.co/hubs/programming/">Programming</a></li>
+    <li><a href="https://www.kukuruku.co/hubs/webdev/">Web Development</a></li>
+    <li><a href="https://www.kukuruku.co/hubs/algorithms/">Algorithms</a></li>
+    <li><a href="https://www.kukuruku.co/hubs/infosec/">Information Security</a></li>
+    <li><a href="https://www.kukuruku.co/hubs/nix/">Unix</a></li>
+    <li><a href="https://www.kukuruku.co/hubs/funcprog/">Functional Programming</a></li>
+    <li><a href="https://www.kukuruku.co/hubs/python/">Python</a></li>
+    <li><a href="https://www.kukuruku.co/hubs/">More...</a></li>
+  </ul>
+</nav>
+
+<main role="main" class="post">
+
+	<div class="center">
+
+		<div class="site-sidebar visible-sm-block visible-md-block visible-lg-block">
+  <aside class="subscribe block">
+  <div class="item">
+    <span class="slogan">THE #1 BLOG FOR ENGINEERS</span><br>
+    <span class="slogan-part-two">Get the latest content first.</span>
+    <form action="//kukuruku.us8.list-manage.com/subscribe/post?u=e4905e022a3bd9502e281743a&amp;id=d25c804b1d" method="post" target="_blank" novalidate="">
+      <input type="email" name="EMAIL" class="email form-control" id="mce-EMAIL" placeholder="Enter your email address" required="">
+      <div style="position: absolute; left: -5000px;">
+        <input type="text" name="b_e4905e022a3bd9502e281743a_d25c804b1d" tabindex="-1">
+      </div>
+      <div class="submit-container">
+      <input type="submit" value="Subscribe" name="subscribe">
+      </div>
+    </form>
+    <div class="privacy">
+      <span class="icon-lock"></span><span class="text">No spam. Just great engineering posts.</span>
+    </div>
+  </div>
+</aside>
+  <aside class="block">
+  <div class="item">
+    <a href="https://www.bithub.com/"><img alt="BitHub – Cryptocurrency Exchange" src="Asynchronous%20Programming%20Back%20to%20the%20Future_files/300x225.png" qo3j7w6dx="" width="300" height="225" border="0"></a>
+  </div>
+</aside>
+
+  <aside class="block">
+  <div class="item">
+    
+    <ins class="adsbygoogle" style="display:inline-block;width:300px;height:250px" data-ad-client="ca-pub-5957750206575747" data-ad-slot="4872645719"></ins>
+    <script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+  </div>
+</aside>
+
+  <aside class="block">
+  <div class="item">
+    
+    <ins class="adsbygoogle" style="display:inline-block;width:300px;height:600px" data-ad-client="ca-pub-5957750206575747" data-ad-slot="4461810114"></ins>
+    <script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+  </div>
+</aside>
+
+</div>
+
+
+		<div class="content">
+
+			<article class="article" itemscope="" itemtype="http://schema.org/Article">
+        <meta itemprop="author" content="Grigory Demchenko">
+        <meta itemprop="headline" content="Asynchronous Programming: Back to the Future">
+        
+        <meta itemprop="image" content="https://s3.amazonaws.com/kukuruku-co/uploads/topics/preview/00/00/02/72/0a4c4df382_300crop.jpg">
+        
+        <meta itemprop="datePublished" content="2016-10-10T00:19:26+00:00">
+        <meta itemprop="wordCount" content="4898">
+
+				<header>
+					
+					<a href="http://gridem.blogspot.com/" class="post-author">Grigory Demchenko</a>
+					
+					<time datetime="2016-10-10" pubdate="">10 October 2016</time>
+					
+						<a href="https://habrahabr.ru/post/201826/" class="translation"></a>
+					
+					<h1 class="post-title">Asynchronous Programming: Back to the Future</h1>
+					<span class="icon-briefcase"></span>
+					
+					<a href="https://www.kukuruku.co/hubs/cpp/" class="hub-name">C++</a>
+					
+				</header>
+				<div class="post-body" itemprop="articleBody">
+					
+
+<p><img src="Asynchronous%20Programming%20Back%20to%20the%20Future_files/8d38b1.jpg" alt=""></p>
+
+<p>Asynchronous programming… Hearing these words, programmers’ eyes 
+begin to shine, breathing becomes shallow, hands are shaking and the 
+brain is drawing multiple levels of abstraction… Managers’ eyes become 
+wide, sounds become inarticulate, fists are clenched, and the voice 
+switches to overtones. The only thing that unites these two groups of 
+people is a rapid pulse. However, there are different reasons. While 
+programmers are eager for the fight, managers are trying to look into 
+the crystal ball and realize the risks, frantically trying to come up 
+with reasons to extend the deadlines as mush as they can. Later, when 
+the most part of the code is already written, programmers begin to 
+realize and experience the bitterness of asynchronous programming, 
+spending endless nights in a debugger, desperately trying to understand 
+what is actually happening…</p>
+
+<p>That’s exactly what my inflamed imagination draws when hearing 
+“asynchronous programming”. Of course, all of it is too emotional and 
+not always true. Right? Various options are possible. Some people might 
+say that “everything will work well with the right approach”. But you 
+could always say so, at every possible occasion. This doesn’t make 
+anything better. Bugs are not fixed, and insomnia won’t go away.</p>
+
+<p>So, what is asynchronous programming? Why is it so attractive, and, most importantly, what’s wrong with it?</p>
+
+<h2 id="introduction">Introduction</h2>
+
+<p>Asynchronous programming is quite a popular subject nowadays. It’s 
+enough to look around to make sure it’s true. You will come across 
+reviews of various libraries, as well as the Go language, and all sorts 
+of asynchronous frameworks in JS, and many other things.</p>
+
+<p>As a rule, asynchronous programming is used for network programming: 
+various sockets-shmockets, readers-writers and other acceptors. But 
+interesting events also take place, especially in UI. In this article, I
+ am going to talk about the network programming only. However, as we 
+shall see in the next article, we can expand and deepen the approach to 
+the unknown extent.</p>
+
+<p>Being more specific, we are going to write a simple HTTP server that 
+will send a standard response to any standard request. This is not to 
+write a parser as it has exactly the same attitude to asynchronous 
+programming as the position of stars to the character of a man (see 
+astrology).</p>
+
+<h2 id="synchronous-single-threaded-server">Synchronous Single-Threaded Server</h2>
+
+<p><img src="Asynchronous%20Programming%20Back%20to%20the%20Future_files/42c4ac.jpg" alt=""></p>
+
+<p>Hmm. Synchronous? Reading an article on asynchronous programming, a 
+careful reader may say that «asynchronous» has nothing to do here. Well,
+ first of all, we have to begin with something, something simple. 
+Secondly, I am the author here, so it’s going to be this way. Later, 
+you’ll find out what it’s for.</p>
+
+<p>In order not to write a low-level platform-dependent code, I’m going to use a powerful asynchronous library named <em>boost.asio</em> for all our purposes. Fortunately, there are lots of articles written about it, so we can be in-the-know.</p>
+
+<p>For more clarity and «productioness» of the code, I am going to create wrappers around some of the <em>boost.asio</em> library’s functions. Someone can certainly like things like <em>boost::asio::ip::tcp::socket</em> or <em>boost::asio::ip::udp::resolver::iterator</em>, but this results to a less clear, as well as less readable code.</p>
+
+<p>Here’s the definition of the socket and acceptor:</p>
+
+<pre><code class="hljs cpp"><span class="hljs-keyword">typedef</span> <span class="hljs-built_in">std</span>::<span class="hljs-built_in">string</span> Buffer;
+
+<span class="hljs-comment">// forward declaration</span>
+<span class="hljs-keyword">struct</span> Acceptor;
+<span class="hljs-keyword">struct</span> Socket
+{
+    <span class="hljs-keyword">friend</span> <span class="hljs-keyword">struct</span> Acceptor;
+
+    Socket();
+    Socket(Socket&amp;&amp; s);
+
+    <span class="hljs-comment">// reading fixed-size data</span>
+    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">read</span><span class="hljs-params">(Buffer&amp;)</span></span>;
+
+    <span class="hljs-comment">// reading data not greater than the buffer's size</span>
+    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">readSome</span><span class="hljs-params">(Buffer&amp;)</span></span>;
+
+    <span class="hljs-comment">// reading data to the until line</span>
+    <span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">readUntil</span><span class="hljs-params">(Buffer&amp;, <span class="hljs-keyword">const</span> Buffer&amp; until)</span></span>;
+
+    <span class="hljs-comment">// writing fixed-size data</span>
+    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">write</span><span class="hljs-params">(<span class="hljs-keyword">const</span> Buffer&amp;)</span></span>;
+
+    <span class="hljs-comment">// closing the socket</span>
+    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">close</span><span class="hljs-params">()</span></span>;
+
+<span class="hljs-keyword">private</span>:
+    boost::asio::ip::tcp::socket socket;
+};
+
+<span class="hljs-keyword">struct</span> Acceptor
+{
+    <span class="hljs-comment">// port to listen to accept connection</span>
+    <span class="hljs-function"><span class="hljs-keyword">explicit</span> <span class="hljs-title">Acceptor</span><span class="hljs-params">(<span class="hljs-keyword">int</span> port)</span></span>;
+
+    <span class="hljs-comment">// socket creation for new connections</span>
+    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">accept</span><span class="hljs-params">(Socket&amp; socket)</span></span>;
+
+<span class="hljs-keyword">private</span>:
+    boost::asio::ip::tcp::acceptor acceptor;
+};
+</code></pre>
+
+<p>Nothing extra, just the server. <em>Socket</em> allows to read and write, as well as reading until certain symbols <em>(readUntil)</em>. <em>Acceptor</em> listens to the specified port and accepts connections.</p>
+
+<p>The implementation is provided below:</p>
+
+<pre><code class="hljs julia">boost<span class="hljs-type">::</span>asio<span class="hljs-type">::</span>io_service&amp; service()
+{
+    <span class="hljs-keyword">return</span> single&lt;boost<span class="hljs-type">::</span>asio<span class="hljs-type">::</span>io_service&gt;();
+}
+
+Socket<span class="hljs-type">::</span>Socket() :
+    socket(service())
+{
+}
+
+Socket<span class="hljs-type">::</span>Socket(Socket&amp;&amp; s) :
+    socket(std<span class="hljs-type">::</span>move(s.socket))
+{
+}
+
+void Socket<span class="hljs-type">::</span>read(Buffer&amp; buffer)
+{
+    boost<span class="hljs-type">::</span>asio<span class="hljs-type">::</span>read(socket, boost<span class="hljs-type">::</span>asio<span class="hljs-type">::</span>buffer(&amp;buffer[<span class="hljs-number">0</span>], buffer.size()));
+}
+
+void Socket<span class="hljs-type">::</span>readSome(Buffer&amp; buffer)
+{
+    buffer.resize(socket.read_some(boost<span class="hljs-type">::</span>asio<span class="hljs-type">::</span>buffer(&amp;buffer[<span class="hljs-number">0</span>], buffer.size())));
+}
+
+bool hasEnd(size_t posEnd, <span class="hljs-keyword">const</span> Buffer&amp; b, <span class="hljs-keyword">const</span> Buffer&amp; <span class="hljs-keyword">end</span>)
+{
+    <span class="hljs-keyword">return</span> posEnd &gt;= <span class="hljs-keyword">end</span>.size() &amp;&amp;
+        b.rfind(<span class="hljs-keyword">end</span>, posEnd - <span class="hljs-keyword">end</span>.size()) != std<span class="hljs-type">::</span>string<span class="hljs-type">::</span>npos;
+}
+
+int Socket<span class="hljs-type">::</span>readUntil(Buffer&amp; buffer, <span class="hljs-keyword">const</span> Buffer&amp; until)
+{
+    size_t offset = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">while</span> (<span class="hljs-literal">true</span>)
+    {
+        size_t bytes = socket.read_some(boost<span class="hljs-type">::</span>asio<span class="hljs-type">::</span>buffer(&amp;buffer[offset], buffer.size() - offset));
+        offset += bytes;
+        <span class="hljs-keyword">if</span> (hasEnd(offset, buffer, until))
+        {
+            buffer.resize(offset);
+            <span class="hljs-keyword">return</span> offset;
+        }
+        <span class="hljs-keyword">if</span> (offset == buffer.size())
+        {
+            LOG(<span class="hljs-string">"not enough size: "</span> &lt;&lt; buffer.size());
+            buffer.resize(buffer.size() * <span class="hljs-number">2</span>);
+        }
+    }
+}
+
+void Socket<span class="hljs-type">::</span>write(<span class="hljs-keyword">const</span> Buffer&amp; buffer)
+{
+    boost<span class="hljs-type">::</span>asio<span class="hljs-type">::</span>write(socket, boost<span class="hljs-type">::</span>asio<span class="hljs-type">::</span>buffer(&amp;buffer[<span class="hljs-number">0</span>], buffer.size()));
+}
+
+void Socket<span class="hljs-type">::</span>close()
+{
+    socket.close();
+}
+
+Acceptor<span class="hljs-type">::</span>Acceptor(int port) :
+    acceptor(service(), boost<span class="hljs-type">::</span>asio<span class="hljs-type">::</span>ip<span class="hljs-type">::</span>tcp<span class="hljs-type">::</span>endpoint(boost<span class="hljs-type">::</span>asio<span class="hljs-type">::</span>ip<span class="hljs-type">::</span>tcp<span class="hljs-type">::</span>v4(), port))
+{
+}
+
+void Acceptor<span class="hljs-type">::</span>accept(Socket&amp; socket)
+{
+    acceptor.accept(socket.socket);
+}
+</code></pre>
+
+<p>Here I’ve used a singleton for<em>io_service</em>, so not to explicitly pass it all the time. How can a user know that there should be some <em>io_service</em>? That’s why I’ve hidden it away. I guess the rest is quite clear, except for the <em>readUntil</em>
+ function. Its purpose is simple: read the bytes until the desired end 
+comes. That’s exactly what we need for HTTP, as we can’t specify the 
+size beforehand. That’s why we have to resize.</p>
+
+<p>Let’s finally write the server. Here it is:</p>
+
+<pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> HTTP_DELIM          <span class="hljs-meta-string">"\r\n"</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> HTTP_DELIM_BODY     HTTP_DELIM HTTP_DELIM</span>
+
+<span class="hljs-comment">// our response</span>
+<span class="hljs-function">Buffer <span class="hljs-title">httpContent</span><span class="hljs-params">(<span class="hljs-keyword">const</span> Buffer&amp; body)</span>
+</span>{
+    <span class="hljs-built_in">std</span>::<span class="hljs-built_in">ostringstream</span> o;
+    o &lt;&lt; <span class="hljs-string">"HTTP/1.1 200 Ok"</span> HTTP_DELIM
+        <span class="hljs-string">"Content-Type: text/html"</span> HTTP_DELIM
+        <span class="hljs-string">"Content-Length: "</span> &lt;&lt; body.size() &lt;&lt; HTTP_DELIM_BODY
+        &lt;&lt; body;
+    <span class="hljs-keyword">return</span> o.str();
+}
+
+<span class="hljs-comment">// we're listening on a 8800 port (who knows, maybe 80 is not availbale?)</span>
+<span class="hljs-function">Acceptor <span class="hljs-title">acceptor</span><span class="hljs-params">(<span class="hljs-number">8800</span>)</span></span>;
+LOG(<span class="hljs-string">"accepting"</span>);
+<span class="hljs-keyword">while</span> (<span class="hljs-literal">true</span>)
+{
+    Socket socket;
+    acceptor.accept(socket);
+    <span class="hljs-keyword">try</span>
+    {
+        LOG(<span class="hljs-string">"accepted"</span>);
+        <span class="hljs-function">Buffer <span class="hljs-title">buffer</span><span class="hljs-params">(<span class="hljs-number">4000</span>, <span class="hljs-number">0</span>)</span></span>;
+        socket.readUntil(buffer, HTTP_DELIM_BODY);
+        socket.write(httpContent(<span class="hljs-string">"&lt;h1&gt;Hello sync singlethread!&lt;/h1&gt;"</span>));
+        socket.close();
+    }
+    <span class="hljs-keyword">catch</span> (<span class="hljs-built_in">std</span>::exception&amp; e)
+    {
+        LOG(<span class="hljs-string">"error: "</span> &lt;&lt; e.what());
+    }
+}
+</code></pre>
+
+<p>The server is ready!</p>
+
+<h2 id="synchronous-multi-threaded-server">Synchronous Multi-Threaded Server</h2>
+
+<p>Downsides of the previous server are obvious:</p>
+
+<ol>
+<li>It is unable to handle several connections simultaneously.</li>
+<li>The client can reuse the connection for a more effective interaction, and we always close it.</li>
+</ol>
+
+<p>That’s why I decide to process connections in a different thread 
+while still accepting further connections. For this purpose, we are 
+going to need a function to create a new thread. I will name such 
+function as <em>go:</em></p>
+
+<pre><code class="hljs cpp"><span class="hljs-keyword">typedef</span> <span class="hljs-built_in">std</span>::function&lt;<span class="hljs-keyword">void</span> ()&gt; Handler;
+
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">go</span><span class="hljs-params">(Handler handler)</span>
+</span>{
+    LOG(<span class="hljs-string">"sync::go"</span>);
+    <span class="hljs-built_in">std</span>::thread([handler] {
+        <span class="hljs-keyword">try</span>
+        {
+            LOG(<span class="hljs-string">"new thread had been created"</span>);
+            handler();
+            LOG(<span class="hljs-string">"thread was ended successfully"</span>);
+        }
+        <span class="hljs-keyword">catch</span> (<span class="hljs-built_in">std</span>::exception&amp; e)
+        {
+            LOG(<span class="hljs-string">"thread was ended with error: "</span> &lt;&lt; e.what());
+        }
+    }).detach();
+}
+</code></pre>
+
+<p>It is necessary to note the following thing: if we remove <em>detach()</em>, guess what the program is going to do?</p>
+
+<p><strong>It will stupidly terminate without ANY messages. Thanks to the developers of the standard, way to go!</strong></p>
+
+<p>Now, it’s time to write the server:</p>
+
+<pre><code class="hljs cpp"><span class="hljs-function">Acceptor <span class="hljs-title">acceptor</span><span class="hljs-params">(<span class="hljs-number">8800</span>)</span></span>;
+
+LOG(<span class="hljs-string">"accepting"</span>);
+
+<span class="hljs-keyword">while</span> (<span class="hljs-literal">true</span>)
+{
+    Socket* toAccept = <span class="hljs-keyword">new</span> Socket;
+    acceptor.accept(*toAccept);
+    LOG(<span class="hljs-string">"accepted"</span>);
+    go([toAccept] {
+        <span class="hljs-keyword">try</span>
+        {
+            Socket socket = <span class="hljs-built_in">std</span>::move(*toAccept);
+            <span class="hljs-keyword">delete</span> toAccept;
+            Buffer buffer;
+            <span class="hljs-keyword">while</span> (<span class="hljs-literal">true</span>)
+            {
+                buffer.resize(<span class="hljs-number">4000</span>);
+                socket.readUntil(buffer, HTTP_DELIM_BODY);
+                socket.write(httpContent(<span class="hljs-string">"&lt;h1&gt;Hello sync multithread!&lt;/h1&gt;"</span>));
+            }
+        }
+        <span class="hljs-keyword">catch</span> (<span class="hljs-built_in">std</span>::exception&amp; e)
+        {
+            LOG(<span class="hljs-string">"error: "</span> &lt;&lt; e.what());
+        }
+    });
+}
+</code></pre>
+
+<p>One would think that everything is all right, but it’s not the case. 
+On high load, in real-world scenarios, it will go down quite fast. 
+That’s why the smart guys have thought for a while and decided to go 
+asynchronous.</p>
+
+<h2 id="asynchronous-server">Asynchronous Server</h2>
+
+<p>What’s wrong with the previous approach? The thing is that most of 
+the time threads are waiting on events from the network, gobbling 
+resources, instead of performing actual work. We would like to make 
+better use of threads for performing useful work.</p>
+
+<p>Therefore, I am going to implement similar functions, but 
+asynchronously, using the proactor pattern. What does this mean? This 
+means that for all operations we call a function and pass it a callback 
+that will be automagically invoked upon the completion of the operation.
+ Which means they will call us as soon as the operation completes. This 
+differs from the reactor pattern when we have to call the necessary 
+processors ourselves, monitoring the state of operations. A typical 
+example of a reactor is something like <em>epoll, kqueue</em>, and various <em>selects</em>. An example of a proactor: IOCP on Windows. I am going to use a cross-platform proactor <em>boost.asio</em>.</p>
+
+<p>Asynchronous interfaces:</p>
+
+<pre><code class="hljs cpp"><span class="hljs-keyword">typedef</span> boost::system::error_code Error;
+<span class="hljs-keyword">typedef</span> <span class="hljs-built_in">std</span>::function&lt;<span class="hljs-keyword">void</span>(<span class="hljs-keyword">const</span> Error&amp;)&gt; IoHandler;
+
+<span class="hljs-keyword">struct</span> Acceptor;
+<span class="hljs-keyword">struct</span> Socket
+{
+    <span class="hljs-keyword">friend</span> <span class="hljs-keyword">struct</span> Acceptor;
+
+    Socket();
+    Socket(Socket&amp;&amp;);
+
+    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">read</span><span class="hljs-params">(Buffer&amp;, IoHandler)</span></span>;
+    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">readSome</span><span class="hljs-params">(Buffer&amp;, IoHandler)</span></span>;
+    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">readUntil</span><span class="hljs-params">(Buffer&amp;, Buffer until, IoHandler)</span></span>;
+    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">write</span><span class="hljs-params">(<span class="hljs-keyword">const</span> Buffer&amp;, IoHandler)</span></span>;
+    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">close</span><span class="hljs-params">()</span></span>;
+
+<span class="hljs-keyword">private</span>:
+    boost::asio::ip::tcp::socket socket;
+};
+
+<span class="hljs-keyword">struct</span> Acceptor
+{
+    <span class="hljs-function"><span class="hljs-keyword">explicit</span> <span class="hljs-title">Acceptor</span><span class="hljs-params">(<span class="hljs-keyword">int</span> port)</span></span>;
+    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">accept</span><span class="hljs-params">(Socket&amp;, IoHandler)</span></span>;
+
+<span class="hljs-keyword">private</span>:
+    boost::asio::ip::tcp::acceptor acceptor;
+};
+</code></pre>
+
+<p>Let’s have a look at the following things:</p>
+
+<ol>
+<li>Error handling differs significantly now. In case of the synchronous
+ approach, we have two variants: returning an error code or generating 
+an exception (this method has been used at the beginning of the 
+article). However, there is the only way in case of asynchronous call: 
+passing an error through the handler. That is, not even through the 
+result, but as an input parameter of the handler. Want it or not, you 
+will have to process errors like in the good old days when there were no
+ exceptions: working with every trifle during the check. But it’s not 
+the most interesting thing here. Interesting is when an error occurs in 
+the handler, and we should process it. Restoring the context is a 
+favorite task of asynchronous programming!</li>
+<li>I’ve used <em>IoHandler</em> for the one-size-fits-all approach, which makes the code simpler and multipurpose.</li>
+</ol>
+
+<p>Having a closer look, the only difference from synchronous functions 
+lies only in the fact that asynchronous ones contain an additional 
+handler as an input parameter.</p>
+
+<p>Well, seems like there’s nothing scary so far.</p>
+
+<p>The Implementation:</p>
+
+<pre><code class="hljs cpp">Socket::Socket() :
+    socket(service())
+{
+}
+
+Socket::Socket(Socket&amp;&amp; s) :
+    socket(<span class="hljs-built_in">std</span>::move(s.socket))
+{
+}
+
+<span class="hljs-keyword">void</span> Socket::read(Buffer&amp; buffer, IoHandler handler)
+{
+    boost::asio::async_read(socket, boost::asio::buffer(&amp;buffer[<span class="hljs-number">0</span>], buffer.size()),
+        [&amp;buffer, handler](<span class="hljs-keyword">const</span> Error&amp; error, <span class="hljs-built_in">std</span>::<span class="hljs-keyword">size_t</span>) {
+            handler(error);
+    }); 
+}
+
+<span class="hljs-keyword">void</span> Socket::readSome(Buffer&amp; buffer, IoHandler handler)
+{
+    socket.async_read_some(boost::asio::buffer(&amp;buffer[<span class="hljs-number">0</span>], buffer.size()),
+        [&amp;buffer, handler](<span class="hljs-keyword">const</span> Error&amp; error, <span class="hljs-built_in">std</span>::<span class="hljs-keyword">size_t</span> bytes) {
+            buffer.resize(bytes);
+            handler(error);
+    });
+}
+
+<span class="hljs-function"><span class="hljs-keyword">bool</span> <span class="hljs-title">hasEnd</span><span class="hljs-params">(<span class="hljs-keyword">size_t</span> posEnd, <span class="hljs-keyword">const</span> Buffer&amp; b, <span class="hljs-keyword">const</span> Buffer&amp; end)</span>
+</span>{
+    <span class="hljs-keyword">return</span> posEnd &gt;= end.size() &amp;&amp;
+        b.rfind(end, posEnd - end.size()) != <span class="hljs-built_in">std</span>::<span class="hljs-built_in">string</span>::npos;
+}
+
+<span class="hljs-keyword">void</span> Socket::readUntil(Buffer&amp; buffer, Buffer until, IoHandler handler)
+{
+    VERIFY(buffer.size() &gt;= until.size(), <span class="hljs-string">"Buffer size is smaller than expected"</span>);
+    <span class="hljs-keyword">struct</span> UntilHandler
+    {
+        UntilHandler(Socket&amp; socket_, Buffer&amp; buffer_, Buffer until_, IoHandler handler_) :
+            offset(<span class="hljs-number">0</span>),
+            socket(socket_),
+            buffer(buffer_),
+            until(<span class="hljs-built_in">std</span>::move(until_)),
+            handler(<span class="hljs-built_in">std</span>::move(handler_))
+        {
+        }
+
+        <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">read</span><span class="hljs-params">()</span>
+        </span>{
+            LOG(<span class="hljs-string">"read at offset: "</span> &lt;&lt; offset);
+            socket.socket.async_read_some(boost::asio::buffer(&amp;buffer[offset], buffer.size() - offset), *<span class="hljs-keyword">this</span>);
+        }
+
+        <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">complete</span><span class="hljs-params">(<span class="hljs-keyword">const</span> Error&amp; error)</span>
+        </span>{
+            handler(error);
+        }
+
+        <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">operator</span><span class="hljs-params">()</span><span class="hljs-params">(<span class="hljs-keyword">const</span> Error&amp; error, <span class="hljs-built_in">std</span>::<span class="hljs-keyword">size_t</span> bytes)</span>
+        </span>{
+            <span class="hljs-keyword">if</span> (!!error)
+            {
+                <span class="hljs-keyword">return</span> complete(error);
+            }
+            offset += bytes;
+            VERIFY(offset &lt;= buffer.size(), <span class="hljs-string">"Offset outside buffer size"</span>);
+            LOG(<span class="hljs-string">"buffer: '"</span> &lt;&lt; buffer.substr(<span class="hljs-number">0</span>, offset) &lt;&lt; <span class="hljs-string">"'"</span>);
+            <span class="hljs-keyword">if</span> (hasEnd(offset, buffer, until))
+            {
+                <span class="hljs-comment">// found end</span>
+                buffer.resize(offset);
+                <span class="hljs-keyword">return</span> complete(error);
+            }
+            <span class="hljs-keyword">if</span> (offset == buffer.size())
+            {
+                LOG(<span class="hljs-string">"not enough size: "</span> &lt;&lt; buffer.size());
+                buffer.resize(buffer.size() * <span class="hljs-number">2</span>);
+            }
+            read();
+        }
+
+    <span class="hljs-keyword">private</span>:
+        <span class="hljs-keyword">size_t</span> offset;
+        Socket&amp; socket;
+        Buffer&amp; buffer;
+        Buffer until;
+        IoHandler handler;
+    };
+    UntilHandler(*<span class="hljs-keyword">this</span>, buffer, <span class="hljs-built_in">std</span>::move(until), <span class="hljs-built_in">std</span>::move(handler)).read();
+}
+
+<span class="hljs-keyword">void</span> Socket::write(<span class="hljs-keyword">const</span> Buffer&amp; buffer, IoHandler handler)
+{
+    boost::asio::async_write(socket, boost::asio::buffer(&amp;buffer[<span class="hljs-number">0</span>], buffer.size()),
+        [&amp;buffer, handler](<span class="hljs-keyword">const</span> Error&amp; error, <span class="hljs-built_in">std</span>::<span class="hljs-keyword">size_t</span>) {
+            handler(error);
+    }); 
+}
+
+<span class="hljs-keyword">void</span> Socket::close()
+{
+    socket.close();
+}
+
+Acceptor::Acceptor(<span class="hljs-keyword">int</span> port) :
+    acceptor(service(), boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port))
+{
+}
+
+<span class="hljs-keyword">void</span> Acceptor::accept(Socket&amp; socket, IoHandler handler)
+{
+    acceptor.async_accept(socket.socket, handler);
+}
+</code></pre>
+
+<p>Everything should be clear, except for the <em>readUntil</em> method. In order to call asynchronous reading on a socket several times, we should save the state. There’s a special <em>UntilHandler</em> class for this purpose. It saves the current state of an asynchronous operation. A similar implementation can be found in <em>boost.asio</em> for various functions (like<em>boost::asio::read</em>) that require multiple calls of simpler (but not less asynchronous) operations.</p>
+
+<p>In addition, we should write an analogue to _go_and <em>dispatch</em>:</p>
+
+<pre><code class="hljs cs"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">go</span>(<span class="hljs-params">Handler</span>)</span>;
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">dispatch</span>(<span class="hljs-params"><span class="hljs-keyword">int</span> threadCount = <span class="hljs-number">0</span></span>)</span>;
+</code></pre>
+
+<p>Here, we have two things: a) a handler that will be running 
+asynchronously in the pool of threads and b) creating a pool of threads 
+with the subsequent dispatch.</p>
+
+<p>Here’s how the implementation looks like:</p>
+
+<pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">go</span><span class="hljs-params">(Handler handler)</span>
+</span>{
+    LOG(<span class="hljs-string">"async::go"</span>);
+    service().post(<span class="hljs-built_in">std</span>::move(handler));
+}
+
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">run</span><span class="hljs-params">()</span>
+</span>{
+    service().run();
+}
+
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">dispatch</span><span class="hljs-params">(<span class="hljs-keyword">int</span> threadCount)</span>
+</span>{
+    <span class="hljs-keyword">int</span> threads = threadCount &gt; <span class="hljs-number">0</span> ? threadCount : <span class="hljs-keyword">int</span>(<span class="hljs-built_in">std</span>::thread::hardware_concurrency());
+    RLOG(<span class="hljs-string">"Threads: "</span> &lt;&lt; threads);
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt; threads; ++ i)
+        sync::go(run);
+    run();
+}
+</code></pre>
+
+<p>We use <em>sync::go</em> here to create threads from the synchronous approach.</p>
+
+<p>Server Implementation:</p>
+
+<pre><code class="hljs javascript">Acceptor acceptor(<span class="hljs-number">8800</span>);
+LOG(<span class="hljs-string">"accepting"</span>);
+Handler accepting = [&amp;acceptor, &amp;accepting] {
+    struct Connection
+    {
+        Buffer buffer;
+        Socket socket;
+
+        <span class="hljs-keyword">void</span> handling()
+        {
+            buffer.resize(<span class="hljs-number">4000</span>);
+            socket.readUntil(buffer, HTTP_DELIM_BODY, [<span class="hljs-keyword">this</span>](<span class="hljs-keyword">const</span> <span class="hljs-built_in">Error</span>&amp; error) {
+                <span class="hljs-keyword">if</span> (!!error)
+                {
+                    LOG(<span class="hljs-string">"error on reading: "</span> &lt;&lt; error.message());
+                    <span class="hljs-keyword">delete</span> <span class="hljs-keyword">this</span>;
+                    <span class="hljs-keyword">return</span>;
+                }
+                LOG(<span class="hljs-string">"read"</span>);
+                buffer = httpContent(<span class="hljs-string">"&lt;h1&gt;Hello async!&lt;/h1&gt;"</span>);
+                socket.write(buffer, [<span class="hljs-keyword">this</span>](<span class="hljs-keyword">const</span> <span class="hljs-built_in">Error</span>&amp; error) {
+                    <span class="hljs-keyword">if</span> (!!error)
+                    {
+                        LOG(<span class="hljs-string">"error on writing: "</span> &lt;&lt; error.message());
+                        <span class="hljs-keyword">delete</span> <span class="hljs-keyword">this</span>;
+                        <span class="hljs-keyword">return</span>;
+                    }
+                    LOG(<span class="hljs-string">"written"</span>);
+                    handling();
+                });
+            });
+        }
+    };
+
+    Connection* conn = <span class="hljs-keyword">new</span> Connection;
+    acceptor.accept(conn-&gt;socket, [conn, &amp;accepting](<span class="hljs-keyword">const</span> <span class="hljs-built_in">Error</span>&amp; error) {
+        <span class="hljs-keyword">if</span> (!!error)
+        {
+            LOG(<span class="hljs-string">"error on accepting: "</span> &lt;&lt; error.message());
+            <span class="hljs-keyword">delete</span> conn;
+            <span class="hljs-keyword">return</span>;
+        }
+        LOG(<span class="hljs-string">"accepted"</span>);
+        conn-&gt;handling();
+        accepting();
+    });
+};
+
+accepting();
+dispatch();
+</code></pre>
+
+<p><img src="Asynchronous%20Programming%20Back%20to%20the%20Future_files/4c8e56.jpg" alt="Asynchrony: Back to the Future - Figure 3" title="Asynchrony: Back to the Future - Figure 3"></p>
+
+<p>Well, that’s it. The nesting of lambdas grows with each new call. 
+Well, normally no one writes such things using lambdas, as there are 
+difficulties with recursion. We should pass a lambda to itself, so that 
+it could call itself. Nevertheless, the readability of the code will be 
+pretty much the same meaning equally bad when compared to synchronous 
+code.</p>
+
+<p>Let’s discuss pros and cons of the asynchronous approach:</p>
+
+<ol>
+<li>The undoubted advantage (actually, that’s the reason why we’re doing
+ this) is performance. It is not only much better but also massively 
+higher!</li>
+<li>Now, it’s time to talk about disadvantages. Actually, there is just 
+one — complex and confusing code, which is also more difficult to debug.</li>
+</ol>
+
+<p>It’s good if you’ve written everything correctly, and now it all 
+works without bugs. But what if it’s not the case? As they say, good 
+luck with your debugging. Moreover, I have considered quite a simple 
+example where we can track the sequence of calls. With a slight 
+complication of the processing method (i.e. simultaneous read and write 
+on the same socket), code complexity shoots up, while the number of bugs
+ begins to grow almost exponentially.</p>
+
+<p>So, is it really worth it? Should we deal with asynchronous things? Actually, there is a solution, and it is called <u>coroutines</u>.</p>
+
+<h2 id="coroutines">Coroutines</h2>
+
+<p><img src="Asynchronous%20Programming%20Back%20to%20the%20Future_files/c574a7.jpg" alt="Asynchrony: Back to the Future - Figure 4" title="Asynchrony: Back to the Future - Figure 4"></p>
+
+<p>What do we all want? Health, happiness, and money? We want a simple 
+thing: use the advantages of asynchronous and synchronous approaches 
+simultaneously. That is, performance would be like in the asynchronous 
+approach, and the code would be as simple as that in the synchronous 
+one.</p>
+
+<p>Sounds great on paper but is it possible? To answer this question, we are going to need a brief introduction to coroutines.</p>
+
+<p>What are regular procedures? For instance, we are at some place of 
+execution, and then there is *boom*…and some procedure is being called. 
+To call the procedure, we preserve the current point of return, and then
+ call the procedure. It performs, completes, and returns the control to 
+the place it has been called from. A coroutine is the same thing, but 
+only different. It also returns the control to the place it has been 
+called from but it <strong>does not complete</strong>. It stops at some 
+point, from which it begins to work during the rerun. Thus, we get a 
+sort of ping pong. The caller throws the ball, and then a coroutine 
+catches it, runs to another place, and throws it back. The caller also 
+does something (runs to a different place), and throws the ball again to
+ the previous place, but of the coroutine. It goes like this until the 
+coroutine completes. In general, we could say that a procedure is a 
+special case of a coroutine.</p>
+
+<p>How can we use it for our asynchronous tasks? We should keep in mind 
+that a coroutine saves some execution context, which is extremely 
+important for asynchronousness. That’s exactly what I am going to use. 
+If a coroutine needs to perform an asynchronous operation, I will simply
+ call an asynchronous method and exit the coroutine. Upon completion of 
+the asynchronous operation, the handler will keep performing our 
+coroutine from the point of the last call of the asynchronous operation.
+ This means that all the dirty work of context saving falls on the 
+shoulders of the implementation of coroutines.</p>
+
+<p>That’s when the problems begin. The thing is that the support for 
+coroutines on the side of languages and processors is ancient history. 
+For the implementation of switching execution contexts, we have to 
+perform lots of operations nowadays. We should save register states, 
+then switch the stack and fill in some command boxes for the correct 
+operation of the runtime environment (for exceptions, TLS, etc.) 
+Moreover, the implementation depends not only on the architecture of the
+ processor but also on the compiler and operating system. Sounds like 
+the final nail in the coffin…</p>
+
+<p>Fortunately, we’ve got <em>boost.context</em> that will implement 
+everything necessary to support a particular platform. Everything is 
+written with Assembler, in the best tradition. We can certainly use <em>boost.coroutine</em> but why when there’s <em>boost.context</em>? We need more hard-rock!</p>
+
+<h2 id="the-implementation-of-coroutines">The Implementation of Coroutines</h2>
+
+<p>So, we are going to write coroutines for our purposes. The interface is going to be like this:</p>
+
+<pre><code class="hljs cpp"><span class="hljs-comment">// leave the coroutine</span>
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">yield</span><span class="hljs-params">()</span></span>;
+
+<span class="hljs-comment">// check if we are inside the coroutine</span>
+<span class="hljs-function"><span class="hljs-keyword">bool</span> <span class="hljs-title">isInsideCoro</span><span class="hljs-params">()</span></span>;
+
+<span class="hljs-comment">// coroutine</span>
+<span class="hljs-keyword">struct</span> Coro
+{
+    <span class="hljs-comment">// just in case</span>
+    <span class="hljs-function"><span class="hljs-keyword">friend</span> <span class="hljs-keyword">void</span> <span class="hljs-title">yield</span><span class="hljs-params">()</span></span>;
+
+    Coro();
+
+    <span class="hljs-comment">// create and invoke the handler</span>
+    Coro(Handler);
+
+    <span class="hljs-comment">// no comments</span>
+    ~Coro();
+
+    <span class="hljs-comment">// run the handler</span>
+    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">start</span><span class="hljs-params">(Handler)</span></span>;
+
+    <span class="hljs-comment">// resume the coroutine's work (only when it was completed with yield)</span>
+    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">resume</span><span class="hljs-params">()</span></span>;
+
+    <span class="hljs-comment">// check if the coroutine can be resumed</span>
+    <span class="hljs-function"><span class="hljs-keyword">bool</span> <span class="hljs-title">isStarted</span><span class="hljs-params">()</span> <span class="hljs-keyword">const</span></span>;
+
+<span class="hljs-keyword">private</span>:
+    ...
+};
+</code></pre>
+
+<p>As you can see, the interface is quite simple. Here’s a variant of using it:</p>
+
+<pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">coro</span><span class="hljs-params">()</span>
+</span>{
+    <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">'2'</span>;
+    yield();
+    <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">'4'</span>;
+}
+</code></pre>
+
+<pre><code class="hljs cpp"><span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">'1'</span>;
+<span class="hljs-function">Coro <span class="hljs-title">c</span><span class="hljs-params">(coro)</span></span>;
+<span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">'3'</span>;
+c.resume();
+<span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">'5'</span>;
+</code></pre>
+
+<p>The following should be seen on the screen:</p>
+
+<p><code>12345</code>
+Let’s begin with the <em>start</em> method:</p>
+
+<pre><code class="hljs cpp"><span class="hljs-keyword">void</span> Coro::start(Handler handler)
+{
+    VERIFY(!isStarted(), <span class="hljs-string">"Trying to start already started coro"</span>);
+    context = boost::context::make_fcontext(&amp;<span class="hljs-built_in">stack</span>.back(), <span class="hljs-built_in">stack</span>.size(), &amp;starterWrapper0);
+    jump0(<span class="hljs-keyword">reinterpret_cast</span>&lt;<span class="hljs-keyword">intptr_t</span>&gt;(&amp;handler));
+}
+</code></pre>
+
+<p>Here, <em>boost::context::make_fcontext</em> creates the context and passes the static method <em>starterWrapper0</em> as a starting function:</p>
+
+<pre><code class="hljs cpp">TLS Coro* t_coro;
+<span class="hljs-keyword">void</span> Coro::starterWrapper0(<span class="hljs-keyword">intptr_t</span> p)
+{
+    t_coro-&gt;starter0(p);
+}
+</code></pre>
+
+<p>that simply redirects to <em>starter0</em> method, extracting the current <em>Coro</em> instance from TLS. All the magic of switching contexts is in the private method<em>jump0</em>:</p>
+
+<pre><code class="hljs cpp"><span class="hljs-keyword">void</span> Coro::jump0(<span class="hljs-keyword">intptr_t</span> p)
+{
+Coro* old = <span class="hljs-keyword">this</span>;
+<span class="hljs-built_in">std</span>::swap(old, t_coro);
+running = <span class="hljs-literal">true</span>;
+boost::context::jump_fcontext(&amp;savedContext, context, p);
+running = <span class="hljs-literal">false</span>;
+<span class="hljs-built_in">std</span>::swap(old, t_coro);
+<span class="hljs-keyword">if</span> (exc != <span class="hljs-built_in">std</span>::exception_ptr())
+<span class="hljs-built_in">std</span>::rethrow_exception(exc);
+}
+</code></pre>
+
+<p>Here we replace the old TLS value of<em>t_coro</em> with a new one 
+(we need it for the recursive switching between several coroutines), 
+then set various flags and switch the context using <em>boost::context::jump_fcontext</em>. At the end, we restore old values and rethrow exceptions.</p>
+
+<p>Now, let’s have a look at the private <em>starter0</em> method that invokes the necessary handler:</p>
+
+<pre><code class="hljs cpp"><span class="hljs-keyword">void</span> Coro::starter0(<span class="hljs-keyword">intptr_t</span> p)
+{
+    started = <span class="hljs-literal">true</span>;
+    <span class="hljs-keyword">try</span>
+    {
+        Handler handler = <span class="hljs-built_in">std</span>::move(*<span class="hljs-keyword">reinterpret_cast</span>&lt;Handler*&gt;(p));
+        handler();
+    }
+    <span class="hljs-keyword">catch</span> (...)
+    {
+        exc = <span class="hljs-built_in">std</span>::current_exception();
+    }
+    started = <span class="hljs-literal">false</span>;
+    yield0();
+}
+</code></pre>
+
+<p>I’d like to highlight one interesting thing: if we do not save the 
+handler inside the coroutine (before calling it) the program can crash 
+during the next return. This is due to the fact that the handler stores 
+some state that can be destroyed at some point.</p>
+
+<p>Let’s have a look at other functions:</p>
+
+<pre><code class="hljs cpp"><span class="hljs-comment">// return the control from the coroutine</span>
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">yield</span><span class="hljs-params">()</span>
+</span>{
+    VERIFY(isInsideCoro(), <span class="hljs-string">"yield() outside coro"</span>);
+    t_coro-&gt;yield0();
+}
+
+<span class="hljs-comment">// check if we are inside the coroutine</span>
+<span class="hljs-function"><span class="hljs-keyword">bool</span> <span class="hljs-title">isInsideCoro</span><span class="hljs-params">()</span>
+</span>{
+    <span class="hljs-keyword">return</span> t_coro != <span class="hljs-literal">nullptr</span>;
+}
+
+<span class="hljs-comment">// resume the coroutine after yield</span>
+<span class="hljs-keyword">void</span> Coro::resume()
+{
+    VERIFY(started, <span class="hljs-string">"Cannot resume: not started"</span>);
+    VERIFY(!running, <span class="hljs-string">"Cannot resume: in running state"</span>);
+    jump0();
+}
+
+<span class="hljs-comment">// check if the coroutine is still running</span>
+<span class="hljs-keyword">bool</span> Coro::isStarted() <span class="hljs-keyword">const</span>
+{
+    <span class="hljs-keyword">return</span> started || running;
+}
+
+<span class="hljs-comment">// go to the preserved context</span>
+<span class="hljs-keyword">void</span> Coro::yield0()
+{
+    boost::context::jump_fcontext(context, &amp;savedContext, <span class="hljs-number">0</span>);
+}
+</code></pre>
+
+<h2 id="synca-async-vice-versa">Synca: async vice versa</h2>
+
+<p><img src="Asynchronous%20Programming%20Back%20to%20the%20Future_files/23941e.jpg" alt="Asynchrony: Back to the Future - Figure 5" title="Asynchrony: Back to the Future - Figure 5"></p>
+
+<p>It’s time to implement asynchronousness on coroutines. A trivial option of implementation is provided in the following diagram:</p>
+
+<p><img src="Asynchronous%20Programming%20Back%20to%20the%20Future_files/26070f.png" alt="Asynchrony: Back to the Future - Figure 6" title="Asynchrony: Back to the Future - Figure 6"></p>
+
+<p>We create a coroutine, then it starts an asynchronous operation and completes its execution using <em>yield()</em> function. Upon completion of the operation, the coroutine continues its execution by calling <strong>resume()</strong> method.</p>
+
+<p>Everything would be fine if it weren’t for the notorious 
+multithreading. As is always the case, it brings some turbulence. That’s
+ why the provided above approach will not work properly, which is 
+clearly illustrated by the following diagram:</p>
+
+<p><img src="Asynchronous%20Programming%20Back%20to%20the%20Future_files/126426.png" alt="Asynchrony: Back to the Future - Figure 7" title="Asynchrony: Back to the Future - Figure 7"></p>
+
+<p>Right after the operation scheduling, we can call the handler that 
+will continue the execution till we exit the coroutine. This certainly 
+wasn’t in our plans. Therefore, we will have to complicate the sequence:</p>
+
+<p><img src="Asynchronous%20Programming%20Back%20to%20the%20Future_files/0a7c2a.png" alt="Asynchrony: Back to the Future - Figure 8" title="Asynchrony: Back to the Future - Figure 8"></p>
+
+<p>The difference lies in the fact that we run the scheduling not in the
+ coroutine, but outside of it, which eliminates the option described 
+above. At the same time, the continuation coroutine can occur in another
+ thread, which is quite normal behavior. Coroutines are meant this way, 
+so that we could displace it back and forth, saving the execution 
+context.</p>
+
+<p><strong>Small Remark</strong></p>
+
+<p>Surprisingly enough, <em>boost.asio</em> already has the support for coroutines. To solve the mentioned above problem,<em>io_service::strand</em>
+ is used but that’s another story. It’s always interesting to write 
+something on its own. Besides, the result obtained in the article is 
+much more convenient to use.</p>
+
+<h2 id="the-implementation">The Implementation</h2>
+
+<p>Let’s begin with the implementation of a <em>go</em> function first:</p>
+
+<pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">go</span><span class="hljs-params">(Handler handler)</span>
+</span>{
+    LOG(<span class="hljs-string">"synca::go"</span>);
+    async::go([handler] {
+        coro::Coro* coro = <span class="hljs-keyword">new</span> coro::Coro(<span class="hljs-built_in">std</span>::move(handler));
+        onCoroComplete(coro);
+    });
+}
+</code></pre>
+
+<p>Instead of simply invoking the handler, we create a coroutine and run a handler inside of it. The <em>onCoroComplete</em> function is also of interest here. It monitors whether something should be scheduled:</p>
+
+<pre><code class="hljs cpp"><span class="hljs-keyword">typedef</span> <span class="hljs-built_in">std</span>::function&lt;<span class="hljs-keyword">void</span>(coro::Coro*)&gt; CoroHandler;
+TLS CoroHandler* t_deferHandler;
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">onCoroComplete</span><span class="hljs-params">(coro::Coro* coro)</span>
+</span>{
+    VERIFY(!coro::isInsideCoro(), <span class="hljs-string">"Complete inside coro"</span>);
+    VERIFY(coro-&gt;isStarted() == (t_deferHandler != <span class="hljs-literal">nullptr</span>), <span class="hljs-string">"Unexpected condition in defer/started state"</span>);
+    <span class="hljs-keyword">if</span> (t_deferHandler != <span class="hljs-literal">nullptr</span>)
+    {
+        LOG(<span class="hljs-string">"invoking defer handler"</span>);
+        (*t_deferHandler)(coro);
+        t_deferHandler = <span class="hljs-literal">nullptr</span>;
+        LOG(<span class="hljs-string">"completed defer handler"</span>);
+    }
+    <span class="hljs-keyword">else</span>
+    {
+        LOG(<span class="hljs-string">"nothing to do, deleting coro"</span>);
+        <span class="hljs-keyword">delete</span> coro;
+    }
+}
+</code></pre>
+
+<p>Our actions are simple. We check whether there’s something to 
+process. In case there is, we do it. If there isn’t, the coroutine 
+completes its execution and we can delete it.</p>
+
+<p>The following question arises: how do we fill in <em>t_deferHandler</em>? Like this:</p>
+
+<pre><code class="hljs cpp">TLS <span class="hljs-keyword">const</span> Error* t_error;
+
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">handleError</span><span class="hljs-params">()</span>
+</span>{
+    <span class="hljs-keyword">if</span> (t_error)
+        <span class="hljs-keyword">throw</span> boost::system::system_error(*t_error, <span class="hljs-string">"synca"</span>);
+}
+
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">defer</span><span class="hljs-params">(CoroHandler handler)</span>
+</span>{
+    VERIFY(coro::isInsideCoro(), <span class="hljs-string">"defer() outside coro"</span>);
+    VERIFY(t_deferHandler == <span class="hljs-literal">nullptr</span>, <span class="hljs-string">"There is unexecuted defer handler"</span>);
+    t_deferHandler = &amp;handler;
+    coro::yield();
+    handleError();
+}
+</code></pre>
+
+<p>This function is always called inside the coroutine. Here, we pass a 
+handler that will deal with scheduling of operations, that is, invoking 
+asynchronies. This handler is preserved so that we could trigger it 
+after exiting the coroutine<em>(coro::yield)</em>. Right after we quit it, <em>onCoroComplete</em> is invoked, and it triggers our «deferred»handler. Here’s the usage of <em>defer</em> function by the example of <em>Socket::accept</em>:</p>
+
+<pre><code class="hljs elixir">void onComplete(<span class="hljs-symbol">coro:</span><span class="hljs-symbol">:Coro*</span> coro, const Error&amp; error)
+{
+    LOG(<span class="hljs-string">"async completed, coro: "</span> &lt;&lt; coro &lt;&lt; <span class="hljs-string">", error: "</span> &lt;&lt; error.message());
+    VERIFY(coro != nullptr, <span class="hljs-string">"Coro is null"</span>);
+    VERIFY(!<span class="hljs-symbol">coro:</span><span class="hljs-symbol">:isInsideCoro</span>(), <span class="hljs-string">"Completion inside coro"</span>);
+    t_error = error ? &amp;error : nullptr;
+    coro-&gt;resume();
+    LOG(<span class="hljs-string">"after resume"</span>);
+    onCoroComplete(coro);
+}
+
+<span class="hljs-symbol">async:</span><span class="hljs-symbol">:IoHandler</span> onCompleteHandler(<span class="hljs-symbol">coro:</span><span class="hljs-symbol">:Coro*</span> coro)
+{
+    <span class="hljs-keyword">return</span> [coro](const Error&amp; error) {
+        onComplete(coro, error);
+    };
+}
+
+void <span class="hljs-symbol">Acceptor:</span><span class="hljs-symbol">:accept</span>(Socket&amp; socket)
+{
+    VERIFY(<span class="hljs-symbol">coro:</span><span class="hljs-symbol">:isInsideCoro</span>(), <span class="hljs-string">"accept must be called inside coro"</span>);
+    defer([this, &amp;socket](<span class="hljs-symbol">coro:</span><span class="hljs-symbol">:Coro*</span> coro) {
+        VERIFY(!<span class="hljs-symbol">coro:</span><span class="hljs-symbol">:isInsideCoro</span>(), <span class="hljs-string">"accept completion must be called outside coro"</span>);
+        acceptor.accept(socket.socket, onCompleteHandler(coro));
+        LOG(<span class="hljs-string">"accept scheduled"</span>);
+    });
+}
+</code></pre>
+
+<p><em>onCompleteHandler</em> returns the asynchronous handler that processes the completion of the asynchronous operation. Inside the handler, the <em>t_error</em> error is stored, so that we could later throw an exception inside our coroutine (refer to <em>handleError</em> inside <em>defer</em>). Then, the execution of <em>coro-&gt;resume()</em> coroutine continues, meaning the return to <em>defer</em> method right after calling <em>yield()</em>. The diagram below shows the sequence of calls and the interaction between various entities:</p>
+
+<p><img src="Asynchronous%20Programming%20Back%20to%20the%20Future_files/4c92f6.png" alt="Asynchrony: Back to the Future - Figure 9" title="Asynchrony: Back to the Future - Figure 9"></p>
+
+<p>Other functions are implemented in a similar way:</p>
+
+<pre><code class="hljs less"><span class="hljs-selector-tag">void</span> <span class="hljs-selector-tag">Socket</span><span class="hljs-selector-pseudo">::readSome(Buffer</span><span class="hljs-selector-tag">&amp;</span> <span class="hljs-selector-tag">buffer</span>)
+{
+    <span class="hljs-selector-tag">VERIFY</span>(<span class="hljs-attribute">coro</span>::isInsideCoro(), <span class="hljs-string">"readSome must be called inside coro"</span>);
+    <span class="hljs-selector-tag">defer</span>([this, &amp;buffer](<span class="hljs-attribute">coro</span>::Coro* coro) {
+        <span class="hljs-selector-tag">VERIFY</span>(!<span class="hljs-attribute">coro</span>::isInsideCoro(), <span class="hljs-string">"readSome completion must be called outside coro"</span>);
+        <span class="hljs-selector-tag">socket</span><span class="hljs-selector-class">.readSome</span>(buffer, onCompleteHandler(coro));
+        <span class="hljs-selector-tag">LOG</span>(<span class="hljs-string">"readSome scheduled"</span>);
+    });
+}
+
+<span class="hljs-selector-tag">void</span> <span class="hljs-selector-tag">Socket</span><span class="hljs-selector-pseudo">::readUntil(Buffer</span><span class="hljs-selector-tag">&amp;</span> <span class="hljs-selector-tag">buffer</span>, <span class="hljs-selector-tag">Buffer</span> <span class="hljs-selector-tag">until</span>)
+{
+    <span class="hljs-selector-tag">VERIFY</span>(<span class="hljs-attribute">coro</span>::isInsideCoro(), <span class="hljs-string">"readUntil must be called inside coro"</span>);
+    <span class="hljs-selector-tag">defer</span>([this, &amp;buffer, until](<span class="hljs-attribute">coro</span>::Coro* coro) {
+        <span class="hljs-selector-tag">VERIFY</span>(!<span class="hljs-attribute">coro</span>::isInsideCoro(), <span class="hljs-string">"readUntil completion must be called outside coro"</span>);
+        <span class="hljs-selector-tag">socket</span><span class="hljs-selector-class">.readUntil</span>(buffer, <span class="hljs-attribute">std</span>::move(until), onCompleteHandler(coro));
+        <span class="hljs-selector-tag">LOG</span>(<span class="hljs-string">"readUntil scheduled"</span>);
+    });
+}
+
+<span class="hljs-selector-tag">void</span> <span class="hljs-selector-tag">Socket</span><span class="hljs-selector-pseudo">::write(const</span> <span class="hljs-selector-tag">Buffer</span><span class="hljs-selector-tag">&amp;</span> <span class="hljs-selector-tag">buffer</span>)
+{
+    <span class="hljs-selector-tag">VERIFY</span>(<span class="hljs-attribute">coro</span>::isInsideCoro(), <span class="hljs-string">"write must be called inside coro"</span>);
+    <span class="hljs-selector-tag">defer</span>([this, &amp;buffer](<span class="hljs-attribute">coro</span>::Coro* coro) {
+        <span class="hljs-selector-tag">VERIFY</span>(!<span class="hljs-attribute">coro</span>::isInsideCoro(), <span class="hljs-string">"write completion must be called outside coro"</span>);
+        <span class="hljs-selector-tag">socket</span><span class="hljs-selector-class">.write</span>(buffer, onCompleteHandler(coro));
+        <span class="hljs-selector-tag">LOG</span>(<span class="hljs-string">"write scheduled"</span>);
+    });
+}
+</code></pre>
+
+<p>In the implementation I use asynchronous <em>objects async::Socket</em> and <em>async::Acceptor</em> that have been described in the part about asynchronousness.</p>
+
+<h2 id="how-to-use-it">How To Use It</h2>
+
+<p>Let’s move on to the usage of our functionality. Everything is much simpler and smarter here:</p>
+
+<pre><code class="hljs lisp">Acceptor acceptor(<span class="hljs-number">8800</span>)<span class="hljs-comment">;</span>
+LOG(<span class="hljs-string">"accepting"</span>)<span class="hljs-comment">;</span>
+go([<span class="hljs-symbol">&amp;acceptor</span>] {
+    while (<span class="hljs-name">true</span>)
+    {
+        Socket* toAccept = new Socket<span class="hljs-comment">;</span>
+        acceptor.accept(<span class="hljs-name">*toAccept</span>)<span class="hljs-comment">;</span>
+        LOG(<span class="hljs-string">"accepted"</span>)<span class="hljs-comment">;</span>
+        go([toAccept] {
+            try
+            {
+                Socket socket = std:<span class="hljs-symbol">:move</span>(<span class="hljs-name">*toAccept</span>)<span class="hljs-comment">;</span>
+                delete toAccept<span class="hljs-comment">;</span>
+                Buffer buffer<span class="hljs-comment">;</span>
+                while (<span class="hljs-name">true</span>)
+                {
+                    buffer.resize(<span class="hljs-number">4000</span>)<span class="hljs-comment">;</span>
+                    socket.readUntil(<span class="hljs-name">buffer</span>, HTTP_DELIM_BODY)<span class="hljs-comment">;</span>
+                    socket.write(<span class="hljs-name">httpContent</span>(<span class="hljs-string">"&lt;h1&gt;Hello synca!&lt;/h1&gt;"</span>))<span class="hljs-comment">;</span>
+                }
+            }
+            catch (<span class="hljs-name">std</span>:<span class="hljs-symbol">:exception&amp;</span> e)
+            {
+                LOG(<span class="hljs-string">"error: "</span> &lt;&lt; e.what())<span class="hljs-comment">;</span>
+            }
+        })<span class="hljs-comment">;</span>
+    }
+})<span class="hljs-comment">;</span>
+dispatch()<span class="hljs-comment">;</span>
+</code></pre>
+
+<p>The provided code resembles something… Right! It’s almost our synchronous code:</p>
+
+<p><img src="Asynchronous%20Programming%20Back%20to%20the%20Future_files/fad1da.png" alt="Sync vs Synca Code" title="Sync vs Synca Code"></p>
+
+<p>There’s just one difference here. In the synchronous implementation, 
+socket acceptance takes place in the main thread. That’s why there’s no <em>dispatch</em>.
+ However, we could make these approaches absolutely identical. To do 
+this, the synchronous implementation should also have socket acceptance 
+in a separate thread with the help of <em>go</em>. As for the <em>dispatch</em> function, it would be waiting for the completion of all threads.</p>
+
+<p>But the difference in the implementation is fundamentally important. 
+The obtained code uses asynchronous network interaction, which makes it a
+ much more effective implementation. Actually, that’s where our goal is 
+achieved, as we wanted to create a symbiosis of the asynchronous and 
+synchronous approaches, taking the best from both worlds (the 
+synchronous approach simplicity and the asynchronous approach 
+performance).</p>
+
+<h2 id="enhancement">Enhancement</h2>
+
+<p><img src="Asynchronous%20Programming%20Back%20to%20the%20Future_files/216b73.jpg" alt="Asynchrony: Back to the Future - Figure 9" title="Asynchrony: Back to the Future - Figure 9"></p>
+
+<p>Let’s have a look how to enhance the process of accepting sockets. 
+After accepting, there are usually two execution routes. The acceptor 
+will continue to accept, and a new socket will be handled in a separate 
+execution context. Therefore, we are going to create a new <em>goAccept</em> method:</p>
+
+<pre><code class="hljs cpp">async::<span class="hljs-function">IoHandler <span class="hljs-title">onCompleteGoHandler</span><span class="hljs-params">(coro::Coro* coro, Handler handler)</span>
+</span>{
+    <span class="hljs-keyword">return</span> [coro, handler](<span class="hljs-keyword">const</span> Error&amp; error) {
+        <span class="hljs-keyword">if</span> (!error)
+            go(<span class="hljs-built_in">std</span>::move(handler));
+        onComplete(coro, error);
+    };
+}
+
+<span class="hljs-keyword">struct</span> Acceptor
+{
+    <span class="hljs-keyword">typedef</span> <span class="hljs-built_in">std</span>::function&lt;<span class="hljs-keyword">void</span>(Socket&amp;)&gt; Handler;
+    <span class="hljs-comment">// ...</span>
+};
+
+<span class="hljs-keyword">void</span> Acceptor::goAccept(Handler handler)
+{
+    VERIFY(coro::isInsideCoro(), <span class="hljs-string">"goAccept must be called inside coro"</span>);
+    defer([<span class="hljs-keyword">this</span>, handler](coro::Coro* coro) {
+        VERIFY(!coro::isInsideCoro(), <span class="hljs-string">"goAccept completion must be called outside coro"</span>);
+        Socket* socket = <span class="hljs-keyword">new</span> Socket;
+        acceptor.accept(socket-&gt;socket, onCompleteGoHandler(coro, [socket, handler] {
+            Socket s = <span class="hljs-built_in">std</span>::move(*socket);
+            <span class="hljs-keyword">delete</span> socket;
+            handler(s);
+        }));
+        LOG(<span class="hljs-string">"accept scheduled"</span>);
+    });
+}
+</code></pre>
+
+<p>So now our server will look like this:</p>
+
+<pre><code class="hljs lisp">Acceptor acceptor(<span class="hljs-number">8800</span>)<span class="hljs-comment">;</span>
+LOG(<span class="hljs-string">"accepting"</span>)<span class="hljs-comment">;</span>
+go([<span class="hljs-symbol">&amp;acceptor</span>] {
+    while (<span class="hljs-name">true</span>)
+    {
+        acceptor.goAccept([](<span class="hljs-name">Socket&amp;</span> socket) {
+            try
+            {
+                Buffer buffer<span class="hljs-comment">;</span>
+                while (<span class="hljs-name">true</span>)
+                {
+                    buffer.resize(<span class="hljs-number">4000</span>)<span class="hljs-comment">;</span>
+                    socket.readUntil(<span class="hljs-name">buffer</span>, HTTP_DELIM_BODY)<span class="hljs-comment">;</span>
+                    socket.write(<span class="hljs-name">httpContent</span>(<span class="hljs-string">"&lt;h1&gt;Hello synca!&lt;/h1&gt;"</span>))<span class="hljs-comment">;</span>
+                }
+            }
+            catch (<span class="hljs-name">std</span>:<span class="hljs-symbol">:exception&amp;</span> e)
+            {
+                LOG(<span class="hljs-string">"error: "</span> &lt;&lt; e.what())<span class="hljs-comment">;</span>
+            }
+        })<span class="hljs-comment">;</span>
+    }
+})<span class="hljs-comment">;</span>
+dispatch()<span class="hljs-comment">;</span>
+</code></pre>
+
+<p>Which is much easier to understand and use.</p>
+
+<p><strong>Question No.1. What about performance?</strong></p>
+
+<p><img src="Asynchronous%20Programming%20Back%20to%20the%20Future_files/c245d3.jpg" alt=""></p>
+
+<p>Unlike the asynchronous approach, additional overhead occurs here to create/switch contexts and related things.</p>
+
+<p>At first, I wanted to test the limit loads but then it turned out 
+that a Gigabit network (rather than a CPU) is fully loaded in one (!!!) 
+thread. Therefore, I have carried out the following test:</p>
+
+<ol>
+<li>The server runs under the constant load of 30K RPS (30K requests per second).</li>
+<li>CPU load in case of <em>async</em> and <em>synca</em>.</li>
+</ol>
+
+<p>The results are provided below:</p>
+
+<p></p><table><tbody><tr><th>Method</th><th>Requests per Second</th><th>Number of Threads</th><th>Workload of the CPU Core</th></tr><tr><td>async</td><td>30000</td><td>1</td><td>75±5%</td></tr><tr><td>synca</td><td>30000</td><td>1</td><td>80±5%</td></tr></tbody></table>It
+ should be noted that the inaccuracy of obtained values is linked to the
+ value fluctuations in the course of one test. Most likely, it is due to
+ the unevenness of the channel load and processing.<p></p>
+
+<p>Nevertheless, we can see that despite the additional switching 
+contexts as well as throwing exceptions instead of using return codes 
+(an exception is generated each time a socket closes, meaning each time 
+on a new request), overheads are negligible. What if we add code that 
+will honestly parse an HTTP message, and also code that won’t less 
+honestly process requests and do something important and necessary? We 
+could claim that <strong>there would be no difference in performance at all</strong>.</p>
+
+<p><strong>Question No.2. Okay, maybe. But is it possible to solve more complex asynchronous tasks this way?</strong></p>
+
+<p><strong>Theorem</strong>. <em>Any asynchronous task can be solved with the help of coroutines.</em></p>
+
+<p><img src="Asynchronous%20Programming%20Back%20to%20the%20Future_files/58d793.jpg" alt="Asynchronous Programming" title="Asynchronous Programming"></p>
+
+<p><strong>Proof</strong>.</p>
+
+<p>First, let’s take a function that uses asynchronous calls. Any 
+function can be converted to a coroutine as function is a special case 
+of coroutines. Then, let’s take any asynchronous call in the converted 
+coroutine. We can represent this call in the following form:</p>
+
+<pre><code class="hljs less"><span class="hljs-comment">// code before the call</span>
+<span class="hljs-selector-tag">async</span>(..., handler);
+<span class="hljs-comment">// code after the call</span>
+</code></pre>
+
+<p>Let’s consider the case when there’s no code after the call:</p>
+
+<pre><code class="hljs less"><span class="hljs-comment">// code before the call</span>
+<span class="hljs-selector-tag">async</span>(..., handler);
+</code></pre>
+
+<p>In terms of the coroutine, such code is equivalent to the following:</p>
+
+<pre><code class="hljs less"><span class="hljs-comment">// code before the call</span>
+<span class="hljs-selector-tag">synca</span>(...);
+<span class="hljs-selector-tag">handler</span>();
+</code></pre>
+
+<p>Meaning that we’re calling a corresponding asynchronous <em>async</em> function inside <em>synca</em> that returns control to the coroutine upon the completion of the operation, and then _handler_<em>()</em> is explicitly called. The result is absolutely the same.</p>
+
+<p>Now, we should consider a more general case, when we have code after the synchronous call. This code is equivalent to:</p>
+
+<pre><code class="hljs less"><span class="hljs-comment">// code before the call</span>
+<span class="hljs-selector-tag">go</span> {
+    <span class="hljs-selector-tag">async</span>(..., handler);
+}
+<span class="hljs-comment">// code after the call</span>
+</code></pre>
+
+<p>Using the fact that we now have no code after calling <em>async</em> inside <em>go</em>, we will get the following:</p>
+
+<pre><code class="hljs less"><span class="hljs-comment">// code before the call</span>
+<span class="hljs-selector-tag">go</span> {
+    <span class="hljs-selector-tag">synca</span>(...);
+    <span class="hljs-selector-tag">handler</span>();
+}
+<span class="hljs-comment">// code after the call</span>
+</code></pre>
+
+<p>This means that we have one asynchronous call less. Applying this 
+approach to every asynchronous call of the function, and to every 
+function, we will rewrite the entire code with coroutines. <strong>QED</strong>.</p>
+
+<h2 id="summary">Summary</h2>
+
+<p>Asynchronous programming bursts into the life of programmers. 
+Complications arising when they write code can drive even the most 
+experienced ones crazy. However, we should not forget about the good old
+ synchronous code. In smart hands, asynchronousness turns into smart 
+coroutines.</p>
+
+<p>In the next article, we’re going to review a much more complex 
+example that will reveal all the power and potential of coroutines!</p>
+
+<p>See you soon!</p>
+
+<p>P.S. The entire code is here: <a href="https://bitbucket.org/gridem/synca">bitbucket:gridem/synca</a></p>
+
+				</div>
+
+				<ul class="share-buttons">
+  <li>
+    <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fkukuruku.co%2F&amp;t=" target="_blank" title="Share on Facebook" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(document.URL) + '&amp;t=' + encodeURIComponent(document.URL)); return false;" class="share-button facebook">
+      <span class="icon icon-facebook-square"></span>
+      <span>Share</span>
+    </a>
+  </li>
+  <li>
+    <a href="https://twitter.com/intent/tweet?source=https%3A%2F%2Fkukuruku.co%2F&amp;text=:%20https%3A%2F%2Fkukuruku.co%2F&amp;via=kukurukuco" target="_blank" title="Tweet" onclick="window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(document.title) + ':%20'  + encodeURIComponent(document.URL)); return false;" class="share-button twitter">
+      <span class="icon icon-twitter"></span>
+      <span>Tweet</span>
+    </a>
+  </li>
+  <li>
+    <a href="https://plus.google.com/share?url=https%3A%2F%2Fkukuruku.co%2F" target="_blank" title="Share on Google+" onclick="window.open('https://plus.google.com/share?url=' + encodeURIComponent(document.URL)); return false;" class="share-button google-plus">
+      <span class="icon icon-google-plus"></span>
+      <span>+1</span>
+    </a>
+  </li>
+  <li>
+    <a href="http://www.reddit.com/submit?url=https%3A%2F%2Fkukuruku.co%2F&amp;title=" target="_blank" title="Submit to Reddit" onclick="window.open('http://www.reddit.com/submit?url=' + encodeURIComponent(document.URL) + '&amp;title=' +  encodeURIComponent(document.title)); return false;" class="share-button reddit">
+      <span class="icon icon-reddit"></span>
+      <span>Reddit</span>
+    </a>
+  </li>
+  <li>
+    <a href="http://www.linkedin.com/shareArticle?mini=true&amp;url=https%3A%2F%2Fkukuruku.co%2F&amp;title=&amp;summary=&amp;source=https%3A%2F%2Fkukuruku.co%2F" target="_blank" title="Share on LinkedIn" onclick="window.open('http://www.linkedin.com/shareArticle?mini=true&amp;url=' + encodeURIComponent(document.URL) + '&amp;title=' +  encodeURIComponent(document.title)); return false;" class="share-button linkedin">
+      <span class="icon icon-linkedin"></span>
+      <span>Share</span>
+    </a>
+  </li>
+</ul>
+
+				<footer>
+					
+					<a href="http://gridem.blogspot.com/" class="post-author">
+						<img src="Asynchronous%20Programming%20Back%20to%20the%20Future_files/avatar_light.png" style="border: 1px solid #d8e2f3; margin-right: 5px;" width="30" height="30">
+					</a>
+					<a href="http://gridem.blogspot.com/" class="post-author">Grigory Demchenko</a>
+					
+				</footer>
+				<section id="comments">
+  <h3>Comments</h3>
+  
+  
+    
+  <meta itemprop="commentCount" content="0">
+  <ol class="article-comments">
+      
+  </ol>
+  
+  
+  <div class="leave-comment-container">
+    <div class="leave-comment-form-container">
+      <form method="post" action="/_p/posts/200/comments/" class="create-comment-form">
+        <div class="avatar-container">
+          <img src="Asynchronous%20Programming%20Back%20to%20the%20Future_files/avatar_light.png">
+        </div>
+        <div class="form-body">
+          <textarea name="comment" class="comment" placeholder="Github flavored markdown is allowed."></textarea>
+          <div class="actions">
+            <input type="submit" value="Post Comment" class="submit-button">
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+			</article>
+
+		
+			
+			<section class="recommendations clearfix">
+				<article>
+  <header>
+    <div class="info">
+      
+      <span class="post-author">Flux</span>
+      
+      <time datetime="2017-01-02" pubdate="">2 January 2017</time>
+      <span class="views">
+        <span class="icon-eye"></span>
+        <span>3,751</span>
+      </span>
+    </div>
+    <h2 class="headline"><a href="https://www.kukuruku.co/post/ropes-fast-strings/">Ropes — Fast Strings</a></h2>
+  </header>
+  
+  <figure>
+    <a href="https://www.kukuruku.co/post/ropes-fast-strings/"><img src="Asynchronous%20Programming%20Back%20to%20the%20Future_files/ropes-fast-strings.jpg" width="160" height="110"></a>
+  </figure>
+  
+  <div class="post-body">
+    Most of us work with strings one way or another. There’s no way to 
+avoid them — when writing code, you’re doomed to concatinate strings 
+every day, split them into parts and access certain characters by index.
+ We are used to the fact that strings are fixed-length arrays of 
+characters, which leads to certain limitations when working with them. 
+For instance, we cannot quickly concatenate two strings. To do this, we 
+will at first need to allocate the required amount of memory, and then 
+copy there the data from the concatenated strings.
+  </div>
+  
+  <footer>
+    
+    
+    <a href="https://www.kukuruku.co/post/ropes-fast-strings/#comments" class="post-comments"><span class="icon-bubbles"></span> 1 comment</a>
+    
+  </footer>
+  
+</article>
+			</section>
+			
+		
+		</div>
+
+	</div>
+
+</main>
+
+<div class="subscribe-footer-block">
+  <div class="container">
+    Get the latest content first
+    <form action="//kukuruku.us8.list-manage.com/subscribe/post?u=e4905e022a3bd9502e281743a&amp;id=d25c804b1d" method="post" target="_blank" novalidate="">
+      <input type="email" name="EMAIL" class="email form-control" id="mce-EMAIL" placeholder="Enter your email address" required="">
+      <div style="position: absolute; left: -5000px;">
+        <input type="text" name="b_e4905e022a3bd9502e281743a_d25c804b1d" tabindex="-1">
+      </div>
+      <input type="submit" value="Subscribe" name="subscribe">
+    </form>
+  </div>
+</div>
+
+    </div>
+    <footer class="site-footer">
+      <div class="center">
+        <ul class="submenu list-inline pull-right">
+          <li><a href="https://www.kukuruku.co/page/privacy">Privacy Policy</a></li>
+          <li><a href="mailto:support@kukuruku.co">Contact us</a></li>
+        </ul>
+        <div class="logo">
+          <a href="https://www.kukuruku.co/">
+            <img src="Asynchronous%20Programming%20Back%20to%20the%20Future_files/25x25.png">
+          </a>
+        </div>
+      </div>
+    </footer>
+    
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-49490146-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async="" src="Asynchronous%20Programming%20Back%20to%20the%20Future_files/analytics.js"></script>
+
+    <script src="Asynchronous%20Programming%20Back%20to%20the%20Future_files/bundle.js"></script>
+    <script type="text/javascript">
+      var infolinks_pid = 3266022;
+      var infolinks_wsid = 0;
+      </script>
+      <script type="text/javascript" src="Asynchronous%20Programming%20Back%20to%20the%20Future_files/infolinks_main.js"></script>
+  
+
+</body></html>

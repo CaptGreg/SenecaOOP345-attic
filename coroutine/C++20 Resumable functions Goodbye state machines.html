@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html class="" lang="en-US"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+<title>C++20 Resumable functions: Goodbye state machines, no one will mourn you – Lords Of Tech</title>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="profile" href="http://gmpg.org/xfn/11">
+<link rel="pingback" href="https://lordsoftech.com/xmlrpc.php"><meta name="theme-color" content="#0a0c0e"><link rel="dns-prefetch" href="https://fonts.googleapis.com/">
+<link rel="dns-prefetch" href="https://s.w.org/">
+<link href="https://fonts.gstatic.com/" crossorigin="" rel="preconnect">
+<link rel="alternate" type="application/rss+xml" title="Lords Of Tech » Feed" href="https://lordsoftech.com/feed/">
+<link rel="alternate" type="application/rss+xml" title="Lords Of Tech » Comments Feed" href="https://lordsoftech.com/comments/feed/">
+<link rel="alternate" type="application/rss+xml" title="Lords Of Tech » C++20 Resumable functions: Goodbye state machines, no one will mourn you Comments Feed" href="https://lordsoftech.com/programming/c20-resumable-functions-goodbye-state-machines-no-one-will-mourn-you/feed/">
+		<script type="text/javascript" async="" src="C++20%20Resumable%20functions%20Goodbye%20state%20machines_files/matomo.js"></script><script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/12.0.0-1\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/12.0.0-1\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/lordsoftech.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=5.4.4"}};
+			/*! This file is auto-generated */
+			!function(e,a,t){var r,n,o,i,p=a.createElement("canvas"),s=p.getContext&&p.getContext("2d");function c(e,t){var a=String.fromCharCode;s.clearRect(0,0,p.width,p.height),s.fillText(a.apply(this,e),0,0);var r=p.toDataURL();return s.clearRect(0,0,p.width,p.height),s.fillText(a.apply(this,t),0,0),r===p.toDataURL()}function l(e){if(!s||!s.fillText)return!1;switch(s.textBaseline="top",s.font="600 32px Arial",e){case"flag":return!c([127987,65039,8205,9895,65039],[127987,65039,8203,9895,65039])&&(!c([55356,56826,55356,56819],[55356,56826,8203,55356,56819])&&!c([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]));case"emoji":return!c([55357,56424,55356,57342,8205,55358,56605,8205,55357,56424,55356,57340],[55357,56424,55356,57342,8203,55358,56605,8203,55357,56424,55356,57340])}return!1}function d(e){var t=a.createElement("script");t.src=e,t.defer=t.type="text/javascript",a.getElementsByTagName("head")[0].appendChild(t)}for(i=Array("flag","emoji"),t.supports={everything:!0,everythingExceptFlag:!0},o=0;o<i.length;o++)t.supports[i[o]]=l(i[o]),t.supports.everything=t.supports.everything&&t.supports[i[o]],"flag"!==i[o]&&(t.supports.everythingExceptFlag=t.supports.everythingExceptFlag&&t.supports[i[o]]);t.supports.everythingExceptFlag=t.supports.everythingExceptFlag&&!t.supports.flag,t.DOMReady=!1,t.readyCallback=function(){t.DOMReady=!0},t.supports.everything||(n=function(){t.readyCallback()},a.addEventListener?(a.addEventListener("DOMContentLoaded",n,!1),e.addEventListener("load",n,!1)):(e.attachEvent("onload",n),a.attachEvent("onreadystatechange",function(){"complete"===a.readyState&&t.readyCallback()})),(r=t.source||{}).concatemoji?d(r.concatemoji):r.wpemoji&&r.twemoji&&(d(r.twemoji),d(r.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script><script src="C++20%20Resumable%20functions%20Goodbye%20state%20machines_files/wp-emoji-release.js" type="text/javascript" defer="defer"></script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+	<link rel="stylesheet" id="wp-block-library-css" href="C++20%20Resumable%20functions%20Goodbye%20state%20machines_files/style.css" type="text/css" media="all">
+<link rel="stylesheet" id="cookie-notice-front-css" href="C++20%20Resumable%20functions%20Goodbye%20state%20machines_files/front.css" type="text/css" media="all">
+<link rel="stylesheet" id="awpa-wp-post-author-style-css" href="C++20%20Resumable%20functions%20Goodbye%20state%20machines_files/awpa-frontend-style.css" type="text/css" media="all">
+<link rel="stylesheet" id="enlighterjs-css" href="C++20%20Resumable%20functions%20Goodbye%20state%20machines_files/enlighterjs.css" type="text/css" media="all">
+<link rel="stylesheet" id="modern-google-fonts-css" href="C++20%20Resumable%20functions%20Goodbye%20state%20machines_files/css" type="text/css" media="screen">
+<link rel="stylesheet" id="genericons-neue-css" href="C++20%20Resumable%20functions%20Goodbye%20state%20machines_files/genericons-neue.css" type="text/css" media="screen">
+<link rel="stylesheet" id="modern-stylesheet-global-css" href="C++20%20Resumable%20functions%20Goodbye%20state%20machines_files/main.css" type="text/css" media="screen">
+<link rel="stylesheet" id="modern-stylesheet-custom-css" href="C++20%20Resumable%20functions%20Goodbye%20state%20machines_files/custom-styles.css" type="text/css" media="screen">
+<style id="modern-inline-css" type="text/css">
+.intro-media::after { background-image: linear-gradient(transparent, #1a1c1e) }
+</style>
+<script type="text/javascript" src="C++20%20Resumable%20functions%20Goodbye%20state%20machines_files/css-vars-ponyfill.js"></script>
+<script type="text/javascript">
+window.onload = function() {
+	cssVars( {
+		onlyVars: true,
+		exclude: 'link:not([href^="https://lordsoftech.com/wp-content/themes"])'
+	} );
+};
+</script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var cnArgs = {"ajaxUrl":"https:\/\/lordsoftech.com\/wp-admin\/admin-ajax.php","nonce":"26a5946988","hideEffect":"fade","position":"bottom","onScroll":"0","onScrollOffset":"100","onClick":"0","cookieName":"cookie_notice_accepted","cookieTime":"2592000","cookieTimeRejected":"2592000","cookiePath":"\/","cookieDomain":"","redirection":"0","cache":"0","refuse":"0","revokeCookies":"0","revokeCookiesOpt":"automatic","secure":"1","coronabarActive":"0"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="C++20%20Resumable%20functions%20Goodbye%20state%20machines_files/front.js"></script>
+<script type="text/javascript" src="C++20%20Resumable%20functions%20Goodbye%20state%20machines_files/jquery_002.js"></script>
+<script type="text/javascript" src="C++20%20Resumable%20functions%20Goodbye%20state%20machines_files/jquery-migrate.js"></script>
+<script type="text/javascript" src="C++20%20Resumable%20functions%20Goodbye%20state%20machines_files/awpa-frontend-scripts.js"></script>
+<link rel="https://api.w.org/" href="https://lordsoftech.com/wp-json/">
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://lordsoftech.com/xmlrpc.php?rsd">
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://lordsoftech.com/wp-includes/wlwmanifest.xml"> 
+<link rel="prev" title="Error codes are far slower than exceptions" href="https://lordsoftech.com/programming/error-codes-are-far-slower-than-exceptions/">
+<link rel="next" title="Adding elements to arrays and changing variables during compilation – imperative meta-metaprogramming in C++" href="https://lordsoftech.com/programming/adding-elements-to-arrays-and-changing-variables-during-compilation-imperative-meta-metaprogramming-in-c/">
+<meta name="generator" content="WordPress 5.4.4">
+<link rel="canonical" href="https://lordsoftech.com/programming/c20-resumable-functions-goodbye-state-machines-no-one-will-mourn-you/">
+<link rel="shortlink" href="https://lordsoftech.com/?p=1340">
+<link rel="alternate" type="application/json+oembed" href="https://lordsoftech.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Flordsoftech.com%2Fprogramming%2Fc20-resumable-functions-goodbye-state-machines-no-one-will-mourn-you%2F">
+<link rel="alternate" type="text/xml+oembed" href="https://lordsoftech.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Flordsoftech.com%2Fprogramming%2Fc20-resumable-functions-goodbye-state-machines-no-one-will-mourn-you%2F&amp;format=xml">
+
+
+<!-- Matomo -->
+<script type="text/javascript">
+  var _paq = window._paq = window._paq || [];
+  /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u="https://lordsoftech.com/matomo/";
+    _paq.push(['setTrackerUrl', u+'matomo.php']);
+    _paq.push(['setSiteId', '1']);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.type='text/javascript'; g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+  })();
+</script>
+<!-- End Matomo Code -->
+
+
+<style id="fit-vids-style">.fluid-width-video-wrapper{width:100%;position:relative;padding:0;}.fluid-width-video-wrapper iframe,.fluid-width-video-wrapper object,.fluid-width-video-wrapper embed {position:absolute;top:0;left:0;width:100%;height:100%;}</style></head>
+
+
+<body class="group-blog has-intro has-navigation-mobile has-post-thumbnail has-posts-layout-masonry is-singular no-widgets-sidebar post-template-default postid-1340 posts-layout-columns-3 single single-format-standard single-post cookies-not-set">
+
+<div id="page" class="site">
+
+<ul class="skip-link-list">
+	<li class="skip-link-list-item"><a class="skip-link screen-reader-text" href="#site-navigation">Skip to main navigation</a></li><li class="skip-link-list-item"><a class="skip-link screen-reader-text" href="#content">Skip to main content</a></li><li class="skip-link-list-item"><a class="skip-link screen-reader-text" href="#colophon">Skip to footer</a></li></ul>
+
+
+<header id="masthead" class="site-header">
+
+
+<div class="site-header-navigation"><div class="site-header-inner">
+
+<nav id="site-navigation" class="main-navigation" aria-label="Primary Menu">
+
+		<button id="menu-toggle" class="menu-toggle" aria-controls="menu-primary" aria-expanded="false">Menu</button>
+
+		<div id="site-navigation-container" class="main-navigation-container">
+		<div class="menu-search"><form role="search" method="get" class="search-form" action="https://lordsoftech.com/">
+				<label>
+					<span class="screen-reader-text">Search for:</span>
+					<input type="search" class="search-field" placeholder="Search …" name="s">
+				</label>
+				<input type="submit" class="search-submit" value="Search">
+			</form></div><div class="menu"><ul id="menu-primary" class="menu-primary"><li id="menu-item-726" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-726" aria-haspopup="true"><a href="https://lordsof.tech/">Home <span class="expander" aria-label="(Focus the link to toggle submenu.)"></span></a>
+<ul class="sub-menu">
+	<li id="menu-item-1040" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1040"><a href="https://lordsoftech.com/category/open-source/">Open Source</a></li>
+	<li id="menu-item-1041" class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor current-menu-parent current-post-parent menu-item-1041"><a href="https://lordsoftech.com/category/programming/">Programming</a></li>
+	<li id="menu-item-1042" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1042"><a href="https://lordsoftech.com/category/tech/">Tech</a></li>
+	<li id="menu-item-1043" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1043"><a href="https://lordsoftech.com/category/uncategorized/">Uncategorized</a></li>
+</ul>
+</li>
+<li id="menu-item-22" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-22" aria-haspopup="true"><a href="https://lordsoftech.com/contact/">Contact <span class="expander" aria-label="(Focus the link to toggle submenu.)"></span></a></li>
+<li id="menu-item-18" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-18"><a href="https://lordsoftech.com/about/">About us</a></li>
+<li class="menu-toggle-skip-link-container"><a href="#menu-toggle" class="menu-toggle-skip-link">Skip to menu toggle button</a></li></ul></div>	</div>
+
+</nav>
+
+</div></div>
+
+
+<div class="site-header-content"><div class="site-header-inner">
+
+
+<div class="site-branding">
+
+	
+	<div class="site-branding-text">
+					<p class="site-title"><a href="https://lordsoftech.com/" class="site-title-text" rel="home">Lords Of Tech</a></p>
+						<p class="site-description">For nerds, by nerds</p>
+				</div>
+
+</div>
+
+<nav class="social-links" aria-label="Social Menu">
+
+	<ul data-id="menu-social-links-menu" class="social-links-items"><li data-id="menu-item-24" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-24"><a href="https://www.facebook.com/tylnesh"><span class="screen-reader-text">Facebook</span><!--{{icon}}--><svg class="svgicon social-icon-facebook" aria-hidden="true" role="img"> <use href="#social-icon-facebook" xlink:href="#social-icon-facebook"></use> </svg></a></li>
+<li data-id="menu-item-25" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-25"><a href="https://twitter.com/KohutekMichal"><span class="screen-reader-text">Twitter</span><!--{{icon}}--><svg class="svgicon social-icon-twitter" aria-hidden="true" role="img"> <use href="#social-icon-twitter" xlink:href="#social-icon-twitter"></use> </svg></a></li>
+<li data-id="menu-item-26" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-26"><a href="mailto:michal@kohutek.eu"><span class="screen-reader-text">Email</span><!--{{icon}}--><svg class="svgicon social-icon-envelope" aria-hidden="true" role="img"> <use href="#social-icon-envelope" xlink:href="#social-icon-envelope"></use> </svg></a></li>
+<li class="back-to-top-link"><a href="#page" class="back-to-top animated" title="Back to top"><span class="screen-reader-text">Back to top ↑</span></a></li></ul>
+</nav>
+
+
+</div></div>
+
+
+
+</header>
+
+
+<section id="intro-container" class="intro-container">
+
+	
+	<div id="intro" class="intro"><div class="intro-inner">
+
+		
+	</div></div>
+
+	
+<div id="intro-media" class="intro-media">
+	<div id="wp-custom-header" class="wp-custom-header"><img src="C++20%20Resumable%20functions%20Goodbye%20state%20machines_files/no_go.png" alt="Lords Of Tech" width="1920" height="1080"></div></div>
+
+</section>
+
+
+<div id="content" class="site-content">
+<div class="site-content-inner">
+	<div id="primary" class="content-area">
+		<main id="main" class="site-main">
+
+
+<article id="post-1340" class="post-1340 post type-post status-publish format-standard has-post-thumbnail hentry category-programming tag-c tag-c20 tag-coroutines entry">
+
+	<div class="entry-media"><figure class="post-thumbnail"><a href="https://lordsoftech.com/wp-content/uploads/2020/11/no_go.png"><img src="C++20%20Resumable%20functions%20Goodbye%20state%20machines_files/no_go-1024x415.png" class="attachment-large size-large wp-post-image" alt="" srcset="C++20%20Resumable%20functions%20Goodbye%20state%20machines_files/no_go-1024x415.png 1024w, C++20%20Resumable%20functions%20Goodbye%20state%20machines_files/no_go-300x121.png 300w, C++20%20Resumable%20functions%20Goodbye%20state%20machines_files/no_go-768x311.png 768w, C++20%20Resumable%20functions%20Goodbye%20state%20machines_files/no_go-1536x622.png 1536w, C++20%20Resumable%20functions%20Goodbye%20state%20machines_files/no_go.png 1630w" sizes="(max-width: 1024px) 100vw, 1024px" width="1024" height="415"></a></figure></div><div class="entry-content-container"><header class="entry-header"><h1 class="entry-title">C++20 Resumable functions: Goodbye state machines, no one will mourn you</h1></header>
+<footer class="entry-meta entry-meta-top">
+<span class="entry-meta-element entry-date posted-on">
+	<span class="entry-meta-description label-published">
+		Posted on:	</span>
+	<a href="https://lordsoftech.com/programming/c20-resumable-functions-goodbye-state-machines-no-one-will-mourn-you/" rel="bookmark">
+		<time datetime="2020-11-29T15:26:58+02:00" class="published" title="Posted on: November 29, 2020">
+			November 29, 2020		</time>
+	</a>
+	<span class="entry-meta-description label-updated">
+		Last updated on:	</span>
+	<time class="updated" datetime="2020-11-30T19:01:49+02:00" title="Last updated on: November 30, 2020">
+		November 30, 2020	</time>
+</span>
+
+<span class="entry-meta-element comments-link">
+	<a href="https://lordsoftech.com/programming/c20-resumable-functions-goodbye-state-machines-no-one-will-mourn-you/#comments" title="Comments: 0">
+		<span class="entry-meta-description">
+			Comments:		</span>
+		<span class="comments-count">
+			0		</span>
+	</a>
+</span>
+
+<span class="entry-meta-element cat-links">
+	<span class="entry-meta-description">
+		Categorized in:	</span>
+	<a href="https://lordsoftech.com/category/programming/" rel="category tag">Programming</a></span>
+
+<span class="entry-meta-element byline author vcard">
+	<span class="entry-meta-description">
+		Written by:	</span>
+	<a href="https://lordsoftech.com/author/dugi/" class="url fn n" rel="author">
+		Dugi	</a>
+</span>
+</footer>
+
+	<div class="entry-content"><div class="entry-summary">
+C++20 allows writing functions that suspend and can continue at the next
+ line. This has an amazing application at avoiding writing annoying and 
+error-prone state machines. This article showcases how coroutines can 
+clean up a function that would usually need an ugly state machine.
+</div>
+
+<p>In imperative programming, the logic of the code closely copies the 
+sequence of actions needed to perform the operation, making it rather 
+intuitive. However, if it the process needs to interact with the 
+physical reality rather than abstractions, it often needs to be 
+interrupted and be resumed again. This can, and often has to be, 
+resolved by saving the state and using it to decide what should be done 
+next. The state machine pattern can be implemented in many ways, with 
+varying degrees of convenience, but it’s always nonlinear and thus less 
+readable and more error prone (the simpler ones can be done as 
+callbacks, but doing cycles with callbacks is even worse than state 
+machines).</p>
+
+
+
+<p>If a thread is dedicated to the process, the code can be written 
+linearly, following the steps in sequence, writing loops naturally, 
+which is much cleaner and less error prone. However, it also comes with a
+ massive downside. It scales terribly. Each such process needs to have 
+its own thread and threads are very resource heavy. C++20 has a new 
+feature that deals with this problem: coroutines.</p>
+
+
+
+<h2>So, where to start?</h2>
+
+
+
+<p>The internet already has quite a collection of articles and talks 
+about coroutines. They are part of the working version of GCC 11 and are
+ available in GCC 10 if the <code>-fcoroutines</code> flag is present . 
+So I wanted to try them out for myself. I looked at a common example of 
+using a coroutine to implement a generator class similar to Python’s <code>range</code>.</p>
+
+
+
+<div class="enlighter-default enlighter-v-standard enlighter-t-enlighter enlighter-hover enlighter-linenumbers "><div class="enlighter-toolbar-top enlighter-toolbar"><div class="enlighter-btn enlighter-btn-raw" title="Toggle RAW code"></div><div class="enlighter-btn enlighter-btn-copy" title="Copy to clipboard"></div><div class="enlighter-btn enlighter-btn-window" title="Open code in new window"></div><div class="enlighter-btn enlighter-btn-website" title="EnlighterJS 3 Syntax Highlighter"></div></div><div class="enlighter" style=""><div class=""><div><span class="enlighter-text">generator</span><span class="enlighter-g1">&lt;</span><span class="enlighter-k5">int</span><span class="enlighter-g1">&gt;</span><span class="enlighter-text"> </span><span class="enlighter-m0">range</span><span class="enlighter-g1">(</span><span class="enlighter-text">start</span><span class="enlighter-g1">)</span><span class="enlighter-text"> </span><span class="enlighter-g1">{</span><span class="enlighter-c0"></span></div></div><div class=""><div><span class="enlighter-c0">//...</span></div></div></div><div class="enlighter-raw">generator&lt;int&gt; range(start) {
+//...</div><div class="enlighter-toolbar-bottom enlighter-toolbar"></div></div><pre class="EnlighterJSRAW enlighter-origin" data-enlighter-language="cpp" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">generator&lt;int&gt; range(start) {
+//...</pre>
+
+
+
+<p>And it didn’t work. There is no <code>generator</code> class. None of the classes returned in the examples isn’t in the standard. The <code>coroutine</code> header contains only some helper classes and the <code>std::coroutine_handle</code>
+ class that expects to be templated to a certain class… that isn’t 
+anywhere. Apparently, I was supposed to implement it myself, but there 
+wasn’t much information on that topic on cppreference.</p>
+
+
+
+<p>Eventually, I found out that while coroutines did make it into C++20, the classes that use it, like <code>std::net::executor</code>,
+ didn’t. They’re part of Networking TS that will probably make it into 
+C++23. Boost Asio 1.74 come with some useful classes, but that is also 
+quite new and examples are rare.</p>
+
+
+
+<p>I found only <a href="https://blog.panicsoftware.com/your-first-coroutine/">one article</a> that showed how to use coroutines only with standard headers. I used it to create a class I called <code>Resumable</code>, with an interface that somewhat imitated <code>std::function</code>:</p>
+
+
+
+<div class="enlighter-default enlighter-v-standard enlighter-t-enlighter enlighter-hover enlighter-linenumbers "><div class="enlighter-toolbar-top enlighter-toolbar"><div class="enlighter-btn enlighter-btn-raw" title="Toggle RAW code"></div><div class="enlighter-btn enlighter-btn-copy" title="Copy to clipboard"></div><div class="enlighter-btn enlighter-btn-window" title="Open code in new window"></div><div class="enlighter-btn enlighter-btn-website" title="EnlighterJS 3 Syntax Highlighter"></div></div><div class="enlighter" style=""><div class=""><div><span class="enlighter-k0">template</span><span class="enlighter-text"> </span><span class="enlighter-g1">&lt;</span><span class="enlighter-k0">typename</span><span class="enlighter-text"> T</span><span class="enlighter-g1">&gt;</span><span class="enlighter-text"></span></div></div><div class=""><div><span class="enlighter-text"></span><span class="enlighter-k0">class</span><span class="enlighter-text"> Resumable </span><span class="enlighter-g1">{</span><span class="enlighter-text"></span></div></div><div class=""><div><span class="enlighter-text"></span><span class="enlighter-k0">public</span><span class="enlighter-text">:</span></div></div><div class=""><div><span class="enlighter-text">    </span><span class="enlighter-k2">struct</span><span class="enlighter-text"> promise_type </span><span class="enlighter-g1">{</span><span class="enlighter-text"></span></div></div><div class=""><div><span class="enlighter-text">        T _returned;</span></div></div><div class=""><div><span class="enlighter-text">        </span><span class="enlighter-k0">auto</span><span class="enlighter-text"> </span><span class="enlighter-m0">get_return_object</span><span class="enlighter-g1">()</span><span class="enlighter-text"> </span><span class="enlighter-g1">{</span><span class="enlighter-text"></span></div></div><div class=""><div><span class="enlighter-text">            </span><span class="enlighter-k0">return</span><span class="enlighter-text"> handle_type::</span><span class="enlighter-m0">from_promise</span><span class="enlighter-g1">(</span><span class="enlighter-text">*</span><span class="enlighter-k0">this</span><span class="enlighter-g1">)</span><span class="enlighter-text">;</span></div></div><div class=""><div><span class="enlighter-text">        </span><span class="enlighter-g1">}</span><span class="enlighter-text"></span></div></div><div class=""><div><span class="enlighter-text">        </span><span class="enlighter-k0">auto</span><span class="enlighter-text"> </span><span class="enlighter-m0">initial_suspend</span><span class="enlighter-g1">()</span><span class="enlighter-text"> </span><span class="enlighter-g1">{</span><span class="enlighter-text"></span></div></div><div class=""><div><span class="enlighter-text">            </span><span class="enlighter-k0">return</span><span class="enlighter-text"> std::</span><span class="enlighter-m0">suspend_always</span><span class="enlighter-g1">()</span><span class="enlighter-text">;</span></div></div><div class=""><div><span class="enlighter-text">        </span><span class="enlighter-g1">}</span><span class="enlighter-text"></span></div></div><div class=""><div><span class="enlighter-text">        </span><span class="enlighter-k0">auto</span><span class="enlighter-text"> </span><span class="enlighter-m0">final_suspend</span><span class="enlighter-g1">()</span><span class="enlighter-text"> </span><span class="enlighter-g1">{</span><span class="enlighter-text"></span></div></div><div class=""><div><span class="enlighter-text">            </span><span class="enlighter-k0">return</span><span class="enlighter-text"> std::</span><span class="enlighter-m0">suspend_always</span><span class="enlighter-g1">()</span><span class="enlighter-text">;</span></div></div><div class=""><div><span class="enlighter-text">        </span><span class="enlighter-g1">}</span><span class="enlighter-text"></span></div></div><div class=""><div><span class="enlighter-text">        </span><span class="enlighter-k5">void</span><span class="enlighter-text"> </span><span class="enlighter-m0">unhandled_exception</span><span class="enlighter-g1">()</span><span class="enlighter-text"> </span><span class="enlighter-g1">{</span><span class="enlighter-text"></span></div></div><div class=""><div><span class="enlighter-text">            </span><span class="enlighter-k1">throw</span><span class="enlighter-g1">(</span><span class="enlighter-m0">UnhandledExceptionInCoroutine</span><span class="enlighter-g1">())</span><span class="enlighter-text">;</span></div></div><div class=""><div><span class="enlighter-text">        </span><span class="enlighter-g1">}</span><span class="enlighter-text"></span></div></div><div class=""><div><span class="enlighter-text">        </span><span class="enlighter-k0">auto</span><span class="enlighter-text"> </span><span class="enlighter-m0">yield_value</span><span class="enlighter-g1">(</span><span class="enlighter-k8">const</span><span class="enlighter-text"> T&amp; value</span><span class="enlighter-g1">){</span><span class="enlighter-text"></span></div></div><div class=""><div><span class="enlighter-text">            _returned = value;</span></div></div><div class=""><div><span class="enlighter-text">            </span><span class="enlighter-k0">return</span><span class="enlighter-text"> std::</span><span class="enlighter-m0">suspend_always</span><span class="enlighter-g1">()</span><span class="enlighter-text">;</span></div></div><div class=""><div><span class="enlighter-text">        </span><span class="enlighter-g1">}</span><span class="enlighter-text"></span></div></div><div class=""><div><span class="enlighter-text">        </span><span class="enlighter-k5">void</span><span class="enlighter-text"> </span><span class="enlighter-m0">return_value</span><span class="enlighter-g1">(</span><span class="enlighter-k8">const</span><span class="enlighter-text"> T&amp; value</span><span class="enlighter-g1">)</span><span class="enlighter-text"> </span><span class="enlighter-g1">{</span><span class="enlighter-text"></span></div></div><div class=""><div><span class="enlighter-text">            _returned = value;</span></div></div><div class=""><div><span class="enlighter-text">        </span><span class="enlighter-g1">}</span><span class="enlighter-text"></span></div></div><div class=""><div><span class="enlighter-text">    </span><span class="enlighter-g1">}</span><span class="enlighter-text">;</span></div></div><div class=""><div><span class="enlighter-text">    </span><span class="enlighter-k0">using</span><span class="enlighter-text"> handle_type = std::coroutine_handle</span><span class="enlighter-g1">&lt;</span><span class="enlighter-text">promise_type</span><span class="enlighter-g1">&gt;</span><span class="enlighter-text">;</span></div></div><div class=""><div><span class="enlighter-text">    </span><span class="enlighter-m0">Resumable</span><span class="enlighter-g1">(</span><span class="enlighter-text">handle_type handle</span><span class="enlighter-g1">)</span><span class="enlighter-text"> : </span><span class="enlighter-m0">_handle</span><span class="enlighter-g1">(</span><span class="enlighter-text">handle</span><span class="enlighter-g1">)</span><span class="enlighter-text"> </span><span class="enlighter-g1">{</span><span class="enlighter-text"> </span><span class="enlighter-g1">}</span><span class="enlighter-text"></span></div></div><div class=""><div><span class="enlighter-text">    </span><span class="enlighter-m0">Resumable</span><span class="enlighter-g1">(</span><span class="enlighter-k8">const</span><span class="enlighter-text"> Resumable&amp;</span><span class="enlighter-g1">)</span><span class="enlighter-text"> = </span><span class="enlighter-k3">delete</span><span class="enlighter-text">;</span></div></div><div class=""><div><span class="enlighter-text">    T </span><span class="enlighter-k0">operator</span><span class="enlighter-g1">()()</span><span class="enlighter-text"> </span><span class="enlighter-g1">{</span><span class="enlighter-text"></span></div></div><div class=""><div><span class="enlighter-text">        </span><span class="enlighter-k1">if</span><span class="enlighter-text"> </span><span class="enlighter-g1">(</span><span class="enlighter-text">_handle.</span><span class="enlighter-m3">done</span><span class="enlighter-g1">())</span><span class="enlighter-text"></span></div></div><div class=""><div><span class="enlighter-text">            </span><span class="enlighter-k1">throw</span><span class="enlighter-text"> </span><span class="enlighter-m0">CallToFinsihedCoroutine</span><span class="enlighter-g1">()</span><span class="enlighter-text">;</span></div></div><div class=""><div><span class="enlighter-text">        _handle.</span><span class="enlighter-m3">resume</span><span class="enlighter-g1">()</span><span class="enlighter-text">;</span></div></div><div class=""><div><span class="enlighter-text">        </span><span class="enlighter-k0">return</span><span class="enlighter-text"> _handle.</span><span class="enlighter-m3">promise</span><span class="enlighter-g1">()</span><span class="enlighter-text">.</span><span class="enlighter-m3">_returned</span><span class="enlighter-text">;</span></div></div><div class=""><div><span class="enlighter-text">    </span><span class="enlighter-g1">}</span><span class="enlighter-text"></span></div></div><div class=""><div><span class="enlighter-text">    </span><span class="enlighter-k0">explicit</span><span class="enlighter-text"> </span><span class="enlighter-k0">operator</span><span class="enlighter-text"> </span><span class="enlighter-k5">bool</span><span class="enlighter-g1">()</span><span class="enlighter-text"> </span><span class="enlighter-g1">{</span><span class="enlighter-text"></span></div></div><div class=""><div><span class="enlighter-text">        </span><span class="enlighter-k0">return</span><span class="enlighter-text"> !_handle.</span><span class="enlighter-m3">done</span><span class="enlighter-g1">()</span><span class="enlighter-text">;    </span></div></div><div class=""><div><span class="enlighter-text">    </span><span class="enlighter-g1">}</span><span class="enlighter-text"></span></div></div><div class=""><div><span class="enlighter-text">    ~</span><span class="enlighter-m0">Resumable</span><span class="enlighter-g1">()</span><span class="enlighter-text"> </span><span class="enlighter-g1">{</span><span class="enlighter-text"></span></div></div><div class=""><div><span class="enlighter-text">        _handle.</span><span class="enlighter-m3">destroy</span><span class="enlighter-g1">()</span><span class="enlighter-text">;</span></div></div><div class=""><div><span class="enlighter-text">    </span><span class="enlighter-g1">}</span><span class="enlighter-text"></span></div></div><div class=""><div><span class="enlighter-text"></span><span class="enlighter-k0">private</span><span class="enlighter-text">:</span></div></div><div class=""><div><span class="enlighter-text">    handle_type _handle;</span></div></div><div class=""><div><span class="enlighter-text"></span><span class="enlighter-g1">}</span><span class="enlighter-text">;</span></div></div></div><div class="enlighter-raw">template &lt;typename T&gt;
+class Resumable {
+public:
+    struct promise_type {
+        T _returned;
+        auto get_return_object() {
+            return handle_type::from_promise(*this);
+        }
+        auto initial_suspend() {
+            return std::suspend_always();
+        }
+        auto final_suspend() {
+            return std::suspend_always();
+        }
+        void unhandled_exception() {
+            throw(UnhandledExceptionInCoroutine());
+        }
+        auto yield_value(const T&amp; value){
+            _returned = value;
+            return std::suspend_always();
+        }
+        void return_value(const T&amp; value) {
+            _returned = value;
+        }
+    };
+    using handle_type = std::coroutine_handle&lt;promise_type&gt;;
+    Resumable(handle_type handle) : _handle(handle) { }
+    Resumable(const Resumable&amp;) = delete;
+    T operator()() {
+        if (_handle.done())
+            throw CallToFinsihedCoroutine();
+        _handle.resume();
+        return _handle.promise()._returned;
+    }
+    explicit operator bool() {
+        return !_handle.done();    
+    }
+    ~Resumable() {
+        _handle.destroy();
+    }
+private:
+    handle_type _handle;
+};</div><div class="enlighter-toolbar-bottom enlighter-toolbar"></div></div><pre class="EnlighterJSRAW enlighter-origin" data-enlighter-language="cpp" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">template &lt;typename T&gt;
+class Resumable {
+public:
+	struct promise_type {
+		T _returned;
+		auto get_return_object() {
+			return handle_type::from_promise(*this);
+		}
+		auto initial_suspend() {
+			return std::suspend_always();
+		}
+		auto final_suspend() {
+			return std::suspend_always();
+		}
+		void unhandled_exception() {
+			throw(UnhandledExceptionInCoroutine());
+		}
+		auto yield_value(const T&amp; value){
+			_returned = value;
+			return std::suspend_always();
+		}
+		void return_value(const T&amp; value) {
+			_returned = value;
+		}
+	};
+	using handle_type = std::coroutine_handle&lt;promise_type&gt;;
+	Resumable(handle_type handle) : _handle(handle) { }
+	Resumable(const Resumable&amp;) = delete;
+	T operator()() {
+		if (_handle.done())
+			throw CallToFinsihedCoroutine();
+		_handle.resume();
+		return _handle.promise()._returned;
+	}
+	explicit operator bool() {
+		return !_handle.done();	
+	}
+	~Resumable() {
+		_handle.destroy();
+	}
+private:
+	handle_type _handle;
+};</pre>
+
+
+
+<p>It could not handle coroutines returning non-void values, so I needed
+ to write a specialisation that didn’t hold the return type. The <code>Resumable</code> instance allows resuming the coroutine with <code>operator()</code>. It can be used as a boolean expression if the coroutine is finished.</p>
+
+
+
+<p>Using it was rather straightforward:</p>
+
+
+
+<div class="enlighter-default enlighter-v-standard enlighter-t-enlighter enlighter-hover enlighter-linenumbers "><div class="enlighter-toolbar-top enlighter-toolbar"><div class="enlighter-btn enlighter-btn-raw" title="Toggle RAW code"></div><div class="enlighter-btn enlighter-btn-copy" title="Copy to clipboard"></div><div class="enlighter-btn enlighter-btn-window" title="Open code in new window"></div><div class="enlighter-btn enlighter-btn-website" title="EnlighterJS 3 Syntax Highlighter"></div></div><div class="enlighter" style=""><div class=""><div><span class="enlighter-c0">// Definition of a function that returns a coroutine instance</span><span class="enlighter-text"></span></div></div><div class=""><div><span class="enlighter-text">Resumable</span><span class="enlighter-g1">&lt;</span><span class="enlighter-text">std::string</span><span class="enlighter-g1">&gt;</span><span class="enlighter-text"> </span><span class="enlighter-m0">poetry</span><span class="enlighter-g1">()</span><span class="enlighter-text"> </span><span class="enlighter-g1">{</span><span class="enlighter-text"></span></div></div><div class=""><div><span class="enlighter-text">    co_yield </span><span class="enlighter-s0">"Du"</span><span class="enlighter-text">;</span></div></div><div class=""><div><span class="enlighter-text">    co_yield </span><span class="enlighter-s0">"Du hast"</span><span class="enlighter-text">;</span></div></div><div class=""><div><span class="enlighter-text">    co_yield </span><span class="enlighter-s0">"Du hast mich"</span><span class="enlighter-text">;</span></div></div><div class=""><div><span class="enlighter-text"></span><span class="enlighter-g1">}</span><span class="enlighter-text"></span></div></div><div class=""><div><span class="enlighter-text"></span><span class="enlighter-c0"></span></div></div><div class=""><div><span class="enlighter-c0">// Usage of the coroutine</span><span class="enlighter-text"></span></div></div><div class=""><div><span class="enlighter-text"></span><span class="enlighter-k0">auto</span><span class="enlighter-text"> sing = </span><span class="enlighter-m0">poetry</span><span class="enlighter-g1">()</span><span class="enlighter-text">;</span></div></div><div class=""><div><span class="enlighter-text">std::cout </span><span class="enlighter-g1">&lt;&lt;</span><span class="enlighter-text"> </span><span class="enlighter-m0">sing</span><span class="enlighter-g1">()</span><span class="enlighter-text"> </span><span class="enlighter-g1">&lt;&lt;</span><span class="enlighter-text"> std::endl;</span><span class="enlighter-c0"> // Prints: Du</span><span class="enlighter-text"></span></div></div><div class=""><div><span class="enlighter-text">std::cout </span><span class="enlighter-g1">&lt;&lt;</span><span class="enlighter-text"> </span><span class="enlighter-m0">sing</span><span class="enlighter-g1">()</span><span class="enlighter-text"> </span><span class="enlighter-g1">&lt;&lt;</span><span class="enlighter-text"> std::endl;</span><span class="enlighter-c0"> // Prints: Du hast</span><span class="enlighter-text"></span></div></div><div class=""><div><span class="enlighter-text">std::cout </span><span class="enlighter-g1">&lt;&lt;</span><span class="enlighter-text"> </span><span class="enlighter-m0">sing</span><span class="enlighter-g1">()</span><span class="enlighter-text"> </span><span class="enlighter-g1">&lt;&lt;</span><span class="enlighter-text"> std::endl;</span><span class="enlighter-c0"> // Prints: Du hast mich</span></div></div></div><div class="enlighter-raw">// Definition of a function that returns a coroutine instance
+Resumable&lt;std::string&gt; poetry() {
+    co_yield "Du";
+    co_yield "Du hast";
+    co_yield "Du hast mich";
+}
+
+// Usage of the coroutine
+auto sing = poetry();
+std::cout &lt;&lt; sing() &lt;&lt; std::endl; // Prints: Du
+std::cout &lt;&lt; sing() &lt;&lt; std::endl; // Prints: Du hast
+std::cout &lt;&lt; sing() &lt;&lt; std::endl; // Prints: Du hast mich</div><div class="enlighter-toolbar-bottom enlighter-toolbar"></div></div><pre class="EnlighterJSRAW enlighter-origin" data-enlighter-language="cpp" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">// Definition of a function that returns a coroutine instance
+Resumable&lt;std::string&gt; poetry() {
+	co_yield "Du";
+	co_yield "Du hast";
+	co_yield "Du hast mich";
+}
+
+// Usage of the coroutine
+auto sing = poetry();
+std::cout &lt;&lt; sing() &lt;&lt; std::endl; // Prints: Du
+std::cout &lt;&lt; sing() &lt;&lt; std::endl; // Prints: Du hast
+std::cout &lt;&lt; sing() &lt;&lt; std::endl; // Prints: Du hast mich</pre>
+
+
+
+<p>Coroutines can have automatic variables, blocks, branching, loops, 
+can call other functions and can even throw and catch exceptions. Member
+ functions and lambdas can also be coroutines (constructors and 
+destructors cannot and you don’t want them to be anyway).</p>
+
+
+
+<h2>How does it work on low level?</h2>
+
+
+
+<p>Internally, the coroutine is class. Its automatic variables that 
+persist when it’s suspended are the member variables of the class. It is
+ capable of saving the position of its instruction counter when 
+suspended and to return to that position when resumed.</p>
+
+
+
+<p>The coroutine object is saved on heap, but the compiler does not have
+ to do so. If a normal function is called from a coroutine, then its 
+automatic variables are saved on the stack, just after the code that 
+called the coroutine.</p>
+
+
+
+<h2>An example of avoiding a nasty state machine with a nice coroutine</h2>
+
+
+
+<p>During my studies of physics, I used a device that slowly, linearly, 
+heated a sample to a certain temperature, kept it there for some time 
+and then cooled it down linearly. This could be done either to study the
+ gases produced by chemical reactions in the sample in order to 
+investigate its chemistry or to anneal the sample in an exact and 
+repeatable way for further analysis.</p>
+
+
+
+<p>Later, I had to implement a controller of such a heating process 
+myself. The process was somewhat more complex and the state machine that
+ did the work was a huge nasty tangle of a function with lots of 
+repetitive code, even if I did my best to keep up with best practices. 
+It took me days to debug.</p>
+
+
+
+<p>I realised how well can a coroutine shorten the code. Just to try it 
+out, I wrote the main part of the algorithm with coroutines and I was 
+able to write it, debug it and adjust its parameters in less than an 
+hour. The process controls the movement of the temperature over a curve 
+that increases linearly, stays at the maximum temperature and then 
+linearly decreases, using a pattern known as <a href="https://en.wikipedia.org/wiki/PID_controller#PI_controller"><em>PI controller</em></a> (it’s a simplified version of the more known <a href="https://en.wikipedia.org/wiki/PID_controller"><em>PID controller</em></a>).
+ The control part that calculates the power that needs to be fed into 
+the heating is repeated a lot and also not very important, so I put it 
+in a lambda:</p>
+
+
+
+<div class="enlighter-default enlighter-v-standard enlighter-t-enlighter enlighter-hover enlighter-linenumbers "><div class="enlighter-toolbar-top enlighter-toolbar"><div class="enlighter-btn enlighter-btn-raw" title="Toggle RAW code"></div><div class="enlighter-btn enlighter-btn-copy" title="Copy to clipboard"></div><div class="enlighter-btn enlighter-btn-window" title="Open code in new window"></div><div class="enlighter-btn enlighter-btn-website" title="EnlighterJS 3 Syntax Highlighter"></div></div><div class="enlighter" style=""><div class=""><div><span class="enlighter-k0">auto</span><span class="enlighter-text"> fullStep = </span><span class="enlighter-g1">[</span><span class="enlighter-text">&amp;</span><span class="enlighter-g1">]</span><span class="enlighter-text"> </span><span class="enlighter-g1">(</span><span class="enlighter-k5">int</span><span class="enlighter-text"> time</span><span class="enlighter-g1">)</span><span class="enlighter-text"> </span><span class="enlighter-g1">{</span><span class="enlighter-text"></span></div></div><div class=""><div><span class="enlighter-text">    integral += </span><span class="enlighter-g1">(</span><span class="enlighter-text">wanted - *currentTemperature</span><span class="enlighter-g1">)</span><span class="enlighter-text"> * time / </span><span class="enlighter-n0">1000.0</span><span class="enlighter-text">;</span></div></div><div class=""><div><span class="enlighter-text">    </span><span class="enlighter-k1">if</span><span class="enlighter-text"> </span><span class="enlighter-g1">(</span><span class="enlighter-m0">fabsf</span><span class="enlighter-g1">(</span><span class="enlighter-text">*currentTemperature - wanted</span><span class="enlighter-g1">)</span><span class="enlighter-text"> </span><span class="enlighter-g1">&gt;</span><span class="enlighter-text"> maxDeviation</span><span class="enlighter-g1">)</span><span class="enlighter-text"></span></div></div><div class=""><div><span class="enlighter-text">        </span><span class="enlighter-k1">throw</span><span class="enlighter-text"> std::</span><span class="enlighter-m0">runtime_error</span><span class="enlighter-g1">(</span><span class="enlighter-s0">"Temperature is out of control"</span><span class="enlighter-g1">)</span><span class="enlighter-text">;</span></div></div><div class=""><div><span class="enlighter-text">    </span><span class="enlighter-k0">return</span><span class="enlighter-text"> </span><span class="enlighter-g1">(</span><span class="enlighter-text">targetTemperature - *currentTemperature</span><span class="enlighter-g1">)</span><span class="enlighter-text"> * coeffP</span></div></div><div class=""><div><span class="enlighter-text">            + integral * coeffI;</span></div></div><div class=""><div><span class="enlighter-text"></span><span class="enlighter-g1">}</span><span class="enlighter-text">;</span></div></div></div><div class="enlighter-raw">auto fullStep = [&amp;] (int time) {
+    integral += (wanted - *currentTemperature) * time / 1000.0;
+    if (fabsf(*currentTemperature - wanted) &gt; maxDeviation)
+        throw std::runtime_error("Temperature is out of control");
+    return (targetTemperature - *currentTemperature) * coeffP
+            + integral * coeffI;
+};</div><div class="enlighter-toolbar-bottom enlighter-toolbar"></div></div><pre class="EnlighterJSRAW enlighter-origin" data-enlighter-language="cpp" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">auto fullStep = [&amp;] (int time) {
+	integral += (wanted - *currentTemperature) * time / 1000.0;
+	if (fabsf(*currentTemperature - wanted) &gt; maxDeviation)
+		throw std::runtime_error("Temperature is out of control");
+	return (targetTemperature - *currentTemperature) * coeffP
+			+ integral * coeffI;
+};</pre>
+
+
+
+<p>If you don’t understand it, it doesn’t really matter. This is the 
+code that goes over the curve. After calculating the power, it returns 
+it and suspends, to be resumed when the value needs to be updated.</p>
+
+
+
+<div class="enlighter-default enlighter-v-standard enlighter-t-enlighter enlighter-hover enlighter-linenumbers "><div class="enlighter-toolbar-top enlighter-toolbar"><div class="enlighter-btn enlighter-btn-raw" title="Toggle RAW code"></div><div class="enlighter-btn enlighter-btn-copy" title="Copy to clipboard"></div><div class="enlighter-btn enlighter-btn-window" title="Open code in new window"></div><div class="enlighter-btn enlighter-btn-website" title="EnlighterJS 3 Syntax Highlighter"></div></div><div class="enlighter" style=""><div class=""><div><span class="enlighter-k1">try</span><span class="enlighter-text"> </span><span class="enlighter-g1">{</span><span class="enlighter-text"></span></div></div><div class=""><div><span class="enlighter-text">   </span><span class="enlighter-c0"> // Heat up</span><span class="enlighter-text"></span></div></div><div class=""><div><span class="enlighter-text">    std::cout </span><span class="enlighter-g1">&lt;&lt;</span><span class="enlighter-text"> </span><span class="enlighter-s0">"Heating"</span><span class="enlighter-text"> </span><span class="enlighter-g1">&lt;&lt;</span><span class="enlighter-text"> std::endl;</span></div></div><div class=""><div><span class="enlighter-text">    </span><span class="enlighter-k1">while</span><span class="enlighter-text"> </span><span class="enlighter-g1">(</span><span class="enlighter-text">wanted </span><span class="enlighter-g1">&lt;</span><span class="enlighter-text"> targetTemperature</span><span class="enlighter-g1">)</span><span class="enlighter-text"> </span><span class="enlighter-g1">{</span><span class="enlighter-text"></span></div></div><div class=""><div><span class="enlighter-text">        </span><span class="enlighter-k0">auto</span><span class="enlighter-text"> time = </span><span class="enlighter-m0">tickTime</span><span class="enlighter-g1">()</span><span class="enlighter-text">;</span></div></div><div class=""><div><span class="enlighter-text">        wanted += upRamp / </span><span class="enlighter-n0">1000.0</span><span class="enlighter-text"> * time;</span></div></div><div class=""><div><span class="enlighter-text">        co_yield </span><span class="enlighter-m0">fullStep</span><span class="enlighter-g1">(</span><span class="enlighter-text">time</span><span class="enlighter-g1">)</span><span class="enlighter-text">;</span></div></div><div class=""><div><span class="enlighter-text">    </span><span class="enlighter-g1">}</span><span class="enlighter-text"></span></div></div><div class=""><div><span class="enlighter-text">   </span><span class="enlighter-c0"> // Keep it at max temperature</span><span class="enlighter-text"></span></div></div><div class=""><div><span class="enlighter-text">    std::cout </span><span class="enlighter-g1">&lt;&lt;</span><span class="enlighter-text"> </span><span class="enlighter-s0">"Hot"</span><span class="enlighter-text"> </span><span class="enlighter-g1">&lt;&lt;</span><span class="enlighter-text"> std::endl;</span></div></div><div class=""><div><span class="enlighter-text">    </span><span class="enlighter-k0">auto</span><span class="enlighter-text"> stayStarted = std::chrono::steady_clock::</span><span class="enlighter-m0">now</span><span class="enlighter-g1">()</span><span class="enlighter-text">;</span></div></div><div class=""><div><span class="enlighter-text">    </span><span class="enlighter-k1">while</span><span class="enlighter-text"> </span><span class="enlighter-g1">(</span><span class="enlighter-text">std::chrono::steady_clock::</span><span class="enlighter-m0">now</span><span class="enlighter-g1">()</span><span class="enlighter-text"> - stayStarted</span></div></div><div class=""><div><span class="enlighter-text">            </span><span class="enlighter-g1">&lt;</span><span class="enlighter-text"> std::chrono::</span><span class="enlighter-m0">seconds</span><span class="enlighter-g1">(</span><span class="enlighter-text">stay</span><span class="enlighter-g1">))</span><span class="enlighter-text"> </span><span class="enlighter-g1">{</span><span class="enlighter-text"></span></div></div><div class=""><div><span class="enlighter-text">        co_yield </span><span class="enlighter-m0">fullStep</span><span class="enlighter-g1">(</span><span class="enlighter-m0">tickTime</span><span class="enlighter-g1">())</span><span class="enlighter-text">;</span></div></div><div class=""><div><span class="enlighter-text">    </span><span class="enlighter-g1">}</span><span class="enlighter-text"></span></div></div><div class=""><div><span class="enlighter-text"></span><span class="enlighter-g1">}</span><span class="enlighter-text"> </span><span class="enlighter-k1">catch</span><span class="enlighter-text"> </span><span class="enlighter-g1">(</span><span class="enlighter-text">std::exception&amp; e</span><span class="enlighter-g1">)</span><span class="enlighter-text"> </span><span class="enlighter-g1">{</span><span class="enlighter-text"></span></div></div><div class=""><div><span class="enlighter-text">    std::cerr </span><span class="enlighter-g1">&lt;&lt;</span><span class="enlighter-text"> e.</span><span class="enlighter-m3">what</span><span class="enlighter-g1">()</span><span class="enlighter-text"> </span><span class="enlighter-g1">&lt;&lt;</span><span class="enlighter-text"> std::endl;    </span></div></div><div class=""><div><span class="enlighter-text"></span><span class="enlighter-g1">}</span><span class="enlighter-c0"></span></div></div><div class=""><div><span class="enlighter-c0">// Cool down, when done or if there is a problem</span><span class="enlighter-text"></span></div></div><div class=""><div><span class="enlighter-text">maxDeviation *= 2;</span><span class="enlighter-c0"> // Increase error tolerance</span><span class="enlighter-text"></span></div></div><div class=""><div><span class="enlighter-text">std::cout </span><span class="enlighter-g1">&lt;&lt;</span><span class="enlighter-text"> </span><span class="enlighter-s0">"Cooling"</span><span class="enlighter-text"> </span><span class="enlighter-g1">&lt;&lt;</span><span class="enlighter-text"> std::endl;</span></div></div><div class=""><div><span class="enlighter-text"></span><span class="enlighter-k1">try</span><span class="enlighter-text"> </span><span class="enlighter-g1">{</span><span class="enlighter-text"></span></div></div><div class=""><div><span class="enlighter-text">    </span><span class="enlighter-k1">while</span><span class="enlighter-text"> </span><span class="enlighter-g1">(</span><span class="enlighter-text">wanted </span><span class="enlighter-g1">&gt;</span><span class="enlighter-text"> roomTemperature</span><span class="enlighter-g1">)</span><span class="enlighter-text"> </span><span class="enlighter-g1">{</span><span class="enlighter-text"></span></div></div><div class=""><div><span class="enlighter-text">        </span><span class="enlighter-k0">auto</span><span class="enlighter-text"> time = </span><span class="enlighter-m0">tickTime</span><span class="enlighter-g1">()</span><span class="enlighter-text">;</span></div></div><div class=""><div><span class="enlighter-text">        wanted -= downRamp / </span><span class="enlighter-n0">1000.0</span><span class="enlighter-text"> * time;</span></div></div><div class=""><div><span class="enlighter-text">        co_yield </span><span class="enlighter-m0">fullStep</span><span class="enlighter-g1">(</span><span class="enlighter-text">time</span><span class="enlighter-g1">)</span><span class="enlighter-text">;</span></div></div><div class=""><div><span class="enlighter-text">    </span><span class="enlighter-g1">}</span><span class="enlighter-text"></span></div></div><div class=""><div><span class="enlighter-text"></span><span class="enlighter-g1">}</span><span class="enlighter-text"> </span><span class="enlighter-k1">catch</span><span class="enlighter-text"> </span><span class="enlighter-g1">(</span><span class="enlighter-text">std::exception&amp; e</span><span class="enlighter-g1">)</span><span class="enlighter-text"> </span><span class="enlighter-g1">{</span><span class="enlighter-text"></span></div></div><div class=""><div><span class="enlighter-text">    std::cerr </span><span class="enlighter-g1">&lt;&lt;</span><span class="enlighter-text"> </span><span class="enlighter-s0">"Cooling broken: "</span><span class="enlighter-text"> </span><span class="enlighter-g1">&lt;&lt;</span><span class="enlighter-text"> e.</span><span class="enlighter-m3">what</span><span class="enlighter-g1">()</span><span class="enlighter-text"> </span><span class="enlighter-g1">&lt;&lt;</span><span class="enlighter-text"> </span><span class="enlighter-s0">", aborting"</span><span class="enlighter-text"> </span><span class="enlighter-g1">&lt;&lt;</span><span class="enlighter-text"> std::endl;    </span></div></div><div class=""><div><span class="enlighter-text"></span><span class="enlighter-g1">}</span><span class="enlighter-c0"> // Just showcasing exceptions, I have doubts if it is really suitable here</span></div></div></div><div class="enlighter-raw">try {
+    // Heat up
+    std::cout &lt;&lt; "Heating" &lt;&lt; std::endl;
+    while (wanted &lt; targetTemperature) {
+        auto time = tickTime();
+        wanted += upRamp / 1000.0 * time;
+        co_yield fullStep(time);
+    }
+    // Keep it at max temperature
+    std::cout &lt;&lt; "Hot" &lt;&lt; std::endl;
+    auto stayStarted = std::chrono::steady_clock::now();
+    while (std::chrono::steady_clock::now() - stayStarted
+            &lt; std::chrono::seconds(stay)) {
+        co_yield fullStep(tickTime());
+    }
+} catch (std::exception&amp; e) {
+    std::cerr &lt;&lt; e.what() &lt;&lt; std::endl;    
+}
+// Cool down, when done or if there is a problem
+maxDeviation *= 2; // Increase error tolerance
+std::cout &lt;&lt; "Cooling" &lt;&lt; std::endl;
+try {
+    while (wanted &gt; roomTemperature) {
+        auto time = tickTime();
+        wanted -= downRamp / 1000.0 * time;
+        co_yield fullStep(time);
+    }
+} catch (std::exception&amp; e) {
+    std::cerr &lt;&lt; "Cooling broken: " &lt;&lt; e.what() &lt;&lt; ", aborting" &lt;&lt; std::endl;    
+} // Just showcasing exceptions, I have doubts if it is really suitable here</div><div class="enlighter-toolbar-bottom enlighter-toolbar"></div></div><pre class="EnlighterJSRAW enlighter-origin" data-enlighter-language="cpp" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">try {
+	// Heat up
+	std::cout &lt;&lt; "Heating" &lt;&lt; std::endl;
+	while (wanted &lt; targetTemperature) {
+		auto time = tickTime();
+		wanted += upRamp / 1000.0 * time;
+		co_yield fullStep(time);
+	}
+	// Keep it at max temperature
+	std::cout &lt;&lt; "Hot" &lt;&lt; std::endl;
+	auto stayStarted = std::chrono::steady_clock::now();
+	while (std::chrono::steady_clock::now() - stayStarted
+			&lt; std::chrono::seconds(stay)) {
+		co_yield fullStep(tickTime());
+	}
+} catch (std::exception&amp; e) {
+	std::cerr &lt;&lt; e.what() &lt;&lt; std::endl;	
+}
+// Cool down, when done or if there is a problem
+maxDeviation *= 2; // Increase error tolerance
+std::cout &lt;&lt; "Cooling" &lt;&lt; std::endl;
+try {
+	while (wanted &gt; roomTemperature) {
+		auto time = tickTime();
+		wanted -= downRamp / 1000.0 * time;
+		co_yield fullStep(time);
+	}
+} catch (std::exception&amp; e) {
+	std::cerr &lt;&lt; "Cooling broken: " &lt;&lt; e.what() &lt;&lt; ", aborting" &lt;&lt; std::endl;	
+} // Just showcasing exceptions, I have doubts if it is really suitable here</pre>
+
+
+
+<p>In the case if the progress wasn’t linear, it would be easily 
+solvable with cycles. State transitions tend to be some kind of 
+invisible <code>goto</code>, so it’s good to replace them with something else.</p>
+
+
+
+<p>Meanwhile, communication with the physical device was simulated by a lambda, also a coroutine:</p>
+
+
+
+<div class="enlighter-default enlighter-v-standard enlighter-t-enlighter enlighter-hover enlighter-linenumbers "><div class="enlighter-toolbar-top enlighter-toolbar"><div class="enlighter-btn enlighter-btn-raw" title="Toggle RAW code"></div><div class="enlighter-btn enlighter-btn-copy" title="Copy to clipboard"></div><div class="enlighter-btn enlighter-btn-window" title="Open code in new window"></div><div class="enlighter-btn enlighter-btn-website" title="EnlighterJS 3 Syntax Highlighter"></div></div><div class="enlighter" style=""><div class=""><div><span class="enlighter-k0">auto</span><span class="enlighter-text"> updateDevice = </span><span class="enlighter-g1">[</span><span class="enlighter-text">&amp;</span><span class="enlighter-g1">]</span><span class="enlighter-text"> </span><span class="enlighter-g1">()</span><span class="enlighter-text"> -</span><span class="enlighter-g1">&gt;</span><span class="enlighter-text"> Resumable</span><span class="enlighter-g1">&lt;</span><span class="enlighter-k5">float</span><span class="enlighter-g1">&gt;</span><span class="enlighter-text"> </span><span class="enlighter-g1">{</span><span class="enlighter-text"></span></div></div><div class=""><div><span class="enlighter-text">    </span><span class="enlighter-k2">struct</span><span class="enlighter-text"> Connection </span><span class="enlighter-g1">{</span><span class="enlighter-c0"> // Pretend we are communicating with something</span><span class="enlighter-text"></span></div></div><div class=""><div><span class="enlighter-text">        </span><span class="enlighter-m0">Connection</span><span class="enlighter-g1">()</span><span class="enlighter-text"> </span><span class="enlighter-g1">{</span><span class="enlighter-text"></span></div></div><div class=""><div><span class="enlighter-text">            std::cout </span><span class="enlighter-g1">&lt;&lt;</span><span class="enlighter-text"> </span><span class="enlighter-s0">"Initialising"</span><span class="enlighter-text"> </span><span class="enlighter-g1">&lt;&lt;</span><span class="enlighter-text"> std::endl;</span></div></div><div class=""><div><span class="enlighter-text">        </span><span class="enlighter-g1">}</span><span class="enlighter-text">;</span></div></div><div class=""><div><span class="enlighter-text">        ~</span><span class="enlighter-m0">Connection</span><span class="enlighter-g1">()</span><span class="enlighter-text"> </span><span class="enlighter-g1">{</span><span class="enlighter-text"></span></div></div><div class=""><div><span class="enlighter-text">            std::cout </span><span class="enlighter-g1">&lt;&lt;</span><span class="enlighter-text"> </span><span class="enlighter-s0">"Terminating"</span><span class="enlighter-text"> </span><span class="enlighter-g1">&lt;&lt;</span><span class="enlighter-text"> std::endl;</span></div></div><div class=""><div><span class="enlighter-text">        </span><span class="enlighter-g1">}</span><span class="enlighter-text">;</span></div></div><div class=""><div><span class="enlighter-text">    </span><span class="enlighter-g1">}</span><span class="enlighter-text">;</span></div></div><div class=""><div><span class="enlighter-text">    Connection conn;</span></div></div><div class=""><div><span class="enlighter-text">    </span></div></div><div class=""><div><span class="enlighter-text">    </span><span class="enlighter-k1">while</span><span class="enlighter-text"> </span><span class="enlighter-g1">(</span><span class="enlighter-e0">true</span><span class="enlighter-g1">)</span><span class="enlighter-text"></span></div></div><div class=""><div><span class="enlighter-text">        co_yield currentTemperature + power / 10</span></div></div><div class=""><div><span class="enlighter-text">                - </span><span class="enlighter-g1">(</span><span class="enlighter-text">currentTemperature - roomTemperature</span><span class="enlighter-g1">)</span><span class="enlighter-text"> / 10;</span></div></div><div class=""><div><span class="enlighter-text"></span><span class="enlighter-g1">}</span><span class="enlighter-text"> </span><span class="enlighter-g1">()</span><span class="enlighter-text">;</span><span class="enlighter-c0"> // Note: the lambda creates the coroutine instance when called</span></div></div></div><div class="enlighter-raw">auto updateDevice = [&amp;] () -&gt; Resumable&lt;float&gt; {
+    struct Connection { // Pretend we are communicating with something
+        Connection() {
+            std::cout &lt;&lt; "Initialising" &lt;&lt; std::endl;
+        };
+        ~Connection() {
+            std::cout &lt;&lt; "Terminating" &lt;&lt; std::endl;
+        };
+    };
+    Connection conn;
+    
+    while (true)
+        co_yield currentTemperature + power / 10
+                - (currentTemperature - roomTemperature) / 10;
+} (); // Note: the lambda creates the coroutine instance when called</div><div class="enlighter-toolbar-bottom enlighter-toolbar"></div></div><pre class="EnlighterJSRAW enlighter-origin" data-enlighter-language="cpp" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">auto updateDevice = [&amp;] () -&gt; Resumable&lt;float&gt; {
+	struct Connection { // Pretend we are communicating with something
+		Connection() {
+			std::cout &lt;&lt; "Initialising" &lt;&lt; std::endl;
+		};
+		~Connection() {
+			std::cout &lt;&lt; "Terminating" &lt;&lt; std::endl;
+		};
+	};
+	Connection conn;
+	
+	while (true)
+		co_yield currentTemperature + power / 10
+				- (currentTemperature - roomTemperature) / 10;
+} (); // Note: the lambda creates the coroutine instance when called</pre>
+
+
+
+<p>Then, every 100 milliseconds, the <code>updateDevice</code> coroutine was used to calculate the simulated temperature while taking the power fed to the heating in consideration.</p>
+
+
+
+<div class="enlighter-default enlighter-v-standard enlighter-t-enlighter enlighter-hover enlighter-linenumbers "><div class="enlighter-toolbar-top enlighter-toolbar"><div class="enlighter-btn enlighter-btn-raw" title="Toggle RAW code"></div><div class="enlighter-btn enlighter-btn-copy" title="Copy to clipboard"></div><div class="enlighter-btn enlighter-btn-window" title="Open code in new window"></div><div class="enlighter-btn enlighter-btn-website" title="EnlighterJS 3 Syntax Highlighter"></div></div><div class="enlighter" style=""><div class=""><div><span class="enlighter-k1">while</span><span class="enlighter-text"> </span><span class="enlighter-g1">(</span><span class="enlighter-text">controller</span><span class="enlighter-g1">)</span><span class="enlighter-text"> </span><span class="enlighter-g1">{</span><span class="enlighter-text"></span></div></div><div class=""><div><span class="enlighter-text">    currentTemperature = </span><span class="enlighter-m0">updateDevice</span><span class="enlighter-g1">()</span><span class="enlighter-text">;</span></div></div><div class=""><div><span class="enlighter-text">    power = </span><span class="enlighter-m0">controller</span><span class="enlighter-g1">()</span><span class="enlighter-text">;</span></div></div><div class=""><div><span class="enlighter-text">    std::cout </span><span class="enlighter-g1">&lt;&lt;</span><span class="enlighter-text"> </span><span class="enlighter-s0">"Temperature\t"</span><span class="enlighter-text"> </span><span class="enlighter-g1">&lt;&lt;</span><span class="enlighter-text"> currentTemperature </span><span class="enlighter-g1">&lt;&lt;</span><span class="enlighter-text"> std::endl;</span></div></div><div class=""><div><span class="enlighter-text">    std::this_thread::</span><span class="enlighter-m0">sleep_for</span><span class="enlighter-g1">(</span><span class="enlighter-text">std::chrono::</span><span class="enlighter-m0">milliseconds</span><span class="enlighter-g1">(</span><span class="enlighter-text">100</span><span class="enlighter-g1">))</span><span class="enlighter-text">;</span></div></div><div class=""><div><span class="enlighter-text"></span><span class="enlighter-g1">}</span></div></div></div><div class="enlighter-raw">while (controller) {
+    currentTemperature = updateDevice();
+    power = controller();
+    std::cout &lt;&lt; "Temperature\t" &lt;&lt; currentTemperature &lt;&lt; std::endl;
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+}</div><div class="enlighter-toolbar-bottom enlighter-toolbar"></div></div><pre class="EnlighterJSRAW enlighter-origin" data-enlighter-language="cpp" data-enlighter-theme="" data-enlighter-highlight="" data-enlighter-linenumbers="" data-enlighter-lineoffset="" data-enlighter-title="" data-enlighter-group="">while (controller) {
+	currentTemperature = updateDevice();
+	power = controller();
+	std::cout &lt;&lt; "Temperature\t" &lt;&lt; currentTemperature &lt;&lt; std::endl;
+	std::this_thread::sleep_for(std::chrono::milliseconds(100));
+}</pre>
+
+
+
+<p>The whole code can be found and tried out <a href="https://wandbox.org/permlink/9EygkdNmVKgJhmgm">here</a>.</p>
+
+
+
+<h2>Is that all?</h2>
+
+
+
+<p>No, absolutely not. While <code>co_yield</code> is extremely useful, it’s only a small introduction to the whole thing (actually, if you check the code of <code>Resumable</code>, you’ll see that even <code>co_yield</code> can be made to behave differently). With another keyword, <code>co_await</code>,
+ there are much more possibilities, for example suspendable functions 
+can wait for other suspendable functions to finish, allowing much 
+cleaner and error resilient code in networking, GUI, embedded systems or
+ games. This however requires much more code to get working and it’s 
+readily available in a <a href="https://www.boost.org/doc/libs/1_74_0/doc/html/boost_asio/overview/core/coroutines_ts.html">more recent version of Boost Asio</a>.</p>
+                <div class="wp-post-author-wrap wp-post-author-shortcode left">
+                    <h3 class="awpa-title"></h3>
+                                        
+        <div class="wp-post-author">
+
+            <div class="awpa-img awpa-author-block square">
+                <a href="https://lordsoftech.com/author/dugi/"><img alt="" src="C++20%20Resumable%20functions%20Goodbye%20state%20machines_files/59092d63ecb42f1f52308997cb7ca676" srcset="C++20%20Resumable%20functions%20Goodbye%20state%20machines_files/59092d63ecb42f1f52308997cb7ca676_002 2x" class="avatar avatar-150 photo" width="150" height="150"></a>
+            </div>
+            <div class="wp-post-author-meta awpa-author-block">
+                <h4 class="awpa-display-name">
+                    <a href="https://lordsoftech.com/author/dugi/">Dugi</a>
+                </h4>
+
+                
+                <div class="wp-post-author-meta-bio">
+                    <p>Jack of all trades, master of several. Nowadays a
+ C++ programmer with a PhD in physics and an avid metalhead. Efficient 
+at breaking Linux systems. Struggling with occasional impulses for 
+ultracrepidarianism.</p>
+                </div>
+                <div class="wp-post-author-meta-more-posts">
+                    <p class="awpa-more-posts">
+                        <a href="https://lordsoftech.com/author/dugi/" class="awpa-more-posts">See author's posts</a>
+                    </p>
+                </div>
+                                    <ul class="awpa-contact-info">
+                                                                        
+                                                                        
+            </ul>
+                            </div>
+        </div>
+
+                                            </div>
+                </div>
+
+	
+<footer class="entry-meta entry-meta-bottom">
+<span class="entry-meta-element tags-links">
+	<span class="entry-meta-description">
+		Tagged as:	</span>
+	<a href="https://lordsoftech.com/tag/c/" rel="tag">C++</a> <a href="https://lordsoftech.com/tag/c20/" rel="tag">C++20</a> <a href="https://lordsoftech.com/tag/coroutines/" rel="tag">coroutines</a></span>
+</footer>
+<a class="skip-link screen-reader-text focus-position-static" href="#site-navigation">Skip back to main navigation</a></div>
+</article>
+
+
+<div id="comments" class="comments-area">
+<div class="comments-area-inner">
+
+		<div id="respond" class="comment-respond">
+		<h3 id="reply-title" class="comment-reply-title">Leave a Reply <small><a rel="nofollow" id="cancel-comment-reply-link" href="https://lordsoftech.com/programming/c20-resumable-functions-goodbye-state-machines-no-one-will-mourn-you/#respond" style="display:none;">Cancel reply</a></small></h3><form action="https://lordsoftech.com/wp-comments-post.php" method="post" id="commentform" class="comment-form" novalidate=""><p class="comment-notes"><span id="email-notes">Your email address will not be published.</span> Required fields are marked <span class="required">*</span></p><p class="comment-form-comment"><label for="comment" class="screen-reader-text">Comment</label> <textarea autocomplete="new-password" id="comment" name="a21913708c" cols="45" rows="8" maxlength="65525" required="required" placeholder="Comment"></textarea><textarea id="a312885aa1122202cc2bb0764a1b4a16" aria-hidden="true" name="comment" autocomplete="new-password" style="padding:0 !important;clip:rect(1px, 1px, 1px, 1px) !important;position:absolute !important;white-space:nowrap !important;height:1px !important;width:1px !important;overflow:hidden !important;" tabindex="-1" placeholder=""></textarea><script data-noptimize="" type="text/javascript">document.getElementById("comment").setAttribute( "id", "a312885aa1122202cc2bb0764a1b4a16" );document.getElementById("a21913708c").setAttribute( "id", "comment" );</script></p><p class="comment-form-author"><label for="author" class="screen-reader-text">Name <span class="required">*</span></label> <input id="author" name="author" type="text" size="30" maxlength="245" required="required" placeholder="Name *"></p>
+<p class="comment-form-email"><label for="email" class="screen-reader-text">Email <span class="required">*</span></label> <input id="email" name="email" type="email" size="30" maxlength="100" aria-describedby="email-notes" required="required" placeholder="Email *"></p>
+<p class="comment-form-url"><label for="url" class="screen-reader-text">Website</label> <input id="url" name="url" type="url" size="30" maxlength="200" placeholder="Website"></p>
+<p class="comment-form-cookies-consent"><input id="wp-comment-cookies-consent" name="wp-comment-cookies-consent" type="checkbox" value="yes"> <label for="wp-comment-cookies-consent">Save my name, email, and website in this browser for the next time I comment.</label></p>
+<div class="anr_captcha_field"><div id="anr_captcha_field_1" class="anr_captcha_field_div"></div></div><p class="form-submit"><input name="submit" type="submit" id="submit" class="submit" value="Post Comment"> <input type="hidden" name="comment_post_ID" value="1340" id="comment_post_ID">
+<input type="hidden" name="comment_parent" id="comment_parent" value="0">
+</p></form>	</div><!-- #respond -->
+	
+</div>
+</div><!-- #comments -->
+
+
+	<nav class="navigation post-navigation" aria-label="Post navigation">
+		<h2 class="screen-reader-text">Post navigation</h2>
+		<div class="nav-links"><div class="nav-previous"><a href="https://lordsoftech.com/programming/error-codes-are-far-slower-than-exceptions/" rel="prev"><span class="label">Previous Post</span> <span class="title">Error codes are far slower than exceptions</span></a></div><div class="nav-next"><a href="https://lordsoftech.com/programming/adding-elements-to-arrays-and-changing-variables-during-compilation-imperative-meta-metaprogramming-in-c/" rel="next"><span class="label">Next Post</span> <span class="title">Adding elements to arrays and changing variables during compilation – imperative meta-metaprogramming in C++</span></a></div></div>
+	</nav><style id="post-navigation-css" type="text/css">.post-navigation .nav-previous a { background-image: url("https://lordsoftech.com/wp-content/uploads/2020/11/Screenshot-from-2020-11-22-16-09-09.png"); }.post-navigation .nav-next a { background-image: url("https://lordsoftech.com/wp-content/uploads/2021/01/scary_code.png"); }</style>
+
+		</main><!-- /#main -->
+	</div><!-- /#primary -->
+</div><!-- /.site-content-inner -->
+</div><!-- /#content -->
+
+
+
+<footer id="colophon" class="site-footer">
+
+
+<div class="site-footer-area footer-area-site-info">
+	<div class="site-footer-area-inner site-info-inner">
+
+		
+		<div class="site-info">
+			
+				© 2021 <a href="https://lordsoftech.com/">Lords Of Tech</a>
+				<span class="sep"> | </span>
+				Using <a rel="nofollow" href="https://www.webmandesign.eu/portfolio/modern-wordpress-theme/"><strong>Modern</strong></a> <a rel="nofollow" href="https://wordpress.org/">WordPress</a> theme.				<span class="sep"> | </span>
+				<a href="#top" id="back-to-top" class="back-to-top">Back to top ↑</a>
+
+					</div>
+
+		
+<nav class="social-links" aria-label="Social Menu">
+
+	<ul data-id="menu-social-links-menu" class="social-links-items"><li data-id="menu-item-24" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-24"><a href="https://www.facebook.com/tylnesh"><span class="screen-reader-text">Facebook</span><!--{{icon}}--><svg class="svgicon social-icon-facebook" aria-hidden="true" role="img"> <use href="#social-icon-facebook" xlink:href="#social-icon-facebook"></use> </svg></a></li>
+<li data-id="menu-item-25" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-25"><a href="https://twitter.com/KohutekMichal"><span class="screen-reader-text">Twitter</span><!--{{icon}}--><svg class="svgicon social-icon-twitter" aria-hidden="true" role="img"> <use href="#social-icon-twitter" xlink:href="#social-icon-twitter"></use> </svg></a></li>
+<li data-id="menu-item-26" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-26"><a href="mailto:michal@kohutek.eu"><span class="screen-reader-text">Email</span><!--{{icon}}--><svg class="svgicon social-icon-envelope" aria-hidden="true" role="img"> <use href="#social-icon-envelope" xlink:href="#social-icon-envelope"></use> </svg></a></li>
+<li class="back-to-top-link"><a href="#page" class="back-to-top animated" title="Back to top"><span class="screen-reader-text">Back to top ↑</span></a></li></ul>
+</nav>
+
+	</div>
+</div>
+
+
+</footer>
+
+
+</div><!-- /#page -->
+
+<script type="text/javascript" src="C++20%20Resumable%20functions%20Goodbye%20state%20machines_files/enlighterjs.js"></script>
+<script type="text/javascript">
+!function(n,o){"undefined"!=typeof EnlighterJS?(n.EnlighterJSINIT=function(){EnlighterJS.init("pre.EnlighterJSRAW", "code.EnlighterJSRAW", {"indent":4,"ampersandCleanup":true,"linehover":true,"rawcodeDbclick":false,"textOverflow":"break","linenumbers":true,"theme":"enlighter","language":"enlighter","retainCssClasses":false,"collapse":false,"toolbarOuter":"","toolbarTop":"{BTN_RAW}{BTN_COPY}{BTN_WINDOW}{BTN_WEBSITE}","toolbarBottom":""})})():(o&&(o.error||o.log)||function(){})("Error: EnlighterJS resources not loaded yet!")}(window,console);
+</script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var $modernBreakpoints = {"s":"448","m":"672","l":"880","xl":"1280","xxl":"1600","xxxl":"1920","xxxxl":"2560"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="C++20%20Resumable%20functions%20Goodbye%20state%20machines_files/skip-link-focus-fix.js"></script>
+<script type="text/javascript" src="C++20%20Resumable%20functions%20Goodbye%20state%20machines_files/scripts-navigation-accessibility.js"></script>
+<script type="text/javascript" src="C++20%20Resumable%20functions%20Goodbye%20state%20machines_files/scripts-navigation-mobile.js"></script>
+<script type="text/javascript" src="C++20%20Resumable%20functions%20Goodbye%20state%20machines_files/jquery.js"></script>
+<script type="text/javascript" src="C++20%20Resumable%20functions%20Goodbye%20state%20machines_files/scripts-global.js"></script>
+<script type="text/javascript" src="C++20%20Resumable%20functions%20Goodbye%20state%20machines_files/wp-embed.js"></script>
+<script type="text/javascript" src="C++20%20Resumable%20functions%20Goodbye%20state%20machines_files/comment-reply.js"></script>
+
+		<!-- Cookie Notice plugin v1.3.2 by Digital Factory https://dfactory.eu/ -->
+		<div id="cookie-notice" role="banner" class="cookie-revoke-hidden cn-position-bottom cn-effect-fade cookie-notice-visible" aria-label="Cookie Notice" style="background-color: rgba(0,0,0,1);"><div class="cookie-notice-container" style="color: #fff;"><span id="cn-notice-text" class="cn-text-container">We
+ use cookies to ensure that we give you the best experience on our 
+website. If you continue to use this site we will assume that you are 
+happy with it.</span><span id="cn-notice-buttons" class="cn-buttons-container"><a href="#" id="cn-accept-cookie" data-cookie-set="accept" class="cn-set-cookie cn-button bootstrap button" aria-label="Ok">Ok</a></span><a href="javascript:void(0);" id="cn-close-notice" data-cookie-set="accept" class="cn-close-icon" aria-label="Ok"></a></div>
+			
+		</div>
+		<!-- / Cookie Notice plugin --><svg style="position: absolute; width: 0; height: 0; overflow: hidden;" version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink">
+	<defs>
+
+		<symbol id="social-icon-behance" viewBox="0 0 37 32">
+			<path d="M33 6.054h-9.125v2.214h9.125v-2.214zM28.5 13.661q-1.607 0-2.607 0.938t-1.107 2.545h7.286q-0.321-3.482-3.571-3.482zM28.786 24.107q1.125 0 2.179-0.571t1.357-1.554h3.946q-1.786 5.482-7.625 5.482-3.821 0-6.080-2.357t-2.259-6.196q0-3.714 2.33-6.17t6.009-2.455q2.464 0 4.295 1.214t2.732 3.196 0.902 4.429q0 0.304-0.036 0.839h-11.75q0 1.982 1.027 3.063t2.973 1.080zM4.946 23.214h5.286q3.661 0 3.661-2.982 0-3.214-3.554-3.214h-5.393v6.196zM4.946 13.625h5.018q1.393 0 2.205-0.652t0.813-2.027q0-2.571-3.393-2.571h-4.643v5.25zM0 4.536h10.607q1.554 0 2.768 0.25t2.259 0.848 1.607 1.723 0.563 2.75q0 3.232-3.071 4.696 2.036 0.571 3.071 2.054t1.036 3.643q0 1.339-0.438 2.438t-1.179 1.848-1.759 1.268-2.161 0.75-2.393 0.232h-10.911v-22.5z"></path>
+		</symbol>
+
+		<symbol id="social-icon-bitbucket" viewBox="0 0 22 28">
+			<path d="M12.734 13.422c0.172 1.312-1.422 2.344-2.531 1.672-1.25-0.547-1.25-2.531-0.031-3.094 1.047-0.641 2.562 0.203 2.562 1.422zM14.469 13.094c-0.281-2.219-2.797-3.687-4.844-2.766-1.297 0.578-2.172 1.953-2.109 3.406 0.078 1.906 1.891 3.469 3.797 3.297s3.391-2.031 3.156-3.938zM18.203 4.625c-0.688-0.906-1.859-1.062-2.891-1.234-2.922-0.469-5.922-0.484-8.844 0.031-0.969 0.156-2.063 0.328-2.672 1.203 1 0.938 2.422 1.078 3.703 1.234 2.312 0.297 4.688 0.313 7 0.016 1.297-0.156 2.734-0.281 3.703-1.25zM19.094 20.797c-0.438 1.531-0.187 3.594-1.813 4.484-2.797 1.547-6.188 1.719-9.266 1.172-1.625-0.297-3.531-0.812-4.422-2.344-0.391-1.5-0.641-3.031-0.891-4.562l0.094-0.25 0.281-0.141c4.656 3.078 11.172 3.078 15.844 0 0.734 0.219 0.187 1.109 0.172 1.641zM21.922 5.781c-0.531 3.422-1.141 6.828-1.734 10.234-0.172 1-1.141 1.563-1.953 1.984-2.922 1.469-6.328 1.719-9.531 1.375-2.172-0.234-4.391-0.812-6.156-2.172-0.828-0.641-0.828-1.734-0.984-2.656-0.547-3.203-1.172-6.406-1.563-9.641 0.187-1.406 1.766-2.016 2.938-2.453 1.563-0.578 3.234-0.844 4.891-1 3.531-0.344 7.141-0.219 10.563 0.781 1.219 0.359 2.531 0.859 3.359 1.906 0.375 0.484 0.25 1.094 0.172 1.641z"></path>
+		</symbol>
+
+		<symbol id="social-icon-chain" viewBox="0 0 30 32">
+			<path d="M26 21.714q0-0.714-0.5-1.214l-3.714-3.714q-0.5-0.5-1.214-0.5-0.75 0-1.286 0.571 0.054 0.054 0.339 0.33t0.384 0.384 0.268 0.339 0.232 0.455 0.063 0.491q0 0.714-0.5 1.214t-1.214 0.5q-0.268 0-0.491-0.063t-0.455-0.232-0.339-0.268-0.384-0.384-0.33-0.339q-0.589 0.554-0.589 1.304 0 0.714 0.5 1.214l3.679 3.696q0.482 0.482 1.214 0.482 0.714 0 1.214-0.464l2.625-2.607q0.5-0.5 0.5-1.196zM13.446 9.125q0-0.714-0.5-1.214l-3.679-3.696q-0.5-0.5-1.214-0.5-0.696 0-1.214 0.482l-2.625 2.607q-0.5 0.5-0.5 1.196 0 0.714 0.5 1.214l3.714 3.714q0.482 0.482 1.214 0.482 0.75 0 1.286-0.554-0.054-0.054-0.339-0.33t-0.384-0.384-0.268-0.339-0.232-0.455-0.063-0.491q0-0.714 0.5-1.214t1.214-0.5q0.268 0 0.491 0.063t0.455 0.232 0.339 0.268 0.384 0.384 0.33 0.339q0.589-0.554 0.589-1.304zM29.429 21.714q0 2.143-1.518 3.625l-2.625 2.607q-1.482 1.482-3.625 1.482-2.161 0-3.643-1.518l-3.679-3.696q-1.482-1.482-1.482-3.625 0-2.196 1.571-3.732l-1.571-1.571q-1.536 1.571-3.714 1.571-2.143 0-3.643-1.5l-3.714-3.714q-1.5-1.5-1.5-3.643t1.518-3.625l2.625-2.607q1.482-1.482 3.625-1.482 2.161 0 3.643 1.518l3.679 3.696q1.482 1.482 1.482 3.625 0 2.196-1.571 3.732l1.571 1.571q1.536-1.571 3.714-1.571 2.143 0 3.643 1.5l3.714 3.714q1.5 1.5 1.5 3.643z"></path>
+		</symbol>
+
+		<symbol id="social-icon-codepen" viewBox="0 0 32 32">
+			<path d="M3.857 20.875l10.768 7.179v-6.411l-5.964-3.982zM2.75 18.304l3.446-2.304-3.446-2.304v4.607zM17.375 28.054l10.768-7.179-4.804-3.214-5.964 3.982v6.411zM16 19.25l4.857-3.25-4.857-3.25-4.857 3.25zM8.661 14.339l5.964-3.982v-6.411l-10.768 7.179zM25.804 16l3.446 2.304v-4.607zM23.339 14.339l4.804-3.214-10.768-7.179v6.411zM32 11.125v9.75q0 0.732-0.607 1.143l-14.625 9.75q-0.375 0.232-0.768 0.232t-0.768-0.232l-14.625-9.75q-0.607-0.411-0.607-1.143v-9.75q0-0.732 0.607-1.143l14.625-9.75q0.375-0.232 0.768-0.232t0.768 0.232l14.625 9.75q0.607 0.411 0.607 1.143z"></path>
+		</symbol>
+
+		<symbol id="social-icon-deviantart" viewBox="0 0 18 32">
+			<path d="M18.286 5.411l-5.411 10.393 0.429 0.554h4.982v7.411h-9.054l-0.786 0.536-2.536 4.875-0.536 0.536h-5.375v-5.411l5.411-10.411-0.429-0.536h-4.982v-7.411h9.054l0.786-0.536 2.536-4.875 0.536-0.536h5.375v5.411z"></path>
+		</symbol>
+
+		<symbol id="social-icon-digg" viewBox="0 0 37 32">
+			<path d="M5.857 5.036h3.643v17.554h-9.5v-12.446h5.857v-5.107zM5.857 19.661v-6.589h-2.196v6.589h2.196zM10.964 10.143v12.446h3.661v-12.446h-3.661zM10.964 5.036v3.643h3.661v-3.643h-3.661zM16.089 10.143h9.518v16.821h-9.518v-2.911h5.857v-1.464h-5.857v-12.446zM21.946 19.661v-6.589h-2.196v6.589h2.196zM27.071 10.143h9.5v16.821h-9.5v-2.911h5.839v-1.464h-5.839v-12.446zM32.911 19.661v-6.589h-2.196v6.589h2.196z"></path>
+		</symbol>
+
+		<symbol id="social-icon-dockerhub" viewBox="0 0 24 28">
+			<path d="M1.597 10.257h2.911v2.83H1.597v-2.83zm3.573 0h2.91v2.83H5.17v-2.83zm0-3.627h2.91v2.829H5.17V6.63zm3.57 3.627h2.912v2.83H8.74v-2.83zm0-3.627h2.912v2.829H8.74V6.63zm3.573 3.627h2.911v2.83h-2.911v-2.83zm0-3.627h2.911v2.829h-2.911V6.63zm3.572 3.627h2.911v2.83h-2.911v-2.83zM12.313 3h2.911v2.83h-2.911V3zm-6.65 14.173c-.449 0-.812.354-.812.788 0 .435.364.788.812.788.447 0 .811-.353.811-.788 0-.434-.363-.788-.811-.788"></path>
+			<path d="M28.172 11.721c-.978-.549-2.278-.624-3.388-.306-.136-1.146-.91-2.149-1.83-2.869l-.366-.286-.307.345c-.618.692-.8 1.845-.718 2.73.063.651.273 1.312.685 1.834-.313.183-.668.328-.985.434-.646.212-1.347.33-2.028.33H.083l-.042.429c-.137 1.432.065 2.866.674 4.173l.262.519.03.048c1.8 2.973 4.963 4.225 8.41 4.225 6.672 0 12.174-2.896 14.702-9.015 1.689.085 3.417-.4 4.243-1.968l.211-.4-.401-.223zM5.664 19.458c-.85 0-1.542-.671-1.542-1.497 0-.825.691-1.498 1.541-1.498.849 0 1.54.672 1.54 1.497s-.69 1.498-1.539 1.498z"></path>
+		</symbol>
+
+		<symbol id="social-icon-dribbble" viewBox="0 0 27 32">
+			<path d="M18.286 26.786q-0.75-4.304-2.5-8.893h-0.036l-0.036 0.018q-0.286 0.107-0.768 0.295t-1.804 0.875-2.446 1.464-2.339 2.045-1.839 2.643l-0.268-0.196q3.286 2.679 7.464 2.679 2.357 0 4.571-0.929zM14.982 15.946q-0.375-0.875-0.946-1.982-5.554 1.661-12.018 1.661-0.018 0.125-0.018 0.375 0 2.214 0.786 4.223t2.214 3.598q0.893-1.589 2.205-2.973t2.545-2.223 2.33-1.446 1.777-0.857l0.661-0.232q0.071-0.018 0.232-0.063t0.232-0.080zM13.071 12.161q-2.143-3.804-4.357-6.75-2.464 1.161-4.179 3.321t-2.286 4.857q5.393 0 10.821-1.429zM25.286 17.857q-3.75-1.071-7.304-0.518 1.554 4.268 2.286 8.375 1.982-1.339 3.304-3.384t1.714-4.473zM10.911 4.625q-0.018 0-0.036 0.018 0.018-0.018 0.036-0.018zM21.446 7.214q-3.304-2.929-7.732-2.929-1.357 0-2.768 0.339 2.339 3.036 4.393 6.821 1.232-0.464 2.321-1.080t1.723-1.098 1.17-1.018 0.67-0.723zM25.429 15.875q-0.054-4.143-2.661-7.321l-0.018 0.018q-0.161 0.214-0.339 0.438t-0.777 0.795-1.268 1.080-1.786 1.161-2.348 1.152q0.446 0.946 0.786 1.696 0.036 0.107 0.116 0.313t0.134 0.295q0.643-0.089 1.33-0.125t1.313-0.036 1.232 0.027 1.143 0.071 1.009 0.098 0.857 0.116 0.652 0.107 0.446 0.080zM27.429 16q0 3.732-1.839 6.884t-4.991 4.991-6.884 1.839-6.884-1.839-4.991-4.991-1.839-6.884 1.839-6.884 4.991-4.991 6.884-1.839 6.884 1.839 4.991 4.991 1.839 6.884z"></path>
+		</symbol>
+
+		<symbol id="social-icon-dropbox" viewBox="0 0 32 32">
+			<path d="M7.179 12.625l8.821 5.446-6.107 5.089-8.75-5.696zM24.786 22.536v1.929l-8.75 5.232v0.018l-0.018-0.018-0.018 0.018v-0.018l-8.732-5.232v-1.929l2.625 1.714 6.107-5.071v-0.036l0.018 0.018 0.018-0.018v0.036l6.125 5.071zM9.893 2.107l6.107 5.089-8.821 5.429-6.036-4.821zM24.821 12.625l6.036 4.839-8.732 5.696-6.125-5.089zM22.125 2.107l8.732 5.696-6.036 4.821-8.821-5.429z"></path>
+		</symbol>
+
+		<symbol id="social-icon-envelope" viewBox="0 0 32 32">
+			<path d="M29.714 26.857v-13.714q-0.571 0.643-1.232 1.179-4.786 3.679-7.607 6.036-0.911 0.768-1.482 1.196t-1.545 0.866-1.83 0.438h-0.036q-0.857 0-1.83-0.438t-1.545-0.866-1.482-1.196q-2.821-2.357-7.607-6.036-0.661-0.536-1.232-1.179v13.714q0 0.232 0.17 0.402t0.402 0.17h26.286q0.232 0 0.402-0.17t0.17-0.402zM29.714 8.089v-0.438t-0.009-0.232-0.054-0.223-0.098-0.161-0.161-0.134-0.25-0.045h-26.286q-0.232 0-0.402 0.17t-0.17 0.402q0 3 2.625 5.071 3.446 2.714 7.161 5.661 0.107 0.089 0.625 0.527t0.821 0.67 0.795 0.563 0.902 0.491 0.768 0.161h0.036q0.357 0 0.768-0.161t0.902-0.491 0.795-0.563 0.821-0.67 0.625-0.527q3.714-2.946 7.161-5.661 0.964-0.768 1.795-2.063t0.83-2.348zM32 7.429v19.429q0 1.179-0.839 2.018t-2.018 0.839h-26.286q-1.179 0-2.018-0.839t-0.839-2.018v-19.429q0-1.179 0.839-2.018t2.018-0.839h26.286q1.179 0 2.018 0.839t0.839 2.018z"></path>
+		</symbol>
+
+		<symbol id="social-icon-facebook" viewBox="0 0 19 32">
+			<path d="M17.125 0.214v4.714h-2.804q-1.536 0-2.071 0.643t-0.536 1.929v3.375h5.232l-0.696 5.286h-4.536v13.554h-5.464v-13.554h-4.554v-5.286h4.554v-3.893q0-3.321 1.857-5.152t4.946-1.83q2.625 0 4.071 0.214z"></path>
+		</symbol>
+
+		<symbol id="social-icon-flickr" viewBox="0 0 27 32">
+			<path d="M22.286 2.286q2.125 0 3.634 1.509t1.509 3.634v17.143q0 2.125-1.509 3.634t-3.634 1.509h-17.143q-2.125 0-3.634-1.509t-1.509-3.634v-17.143q0-2.125 1.509-3.634t3.634-1.509h17.143zM12.464 16q0-1.571-1.107-2.679t-2.679-1.107-2.679 1.107-1.107 2.679 1.107 2.679 2.679 1.107 2.679-1.107 1.107-2.679zM22.536 16q0-1.571-1.107-2.679t-2.679-1.107-2.679 1.107-1.107 2.679 1.107 2.679 2.679 1.107 2.679-1.107 1.107-2.679z"></path>
+		</symbol>
+
+		<symbol id="social-icon-foursquare" viewBox="0 0 23 32">
+			<path d="M17.857 7.75l0.661-3.464q0.089-0.411-0.161-0.714t-0.625-0.304h-12.714q-0.411 0-0.688 0.304t-0.277 0.661v19.661q0 0.125 0.107 0.018l5.196-6.286q0.411-0.464 0.679-0.598t0.857-0.134h4.268q0.393 0 0.661-0.259t0.321-0.527q0.429-2.321 0.661-3.411 0.071-0.375-0.205-0.714t-0.652-0.339h-5.25q-0.518 0-0.857-0.339t-0.339-0.857v-0.75q0-0.518 0.339-0.848t0.857-0.33h6.179q0.321 0 0.625-0.241t0.357-0.527zM21.911 3.786q-0.268 1.304-0.955 4.759t-1.241 6.25-0.625 3.098q-0.107 0.393-0.161 0.58t-0.25 0.58-0.438 0.589-0.688 0.375-1.036 0.179h-4.839q-0.232 0-0.393 0.179-0.143 0.161-7.607 8.821-0.393 0.446-1.045 0.509t-0.866-0.098q-0.982-0.393-0.982-1.75v-25.179q0-0.982 0.679-1.83t2.143-0.848h15.857q1.696 0 2.268 0.946t0.179 2.839zM21.911 3.786l-2.821 14.107q0.071-0.304 0.625-3.098t1.241-6.25 0.955-4.759z"></path>
+		</symbol>
+
+		<symbol id="social-icon-get-pocket" viewBox="0 0 31 32">
+			<path d="M27.946 2.286q1.161 0 1.964 0.813t0.804 1.973v9.268q0 3.143-1.214 6t-3.259 4.911-4.893 3.259-5.973 1.205q-3.143 0-5.991-1.205t-4.902-3.259-3.268-4.911-1.214-6v-9.268q0-1.143 0.821-1.964t1.964-0.821h25.161zM15.375 21.286q0.839 0 1.464-0.589l7.214-6.929q0.661-0.625 0.661-1.518 0-0.875-0.616-1.491t-1.491-0.616q-0.839 0-1.464 0.589l-5.768 5.536-5.768-5.536q-0.625-0.589-1.446-0.589-0.875 0-1.491 0.616t-0.616 1.491q0 0.911 0.643 1.518l7.232 6.929q0.589 0.589 1.446 0.589z"></path>
+		</symbol>
+
+		<symbol id="social-icon-github" viewBox="0 0 27 32">
+			<path d="M13.714 2.286q3.732 0 6.884 1.839t4.991 4.991 1.839 6.884q0 4.482-2.616 8.063t-6.759 4.955q-0.482 0.089-0.714-0.125t-0.232-0.536q0-0.054 0.009-1.366t0.009-2.402q0-1.732-0.929-2.536 1.018-0.107 1.83-0.321t1.679-0.696 1.446-1.188 0.946-1.875 0.366-2.688q0-2.125-1.411-3.679 0.661-1.625-0.143-3.643-0.5-0.161-1.446 0.196t-1.643 0.786l-0.679 0.429q-1.661-0.464-3.429-0.464t-3.429 0.464q-0.286-0.196-0.759-0.482t-1.491-0.688-1.518-0.241q-0.804 2.018-0.143 3.643-1.411 1.554-1.411 3.679 0 1.518 0.366 2.679t0.938 1.875 1.438 1.196 1.679 0.696 1.83 0.321q-0.696 0.643-0.875 1.839-0.375 0.179-0.804 0.268t-1.018 0.089-1.17-0.384-0.991-1.116q-0.339-0.571-0.866-0.929t-0.884-0.429l-0.357-0.054q-0.375 0-0.518 0.080t-0.089 0.205 0.161 0.25 0.232 0.214l0.125 0.089q0.393 0.179 0.777 0.679t0.563 0.911l0.179 0.411q0.232 0.679 0.786 1.098t1.196 0.536 1.241 0.125 0.991-0.063l0.411-0.071q0 0.679 0.009 1.58t0.009 0.973q0 0.321-0.232 0.536t-0.714 0.125q-4.143-1.375-6.759-4.955t-2.616-8.063q0-3.732 1.839-6.884t4.991-4.991 6.884-1.839zM5.196 21.982q0.054-0.125-0.125-0.214-0.179-0.054-0.232 0.036-0.054 0.125 0.125 0.214 0.161 0.107 0.232-0.036zM5.75 22.589q0.125-0.089-0.036-0.286-0.179-0.161-0.286-0.054-0.125 0.089 0.036 0.286 0.179 0.179 0.286 0.054zM6.286 23.393q0.161-0.125 0-0.339-0.143-0.232-0.304-0.107-0.161 0.089 0 0.321t0.304 0.125zM7.036 24.143q0.143-0.143-0.071-0.339-0.214-0.214-0.357-0.054-0.161 0.143 0.071 0.339 0.214 0.214 0.357 0.054zM8.054 24.589q0.054-0.196-0.232-0.286-0.268-0.071-0.339 0.125t0.232 0.268q0.268 0.107 0.339-0.107zM9.179 24.679q0-0.232-0.304-0.196-0.286 0-0.286 0.196 0 0.232 0.304 0.196 0.286 0 0.286-0.196zM10.214 24.5q-0.036-0.196-0.321-0.161-0.286 0.054-0.25 0.268t0.321 0.143 0.25-0.25z"></path>
+		</symbol>
+
+		<symbol id="social-icon-google" viewBox="0 0 27 32">
+			<path d="M13.714 14.036h12.946c0.125 0.696 0.214 1.375 0.214 2.286 0 7.821-5.25 13.393-13.161 13.393-7.589 0-13.714-6.125-13.714-13.714s6.125-13.714 13.714-13.714c3.696 0 6.804 1.357 9.196 3.589l-3.732 3.589c-1.018-0.982-2.804-2.125-5.464-2.125-4.679 0-8.5 3.875-8.5 8.661s3.821 8.661 8.5 8.661c5.429 0 7.464-3.893 7.786-5.911h-7.786v-4.714z"></path>
+		</symbol>
+
+		<symbol id="social-icon-google-plus" viewBox="0 0 41 32">
+			<path d="M25.661 16.304q0 3.714-1.554 6.616t-4.429 4.536-6.589 1.634q-2.661 0-5.089-1.036t-4.179-2.786-2.786-4.179-1.036-5.089 1.036-5.089 2.786-4.179 4.179-2.786 5.089-1.036q5.107 0 8.768 3.429l-3.554 3.411q-2.089-2.018-5.214-2.018-2.196 0-4.063 1.107t-2.955 3.009-1.089 4.152 1.089 4.152 2.955 3.009 4.063 1.107q1.482 0 2.723-0.411t2.045-1.027 1.402-1.402 0.875-1.482 0.384-1.321h-7.429v-4.5h12.357q0.214 1.125 0.214 2.179zM41.143 14.125v3.75h-3.732v3.732h-3.75v-3.732h-3.732v-3.75h3.732v-3.732h3.75v3.732h3.732z"></path>
+		</symbol>
+
+		<symbol id="social-icon-instagram" viewBox="0 0 27 32">
+			<path d="M18.286 16q0-1.893-1.339-3.232t-3.232-1.339-3.232 1.339-1.339 3.232 1.339 3.232 3.232 1.339 3.232-1.339 1.339-3.232zM20.75 16q0 2.929-2.054 4.982t-4.982 2.054-4.982-2.054-2.054-4.982 2.054-4.982 4.982-2.054 4.982 2.054 2.054 4.982zM22.679 8.679q0 0.679-0.482 1.161t-1.161 0.482-1.161-0.482-0.482-1.161 0.482-1.161 1.161-0.482 1.161 0.482 0.482 1.161zM13.714 4.75q-0.125 0-1.366-0.009t-1.884 0-1.723 0.054-1.839 0.179-1.277 0.33q-0.893 0.357-1.571 1.036t-1.036 1.571q-0.196 0.518-0.33 1.277t-0.179 1.839-0.054 1.723 0 1.884 0.009 1.366-0.009 1.366 0 1.884 0.054 1.723 0.179 1.839 0.33 1.277q0.357 0.893 1.036 1.571t1.571 1.036q0.518 0.196 1.277 0.33t1.839 0.179 1.723 0.054 1.884 0 1.366-0.009 1.366 0.009 1.884 0 1.723-0.054 1.839-0.179 1.277-0.33q0.893-0.357 1.571-1.036t1.036-1.571q0.196-0.518 0.33-1.277t0.179-1.839 0.054-1.723 0-1.884-0.009-1.366 0.009-1.366 0-1.884-0.054-1.723-0.179-1.839-0.33-1.277q-0.357-0.893-1.036-1.571t-1.571-1.036q-0.518-0.196-1.277-0.33t-1.839-0.179-1.723-0.054-1.884 0-1.366 0.009zM27.429 16q0 4.089-0.089 5.661-0.179 3.714-2.214 5.75t-5.75 2.214q-1.571 0.089-5.661 0.089t-5.661-0.089q-3.714-0.179-5.75-2.214t-2.214-5.75q-0.089-1.571-0.089-5.661t0.089-5.661q0.179-3.714 2.214-5.75t5.75-2.214q1.571-0.089 5.661-0.089t5.661 0.089q3.714 0.179 5.75 2.214t2.214 5.75q0.089 1.571 0.089 5.661z"></path>
+		</symbol>
+
+		<symbol id="social-icon-linkedin" viewBox="0 0 27 32">
+			<path d="M6.232 11.161v17.696h-5.893v-17.696h5.893zM6.607 5.696q0.018 1.304-0.902 2.179t-2.42 0.875h-0.036q-1.464 0-2.357-0.875t-0.893-2.179q0-1.321 0.92-2.188t2.402-0.866 2.375 0.866 0.911 2.188zM27.429 18.714v10.143h-5.875v-9.464q0-1.875-0.723-2.938t-2.259-1.063q-1.125 0-1.884 0.616t-1.134 1.527q-0.196 0.536-0.196 1.446v9.875h-5.875q0.036-7.125 0.036-11.554t-0.018-5.286l-0.018-0.857h5.875v2.571h-0.036q0.357-0.571 0.732-1t1.009-0.929 1.554-0.777 2.045-0.277q3.054 0 4.911 2.027t1.857 5.938z"></path>
+		</symbol>
+
+		<symbol id="social-icon-medium" viewBox="0 0 32 32">
+			<path d="M10.661 7.518v20.946q0 0.446-0.223 0.759t-0.652 0.313q-0.304 0-0.589-0.143l-8.304-4.161q-0.375-0.179-0.634-0.598t-0.259-0.83v-20.357q0-0.357 0.179-0.607t0.518-0.25q0.25 0 0.786 0.268l9.125 4.571q0.054 0.054 0.054 0.089zM11.804 9.321l9.536 15.464-9.536-4.75v-10.714zM32 9.643v18.821q0 0.446-0.25 0.723t-0.679 0.277-0.839-0.232l-7.875-3.929zM31.946 7.5q0 0.054-4.58 7.491t-5.366 8.705l-6.964-11.321 5.786-9.411q0.304-0.5 0.929-0.5 0.25 0 0.464 0.107l9.661 4.821q0.071 0.036 0.071 0.107z"></path>
+		</symbol>
+
+		<symbol id="social-icon-paypal" viewBox="0 0 24 28">
+			<path d="M23.734 10.094v0c0.203 0.938 0.156 2.016-0.063 3.187-1.016 5.156-4.438 6.937-8.828 6.937h-0.688c-0.531 0-0.969 0.391-1.062 0.922l-0.063 0.297-0.859 5.406-0.031 0.234c-0.109 0.531-0.547 0.922-1.078 0.922h-3.922c-0.438 0-0.719-0.359-0.656-0.797 0.281-1.75 0.547-3.5 0.828-5.25s0.562-3.484 0.844-5.234c0.047-0.375 0.297-0.578 0.672-0.578 0.625 0 1.25-0.016 2.047 0 1.125 0.016 2.422-0.047 3.687-0.328 1.687-0.375 3.219-1.062 4.484-2.25 1.141-1.062 1.906-2.375 2.422-3.844 0.234-0.688 0.422-1.375 0.547-2.078 0.031-0.187 0.078-0.156 0.187-0.078 0.859 0.641 1.344 1.5 1.531 2.531zM21.047 5.688c0 1.281-0.297 2.5-0.719 3.687-0.812 2.359-2.344 4.047-4.719 4.922-1.266 0.453-2.594 0.641-3.938 0.656-0.938 0.016-1.875 0-2.812 0-1.016 0-1.656 0.5-1.844 1.5-0.219 1.188-1.078 6.719-1.328 8.281-0.016 0.109-0.063 0.156-0.187 0.156h-4.609c-0.469 0-0.812-0.406-0.75-0.859l3.625-22.984c0.094-0.594 0.625-1.047 1.234-1.047h9.344c0.672 0 2.219 0.297 3.266 0.703 2.219 0.859 3.437 2.609 3.437 4.984z"></path>
+		</symbol>
+
+		<symbol id="social-icon-periscope" viewBox="0 0 24 28">
+			<path d="M12.285,1C6.696,1,2.277,5.643,2.277,11.243c0,5.851,7.77,14.578,10.007,14.578c1.959,0,9.729-8.728,9.729-14.578 C22.015,5.643,17.596,1,12.285,1z M12.317,16.551c-3.473,0-6.152-2.611-6.152-5.664c0-1.292,0.39-2.472,1.065-3.438 c0.206,1.084,1.18,1.906,2.352,1.906c1.322,0,2.393-1.043,2.393-2.333c0-0.832-0.447-1.561-1.119-1.975 c0.467-0.105,0.955-0.161,1.46-0.161c3.133,0,5.81,2.611,5.81,5.998C18.126,13.94,15.449,16.551,12.317,16.551z"></path>
+		</symbol>
+
+		<symbol id="social-icon-phone" viewBox="0 0 16 16">
+			<path d="M10,1H6C4.9,1,4,1.9,4,3v10c0,1.1,0.9,2,2,2h4c1.1,0,2-0.9,2-2V3C12,1.9,11.1,1,10,1z M8.5,14h-1
+	C7.2,14,7,13.8,7,13.5S7.2,13,7.5,13h1C8.8,13,9,13.2,9,13.5S8.8,14,8.5,14z M11,12H5V3h6V12z"></path>
+		</symbol>
+
+		<symbol id="social-icon-pinterest" viewBox="0 0 23 32">
+			<path d="M0 10.661q0-1.929 0.67-3.634t1.848-2.973 2.714-2.196 3.304-1.393 3.607-0.464q2.821 0 5.25 1.188t3.946 3.455 1.518 5.125q0 1.714-0.339 3.357t-1.071 3.161-1.786 2.67-2.589 1.839-3.375 0.688q-1.214 0-2.411-0.571t-1.714-1.571q-0.179 0.696-0.5 2.009t-0.42 1.696-0.366 1.268-0.464 1.268-0.571 1.116-0.821 1.384-1.107 1.545l-0.25 0.089-0.161-0.179q-0.268-2.804-0.268-3.357 0-1.643 0.384-3.688t1.188-5.134 0.929-3.625q-0.571-1.161-0.571-3.018 0-1.482 0.929-2.786t2.357-1.304q1.089 0 1.696 0.723t0.607 1.83q0 1.179-0.786 3.411t-0.786 3.339q0 1.125 0.804 1.866t1.946 0.741q0.982 0 1.821-0.446t1.402-1.214 1-1.696 0.679-1.973 0.357-1.982 0.116-1.777q0-3.089-1.955-4.813t-5.098-1.723q-3.571 0-5.964 2.313t-2.393 5.866q0 0.786 0.223 1.518t0.482 1.161 0.482 0.813 0.223 0.545q0 0.5-0.268 1.304t-0.661 0.804q-0.036 0-0.304-0.054-0.911-0.268-1.616-1t-1.089-1.688-0.58-1.929-0.196-1.902z"></path>
+		</symbol>
+
+		<symbol id="social-icon-reddit" viewBox="0 0 32 32">
+			<path d="M32 15.107q0 1.036-0.527 1.884t-1.42 1.295q0.214 0.821 0.214 1.714 0 2.768-1.902 5.125t-5.188 3.723-7.143 1.366-7.134-1.366-5.179-3.723-1.902-5.125q0-0.839 0.196-1.679-0.911-0.446-1.464-1.313t-0.554-1.902q0-1.464 1.036-2.509t2.518-1.045q1.518 0 2.589 1.125 3.893-2.714 9.196-2.893l2.071-9.304q0.054-0.232 0.268-0.375t0.464-0.089l6.589 1.446q0.321-0.661 0.964-1.063t1.411-0.402q1.107 0 1.893 0.777t0.786 1.884-0.786 1.893-1.893 0.786-1.884-0.777-0.777-1.884l-5.964-1.321-1.857 8.429q5.357 0.161 9.268 2.857 1.036-1.089 2.554-1.089 1.482 0 2.518 1.045t1.036 2.509zM7.464 18.661q0 1.107 0.777 1.893t1.884 0.786 1.893-0.786 0.786-1.893-0.786-1.884-1.893-0.777q-1.089 0-1.875 0.786t-0.786 1.875zM21.929 25q0.196-0.196 0.196-0.464t-0.196-0.464q-0.179-0.179-0.446-0.179t-0.464 0.179q-0.732 0.75-2.161 1.107t-2.857 0.357-2.857-0.357-2.161-1.107q-0.196-0.179-0.464-0.179t-0.446 0.179q-0.196 0.179-0.196 0.455t0.196 0.473q0.768 0.768 2.116 1.214t2.188 0.527 1.625 0.080 1.625-0.080 2.188-0.527 2.116-1.214zM21.875 21.339q1.107 0 1.884-0.786t0.777-1.893q0-1.089-0.786-1.875t-1.875-0.786q-1.107 0-1.893 0.777t-0.786 1.884 0.786 1.893 1.893 0.786z"></path>
+		</symbol>
+
+		<symbol id="social-icon-rss" viewBox="0 0 25 32">
+			<path d="M6.857 24c0 1.893-1.536 3.429-3.429 3.429s-3.429-1.536-3.429-3.429 1.536-3.429 3.429-3.429 3.429 1.536 3.429 3.429zM16 26.196c0.018 0.321-0.089 0.625-0.304 0.857-0.214 0.25-0.518 0.375-0.839 0.375h-2.411c-0.589 0-1.071-0.446-1.125-1.036-0.518-5.446-4.839-9.768-10.286-10.286-0.589-0.054-1.036-0.536-1.036-1.125v-2.411c0-0.321 0.125-0.625 0.375-0.839 0.196-0.196 0.482-0.304 0.768-0.304h0.089c3.804 0.304 7.393 1.964 10.089 4.679 2.714 2.696 4.375 6.286 4.679 10.089zM25.143 26.232c0.018 0.304-0.089 0.607-0.321 0.839-0.214 0.232-0.5 0.357-0.821 0.357h-2.554c-0.607 0-1.107-0.464-1.143-1.071-0.589-10.375-8.857-18.643-19.232-19.25-0.607-0.036-1.071-0.536-1.071-1.125v-2.554c0-0.321 0.125-0.607 0.357-0.821 0.214-0.214 0.5-0.321 0.786-0.321h0.054c6.25 0.321 12.125 2.946 16.554 7.393 4.446 4.429 7.071 10.304 7.393 16.554z"></path>
+		</symbol>
+
+		<symbol id="social-icon-skype" viewBox="0 0 27 32">
+			<path d="M20.946 18.982q0-0.893-0.348-1.634t-0.866-1.223-1.304-0.875-1.473-0.607-1.563-0.411l-1.857-0.429q-0.536-0.125-0.786-0.188t-0.625-0.205-0.536-0.286-0.295-0.375-0.134-0.536q0-1.375 2.571-1.375 0.768 0 1.375 0.214t0.964 0.509 0.679 0.598 0.714 0.518 0.857 0.214q0.839 0 1.348-0.571t0.509-1.375q0-0.982-1-1.777t-2.536-1.205-3.25-0.411q-1.214 0-2.357 0.277t-2.134 0.839-1.589 1.554-0.598 2.295q0 1.089 0.339 1.902t1 1.348 1.429 0.866 1.839 0.58l2.607 0.643q1.607 0.393 2 0.643 0.571 0.357 0.571 1.071 0 0.696-0.714 1.152t-1.875 0.455q-0.911 0-1.634-0.286t-1.161-0.688-0.813-0.804-0.821-0.688-0.964-0.286q-0.893 0-1.348 0.536t-0.455 1.339q0 1.643 2.179 2.813t5.196 1.17q1.304 0 2.5-0.33t2.188-0.955 1.58-1.67 0.589-2.348zM27.429 22.857q0 2.839-2.009 4.848t-4.848 2.009q-2.321 0-4.179-1.429-1.375 0.286-2.679 0.286-2.554 0-4.884-0.991t-4.018-2.679-2.679-4.018-0.991-4.884q0-1.304 0.286-2.679-1.429-1.857-1.429-4.179 0-2.839 2.009-4.848t4.848-2.009q2.321 0 4.179 1.429 1.375-0.286 2.679-0.286 2.554 0 4.884 0.991t4.018 2.679 2.679 4.018 0.991 4.884q0 1.304-0.286 2.679 1.429 1.857 1.429 4.179z"></path>
+		</symbol>
+
+		<symbol id="social-icon-slack" viewBox="0 0 26 28">
+			<path d="M23.734 12.125c1.281 0 2.266 0.938 2.266 2.219 0 1-0.516 1.703-1.453 2.031l-2.688 0.922 0.875 2.609c0.078 0.234 0.109 0.484 0.109 0.734 0 1.234-1 2.266-2.234 2.266-0.984 0-1.859-0.609-2.172-1.547l-0.859-2.578-4.844 1.656 0.859 2.562c0.078 0.234 0.125 0.484 0.125 0.734 0 1.219-1 2.266-2.25 2.266-0.984 0-1.844-0.609-2.156-1.547l-0.859-2.547-2.391 0.828c-0.25 0.078-0.516 0.141-0.781 0.141-1.266 0-2.219-0.938-2.219-2.203 0-0.969 0.625-1.844 1.547-2.156l2.438-0.828-1.641-4.891-2.438 0.844c-0.25 0.078-0.5 0.125-0.75 0.125-1.25 0-2.219-0.953-2.219-2.203 0-0.969 0.625-1.844 1.547-2.156l2.453-0.828-0.828-2.484c-0.078-0.234-0.125-0.484-0.125-0.734 0-1.234 1-2.266 2.25-2.266 0.984 0 1.844 0.609 2.156 1.547l0.844 2.5 4.844-1.641-0.844-2.5c-0.078-0.234-0.125-0.484-0.125-0.734 0-1.234 1.016-2.266 2.25-2.266 0.984 0 1.859 0.625 2.172 1.547l0.828 2.516 2.531-0.859c0.219-0.063 0.438-0.094 0.672-0.094 1.219 0 2.266 0.906 2.266 2.156 0 0.969-0.75 1.781-1.625 2.078l-2.453 0.844 1.641 4.937 2.562-0.875c0.234-0.078 0.484-0.125 0.719-0.125zM11.328 16.219l4.844-1.641-1.641-4.922-4.844 1.672z"></path>
+		</symbol>
+
+		<symbol id="social-icon-slideshare" viewBox="0 0 32 32">
+			<path d="M15.589 13.214q0 1.482-1.134 2.545t-2.723 1.063-2.723-1.063-1.134-2.545q0-1.5 1.134-2.554t2.723-1.054 2.723 1.054 1.134 2.554zM24.554 13.214q0 1.482-1.125 2.545t-2.732 1.063q-1.589 0-2.723-1.063t-1.134-2.545q0-1.5 1.134-2.554t2.723-1.054q1.607 0 2.732 1.054t1.125 2.554zM28.571 16.429v-11.911q0-1.554-0.571-2.205t-1.982-0.652h-19.857q-1.482 0-2.009 0.607t-0.527 2.25v12.018q0.768 0.411 1.58 0.714t1.446 0.5 1.446 0.33 1.268 0.196 1.25 0.071 1.045 0.009 1.009-0.036 0.795-0.036q1.214-0.018 1.696 0.482 0.107 0.107 0.179 0.161 0.464 0.446 1.089 0.911 0.125-1.625 2.107-1.554 0.089 0 0.652 0.027t0.768 0.036 0.813 0.018 0.946-0.018 0.973-0.080 1.089-0.152 1.107-0.241 1.196-0.348 1.205-0.482 1.286-0.616zM31.482 16.339q-2.161 2.661-6.643 4.5 1.5 5.089-0.411 8.304-1.179 2.018-3.268 2.643-1.857 0.571-3.25-0.268-1.536-0.911-1.464-2.929l-0.018-5.821v-0.018q-0.143-0.036-0.438-0.107t-0.42-0.089l-0.018 6.036q0.071 2.036-1.482 2.929-1.411 0.839-3.268 0.268-2.089-0.643-3.25-2.679-1.875-3.214-0.393-8.268-4.482-1.839-6.643-4.5-0.446-0.661-0.071-1.125t1.071 0.018q0.054 0.036 0.196 0.125t0.196 0.143v-12.393q0-1.286 0.839-2.196t2.036-0.911h22.446q1.196 0 2.036 0.911t0.839 2.196v12.393l0.375-0.268q0.696-0.482 1.071-0.018t-0.071 1.125z"></path>
+		</symbol>
+
+		<symbol id="social-icon-snapchat" viewBox="0 0 30 32">
+			<path d="M15.143 2.286q2.393-0.018 4.295 1.223t2.92 3.438q0.482 1.036 0.482 3.196 0 0.839-0.161 3.411 0.25 0.125 0.5 0.125 0.321 0 0.911-0.241t0.911-0.241q0.518 0 1 0.321t0.482 0.821q0 0.571-0.563 0.964t-1.232 0.563-1.232 0.518-0.563 0.848q0 0.268 0.214 0.768 0.661 1.464 1.83 2.679t2.58 1.804q0.5 0.214 1.429 0.411 0.5 0.107 0.5 0.625 0 1.25-3.911 1.839-0.125 0.196-0.196 0.696t-0.25 0.83-0.589 0.33q-0.357 0-1.107-0.116t-1.143-0.116q-0.661 0-1.107 0.089-0.571 0.089-1.125 0.402t-1.036 0.679-1.036 0.723-1.357 0.598-1.768 0.241q-0.929 0-1.723-0.241t-1.339-0.598-1.027-0.723-1.036-0.679-1.107-0.402q-0.464-0.089-1.125-0.089-0.429 0-1.17 0.134t-1.045 0.134q-0.446 0-0.625-0.33t-0.25-0.848-0.196-0.714q-3.911-0.589-3.911-1.839 0-0.518 0.5-0.625 0.929-0.196 1.429-0.411 1.393-0.571 2.58-1.804t1.83-2.679q0.214-0.5 0.214-0.768 0-0.5-0.563-0.848t-1.241-0.527-1.241-0.563-0.563-0.938q0-0.482 0.464-0.813t0.982-0.33q0.268 0 0.857 0.232t0.946 0.232q0.321 0 0.571-0.125-0.161-2.536-0.161-3.393 0-2.179 0.482-3.214 1.143-2.446 3.071-3.536t4.714-1.125z"></path>
+		</symbol>
+
+		<symbol id="social-icon-soundcloud" viewBox="0 0 41 32">
+			<path d="M14 24.5l0.286-4.304-0.286-9.339q-0.018-0.179-0.134-0.304t-0.295-0.125q-0.161 0-0.286 0.125t-0.125 0.304l-0.25 9.339 0.25 4.304q0.018 0.179 0.134 0.295t0.277 0.116q0.393 0 0.429-0.411zM19.286 23.982l0.196-3.768-0.214-10.464q0-0.286-0.232-0.429-0.143-0.089-0.286-0.089t-0.286 0.089q-0.232 0.143-0.232 0.429l-0.018 0.107-0.179 10.339q0 0.018 0.196 4.214v0.018q0 0.179 0.107 0.304 0.161 0.196 0.411 0.196 0.196 0 0.357-0.161 0.161-0.125 0.161-0.357zM0.625 17.911l0.357 2.286-0.357 2.25q-0.036 0.161-0.161 0.161t-0.161-0.161l-0.304-2.25 0.304-2.286q0.036-0.161 0.161-0.161t0.161 0.161zM2.161 16.5l0.464 3.696-0.464 3.625q-0.036 0.161-0.179 0.161-0.161 0-0.161-0.179l-0.411-3.607 0.411-3.696q0-0.161 0.161-0.161 0.143 0 0.179 0.161zM3.804 15.821l0.446 4.375-0.446 4.232q0 0.196-0.196 0.196-0.179 0-0.214-0.196l-0.375-4.232 0.375-4.375q0.036-0.214 0.214-0.214 0.196 0 0.196 0.214zM5.482 15.696l0.411 4.5-0.411 4.357q-0.036 0.232-0.25 0.232-0.232 0-0.232-0.232l-0.375-4.357 0.375-4.5q0-0.232 0.232-0.232 0.214 0 0.25 0.232zM7.161 16.018l0.375 4.179-0.375 4.393q-0.036 0.286-0.286 0.286-0.107 0-0.188-0.080t-0.080-0.205l-0.357-4.393 0.357-4.179q0-0.107 0.080-0.188t0.188-0.080q0.25 0 0.286 0.268zM8.839 13.411l0.375 6.786-0.375 4.393q0 0.125-0.089 0.223t-0.214 0.098q-0.286 0-0.321-0.321l-0.321-4.393 0.321-6.786q0.036-0.321 0.321-0.321 0.125 0 0.214 0.098t0.089 0.223zM10.518 11.875l0.339 8.357-0.339 4.357q0 0.143-0.098 0.241t-0.241 0.098q-0.321 0-0.357-0.339l-0.286-4.357 0.286-8.357q0.036-0.339 0.357-0.339 0.143 0 0.241 0.098t0.098 0.241zM12.268 11.161l0.321 9.036-0.321 4.321q-0.036 0.375-0.393 0.375-0.339 0-0.375-0.375l-0.286-4.321 0.286-9.036q0-0.161 0.116-0.277t0.259-0.116q0.161 0 0.268 0.116t0.125 0.277zM19.268 24.411v0 0zM15.732 11.089l0.268 9.107-0.268 4.268q0 0.179-0.134 0.313t-0.313 0.134-0.304-0.125-0.143-0.321l-0.25-4.268 0.25-9.107q0-0.196 0.134-0.321t0.313-0.125 0.313 0.125 0.134 0.321zM17.5 11.429l0.25 8.786-0.25 4.214q0 0.196-0.143 0.339t-0.339 0.143-0.339-0.143-0.161-0.339l-0.214-4.214 0.214-8.786q0.018-0.214 0.161-0.357t0.339-0.143 0.33 0.143 0.152 0.357zM21.286 20.214l-0.25 4.125q0 0.232-0.161 0.393t-0.393 0.161-0.393-0.161-0.179-0.393l-0.107-2.036-0.107-2.089 0.214-11.357v-0.054q0.036-0.268 0.214-0.429 0.161-0.125 0.357-0.125 0.143 0 0.268 0.089 0.25 0.143 0.286 0.464zM41.143 19.875q0 2.089-1.482 3.563t-3.571 1.473h-14.036q-0.232-0.036-0.393-0.196t-0.161-0.393v-16.054q0-0.411 0.5-0.589 1.518-0.607 3.232-0.607 3.482 0 6.036 2.348t2.857 5.777q0.946-0.393 1.964-0.393 2.089 0 3.571 1.482t1.482 3.589z"></path>
+		</symbol>
+
+		<symbol id="social-icon-spotify" viewBox="0 0 27 32">
+			<path d="M20.125 21.607q0-0.571-0.536-0.911-3.446-2.054-7.982-2.054-2.375 0-5.125 0.607-0.75 0.161-0.75 0.929 0 0.357 0.241 0.616t0.634 0.259q0.089 0 0.661-0.143 2.357-0.482 4.339-0.482 4.036 0 7.089 1.839 0.339 0.196 0.589 0.196 0.339 0 0.589-0.241t0.25-0.616zM21.839 17.768q0-0.714-0.625-1.089-4.232-2.518-9.786-2.518-2.732 0-5.411 0.75-0.857 0.232-0.857 1.143 0 0.446 0.313 0.759t0.759 0.313q0.125 0 0.661-0.143 2.179-0.589 4.482-0.589 4.982 0 8.714 2.214 0.429 0.232 0.679 0.232 0.446 0 0.759-0.313t0.313-0.759zM23.768 13.339q0-0.839-0.714-1.25-2.25-1.304-5.232-1.973t-6.125-0.67q-3.643 0-6.5 0.839-0.411 0.125-0.688 0.455t-0.277 0.866q0 0.554 0.366 0.929t0.92 0.375q0.196 0 0.714-0.143 2.375-0.661 5.482-0.661 2.839 0 5.527 0.607t4.527 1.696q0.375 0.214 0.714 0.214 0.518 0 0.902-0.366t0.384-0.92zM27.429 16q0 3.732-1.839 6.884t-4.991 4.991-6.884 1.839-6.884-1.839-4.991-4.991-1.839-6.884 1.839-6.884 4.991-4.991 6.884-1.839 6.884 1.839 4.991 4.991 1.839 6.884z"></path>
+		</symbol>
+
+		<symbol id="social-icon-stack-overflow" viewBox="0 0 24 28">
+			<path d="M20.141 25.5h-17.469v-7.5h-2.5v10h22.469v-10h-2.5v7.5zM5.422 17.313l0.516-2.453 12.234 2.578-0.516 2.438zM7.031 11.469l1.047-2.281 11.328 5.297-1.047 2.266zM10.172 5.906l1.594-1.922 9.594 8.016-1.594 1.922zM16.375 0l7.453 10.016-2 1.5-7.453-10.016zM5.156 22.984v-2.484h12.5v2.484h-12.5z"></path>
+		</symbol>
+
+		<symbol id="social-icon-stumbleupon" viewBox="0 0 34 32">
+			<path d="M18.964 12.714v-2.107q0-0.75-0.536-1.286t-1.286-0.536-1.286 0.536-0.536 1.286v10.929q0 3.125-2.25 5.339t-5.411 2.214q-3.179 0-5.42-2.241t-2.241-5.42v-4.75h5.857v4.679q0 0.768 0.536 1.295t1.286 0.527 1.286-0.527 0.536-1.295v-11.071q0-3.054 2.259-5.214t5.384-2.161q3.143 0 5.393 2.179t2.25 5.25v2.429l-3.482 1.036zM28.429 16.679h5.857v4.75q0 3.179-2.241 5.42t-5.42 2.241q-3.161 0-5.411-2.223t-2.25-5.366v-4.786l2.339 1.089 3.482-1.036v4.821q0 0.75 0.536 1.277t1.286 0.527 1.286-0.527 0.536-1.277v-4.911z"></path>
+		</symbol>
+
+		<symbol id="social-icon-trello" viewBox="0 0 24 28">
+			<path d="M11 21v-16c0-0.281-0.219-0.5-0.5-0.5h-7.5c-0.281 0-0.5 0.219-0.5 0.5v16c0 0.281 0.219 0.5 0.5 0.5h7.5c0.281 0 0.5-0.219 0.5-0.5zM21.5 15v-10c0-0.281-0.219-0.5-0.5-0.5h-7.5c-0.281 0-0.5 0.219-0.5 0.5v10c0 0.281 0.219 0.5 0.5 0.5h7.5c0.281 0 0.5-0.219 0.5-0.5zM24 3v22c0 0.547-0.453 1-1 1h-22c-0.547 0-1-0.453-1-1v-22c0-0.547 0.453-1 1-1h22c0.547 0 1 0.453 1 1z"></path>
+		</symbol>
+
+		<symbol id="social-icon-tripadvisor" viewBox="0 0 36 28">
+			<path d="M10.172 15.578c0 0.812-0.656 1.469-1.453 1.469-0.812 0-1.469-0.656-1.469-1.469 0-0.797 0.656-1.453 1.469-1.453 0.797 0 1.453 0.656 1.453 1.453zM28.203 15.563c0 0.812-0.656 1.469-1.469 1.469s-1.469-0.656-1.469-1.469 0.656-1.453 1.469-1.453 1.469 0.641 1.469 1.453zM11.953 15.578c0-1.656-1.359-3.016-3.016-3.016-1.672 0-3.016 1.359-3.016 3.016 0 1.672 1.344 3.016 3.016 3.016 1.656 0 3.016-1.344 3.016-3.016zM29.969 15.563c0-1.656-1.344-3.016-3.016-3.016-1.656 0-3.016 1.359-3.016 3.016 0 1.672 1.359 3.016 3.016 3.016 1.672 0 3.016-1.344 3.016-3.016zM13.281 15.578c0 2.406-1.937 4.359-4.344 4.359s-4.359-1.953-4.359-4.359c0-2.391 1.953-4.344 4.359-4.344s4.344 1.953 4.344 4.344zM31.313 15.563c0 2.406-1.953 4.344-4.359 4.344-2.391 0-4.344-1.937-4.344-4.344s1.953-4.344 4.344-4.344c2.406 0 4.359 1.937 4.359 4.344zM16.25 15.609c0-3.984-3.234-7.219-7.219-7.219-3.969 0-7.203 3.234-7.203 7.219s3.234 7.219 7.203 7.219c3.984 0 7.219-3.234 7.219-7.219zM26.688 6.656c-2.578-1.125-5.484-1.734-8.687-1.734s-6.391 0.609-8.953 1.719c4.953 0.016 8.953 4.016 8.953 8.969 0-4.859 3.859-8.813 8.687-8.953zM34.172 15.609c0-3.984-3.219-7.219-7.203-7.219s-7.219 3.234-7.219 7.219 3.234 7.219 7.219 7.219 7.203-3.234 7.203-7.219zM30.016 6.766h5.984c-0.938 1.094-1.625 2.562-1.797 3.578 1.078 1.484 1.719 3.297 1.719 5.266 0 4.953-4.016 8.953-8.953 8.953-2.812 0-5.313-1.281-6.953-3.297 0 0-0.734 0.875-2.016 2.797-0.219-0.453-1.328-2.031-2-2.812-1.641 2.031-4.156 3.313-6.969 3.313-4.937 0-8.953-4-8.953-8.953 0-1.969 0.641-3.781 1.719-5.266-0.172-1.016-0.859-2.484-1.797-3.578h5.703c3.063-2.047 7.516-3.328 12.297-3.328s8.953 1.281 12.016 3.328z"></path>
+		</symbol>
+
+		<symbol id="social-icon-tumblr" viewBox="0 0 19 32">
+			<path d="M16.857 23.732l1.429 4.232q-0.411 0.625-1.982 1.179t-3.161 0.571q-1.857 0.036-3.402-0.464t-2.545-1.321-1.696-1.893-0.991-2.143-0.295-2.107v-9.714h-3v-3.839q1.286-0.464 2.304-1.241t1.625-1.607 1.036-1.821 0.607-1.768 0.268-1.58q0.018-0.089 0.080-0.152t0.134-0.063h4.357v7.571h5.946v4.5h-5.964v9.25q0 0.536 0.116 1t0.402 0.938 0.884 0.741 1.455 0.25q1.393-0.036 2.393-0.518z"></path>
+		</symbol>
+
+		<symbol id="social-icon-twitch" viewBox="0 0 32 32">
+			<path d="M16 7.75v7.75h-2.589v-7.75h2.589zM23.107 7.75v7.75h-2.589v-7.75h2.589zM23.107 21.321l4.518-4.536v-14.196h-21.321v18.732h5.821v3.875l3.875-3.875h7.107zM30.214 0v18.089l-7.75 7.75h-5.821l-3.875 3.875h-3.875v-3.875h-7.107v-20.679l1.946-5.161h26.482z"></path>
+		</symbol>
+
+		<symbol id="social-icon-twitter" viewBox="0 0 30 32">
+			<path d="M28.929 7.286q-1.196 1.75-2.893 2.982 0.018 0.25 0.018 0.75 0 2.321-0.679 4.634t-2.063 4.437-3.295 3.759-4.607 2.607-5.768 0.973q-4.839 0-8.857-2.589 0.625 0.071 1.393 0.071 4.018 0 7.161-2.464-1.875-0.036-3.357-1.152t-2.036-2.848q0.589 0.089 1.089 0.089 0.768 0 1.518-0.196-2-0.411-3.313-1.991t-1.313-3.67v-0.071q1.214 0.679 2.607 0.732-1.179-0.786-1.875-2.054t-0.696-2.75q0-1.571 0.786-2.911 2.161 2.661 5.259 4.259t6.634 1.777q-0.143-0.679-0.143-1.321 0-2.393 1.688-4.080t4.080-1.688q2.5 0 4.214 1.821 1.946-0.375 3.661-1.393-0.661 2.054-2.536 3.179 1.661-0.179 3.321-0.893z"></path>
+		</symbol>
+
+		<symbol id="social-icon-vimeo" viewBox="0 0 32 32">
+			<path d="M30.518 9.25q-0.179 4.214-5.929 11.625-5.946 7.696-10.036 7.696-2.536 0-4.286-4.696-0.786-2.857-2.357-8.607-1.286-4.679-2.804-4.679-0.321 0-2.268 1.357l-1.375-1.75q0.429-0.375 1.929-1.723t2.321-2.063q2.786-2.464 4.304-2.607 1.696-0.161 2.732 0.991t1.446 3.634q0.786 5.125 1.179 6.661 0.982 4.446 2.143 4.446 0.911 0 2.75-2.875 1.804-2.875 1.946-4.393 0.232-2.482-1.946-2.482-1.018 0-2.161 0.464 2.143-7.018 8.196-6.821 4.482 0.143 4.214 5.821z"></path>
+		</symbol>
+
+		<symbol id="social-icon-vine" viewBox="0 0 27 32">
+			<path d="M26.732 14.768v3.536q-1.804 0.411-3.536 0.411-1.161 2.429-2.955 4.839t-3.241 3.848-2.286 1.902q-1.429 0.804-2.893-0.054-0.5-0.304-1.080-0.777t-1.518-1.491-1.83-2.295-1.92-3.286-1.884-4.357-1.634-5.616-1.259-6.964h5.054q0.464 3.893 1.25 7.116t1.866 5.661 2.17 4.205 2.5 3.482q3.018-3.018 5.125-7.25-2.536-1.286-3.982-3.929t-1.446-5.946q0-3.429 1.857-5.616t5.071-2.188q3.179 0 4.875 1.884t1.696 5.313q0 2.839-1.036 5.107-0.125 0.018-0.348 0.054t-0.821 0.036-1.125-0.107-1.107-0.455-0.902-0.92q0.554-1.839 0.554-3.286 0-1.554-0.518-2.357t-1.411-0.804q-0.946 0-1.518 0.884t-0.571 2.509q0 3.321 1.875 5.241t4.768 1.92q1.107 0 2.161-0.25z"></path>
+		</symbol>
+
+		<symbol id="social-icon-vk" viewBox="0 0 35 32">
+			<path d="M34.232 9.286q0.411 1.143-2.679 5.25-0.429 0.571-1.161 1.518-1.393 1.786-1.607 2.339-0.304 0.732 0.25 1.446 0.304 0.375 1.446 1.464h0.018l0.071 0.071q2.518 2.339 3.411 3.946 0.054 0.089 0.116 0.223t0.125 0.473-0.009 0.607-0.446 0.491-1.054 0.223l-4.571 0.071q-0.429 0.089-1-0.089t-0.929-0.393l-0.357-0.214q-0.536-0.375-1.25-1.143t-1.223-1.384-1.089-1.036-1.009-0.277q-0.054 0.018-0.143 0.063t-0.304 0.259-0.384 0.527-0.304 0.929-0.116 1.384q0 0.268-0.063 0.491t-0.134 0.33l-0.071 0.089q-0.321 0.339-0.946 0.393h-2.054q-1.268 0.071-2.607-0.295t-2.348-0.946-1.839-1.179-1.259-1.027l-0.446-0.429q-0.179-0.179-0.491-0.536t-1.277-1.625-1.893-2.696-2.188-3.768-2.33-4.857q-0.107-0.286-0.107-0.482t0.054-0.286l0.071-0.107q0.268-0.339 1.018-0.339l4.893-0.036q0.214 0.036 0.411 0.116t0.286 0.152l0.089 0.054q0.286 0.196 0.429 0.571 0.357 0.893 0.821 1.848t0.732 1.455l0.286 0.518q0.518 1.071 1 1.857t0.866 1.223 0.741 0.688 0.607 0.25 0.482-0.089q0.036-0.018 0.089-0.089t0.214-0.393 0.241-0.839 0.17-1.446 0-2.232q-0.036-0.714-0.161-1.304t-0.25-0.821l-0.107-0.214q-0.446-0.607-1.518-0.768-0.232-0.036 0.089-0.429 0.304-0.339 0.679-0.536 0.946-0.464 4.268-0.429 1.464 0.018 2.411 0.232 0.357 0.089 0.598 0.241t0.366 0.429 0.188 0.571 0.063 0.813-0.018 0.982-0.045 1.259-0.027 1.473q0 0.196-0.018 0.75t-0.009 0.857 0.063 0.723 0.205 0.696 0.402 0.438q0.143 0.036 0.304 0.071t0.464-0.196 0.679-0.616 0.929-1.196 1.214-1.92q1.071-1.857 1.911-4.018 0.071-0.179 0.179-0.313t0.196-0.188l0.071-0.054 0.089-0.045t0.232-0.054 0.357-0.009l5.143-0.036q0.696-0.089 1.143 0.045t0.554 0.295z"></path>
+		</symbol>
+
+		<symbol id="social-icon-whatsapp" viewBox="0 0 27 32">
+			<path d="M17.589 17.393c0.304 0 3.214 1.518 3.339 1.732 0.036 0.089 0.036 0.196 0.036 0.268 0 0.446-0.143 0.946-0.304 1.357-0.411 1-2.071 1.643-3.089 1.643-0.857 0-2.625-0.75-3.393-1.107-2.554-1.161-4.143-3.143-5.679-5.411-0.679-1-1.286-2.232-1.268-3.464v-0.143c0.036-1.179 0.464-2.018 1.321-2.821 0.268-0.25 0.554-0.393 0.929-0.393 0.214 0 0.429 0.054 0.661 0.054 0.482 0 0.571 0.143 0.75 0.607 0.125 0.304 1.036 2.732 1.036 2.911 0 0.679-1.232 1.446-1.232 1.857 0 0.089 0.036 0.179 0.089 0.268 0.393 0.839 1.143 1.804 1.821 2.446 0.821 0.786 1.696 1.304 2.696 1.804 0.125 0.071 0.25 0.125 0.393 0.125 0.536 0 1.429-1.732 1.893-1.732zM13.964 26.857c6.179 0 11.214-5.036 11.214-11.214s-5.036-11.214-11.214-11.214-11.214 5.036-11.214 11.214c0 2.357 0.75 4.661 2.143 6.571l-1.411 4.161 4.321-1.375c1.821 1.196 3.982 1.857 6.161 1.857zM13.964 2.179c7.429 0 13.464 6.036 13.464 13.464s-6.036 13.464-13.464 13.464c-2.268 0-4.518-0.571-6.518-1.679l-7.446 2.393 2.429-7.232c-1.268-2.089-1.929-4.5-1.929-6.946 0-7.429 6.036-13.464 13.464-13.464z"></path>
+		</symbol>
+
+		<symbol id="social-icon-wordpress" viewBox="0 0 32 32">
+			<path d="M2.268 16q0-2.911 1.196-5.589l6.554 17.946q-3.5-1.696-5.625-5.018t-2.125-7.339zM25.268 15.304q0 0.339-0.045 0.688t-0.179 0.884-0.205 0.786-0.313 1.054-0.313 1.036l-1.357 4.571-4.964-14.75q0.821-0.054 1.571-0.143 0.339-0.036 0.464-0.33t-0.045-0.554-0.509-0.241l-3.661 0.179q-1.339-0.018-3.607-0.179-0.214-0.018-0.366 0.089t-0.205 0.268-0.027 0.33 0.161 0.295 0.348 0.143l1.429 0.143 2.143 5.857-3 9-5-14.857q0.821-0.054 1.571-0.143 0.339-0.036 0.464-0.33t-0.045-0.554-0.509-0.241l-3.661 0.179q-0.125 0-0.411-0.009t-0.464-0.009q1.875-2.857 4.902-4.527t6.563-1.67q2.625 0 5.009 0.946t4.259 2.661h-0.179q-0.982 0-1.643 0.723t-0.661 1.705q0 0.214 0.036 0.429t0.071 0.384 0.143 0.411 0.161 0.375 0.214 0.402 0.223 0.375 0.259 0.429 0.25 0.411q1.125 1.911 1.125 3.786zM16.232 17.196l4.232 11.554q0.018 0.107 0.089 0.196-2.25 0.786-4.554 0.786-2 0-3.875-0.571zM28.036 9.411q1.696 3.107 1.696 6.589 0 3.732-1.857 6.884t-4.982 4.973l4.196-12.107q1.054-3.018 1.054-4.929 0-0.75-0.107-1.411zM16 0q3.25 0 6.214 1.268t5.107 3.411 3.411 5.107 1.268 6.214-1.268 6.214-3.411 5.107-5.107 3.411-6.214 1.268-6.214-1.268-5.107-3.411-3.411-5.107-1.268-6.214 1.268-6.214 3.411-5.107 5.107-3.411 6.214-1.268zM16 31.268q3.089 0 5.92-1.214t4.875-3.259 3.259-4.875 1.214-5.92-1.214-5.92-3.259-4.875-4.875-3.259-5.92-1.214-5.92 1.214-4.875 3.259-3.259 4.875-1.214 5.92 1.214 5.92 3.259 4.875 4.875 3.259 5.92 1.214z"></path>
+		</symbol>
+
+		<symbol id="social-icon-xing" viewBox="0 0 25 32">
+			<path d="M10.661 11.911c0 0-0.179 0.304-4.589 8.143-0.232 0.393-0.536 0.821-1.161 0.821h-4.268c-0.25 0-0.446-0.125-0.554-0.304s-0.125-0.411 0-0.643l4.518-8c0.018 0 0.018 0 0-0.018l-2.875-4.982c-0.125-0.232-0.143-0.482-0.018-0.661 0.107-0.179 0.321-0.268 0.571-0.268h4.268c0.643 0 0.964 0.429 1.179 0.804 2.911 5.089 2.929 5.107 2.929 5.107zM25.054 0.446c0.125 0.179 0.125 0.429 0 0.661l-9.429 16.679c-0.018 0-0.018 0.018 0 0.018l6 10.982c0.125 0.232 0.125 0.482 0.018 0.661-0.125 0.179-0.321 0.268-0.571 0.268h-4.268c-0.643 0-0.982-0.429-1.179-0.804-6.054-11.089-6.054-11.107-6.054-11.107s0.304-0.536 9.482-16.821c0.232-0.411 0.5-0.804 1.143-0.804h4.304c0.25 0 0.446 0.089 0.554 0.268z"></path>
+		</symbol>
+
+		<symbol id="social-icon-yelp" viewBox="0 0 27 32">
+			<path d="M13.804 23.554v2.268q-0.018 5.214-0.107 5.446-0.214 0.571-0.911 0.714-0.964 0.161-3.241-0.679t-2.902-1.589q-0.232-0.268-0.304-0.643-0.018-0.214 0.071-0.464 0.071-0.179 0.607-0.839t3.232-3.857q0.018 0 1.071-1.25 0.268-0.339 0.705-0.438t0.884 0.063q0.429 0.179 0.67 0.518t0.223 0.75zM11.143 19.071q-0.054 0.982-0.929 1.25l-2.143 0.696q-4.911 1.571-5.214 1.571-0.625-0.036-0.964-0.643-0.214-0.446-0.304-1.339-0.143-1.357 0.018-2.973t0.536-2.223 1-0.571q0.232 0 3.607 1.375 1.25 0.518 2.054 0.839l1.5 0.607q0.411 0.161 0.634 0.545t0.205 0.866zM25.893 24.375q-0.125 0.964-1.634 2.875t-2.42 2.268q-0.661 0.25-1.125-0.125-0.25-0.179-3.286-5.125l-0.839-1.375q-0.25-0.375-0.205-0.821t0.348-0.821q0.625-0.768 1.482-0.464 0.018 0.018 2.125 0.714 3.625 1.179 4.321 1.42t0.839 0.366q0.5 0.393 0.393 1.089zM13.893 13.089q0.089 1.821-0.964 2.179-1.036 0.304-2.036-1.268l-6.75-10.679q-0.143-0.625 0.339-1.107 0.732-0.768 3.705-1.598t4.009-0.563q0.714 0.179 0.875 0.804 0.054 0.321 0.393 5.455t0.429 6.777zM25.714 15.018q0.054 0.696-0.464 1.054-0.268 0.179-5.875 1.536-1.196 0.268-1.625 0.411l0.018-0.036q-0.411 0.107-0.821-0.071t-0.661-0.571q-0.536-0.839 0-1.554 0.018-0.018 1.339-1.821 2.232-3.054 2.679-3.643t0.607-0.696q0.5-0.339 1.161-0.036 0.857 0.411 2.196 2.384t1.446 2.991v0.054z"></path>
+		</symbol>
+
+		<symbol id="social-icon-youtube" viewBox="0 0 27 32">
+			<path d="M17.339 22.214v3.768q0 1.196-0.696 1.196-0.411 0-0.804-0.393v-5.375q0.393-0.393 0.804-0.393 0.696 0 0.696 1.196zM23.375 22.232v0.821h-1.607v-0.821q0-1.214 0.804-1.214t0.804 1.214zM6.125 18.339h1.911v-1.679h-5.571v1.679h1.875v10.161h1.786v-10.161zM11.268 28.5h1.589v-8.821h-1.589v6.75q-0.536 0.75-1.018 0.75-0.321 0-0.375-0.375-0.018-0.054-0.018-0.625v-6.5h-1.589v6.982q0 0.875 0.143 1.304 0.214 0.661 1.036 0.661 0.857 0 1.821-1.089v0.964zM18.929 25.857v-3.518q0-1.304-0.161-1.768-0.304-1-1.268-1-0.893 0-1.661 0.964v-3.875h-1.589v11.839h1.589v-0.857q0.804 0.982 1.661 0.982 0.964 0 1.268-0.982 0.161-0.482 0.161-1.786zM24.964 25.679v-0.232h-1.625q0 0.911-0.036 1.089-0.125 0.643-0.714 0.643-0.821 0-0.821-1.232v-1.554h3.196v-1.839q0-1.411-0.482-2.071-0.696-0.911-1.893-0.911-1.214 0-1.911 0.911-0.5 0.661-0.5 2.071v3.089q0 1.411 0.518 2.071 0.696 0.911 1.929 0.911 1.286 0 1.929-0.946 0.321-0.482 0.375-0.964 0.036-0.161 0.036-1.036zM14.107 9.375v-3.75q0-1.232-0.768-1.232t-0.768 1.232v3.75q0 1.25 0.768 1.25t0.768-1.25zM26.946 22.786q0 4.179-0.464 6.25-0.25 1.054-1.036 1.768t-1.821 0.821q-3.286 0.375-9.911 0.375t-9.911-0.375q-1.036-0.107-1.83-0.821t-1.027-1.768q-0.464-2-0.464-6.25 0-4.179 0.464-6.25 0.25-1.054 1.036-1.768t1.839-0.839q3.268-0.357 9.893-0.357t9.911 0.357q1.036 0.125 1.83 0.839t1.027 1.768q0.464 2 0.464 6.25zM9.125 0h1.821l-2.161 7.125v4.839h-1.786v-4.839q-0.25-1.321-1.089-3.786-0.661-1.839-1.161-3.339h1.893l1.268 4.696zM15.732 5.946v3.125q0 1.446-0.5 2.107-0.661 0.911-1.893 0.911-1.196 0-1.875-0.911-0.5-0.679-0.5-2.107v-3.125q0-1.429 0.5-2.089 0.679-0.911 1.875-0.911 1.232 0 1.893 0.911 0.5 0.661 0.5 2.089zM21.714 3.054v8.911h-1.625v-0.982q-0.946 1.107-1.839 1.107-0.821 0-1.054-0.661-0.143-0.429-0.143-1.339v-7.036h1.625v6.554q0 0.589 0.018 0.625 0.054 0.393 0.375 0.393 0.482 0 1.018-0.768v-6.804h1.625z"></path>
+		</symbol>
+
+	</defs>
+</svg>
+			<script type="text/javascript">
+				var anr_onloadCallback = function() {
+					for ( var i = 0; i < document.forms.length; i++ ) {
+						var form = document.forms[i];
+						var captcha_div = form.querySelector( '.anr_captcha_field_div' );
+
+						if ( null === captcha_div )
+							continue;
+						captcha_div.innerHTML = '';
+						( function( form ) {
+							var anr_captcha = grecaptcha.render( captcha_div,{
+								'sitekey' : '6LeOF90ZAAAAAMGw_pLOsW5_zmjiBMswTR3LYPOu',
+								'size'  : 'normal',
+								'theme' : 'light'
+							});
+							if ( typeof jQuery !== 'undefined' ) {
+								jQuery( document.body ).on( 'checkout_error', function(){
+									grecaptcha.reset(anr_captcha);
+								});
+							}
+							if ( typeof wpcf7 !== 'undefined' ) {
+								document.addEventListener( 'wpcf7submit', function() {
+									grecaptcha.reset(anr_captcha);
+								}, false );
+							}
+						})(form);
+					}
+				};
+			</script>
+						<script src="C++20%20Resumable%20functions%20Goodbye%20state%20machines_files/api.js" async="" defer="defer">
+			</script>
+			
+
+
+
+</body></html>

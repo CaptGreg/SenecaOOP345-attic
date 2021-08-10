@@ -1,0 +1,98 @@
+/* FILE: custom-styles.scss */
+/* FILE: _setup.scss */
+/* inStyle (v1.6.3) github.com/salsita/inStyle 2016 | MIT @mixin ============================= */
+/* FILE: main/custom-styles/_main.scss */
+/* FILE: main/custom-styles/__extenders.scss */
+.button, button, input[type="button"], input[type="reset"], input[type="submit"], .main-navigation-container .button > a, .menu-toggle, mark, #page mark, .highlight, #page .highlight, .pagination .current, .bypostauthor > .comment-body .comment-author::before, .widget_calendar tbody a, .widget .tagcloud a:hover, .widget .tagcloud a:focus, .widget .tagcloud a:active, .slick-slider .slick-arrow, .slick-slider .slick-dots button:hover, .slick-slider .slick-dots button:focus, .slick-slider .slick-active button, .posts .sticky::before, .format-image .entry-media::before, .format-quote.entry, .format-status.entry, .type-jetpack-testimonial.entry, .post-navigation .nav-links a, .sidebar .widget .current_page_item > a, .sidebar .widget .current-menu-item > a, .site #infinite-handle span { background-color: #00855b; color: #ffffff; background-color: var(--color_accent); color: var(--color_accent_text); }
+
+.site-content div.sharedaddy .sd-content ul li a.sd-button:not(.no-text) { background-color: #00855b; background-color: var(--color_accent); }
+
+a, .accent-color { color: #00855b; color: var(--color_accent); }
+
+.button:focus, button:focus, input:focus[type="button"], input:focus[type="reset"], input:focus[type="submit"], .main-navigation-container .button > a:focus, .menu-toggle:focus { outline: thin dashed #00855b; outline: thin dashed var(--color_accent); }
+
+.site-header-navigation, .site-header-navigation::before { background-color: #0a0c0e; color: #ffffff; border-color: rgba(255, 255, 255, 0.2); background-color: var(--color_header_background); color: var(--color_header_text); border-color: var(--color_header_text--a20); }
+
+.site-header-navigation h2, .site-header-navigation::before h2, .site-header-navigation h3, .site-header-navigation::before h3, .site-header-navigation h4, .site-header-navigation::before h4, .site-header-navigation .h1, .site-header-navigation::before .h1, .site-header-navigation .h2, .site-header-navigation::before .h2, .site-header-navigation .h3, .site-header-navigation::before .h3, .site-header-navigation .h4, .site-header-navigation::before .h4 { color: inherit; }
+
+.site-header-content, .intro-container, .intro-media { background-color: #1a1c1e; color: #ffffff; background-color: var(--color_intro_background); color: var(--color_intro_text); }
+
+.site-header-content h1, .intro-container h1, .intro-media h1, .site-header-content h2, .intro-container h2, .intro-media h2, .site-header-content h3, .intro-container h3, .intro-media h3, .site-header-content h4, .intro-container h4, .intro-media h4, .site-header-content .h1, .intro-container .h1, .intro-media .h1, .site-header-content .h2, .intro-container .h2, .intro-media .h2, .site-header-content .h3, .intro-container .h3, .intro-media .h3, .site-header-content .h4, .intro-container .h4, .intro-media .h4 { color: inherit; }
+
+.is-singular .content-area, .entry, .page-template-_front .comments-area, .sidebar .widget { background-color: #ffffff; color: #6a6c6e; border-color: rgba(106, 108, 110, 0.2); background-color: var(--color_content_background); color: var(--color_content_text); border-color: var(--color_content_text--a20); }
+
+.is-singular .content-area h1, .entry h1, .page-template-_front .comments-area h1, .sidebar .widget h1, .is-singular .content-area .h1, .entry .h1, .page-template-_front .comments-area .h1, .sidebar .widget .h1, .is-singular .content-area h2, .entry h2, .page-template-_front .comments-area h2, .sidebar .widget h2, .is-singular .content-area .h2, .entry .h2, .page-template-_front .comments-area .h2, .sidebar .widget .h2, .is-singular .content-area h3, .entry h3, .page-template-_front .comments-area h3, .sidebar .widget h3, .is-singular .content-area .h3, .entry .h3, .page-template-_front .comments-area .h3, .sidebar .widget .h3, .is-singular .content-area h4, .entry h4, .page-template-_front .comments-area h4, .sidebar .widget h4, .is-singular .content-area .h4, .entry .h4, .page-template-_front .comments-area .h4, .sidebar .widget .h4, .is-singular .content-area h5, .entry h5, .page-template-_front .comments-area h5, .sidebar .widget h5, .is-singular .content-area .h5, .entry .h5, .page-template-_front .comments-area .h5, .sidebar .widget .h5, .is-singular .content-area h6, .entry h6, .page-template-_front .comments-area h6, .sidebar .widget h6, .is-singular .content-area .h6, .entry .h6, .page-template-_front .comments-area .h6, .sidebar .widget .h6, .is-singular .content-area .post-navigation, .entry .post-navigation, .page-template-_front .comments-area .post-navigation, .sidebar .widget .post-navigation, .is-singular .content-area .dropcap-text::first-letter, .entry .dropcap-text::first-letter, .page-template-_front .comments-area .dropcap-text::first-letter, .sidebar .widget .dropcap-text::first-letter { color: #1a1c1e; color: var(--color_content_headings); }
+
+.site-footer { background-color: #eaecee; color: #5a5c5e; border-color: rgba(90, 92, 94, 0.2); background-color: var(--color_footer_background); color: var(--color_footer_text); border-color: var(--color_footer_text--a20); }
+
+.site-footer h2, .site-footer h3, .site-footer h4, .site-footer .h1, .site-footer .h2, .site-footer .h3, .site-footer .h4, .site-footer a:not(.button), .site-footer .accent-color { color: #1a1c1e; color: var(--color_footer_headings); }
+
+/* FILE: main/custom-styles/__base.scss */
+body { background-color: #1a1c1e; }
+
+.site { color: #ffffff; color: var(--color_intro_text); }
+
+*, *::after, *::before { border-color: inherit; }
+
+::-webkit-input-placeholder, :disabled::-webkit-input-placeholder { color: inherit !important; }
+
+:-ms-input-placeholder, :disabled:-ms-input-placeholder { color: inherit !important; }
+
+::-ms-input-placeholder, :disabled::-ms-input-placeholder { color: inherit !important; }
+
+::placeholder, :disabled::placeholder { color: inherit !important; }
+
+button, input, select, textarea { background-color: transparent; }
+
+.gallery-caption { background-color: rgba(0, 0, 0, 0.8); color: #fdfcfc; }
+
+.color-error { background-color: rgba(238, 0, 0, 0.85); color: #fff; }
+
+.color-error a:not(.button) { color: inherit; }
+
+.color-info { background-color: rgba(0, 85, 238, 0.85); color: #fff; }
+
+.color-info a:not(.button) { color: inherit; }
+
+.color-success { background-color: rgba(0, 119, 34, 0.85); color: #fff; }
+
+.color-success a:not(.button) { color: inherit; }
+
+.color-warning { background-color: rgba(255, 221, 0, 0.85); color: #310; }
+
+.color-warning a:not(.button) { color: inherit; }
+
+/* FILE: main/custom-styles/__accent.scss */
+mark, .highlight { -webkit-box-shadow: 0.38em 0 0 #00855b, -0.38em 0 0 #00855b; box-shadow: 0.38em 0 0 #00855b, -0.38em 0 0 #00855b; -webkit-box-shadow: 0.38em 0 0 var(--color_accent), -0.38em 0 0 var(--color_accent); box-shadow: 0.38em 0 0 var(--color_accent), -0.38em 0 0 var(--color_accent); }
+
+@media only screen and (max-width: 41.9375em) { .pagination a { background-color: #00855b; color: #ffffff; background-color: var(--color_accent); color: var(--color_accent_text); } }
+
+/* FILE: main/custom-styles/__header.scss */
+.site .site-header-content, .site .site-header-navigation { background: none; }
+
+/* FILE: main/custom-styles/__branding.scss */
+.site-title, .custom-logo { color: #ffffff; color: var(--color_header_headings); }
+
+.custom-logo, .fl-builder-edit .custom-logo { max-height: 100px; max-height: var(--custom_logo_height); }
+
+/* FILE: main/custom-styles/__menu.scss */
+@media only screen and (min-width: 55em) { .main-navigation-container li ul { background-color: #0a0c0e; color: #ffffff; background-color: var(--color_header_background); color: var(--color_header_text); } }
+
+@media only screen and (max-width: 54.9375em) { .has-navigation-mobile .main-navigation-container { background-color: #0a0c0e; color: #ffffff; border-color: rgba(255, 255, 255, 0.2); background-color: var(--color_header_background); color: var(--color_header_text); border-color: var(--color_header_text--a20); } }
+
+/* FILE: main/custom-styles/__intro.scss */
+.intro-container { background-color: transparent; }
+
+.intro-media::after { background-image: -webkit-gradient(linear, left top, left bottom, from(transparent), to(#1a1c1e)); background-image: -o-linear-gradient(transparent, #1a1c1e); background-image: linear-gradient(transparent, #1a1c1e); }
+
+/* FILE: main/custom-styles/__content.scss */
+.post-navigation .nav-previous a::before { background-image: -webkit-gradient(linear, left top, right top, color-stop(38%, #00855b), to(transparent)); background-image: -o-linear-gradient(left, #00855b 38%, transparent); background-image: linear-gradient(to right, #00855b 38%, transparent); background-image: -webkit-gradient(linear, left top, right top, color-stop(38%, var(--color_accent)), to(transparent)); background-image: -o-linear-gradient(left, var(--color_accent) 38%, transparent); background-image: linear-gradient(to right, var(--color_accent) 38%, transparent); }
+
+.post-navigation .nav-next a::before { background-image: -webkit-gradient(linear, right top, left top, color-stop(38%, #00855b), to(transparent)); background-image: -o-linear-gradient(right, #00855b 38%, transparent); background-image: linear-gradient(to left, #00855b 38%, transparent); background-image: -webkit-gradient(linear, right top, left top, color-stop(38%, var(--color_accent)), to(transparent)); background-image: -o-linear-gradient(right, var(--color_accent) 38%, transparent); background-image: linear-gradient(to left, var(--color_accent) 38%, transparent); }
+
+/* FILE: main/custom-styles/__footer.scss */
+/* FILE: main/custom-styles/__sidebar.scss */
+/* FILE: main/custom-styles/__plugins.scss */
+.infinite-loader .spinner > div > div { background-color: #00855b !important; background-color: var(--color_accent) !important; }
+
+.site-content div.sharedaddy .sd-content ul li a.sd-button:not(.no-text) { color: #ffffff !important; color: var(--color_accent_text) !important; }

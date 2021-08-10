@@ -1,0 +1,49 @@
+https://corecppil.github.io/Meetups/2019-08-29_Summer_CoreC++_2019/2019_Generators_AdiShavit.pdf
+
+OBJECTS THAT LAZILY GENERATE VALUES ARE CALLED GENERATORS
+
+ranges
+  •Abstraction layer on top of iterators
+  •The answer to The Awkward Coupling
+  •C++20 Ranges encapsulate:
+    •A begin and end iterator-pair;
+    •An iterator + size; 
+    •An iterator and stopping condition
+  •A single object that makes STL iterators and algorithms more powerful by making them composable.
+  •Create pipelines to transform values
+
+
+coroutines
+  A Coroutine is a functionthat:
+    1.Can suspend execution;
+    2.Resume later;
+    3.Preserve local state;
+    4.Allows re-entry more than once;
+    5.Non-pre-emptive →Cooperative
+
+
+C++20 coroutines
+  •The answer to Distributed Logic
+  •A functionis a coroutine if any of the following:
+    •Uses co_awaitto suspend execution until resumed;
+    •Uses co_yieldto suspend + returning a value;
+    •Uses co_returnto complete + return a value.
+  •Return type must satisfy some requirements.
+
+
+Coroutines Implementations in assembly languages
+
+  Machine-dependent assembly languages often provide direct methods for coroutine execution. 
+
+  MACRO-11 "JSR PC,@(SP)+", 
+  For example, in MACRO-11, the assembly language of the PDP-11 family of minicomputers, the “classic” coroutine switch is effected by the instruction "JSR PC,@(SP)+", 
+  which jumps to the address popped from the stack and pushes the current (i.e that of the next) instruction address onto the stack. 
+
+  On VAXen (in Macro-32) the comparable instruction is "JSB @(SP)+". 
+
+  Even on a Motorola 6809 there is the instruction "JSR [,S++]"; note the "++", as 2 bytes (of address) are popped from the stack. 
+  This instruction is much used in the (standard) 'monitor' Assist 09.
+
+
+ MUTUAL RECURSION
+   In mathematics and computer science, mutual recursion is a form of recursion where two mathematical or computational objects, such as functions or data types, are defined in terms of each other.[1] Mutual recursion is very common in functional programming and in some problem domains, such as recursive descent parsers, where the data types are naturally mutually recursive. 
